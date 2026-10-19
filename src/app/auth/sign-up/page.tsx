@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
+import { GuideWordmark } from "@/components/guide-logo";
 import { signUpWithEmail } from "./actions";
 
 export default function SignUpPage() {
@@ -14,12 +15,14 @@ export default function SignUpPage() {
     <div className="bg-sky-soft">
       <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-5 py-14 sm:px-8">
         <div className="panel !rounded-[1.5rem] !p-7 shadow-[var(--shadow-soft)] sm:!p-9">
+          <GuideWordmark href={null} size="sm" className="mb-4" />
           <p className="hebrew text-forest-600">ברוכים הבאים</p>
           <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
             Join Guide
           </h1>
           <p className="mt-2 text-ink-muted">
-            Save progress, notes, and quizzes — free and ready when you are.
+            Save progress, notes, and quizzes for Mishnayos and Gemara — free
+            and ready when you are.
           </p>
 
           <form action={formAction} className="mt-8 space-y-4">

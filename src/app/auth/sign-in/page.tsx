@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { GuideWordmark } from "@/components/guide-logo";
 import { signInWithEmail } from "./actions";
 
 export default function SignInPage() {
@@ -11,12 +12,13 @@ export default function SignInPage() {
     <div className="bg-sky-soft">
       <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-5 py-14 sm:px-8">
         <div className="panel !rounded-[1.5rem] !p-7 shadow-[var(--shadow-soft)] sm:!p-9">
+          <GuideWordmark href={null} size="sm" className="mb-4" />
           <p className="hebrew text-forest-600">שלום</p>
           <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
             Welcome back
           </h1>
           <p className="mt-2 text-ink-muted">
-            Log in to continue your Mishnah and Gemara study.
+            Log in to continue your Mishnayos and Gemara study.
           </p>
 
           <form action={formAction} className="mt-8 space-y-4">

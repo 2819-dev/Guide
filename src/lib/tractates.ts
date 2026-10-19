@@ -51,7 +51,7 @@ export const TRACTATES: Tractate[] = [
     firstPage: 2,
     lastPage: 64,
     available: false,
-    blurb: "Coming soon — Mishnah and Gemara will open here.",
+    blurb: "Coming soon — Mishnayos and Gemara will open here.",
   },
   {
     slug: "shabbat",

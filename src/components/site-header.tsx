@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { GuideWordmark } from "@/components/guide-logo";
 import { SignOutButton } from "@/components/sign-out-button";
 import { roleLabel, type Role } from "@/lib/roles";
 
@@ -20,16 +21,13 @@ export function SiteHeader() {
   }, []);
 
   const role = me?.profile?.role;
+  const educationHref =
+    role === "rebbe" || role === "admin" ? "/education/panel" : "/education";
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
-        <Link href="/" className="flex items-baseline gap-2 no-underline">
-          <span className="display text-[1.65rem] text-forest-900">Guide</span>
-          <span className="hebrew hidden text-sm text-forest-600 sm:inline">
-            משניות · גמרא
-          </span>
-        </Link>
+        <GuideWordmark />
         <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
           <Link
             href="/study"
@@ -37,14 +35,12 @@ export function SiteHeader() {
           >
             Study
           </Link>
-          {role === "rebbe" && (
-            <Link
-              href="/education"
-              className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
-            >
-              Education
-            </Link>
-          )}
+          <Link
+            href={educationHref}
+            className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
+          >
+            Education
+          </Link>
           {role === "admin" && (
             <Link
               href="/admin"
@@ -80,7 +76,10 @@ export function SiteHeader() {
               >
                 Log in
               </Link>
-              <Link href="/auth/sign-up" className="btn-primary !px-4 !py-2 text-sm">
+              <Link
+                href="/auth/sign-up"
+                className="btn-primary !px-4 !py-2 text-sm"
+              >
                 Get started
               </Link>
             </>

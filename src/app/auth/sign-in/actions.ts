@@ -18,7 +18,7 @@ export async function signInWithEmail(
   }
 
   const session = await ensureProfile();
-  if (session?.profile.role === "rebbe") redirect("/education");
+  if (session?.profile.role === "rebbe") redirect("/education/panel");
   if (session?.profile.role === "admin") redirect("/admin");
   redirect("/study");
 }

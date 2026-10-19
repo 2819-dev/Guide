@@ -58,6 +58,6 @@ export async function signUpWithEmail(
     }
   }
 
-  if (role === "rebbe") redirect("/education");
+  if (role === "rebbe") redirect("/education/panel");
   redirect("/study");
 }

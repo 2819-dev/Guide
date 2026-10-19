@@ -9,17 +9,14 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* Soft hero — Clever-like airy masthead */}
+      {/* Soft hero — Clever-like airy masthead; study product only */}
       <section className="relative overflow-hidden bg-sky-soft">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-14 pt-12 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:pb-20 lg:pt-16">
           <div>
-            <p className="animate-rise hebrew text-lg font-medium text-forest-700 sm:text-xl">
-              משניות · גמרא
-            </p>
-            <h1 className="animate-rise-delay display mt-3 max-w-xl text-4xl text-forest-950 sm:text-5xl lg:text-[3.4rem]">
-              The calm place to study Mishnah &amp; Gemara
+            <h1 className="animate-rise display mt-1 max-w-xl text-4xl text-forest-950 sm:text-5xl lg:text-[3.4rem]">
+              The calm place to study Mishnayos and Gemara
             </h1>
-            <p className="animate-rise-late mt-5 max-w-lg text-lg text-ink-muted sm:text-xl">
+            <p className="animate-rise-delay mt-5 max-w-lg text-lg text-ink-muted sm:text-xl">
               Open a daf, read clearly, and quiz yourself. After school, upload
               your notes for a second pass that feels personal — not
               overwhelming.
@@ -64,38 +61,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Audience tray — Clever puts the learner first */}
-      <section className="border-b border-line bg-paper">
-        <div className="mx-auto grid max-w-6xl gap-4 px-5 py-6 sm:grid-cols-2 sm:px-8">
-          <Link
-            href="/auth/sign-up"
-            className="color-block bg-forest-700 text-white no-underline transition hover:bg-forest-600"
-          >
-            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-forest-200">
-              Students
-            </p>
-            <p className="display mt-2 text-2xl">Log in and keep learning</p>
-            <p className="mt-2 text-forest-100">
-              Study at home or on a school Chromebook. Your notes and quizzes
-              stay with you.
-            </p>
-          </Link>
-          <Link
-            href="/auth/sign-up?role=rebbe"
-            className="color-block border border-line bg-white text-forest-950 no-underline transition hover:border-forest-300"
-          >
-            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-forest-600">
-              Rebbeim
-            </p>
-            <p className="display mt-2 text-2xl">Guide for Education</p>
-            <p className="mt-2 text-ink-muted">
-              Invite students, then see dapim studied, quizzes taken, and notes
-              submitted.
-            </p>
-          </Link>
-        </div>
-      </section>
-
       {/* What is Guide */}
       <section className="section-pad mx-auto max-w-6xl">
         <p className="text-sm font-semibold uppercase tracking-[0.14em] text-forest-600">
@@ -106,13 +71,12 @@ export default function HomePage() {
           {featured.englishName}.
         </h2>
         <p className="mt-4 max-w-2xl text-lg text-ink-muted">
-          Built for real learners: clear pages, friendly quizzes, and a Rebbe
-          panel that makes home learning visible without turning study into a
-          dashboard.
+          Built for real learners: clear pages, friendly quizzes, and notes that
+          turn after-school homework into a clear second pass.
         </p>
       </section>
 
-      {/* Feature color blocks — modular Clever rhythm */}
+      {/* Feature color blocks */}
       <section className="bg-paper pb-6">
         <div className="mx-auto grid max-w-6xl gap-5 px-5 sm:px-8 lg:grid-cols-3">
           <article className="color-block bg-forest-100">
@@ -189,33 +153,9 @@ export default function HomePage() {
               </li>
               <li className="flex gap-3">
                 <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-sun" />
-                Rebbeim can see class activity without clutter
+                Create an account free — ready when you are
               </li>
             </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Education CTA */}
-      <section className="bg-forest-100">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-16 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-forest-700">
-              Guide for Education
-            </p>
-            <h2 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
-              Rebbeim, see the learning that happens at home
-            </h2>
-            <p className="mt-3 text-lg text-ink-muted">
-              Create a class, share an invite code, and follow dapim, quizzes,
-              and notes across Mishnah and Gemara — so Chromebook and
-              after-school study stay connected to the classroom.
-            </p>
-          </div>
-          <div className="shrink-0">
-            <Link href="/auth/sign-up?role=rebbe" className="btn-primary">
-              Join as a Rebbe
-            </Link>
           </div>
         </div>
       </section>
