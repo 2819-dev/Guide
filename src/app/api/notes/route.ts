@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
-import { parseDafId } from "@/lib/daf";
+import { resolveTractateAndDaf } from "@/lib/daf";
 import { requireProfile } from "@/lib/profile";
 import { studyNotes } from "@/lib/schema";
+import { getFeaturedTractate, getTractate } from "@/lib/tractates";
 
 const postSchema = z.object({
   dafId: z.string().min(2).max(8),
+  tractateSlug: z.string().optional(),
   title: z.string().min(1).max(200).optional(),
   content: z.string().min(10).max(50_000),
   sourceFilename: z.string().max(255).optional(),
@@ -19,19 +21,26 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
   try {
-    const dafId = new URL(request.url).searchParams.get("dafId");
-    if (!dafId || !parseDafId(dafId)) {
+    const url = new URL(request.url);
+    const dafId = url.searchParams.get("dafId");
+    const tractateSlug =
+      url.searchParams.get("tractate") ?? getFeaturedTractate().slug;
+    if (!dafId || !resolveTractateAndDaf(tractateSlug, dafId)) {
       return NextResponse.json({ error: "Valid daf required" }, { status: 400 });
     }
     const db = getDb();
     const notes = await db
       .select()
       .from(studyNotes)
-      .where(eq(studyNotes.profileId, authz.profile.id))
+      .where(
+        and(
+          eq(studyNotes.profileId, authz.profile.id),
+          eq(studyNotes.tractateSlug, tractateSlug),
+          eq(studyNotes.dafId, dafId),
+        ),
+      )
       .orderBy(desc(studyNotes.createdAt));
-    return NextResponse.json({
-      notes: notes.filter((n) => n.dafId === dafId),
-    });
+    return NextResponse.json({ notes });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Could not load notes" }, { status: 500 });
@@ -45,7 +54,12 @@ export async function POST(request: Request) {
   }
   try {
     const body = postSchema.parse(await request.json());
-    if (!parseDafId(body.dafId)) {
+    const tractateSlug =
+      body.tractateSlug ?? getFeaturedTractate().slug;
+    if (!getTractate(tractateSlug)?.available) {
+      return NextResponse.json({ error: "Unknown tractate" }, { status: 400 });
+    }
+    if (!resolveTractateAndDaf(tractateSlug, body.dafId)) {
       return NextResponse.json({ error: "Invalid daf" }, { status: 400 });
     }
     const db = getDb();
@@ -53,6 +67,7 @@ export async function POST(request: Request) {
       .insert(studyNotes)
       .values({
         profileId: authz.profile.id,
+        tractateSlug,
         dafId: body.dafId,
         title: body.title ?? "Study notes",
         content: body.content,

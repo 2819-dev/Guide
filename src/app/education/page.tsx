@@ -20,8 +20,8 @@ export default async function EducationPage() {
             Rebbe panel
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-ink-muted">
-            Invite students with a class code. Track dapim studied, quizzes, and
-            notes from home or Chromebook study — clear and calm.
+            Invite students with a class code. Track Mishnah and Gemara study —
+            dapim, quizzes, and notes from home or Chromebook — clear and calm.
           </p>
         </div>
       </section>

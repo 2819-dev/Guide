@@ -1,8 +1,14 @@
-/** Bava Metzia spans dapim 2a–119b. אלו מציאות (Eilu Metzios) opens at 21a. */
+import {
+  getTractate,
+  type Tractate,
+} from "@/lib/tractates";
+
+/** Daf / amud helpers — scoped to a tractate from the catalog. */
 
 export type DafSide = "a" | "b";
 
 export type DafRef = {
+  tractateSlug: string;
   page: number;
   side: DafSide;
   /** e.g. "21a" */
@@ -11,7 +17,8 @@ export type DafRef = {
   sefariaRef: string;
   hebrewLabel: string;
   englishLabel: string;
-  isEiluMetzios: boolean;
+  /** True when this amud is in the featured chapter (e.g. אלו מציאות) */
+  isFeaturedChapter: boolean;
 };
 
 const HEBREW_NUMERALS: Record<number, string> = {
@@ -62,48 +69,78 @@ export function toHebrewNumeral(n: number): string {
   return String(n);
 }
 
-export const BAVA_METZIA_FIRST = 2;
-export const BAVA_METZIA_LAST = 119;
-/** Chapter אלו מציאות begins here */
-export const EILU_METZIOS_START = 21;
-
-export function parseDafId(id: string): { page: number; side: DafSide } | null {
+export function parseDafId(
+  id: string,
+  tractate: Tractate,
+): { page: number; side: DafSide } | null {
   const match = /^(\d{1,3})([ab])$/i.exec(id.trim());
   if (!match) return null;
   const page = Number(match[1]);
   const side = match[2].toLowerCase() as DafSide;
-  if (page < BAVA_METZIA_FIRST || page > BAVA_METZIA_LAST) return null;
+  if (page < tractate.firstPage || page > tractate.lastPage) return null;
   return { page, side };
 }
 
-export function makeDaf(page: number, side: DafSide): DafRef {
+function featuredStartPage(tractate: Tractate): number | null {
+  const start = tractate.featuredChapter?.startDaf;
+  if (!start) return null;
+  const m = /^(\d+)/.exec(start);
+  return m ? Number(m[1]) : null;
+}
+
+export function makeDaf(
+  tractate: Tractate,
+  page: number,
+  side: DafSide,
+): DafRef {
   const id = `${page}${side}`;
   const heNum = toHebrewNumeral(page);
   const heSide = side === "a" ? "ע״א" : "ע״ב";
+  const featuredFrom = featuredStartPage(tractate);
   return {
+    tractateSlug: tractate.slug,
     page,
     side,
     id,
-    sefariaRef: `Bava_Metzia.${id}`,
-    hebrewLabel: `בבא מציעא דף ${heNum} ${heSide}`,
-    englishLabel: `Bava Metzia ${id}`,
-    isEiluMetzios: page >= EILU_METZIOS_START,
+    sefariaRef: `${tractate.sefariaBook}.${id}`,
+    hebrewLabel: `${tractate.hebrewName} דף ${heNum} ${heSide}`,
+    englishLabel: `${tractate.englishName} ${id}`,
+    isFeaturedChapter:
+      featuredFrom != null ? page >= featuredFrom : false,
   };
 }
 
-export function listAllDafim(): DafRef[] {
+export function listDafim(tractate: Tractate): DafRef[] {
   const out: DafRef[] = [];
-  for (let page = BAVA_METZIA_FIRST; page <= BAVA_METZIA_LAST; page++) {
-    out.push(makeDaf(page, "a"), makeDaf(page, "b"));
+  for (let page = tractate.firstPage; page <= tractate.lastPage; page++) {
+    out.push(makeDaf(tractate, page, "a"), makeDaf(tractate, page, "b"));
   }
   return out;
 }
 
-export function adjacentDaf(id: string, dir: -1 | 1): DafRef | null {
-  const parsed = parseDafId(id);
+export function adjacentDaf(
+  tractate: Tractate,
+  id: string,
+  dir: -1 | 1,
+): DafRef | null {
+  const parsed = parseDafId(id, tractate);
   if (!parsed) return null;
-  const all = listAllDafim();
+  const all = listDafim(tractate);
   const idx = all.findIndex((d) => d.id === `${parsed.page}${parsed.side}`);
   if (idx < 0) return null;
   return all[idx + dir] ?? null;
+}
+
+export function resolveTractateAndDaf(
+  tractateSlug: string,
+  dafId: string,
+): { tractate: Tractate; daf: DafRef } | null {
+  const tractate = getTractate(tractateSlug);
+  if (!tractate?.available) return null;
+  const parsed = parseDafId(dafId, tractate);
+  if (!parsed) return null;
+  return {
+    tractate,
+    daf: makeDaf(tractate, parsed.page, parsed.side),
+  };
 }

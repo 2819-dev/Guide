@@ -2,37 +2,36 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import {
-  EILU_METZIOS_START,
-  listAllDafim,
-  type DafRef,
-} from "@/lib/daf";
+import { listDafim, type DafRef } from "@/lib/daf";
+import { studyPath, type Tractate } from "@/lib/tractates";
 
 type Props = {
+  tractate: Tractate;
   visitedIds?: string[];
 };
 
-export function DafPicker({ visitedIds }: Props) {
+export function DafPicker({ tractate, visitedIds }: Props) {
   const [query, setQuery] = useState("");
-  const [focusEilu, setFocusEilu] = useState(true);
+  const hasFeatured = Boolean(tractate.featuredChapter);
+  const [focusFeatured, setFocusFeatured] = useState(hasFeatured);
   const [visited, setVisited] = useState(() => new Set(visitedIds ?? []));
-  const all = useMemo(() => listAllDafim(), []);
+  const all = useMemo(() => listDafim(tractate), [tractate]);
 
   useEffect(() => {
     if (visitedIds) return;
-    void fetch("/api/progress")
+    void fetch(`/api/progress?tractate=${encodeURIComponent(tractate.slug)}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data: { progress?: { dafId: string }[] } | null) => {
         if (!data?.progress) return;
         setVisited(new Set(data.progress.map((p) => p.dafId)));
       })
       .catch(() => undefined);
-  }, [visitedIds]);
+  }, [visitedIds, tractate.slug]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return all.filter((d) => {
-      if (focusEilu && !d.isEiluMetzios) return false;
+      if (focusFeatured && hasFeatured && !d.isFeaturedChapter) return false;
       if (!q) return true;
       return (
         d.id.includes(q) ||
@@ -40,7 +39,7 @@ export function DafPicker({ visitedIds }: Props) {
         d.hebrewLabel.includes(query.trim())
       );
     });
-  }, [all, focusEilu, query]);
+  }, [all, focusFeatured, hasFeatured, query]);
 
   const byPage = useMemo(() => {
     const map = new Map<number, DafRef[]>();
@@ -51,6 +50,8 @@ export function DafPicker({ visitedIds }: Props) {
     }
     return [...map.entries()];
   }, [filtered]);
+
+  const featuredLabel = tractate.featuredChapter?.hebrew;
 
   return (
     <div className="space-y-6">
@@ -64,26 +65,33 @@ export function DafPicker({ visitedIds }: Props) {
             className="field"
           />
         </label>
-        <label className="flex items-center gap-2 text-sm font-semibold text-forest-800">
-          <input
-            type="checkbox"
-            checked={focusEilu}
-            onChange={(e) => setFocusEilu(e.target.checked)}
-            className="size-4 accent-forest-600"
-          />
-          אלו מציאות only (from דף {EILU_METZIOS_START})
-        </label>
+        {hasFeatured && featuredLabel && (
+          <label className="flex items-center gap-2 text-sm font-semibold text-forest-800">
+            <input
+              type="checkbox"
+              checked={focusFeatured}
+              onChange={(e) => setFocusFeatured(e.target.checked)}
+              className="size-4 accent-forest-600"
+            />
+            {featuredLabel} only
+          </label>
+        )}
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {byPage.map(([page, sides]) => (
-          <div key={page} className="panel !rounded-2xl !p-3 shadow-[0_8px_24px_rgba(22,53,40,0.04)]">
+          <div
+            key={page}
+            className="panel !rounded-2xl !p-3 shadow-[0_8px_24px_rgba(22,53,40,0.04)]"
+          >
             <div className="mb-2 flex items-center justify-between px-1">
               <span className="display text-lg font-semibold text-forest-900">
                 דף {page}
               </span>
-              {page >= EILU_METZIOS_START && (
-                <span className="hebrew text-xs text-forest-600">אלו מציאות</span>
+              {sides.some((d) => d.isFeaturedChapter) && featuredLabel && (
+                <span className="hebrew text-xs text-forest-600">
+                  {featuredLabel}
+                </span>
               )}
             </div>
             <div className="flex gap-2">
@@ -92,7 +100,7 @@ export function DafPicker({ visitedIds }: Props) {
                 return (
                   <Link
                     key={daf.id}
-                    href={`/study/${daf.id}`}
+                    href={studyPath(tractate.slug, daf.id)}
                     className={`flex-1 rounded-lg px-3 py-3 text-center text-sm font-semibold no-underline transition ${
                       seen
                         ? "bg-forest-700 text-white"

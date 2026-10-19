@@ -16,7 +16,7 @@ export default function SignInPage() {
             Welcome back
           </h1>
           <p className="mt-2 text-ink-muted">
-            Log in to continue your Bava Metzia study.
+            Log in to continue your Mishnah and Gemara study.
           </p>
 
           <form action={formAction} className="mt-8 space-y-4">

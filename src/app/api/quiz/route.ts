@@ -2,14 +2,16 @@ import { NextResponse } from "next/server";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
-import { parseDafId } from "@/lib/daf";
+import { resolveTractateAndDaf } from "@/lib/daf";
 import { buildQuiz, scoreAnswers } from "@/lib/quiz";
 import { requireProfile } from "@/lib/profile";
 import { fetchDafText } from "@/lib/sefaria";
 import { progress, quizSessions, studyNotes } from "@/lib/schema";
+import { getFeaturedTractate, getTractate } from "@/lib/tractates";
 
 const startSchema = z.object({
   dafId: z.string(),
+  tractateSlug: z.string().optional(),
   mode: z.enum(["daf", "notes", "mixed"]).default("daf"),
   noteId: z.string().uuid().optional(),
 });
@@ -62,6 +64,7 @@ export async function POST(request: Request) {
         .where(
           and(
             eq(progress.profileId, authz.profile.id),
+            eq(progress.tractateSlug, session.tractateSlug),
             eq(progress.dafId, session.dafId),
           ),
         )
@@ -79,6 +82,7 @@ export async function POST(request: Request) {
       } else {
         await db.insert(progress).values({
           profileId: authz.profile.id,
+          tractateSlug: session.tractateSlug,
           dafId: session.dafId,
           quizAttempts: 1,
           bestScore: score,
@@ -96,11 +100,16 @@ export async function POST(request: Request) {
     }
 
     const body = startSchema.parse(json);
-    if (!parseDafId(body.dafId)) {
+    const tractateSlug =
+      body.tractateSlug ?? getFeaturedTractate().slug;
+    if (!getTractate(tractateSlug)?.available) {
+      return NextResponse.json({ error: "Unknown tractate" }, { status: 400 });
+    }
+    if (!resolveTractateAndDaf(tractateSlug, body.dafId)) {
       return NextResponse.json({ error: "Invalid daf" }, { status: 400 });
     }
 
-    const dafText = await fetchDafText(body.dafId);
+    const dafText = await fetchDafText(body.dafId, tractateSlug);
     let notesContent: string | null = null;
     let noteId = body.noteId;
 
@@ -124,6 +133,7 @@ export async function POST(request: Request) {
           .where(
             and(
               eq(studyNotes.profileId, authz.profile.id),
+              eq(studyNotes.tractateSlug, tractateSlug),
               eq(studyNotes.dafId, body.dafId),
             ),
           )
@@ -157,6 +167,7 @@ export async function POST(request: Request) {
       .insert(quizSessions)
       .values({
         profileId: authz.profile.id,
+        tractateSlug,
         dafId: body.dafId,
         mode: body.mode,
         noteId,
@@ -171,6 +182,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       quiz: {
         id: quiz.id,
+        tractateSlug: quiz.tractateSlug,
         dafId: quiz.dafId,
         mode: quiz.mode,
         questions: publicQuestions,

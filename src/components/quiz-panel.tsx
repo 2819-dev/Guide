@@ -17,11 +17,12 @@ type GradedQuestion = PublicQuestion & {
 
 type Props = {
   dafId: string;
+  tractateSlug: string;
   hasNotes: boolean;
   signedIn: boolean;
 };
 
-export function QuizPanel({ dafId, hasNotes, signedIn }: Props) {
+export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
   const [mode, setMode] = useState<"daf" | "notes" | "mixed">("daf");
   const [quizId, setQuizId] = useState<string | null>(null);
   const [questions, setQuestions] = useState<PublicQuestion[]>([]);
@@ -57,7 +58,7 @@ export function QuizPanel({ dafId, hasNotes, signedIn }: Props) {
       const res = await fetch("/api/quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dafId, mode }),
+        body: JSON.stringify({ dafId, tractateSlug, mode }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Could not start quiz");

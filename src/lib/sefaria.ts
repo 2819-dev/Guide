@@ -1,4 +1,5 @@
-import { makeDaf, parseDafId, type DafRef } from "./daf";
+import { adjacentDaf, resolveTractateAndDaf, type DafRef } from "./daf";
+import { getFeaturedTractate } from "./tractates";
 
 export type DafText = {
   daf: DafRef;
@@ -35,12 +36,15 @@ function asLines(value: unknown): string[] {
   return [];
 }
 
-export async function fetchDafText(dafId: string): Promise<DafText> {
-  const parsed = parseDafId(dafId);
-  if (!parsed) {
-    throw new Error(`Invalid daf: ${dafId}`);
+export async function fetchDafText(
+  dafId: string,
+  tractateSlug: string = getFeaturedTractate().slug,
+): Promise<DafText> {
+  const resolved = resolveTractateAndDaf(tractateSlug, dafId);
+  if (!resolved) {
+    throw new Error(`Invalid daf: ${tractateSlug}/${dafId}`);
   }
-  const daf = makeDaf(parsed.page, parsed.side);
+  const { tractate, daf } = resolved;
   const url = `https://www.sefaria.org/api/texts/${daf.sefariaRef}?commentary=0&context=0&pad=0`;
   const res = await fetch(url, {
     headers: { Accept: "application/json" },
@@ -57,12 +61,15 @@ export async function fetchDafText(dafId: string): Promise<DafText> {
     prev?: string | null;
   };
 
+  const prev = adjacentDaf(tractate, daf.id, -1);
+  const next = adjacentDaf(tractate, daf.id, 1);
+
   return {
     daf,
     heRef: data.heRef ?? daf.hebrewLabel,
     hebrew: asLines(data.he),
     english: asLines(data.text),
-    next: data.next ?? null,
-    prev: data.prev ?? null,
+    next: next?.id ?? data.next ?? null,
+    prev: prev?.id ?? data.prev ?? null,
   };
 }

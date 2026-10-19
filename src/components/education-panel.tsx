@@ -70,7 +70,7 @@ export function EducationPanel() {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. אלו מציאות — evening shiur"
+            placeholder="e.g. Evening Gemara · בבא מציעא"
             className="field max-w-md"
           />
           <button

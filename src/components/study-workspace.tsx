@@ -13,26 +13,30 @@ type Props = {
 
 export function StudyWorkspace({ text, signedIn }: Props) {
   const [hasNotes, setHasNotes] = useState(false);
+  const tractateSlug = text.daf.tractateSlug;
+  const dafId = text.daf.id;
 
   useEffect(() => {
     if (!signedIn) return;
     void fetch("/api/progress", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ dafId: text.daf.id }),
+      body: JSON.stringify({ dafId, tractateSlug }),
     });
-  }, [text.daf.id, signedIn]);
+  }, [dafId, tractateSlug, signedIn]);
 
   return (
     <div className="space-y-14">
       <GemaraReader text={text} />
       <NotesUpload
-        dafId={text.daf.id}
+        dafId={dafId}
+        tractateSlug={tractateSlug}
         signedIn={signedIn}
         onNotesChange={(notes) => setHasNotes(notes.length > 0)}
       />
       <QuizPanel
-        dafId={text.daf.id}
+        dafId={dafId}
+        tractateSlug={tractateSlug}
         hasNotes={hasNotes}
         signedIn={signedIn}
       />

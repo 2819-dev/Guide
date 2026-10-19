@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { getFeaturedTractate, studyPath } from "@/lib/tractates";
 
 export default function HomePage() {
+  const featured = getFeaturedTractate();
+  const startDaf = featured.featuredChapter?.startDaf ?? "2a";
+  const startHref = studyPath(featured.slug, startDaf);
+  const featuredSugya = featured.featuredChapter?.hebrew;
+
   return (
     <div>
       {/* Soft hero — Clever-like airy masthead */}
@@ -8,23 +14,22 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-14 pt-12 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:pb-20 lg:pt-16">
           <div>
             <p className="animate-rise hebrew text-lg font-medium text-forest-700 sm:text-xl">
-              אלו מציאות
+              משניות · גמרא
             </p>
             <h1 className="animate-rise-delay display mt-3 max-w-xl text-4xl text-forest-950 sm:text-5xl lg:text-[3.4rem]">
-              The calm place to study{" "}
-              <span className="whitespace-nowrap">Bava Metzia</span>
+              The calm place to study Mishnah &amp; Gemara
             </h1>
             <p className="animate-rise-late mt-5 max-w-lg text-lg text-ink-muted sm:text-xl">
-              Open a daf, read the Gemara, and quiz yourself. After school,
-              upload your notes for a second pass that feels personal — not
+              Open a daf, read clearly, and quiz yourself. After school, upload
+              your notes for a second pass that feels personal — not
               overwhelming.
             </p>
             <div className="animate-rise-late mt-8 flex flex-wrap gap-3">
-              <Link href="/study/21a" className="btn-primary">
-                Start at דף כ״א ע״א
+              <Link href={startHref} className="btn-primary">
+                Start with {featured.englishName}
               </Link>
               <Link href="/study" className="btn-secondary">
-                Browse dapim
+                Browse tractates
               </Link>
             </div>
           </div>
@@ -40,17 +45,19 @@ export default function HomePage() {
             />
             <div className="facet-frame relative bg-forest-800 p-6 text-forest-50 sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.14em] text-forest-300">
-                Tonight&apos;s page
+                Available now
               </p>
               <p className="hebrew mt-4 text-3xl text-white sm:text-4xl">
-                בבא מציעא דף כ״א ע״א
+                {featured.hebrewName}
+                {featuredSugya ? ` · ${featuredSugya}` : ""}
               </p>
               <p className="mt-4 max-w-sm text-forest-100">
-                Read Hebrew and English together, then check what stayed with
-                you — from the daf or from your own notes.
+                Our first tractate is ready — including{" "}
+                {featuredSugya ?? "the opening dapim"}. More masechtot are on
+                the way.
               </p>
-              <Link href="/study/21a" className="btn-light mt-6 inline-flex">
-                Open this daf
+              <Link href={startHref} className="btn-light mt-6 inline-flex">
+                Open {startDaf}
               </Link>
             </div>
           </div>
@@ -95,7 +102,8 @@ export default function HomePage() {
           What is Guide?
         </p>
         <h2 className="display mt-3 max-w-3xl text-3xl text-forest-950 sm:text-4xl">
-          One calm study flow for אלו מציאות — and the rest of Bava Metzia.
+          One calm study flow for Mishnayos and Gemara — starting with{" "}
+          {featured.englishName}.
         </h2>
         <p className="mt-4 max-w-2xl text-lg text-ink-muted">
           Built for real learners: clear pages, friendly quizzes, and a Rebbe
@@ -111,10 +119,18 @@ export default function HomePage() {
             <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-forest-700 text-lg font-bold text-white">
               1
             </div>
-            <h3 className="display text-2xl text-forest-950">Choose a daf</h3>
+            <h3 className="display text-2xl text-forest-950">Pick a tractate</h3>
             <p className="mt-2 text-ink-muted">
-              Browse בבא מציעא from 2a to 119b. אלו מציאות starts at דף כ״א —
-              highlighted so you never wonder where to begin.
+              Browse the catalog. {featured.englishName} (
+              <span className="hebrew">{featured.hebrewName}</span>) is open
+              now
+              {featuredSugya ? (
+                <>
+                  {" "}
+                  — including <span className="hebrew">{featuredSugya}</span>
+                </>
+              ) : null}
+              . More masechtot will appear here as they&apos;re ready.
             </p>
           </article>
           <article className="color-block bg-moss/25">
@@ -150,7 +166,7 @@ export default function HomePage() {
             </p>
             <p className="mt-4 text-forest-100">
               Soft color, clear steps, and room to breathe. Guide keeps the
-              focus on the Gemara and on your notes.
+              focus on the text and on your notes.
             </p>
           </div>
           <div>
@@ -192,8 +208,8 @@ export default function HomePage() {
             </h2>
             <p className="mt-3 text-lg text-ink-muted">
               Create a class, share an invite code, and follow dapim, quizzes,
-              and notes — so Chromebook and after-school study stay connected to
-              the classroom.
+              and notes across Mishnah and Gemara — so Chromebook and
+              after-school study stay connected to the classroom.
             </p>
           </div>
           <div className="shrink-0">
@@ -210,12 +226,19 @@ export default function HomePage() {
           Ready when you are
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-lg text-ink-muted">
-          Begin with אלו מציאות, or create an account so your notes and scores
-          come along for the ride.
+          Begin with {featured.englishName}
+          {featuredSugya ? (
+            <>
+              {" "}
+              (<span className="hebrew">{featuredSugya}</span>)
+            </>
+          ) : null}
+          , or create an account so your notes and scores come along for the
+          ride.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/study/21a" className="btn-primary">
-            Begin studying
+          <Link href="/study" className="btn-primary">
+            Browse tractates
           </Link>
           <Link href="/auth/sign-up" className="btn-secondary">
             Get started free

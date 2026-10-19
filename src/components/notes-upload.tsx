@@ -13,11 +13,17 @@ type Note = {
 
 type Props = {
   dafId: string;
+  tractateSlug: string;
   signedIn: boolean;
   onNotesChange?: (notes: Note[]) => void;
 };
 
-export function NotesUpload({ dafId, signedIn, onNotesChange }: Props) {
+export function NotesUpload({
+  dafId,
+  tractateSlug,
+  signedIn,
+  onNotesChange,
+}: Props) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("After-school notes");
@@ -26,7 +32,9 @@ export function NotesUpload({ dafId, signedIn, onNotesChange }: Props) {
 
   async function load() {
     if (!signedIn) return;
-    const res = await fetch(`/api/notes?dafId=${dafId}`);
+    const res = await fetch(
+      `/api/notes?dafId=${encodeURIComponent(dafId)}&tractate=${encodeURIComponent(tractateSlug)}`,
+    );
     if (!res.ok) return;
     const data = (await res.json()) as { notes: Note[] };
     setNotes(data.notes);
@@ -36,7 +44,7 @@ export function NotesUpload({ dafId, signedIn, onNotesChange }: Props) {
   useEffect(() => {
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dafId, signedIn]);
+  }, [dafId, tractateSlug, signedIn]);
 
   async function saveText(text: string, filename?: string) {
     setBusy(true);
@@ -47,6 +55,7 @@ export function NotesUpload({ dafId, signedIn, onNotesChange }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           dafId,
+          tractateSlug,
           title,
           content: text,
           sourceFilename: filename,

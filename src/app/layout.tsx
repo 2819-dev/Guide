@@ -22,11 +22,11 @@ const frankRuhl = Frank_Ruhl_Libre({
 
 export const metadata: Metadata = {
   title: {
-    default: "Guide — לימוד בבא מציעא",
+    default: "Guide — לימוד משניות וגמרא",
     template: "%s · Guide",
   },
   description:
-    "Guide helps students study Bava Metzia with clarity — open a daf, read the Gemara, quiz yourself, and review with your notes.",
+    "Guide helps students study Mishnah and Gemara with clarity — open a daf, read, quiz yourself, and review with your notes.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

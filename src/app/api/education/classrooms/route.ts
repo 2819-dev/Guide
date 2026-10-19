@@ -106,7 +106,11 @@ export async function GET() {
                 b.lastVisitedAt.getTime() - a.lastVisitedAt.getTime(),
             )
             .slice(0, 5)
-            .map((p) => p.dafId),
+            .map((p) =>
+              p.tractateSlug === "bava-metzia"
+                ? p.dafId
+                : `${p.tractateSlug} ${p.dafId}`,
+            ),
         };
       }),
     });

@@ -71,6 +71,10 @@ export const studyNotes = pgTable("study_notes", {
   profileId: uuid("profile_id")
     .notNull()
     .references(() => profiles.id, { onDelete: "cascade" }),
+  /** Catalog slug from TRACTATES — e.g. bava-metzia */
+  tractateSlug: varchar("tractate_slug", { length: 64 })
+    .notNull()
+    .default("bava-metzia"),
   dafId: varchar("daf_id", { length: 8 }).notNull(),
   title: varchar("title", { length: 200 }).notNull().default("Study notes"),
   content: text("content").notNull(),
@@ -87,6 +91,9 @@ export const progress = pgTable(
     profileId: uuid("profile_id")
       .notNull()
       .references(() => profiles.id, { onDelete: "cascade" }),
+    tractateSlug: varchar("tractate_slug", { length: 64 })
+      .notNull()
+      .default("bava-metzia"),
     dafId: varchar("daf_id", { length: 8 }).notNull(),
     visited: boolean("visited").notNull().default(true),
     quizAttempts: integer("quiz_attempts").notNull().default(0),
@@ -95,7 +102,13 @@ export const progress = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (t) => [uniqueIndex("progress_profile_daf_idx").on(t.profileId, t.dafId)],
+  (t) => [
+    uniqueIndex("progress_profile_tractate_daf_idx").on(
+      t.profileId,
+      t.tractateSlug,
+      t.dafId,
+    ),
+  ],
 );
 
 export type QuizQuestionRecord = {
@@ -112,6 +125,9 @@ export const quizSessions = pgTable("quiz_sessions", {
   profileId: uuid("profile_id")
     .notNull()
     .references(() => profiles.id, { onDelete: "cascade" }),
+  tractateSlug: varchar("tractate_slug", { length: 64 })
+    .notNull()
+    .default("bava-metzia"),
   dafId: varchar("daf_id", { length: 8 }).notNull(),
   mode: varchar("mode", { length: 24 }).notNull(),
   noteId: uuid("note_id").references(() => studyNotes.id, {

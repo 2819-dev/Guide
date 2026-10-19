@@ -27,7 +27,7 @@ export function SiteHeader() {
         <Link href="/" className="flex items-baseline gap-2 no-underline">
           <span className="display text-[1.65rem] text-forest-900">Guide</span>
           <span className="hebrew hidden text-sm text-forest-600 sm:inline">
-            בבא מציעא
+            משניות · גמרא
           </span>
         </Link>
         <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
