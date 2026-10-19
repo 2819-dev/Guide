@@ -1,8 +1,4 @@
 import { DafPicker } from "@/components/daf-picker";
-import { getDb } from "@/lib/db";
-import { getOrCreateLearner } from "@/lib/session";
-import { progress } from "@/lib/schema";
-import { eq } from "drizzle-orm";
 
 export const instant = false;
 
@@ -10,20 +6,7 @@ export const metadata = {
   title: "Choose a daf",
 };
 
-export default async function StudyIndexPage() {
-  let visitedIds: string[] = [];
-  try {
-    const learner = await getOrCreateLearner();
-    const db = getDb();
-    const rows = await db
-      .select({ dafId: progress.dafId })
-      .from(progress)
-      .where(eq(progress.learnerId, learner.id));
-    visitedIds = rows.map((r) => r.dafId);
-  } catch {
-    visitedIds = [];
-  }
-
+export default function StudyIndexPage() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
       <header className="mb-10 max-w-2xl">
@@ -36,7 +19,7 @@ export default async function StudyIndexPage() {
           to start if you&apos;re learning that sugya.
         </p>
       </header>
-      <DafPicker visitedIds={visitedIds} />
+      <DafPicker />
     </div>
   );
 }

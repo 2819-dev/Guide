@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   EILU_METZIOS_START,
   listAllDafim,
@@ -12,11 +12,22 @@ type Props = {
   visitedIds?: string[];
 };
 
-export function DafPicker({ visitedIds = [] }: Props) {
+export function DafPicker({ visitedIds }: Props) {
   const [query, setQuery] = useState("");
   const [focusEilu, setFocusEilu] = useState(true);
-  const visited = useMemo(() => new Set(visitedIds), [visitedIds]);
+  const [visited, setVisited] = useState(() => new Set(visitedIds ?? []));
   const all = useMemo(() => listAllDafim(), []);
+
+  useEffect(() => {
+    if (visitedIds) return;
+    void fetch("/api/progress")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: { progress?: { dafId: string }[] } | null) => {
+        if (!data?.progress) return;
+        setVisited(new Set(data.progress.map((p) => p.dafId)));
+      })
+      .catch(() => undefined);
+  }, [visitedIds]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
