@@ -5,8 +5,8 @@ type MarkProps = {
   title?: string;
 };
 
-/** Forest mark — open page + guiding path */
-export function GuideMark({ className = "h-9 w-9", title }: MarkProps) {
+/** Quiet mark — open page, single forest accent */
+export function GuideMark({ className = "h-8 w-8", title }: MarkProps) {
   return (
     <svg
       className={className}
@@ -18,28 +18,22 @@ export function GuideMark({ className = "h-9 w-9", title }: MarkProps) {
       aria-label={title}
     >
       {title ? <title>{title}</title> : null}
-      <rect width="40" height="40" rx="11" fill="#276348" />
+      <rect width="40" height="40" rx="8" fill="#1c3d2e" />
       <path
-        d="M11 12.5c0-.8.65-1.45 1.45-1.45H19.2c.35 0 .68.12.95.35l1.35 1.15c.27.23.6.35.95.35h4.1c.8 0 1.45.65 1.45 1.45v15.05c0 .8-.65 1.45-1.45 1.45H12.45c-.8 0-1.45-.65-1.45-1.45V12.5Z"
-        fill="#eaf5ef"
+        d="M12 11.5h7.1c.4 0 .75.15 1.02.42l1.2 1.15c.27.26.63.4 1.01.4H28c.83 0 1.5.67 1.5 1.5V28c0 .83-.67 1.5-1.5 1.5H12c-.83 0-1.5-.67-1.5-1.5V13c0-.83.67-1.5 1.5-1.5Z"
+        fill="#e8f0eb"
       />
       <path
-        d="M20 12.2v16.6"
-        stroke="#276348"
-        strokeWidth="1.6"
+        d="M20 12v16.5"
+        stroke="#1c3d2e"
+        strokeWidth="1.4"
         strokeLinecap="round"
-        opacity="0.35"
+        opacity="0.28"
       />
       <path
-        d="M14.2 18.2c2.2 1.6 4.2 2.4 5.8 2.4 1.6 0 3.6-.8 5.8-2.4"
-        stroke="#7cb05f"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M14.2 23.1c2.2 1.5 4.2 2.25 5.8 2.25 1.6 0 3.6-.75 5.8-2.25"
-        stroke="#f0c96a"
-        strokeWidth="2.2"
+        d="M14.5 20.5h11"
+        stroke="#245239"
+        strokeWidth="2"
         strokeLinecap="round"
       />
     </svg>
@@ -49,18 +43,17 @@ export function GuideMark({ className = "h-9 w-9", title }: MarkProps) {
 type WordmarkProps = {
   href?: string | null;
   className?: string;
-  /** Light wordmark for dark footers */
   tone?: "default" | "onDark";
   size?: "sm" | "md" | "lg";
 };
 
 const sizeMap = {
-  sm: { mark: "h-7 w-7", text: "text-xl" },
-  md: { mark: "h-9 w-9", text: "text-[1.65rem]" },
-  lg: { mark: "h-11 w-11", text: "text-3xl" },
+  sm: { mark: "h-7 w-7", text: "text-lg" },
+  md: { mark: "h-8 w-8", text: "text-[1.35rem]" },
+  lg: { mark: "h-10 w-10", text: "text-2xl" },
 } as const;
 
-/** Brand lockup: mark + “Guide” only — never category text */
+/** Brand lockup: mark + “Guide” only */
 export function GuideWordmark({
   href = "/",
   className = "",
@@ -68,13 +61,14 @@ export function GuideWordmark({
   size = "md",
 }: WordmarkProps) {
   const s = sizeMap[size];
-  const textColor =
-    tone === "onDark" ? "text-white" : "text-forest-900";
+  const textColor = tone === "onDark" ? "text-white" : "text-forest-900";
 
   const inner = (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
+    <span className={`inline-flex items-center gap-2 ${className}`}>
       <GuideMark className={s.mark} title="Guide" />
-      <span className={`display leading-none ${s.text} ${textColor}`}>
+      <span
+        className={`display leading-none font-medium ${s.text} ${textColor}`}
+      >
         Guide
       </span>
     </span>

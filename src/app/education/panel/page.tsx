@@ -12,28 +12,25 @@ export default async function EducationPanelPage() {
 
   return (
     <div>
-      <section className="bg-sky-soft">
-        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+      <section className="hero-band">
+        <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
           <Link
             href="/education"
-            className="text-sm font-semibold text-forest-700 no-underline hover:underline"
+            className="text-sm font-medium text-forest-700 no-underline hover:underline"
           >
             ← Guide for Education
           </Link>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.14em] text-forest-600">
-            Guide for Education
-          </p>
-          <h1 className="display mt-2 text-4xl text-forest-950 sm:text-5xl">
+          <p className="eyebrow mt-4">Guide for Education</p>
+          <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
             Rebbe panel
           </h1>
-          <p className="mt-3 max-w-2xl text-lg text-ink-muted">
+          <p className="mt-3 max-w-2xl text-base text-ink-muted">
             Invite students with a class code. Track Mishnayos and Gemara study
-            — dapim, quizzes, and notes from home or Chromebook — clear and
-            calm.
+            — dapim, quizzes, and notes from home or Chromebook.
           </p>
         </div>
       </section>
-      <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
+      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
         <EducationPanel />
       </div>
     </div>

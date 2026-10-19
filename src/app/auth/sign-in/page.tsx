@@ -9,12 +9,12 @@ export default function SignInPage() {
   const [state, formAction, pending] = useActionState(signInWithEmail, null);
 
   return (
-    <div className="bg-sky-soft">
-      <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-5 py-14 sm:px-8">
-        <div className="panel !rounded-[1.5rem] !p-7 shadow-[var(--shadow-soft)] sm:!p-9">
+    <div className="bg-paper">
+      <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-5 py-12 sm:px-8">
+        <div className="panel !p-6 sm:!p-8">
           <GuideWordmark href={null} size="sm" className="mb-4" />
-          <p className="hebrew text-forest-600">שלום</p>
-          <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
+          <p className="hebrew text-forest-700">שלום</p>
+          <h1 className="display mt-2 text-2xl text-forest-950 sm:text-3xl">
             Welcome back
           </h1>
           <p className="mt-2 text-ink-muted">

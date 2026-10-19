@@ -12,17 +12,16 @@ export default function SignUpPage() {
   const [state, formAction, pending] = useActionState(signUpWithEmail, null);
 
   return (
-    <div className="bg-sky-soft">
-      <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-5 py-14 sm:px-8">
-        <div className="panel !rounded-[1.5rem] !p-7 shadow-[var(--shadow-soft)] sm:!p-9">
+    <div className="bg-paper">
+      <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-5 py-12 sm:px-8">
+        <div className="panel !p-6 sm:!p-8">
           <GuideWordmark href={null} size="sm" className="mb-4" />
-          <p className="hebrew text-forest-600">ברוכים הבאים</p>
-          <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
+          <p className="hebrew text-forest-700">ברוכים הבאים</p>
+          <h1 className="display mt-2 text-2xl text-forest-950 sm:text-3xl">
             Join Guide
           </h1>
-          <p className="mt-2 text-ink-muted">
-            Save progress, notes, and quizzes for Mishnayos and Gemara — free
-            and ready when you are.
+          <p className="mt-2 text-sm text-ink-muted">
+            Save progress, notes, and quizzes for Mishnayos and Gemara.
           </p>
 
           <form action={formAction} className="mt-8 space-y-4">
@@ -56,7 +55,7 @@ export default function SignUpPage() {
                 placeholder="At least 8 characters"
               />
             </label>
-            <fieldset className="space-y-2.5 rounded-2xl bg-forest-100/70 p-4">
+            <fieldset className="space-y-2.5 rounded-md border border-line bg-paper p-4">
               <legend className="px-1 text-sm font-semibold text-forest-800">
                 I am a…
               </legend>

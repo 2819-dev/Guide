@@ -16,20 +16,18 @@ export default async function EducationLandingPage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden bg-sky-soft">
-        <div className="mx-auto max-w-6xl px-5 pb-14 pt-12 sm:px-8 lg:pb-20 lg:pt-16">
-          <p className="animate-rise text-sm font-semibold uppercase tracking-[0.14em] text-forest-600">
-            Guide for Education
-          </p>
-          <h1 className="animate-rise-delay display mt-3 max-w-3xl text-4xl text-forest-950 sm:text-5xl lg:text-[3.4rem]">
-            See the Mishnayos and Gemara learning that happens at home
+      <section className="hero-band">
+        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 lg:py-16">
+          <p className="eyebrow">Guide for Education</p>
+          <h1 className="display mt-3 max-w-3xl text-[2.15rem] text-forest-950 sm:text-4xl lg:text-[2.75rem]">
+            Follow Mishnayos and Gemara study at home
           </h1>
-          <p className="animate-rise-late mt-5 max-w-2xl text-lg text-ink-muted sm:text-xl">
-            Create a class, share an invite code, and follow dapim, quizzes, and
-            notes — so Chromebook and after-school study stay connected to the
-            classroom.
+          <p className="mt-4 max-w-2xl text-base text-ink-muted sm:text-lg">
+            Create a class, share an invite code, and see dapim, quizzes, and
+            notes — so Chromebook and after-school study stay connected to
+            shiur.
           </p>
-          <div className="animate-rise-late mt-8 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap gap-2.5">
             {isRebbe ? (
               <Link href="/education/panel" className="btn-primary">
                 Open Rebbe panel
@@ -40,59 +38,64 @@ export default async function EducationLandingPage() {
               </Link>
             )}
             <Link href="/study" className="btn-secondary">
-              Back to Study
+              Student study
             </Link>
           </div>
         </div>
       </section>
 
       <section className="section-pad mx-auto max-w-6xl">
-        <h2 className="display max-w-2xl text-3xl text-forest-950 sm:text-4xl">
-          Built for Rebbeim — calm, clear, classroom-ready
+        <h2 className="display max-w-2xl text-2xl text-forest-950 sm:text-3xl">
+          For Rebbeim who want home learning to stay visible
         </h2>
-        <p className="mt-4 max-w-2xl text-lg text-ink-muted">
-          Guide for Education sits beside the student product. Students study
-          Mishnayos and Gemara on Guide; you see progress without turning home
-          learning into a noisy dashboard.
+        <p className="mt-3 max-w-2xl text-base text-ink-muted">
+          Students study on Guide. You see progress without turning after-school
+          work into a noisy dashboard.
         </p>
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          <article className="color-block bg-forest-100">
-            <h3 className="display text-2xl text-forest-950">Invite a class</h3>
-            <p className="mt-2 text-ink-muted">
+        <ol className="mt-8 grid gap-0 border border-line bg-surface lg:grid-cols-3">
+          <li className="border-b border-line p-5 lg:border-b-0 lg:border-r">
+            <p className="text-xs font-semibold text-forest-600">01</p>
+            <h3 className="mt-2 text-base font-semibold text-forest-950">
+              Invite a class
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-ink-muted">
               Create a class and share a short invite code. Students join after
               they sign up.
             </p>
-          </article>
-          <article className="color-block bg-moss/25">
-            <h3 className="display text-2xl text-forest-950">
+          </li>
+          <li className="border-b border-line p-5 lg:border-b-0 lg:border-r">
+            <p className="text-xs font-semibold text-forest-600">02</p>
+            <h3 className="mt-2 text-base font-semibold text-forest-950">
               Track home study
             </h3>
-            <p className="mt-2 text-ink-muted">
+            <p className="mt-2 text-sm leading-relaxed text-ink-muted">
               See dapim visited, quizzes taken, and notes submitted from home or
               Chromebook.
             </p>
-          </article>
-          <article className="color-block bg-sun/35">
-            <h3 className="display text-2xl text-forest-950">Stay focused</h3>
-            <p className="mt-2 text-ink-muted">
-              Clear tables, no clutter — just the learning signals that help you
-              follow up in shiur.
+          </li>
+          <li className="p-5">
+            <p className="text-xs font-semibold text-forest-600">03</p>
+            <h3 className="mt-2 text-base font-semibold text-forest-950">
+              Stay focused
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+              Clear tables — the signals you need to follow up in shiur.
             </p>
-          </article>
-        </div>
+          </li>
+        </ol>
       </section>
 
-      <section className="bg-forest-100">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-16 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-2xl">
-            <h2 className="display text-3xl text-forest-950 sm:text-4xl">
-              Ready to open your panel?
+      <section className="cta-band">
+        <div className="mx-auto flex max-w-6xl flex-col gap-5 px-5 py-12 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-xl">
+            <h2 className="display text-2xl text-forest-950 sm:text-3xl">
+              Open your panel
             </h2>
-            <p className="mt-3 text-lg text-ink-muted">
+            <p className="mt-2 text-base text-ink-muted">
               Sign up as a Rebbe, or log in if you already have an account.
             </p>
           </div>
-          <div className="flex shrink-0 flex-wrap gap-3">
+          <div className="flex shrink-0 flex-wrap gap-2.5">
             {isRebbe ? (
               <Link href="/education/panel" className="btn-primary">
                 Open Rebbe panel

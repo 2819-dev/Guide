@@ -10,6 +10,9 @@ type Me = {
   profile: { id: string; role: Role; displayName: string } | null;
 };
 
+const navLink =
+  "rounded-md px-2.5 py-1.5 text-sm font-medium text-ink no-underline hover:bg-forest-100";
+
 export function SiteHeader() {
   const [me, setMe] = useState<Me | null>(null);
 
@@ -26,33 +29,24 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
         <GuideWordmark />
-        <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
-          <Link
-            href="/study"
-            className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
-          >
+        <nav className="flex flex-wrap items-center justify-end gap-0.5 sm:gap-1">
+          <Link href="/study" className={navLink}>
             Study
           </Link>
-          <Link
-            href={educationHref}
-            className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
-          >
+          <Link href={educationHref} className={navLink}>
             Education
           </Link>
           {role === "admin" && (
-            <Link
-              href="/admin"
-              className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
-            >
+            <Link href="/admin" className={navLink}>
               Support
             </Link>
           )}
           {role === "moderator" && (
             <Link
               href="/account"
-              className="rounded-full px-3 py-2 text-sm text-ink-muted no-underline"
+              className="rounded-md px-2.5 py-1.5 text-sm text-ink-muted no-underline"
               title={roleLabel("moderator")}
             >
               Moderator
@@ -62,7 +56,7 @@ export function SiteHeader() {
             <>
               <Link
                 href="/account"
-                className="hidden rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100 sm:inline"
+                className={`hidden sm:inline ${navLink}`}
               >
                 {me.profile.displayName}
               </Link>
@@ -70,15 +64,12 @@ export function SiteHeader() {
             </>
           ) : (
             <>
-              <Link
-                href="/auth/sign-in"
-                className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
-              >
+              <Link href="/auth/sign-in" className={navLink}>
                 Log in
               </Link>
               <Link
                 href="/auth/sign-up"
-                className="btn-primary !px-4 !py-2 text-sm"
+                className="btn-primary !px-3 !py-1.5 text-sm"
               >
                 Get started
               </Link>
