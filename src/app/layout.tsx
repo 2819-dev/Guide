@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Fraunces, Source_Sans_3, Frank_Ruhl_Libre } from "next/font/google";
+import { Fraunces, Manrope, Frank_Ruhl_Libre } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -8,8 +9,8 @@ const fraunces = Fraunces({
   subsets: ["latin"],
 });
 
-const sourceSans = Source_Sans_3({
-  variable: "--font-source-sans",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
@@ -25,18 +26,19 @@ export const metadata: Metadata = {
     template: "%s · Guide",
   },
   description:
-    "Guide helps you study Bava Metzia — open a daf, read the Gemara, quiz yourself, and review with your notes.",
+    "Guide helps students study Bava Metzia with clarity — open a daf, read the Gemara, quiz yourself, and review with your notes.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${sourceSans.variable} ${frankRuhl.variable} h-full`}
+      className={`${fraunces.variable} ${manrope.variable} ${frankRuhl.variable} h-full`}
     >
       <body className="site-shell min-h-full flex flex-col antialiased">
         <SiteHeader />
         <main className="flex-1">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   );

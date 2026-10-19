@@ -22,27 +22,25 @@ export function SiteHeader() {
   const role = me?.profile?.role;
 
   return (
-    <header className="border-b border-line bg-paper/90">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-        <Link href="/" className="group flex items-baseline gap-2 no-underline">
-          <span className="display text-2xl font-semibold text-forest-900">
-            Guide
-          </span>
+    <header className="sticky top-0 z-40 border-b border-line bg-paper">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+        <Link href="/" className="flex items-baseline gap-2 no-underline">
+          <span className="display text-[1.65rem] text-forest-900">Guide</span>
           <span className="hebrew hidden text-sm text-forest-600 sm:inline">
             בבא מציעא
           </span>
         </Link>
-        <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
+        <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-2">
           <Link
             href="/study"
-            className="rounded-md px-2.5 py-1.5 text-sm font-semibold text-forest-800 no-underline hover:bg-forest-100"
+            className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
           >
             Study
           </Link>
           {role === "rebbe" && (
             <Link
               href="/education"
-              className="rounded-md px-2.5 py-1.5 text-sm font-semibold text-forest-800 no-underline hover:bg-forest-100"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
             >
               Education
             </Link>
@@ -50,7 +48,7 @@ export function SiteHeader() {
           {role === "admin" && (
             <Link
               href="/admin"
-              className="rounded-md px-2.5 py-1.5 text-sm font-semibold text-forest-800 no-underline hover:bg-forest-100"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
             >
               Support
             </Link>
@@ -58,7 +56,7 @@ export function SiteHeader() {
           {role === "moderator" && (
             <Link
               href="/account"
-              className="rounded-md px-2.5 py-1.5 text-sm text-ink-muted no-underline"
+              className="rounded-full px-3 py-2 text-sm text-ink-muted no-underline"
               title={roleLabel("moderator")}
             >
               Moderator
@@ -68,7 +66,7 @@ export function SiteHeader() {
             <>
               <Link
                 href="/account"
-                className="hidden rounded-md px-2.5 py-1.5 text-sm font-semibold text-forest-800 no-underline hover:bg-forest-100 sm:inline"
+                className="hidden rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100 sm:inline"
               >
                 {me.profile.displayName}
               </Link>
@@ -78,12 +76,12 @@ export function SiteHeader() {
             <>
               <Link
                 href="/auth/sign-in"
-                className="rounded-md px-2.5 py-1.5 text-sm font-semibold text-forest-800 no-underline hover:bg-forest-100"
+                className="rounded-full px-3 py-2 text-sm font-semibold text-ink no-underline hover:bg-forest-100"
               >
-                Sign in
+                Log in
               </Link>
-              <Link href="/auth/sign-up" className="btn-primary !px-3 !py-1.5 text-sm">
-                Join
+              <Link href="/auth/sign-up" className="btn-primary !px-4 !py-2 text-sm">
+                Get started
               </Link>
             </>
           )}

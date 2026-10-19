@@ -10,21 +10,24 @@ export default async function EducationPage() {
   if (!authz) redirect("/auth/sign-in");
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
-      <header className="mb-10 max-w-2xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.14em] text-forest-600">
-          Guide for Education
-        </p>
-        <h1 className="display mt-2 text-4xl font-semibold text-forest-950">
-          Rebbe panel
-        </h1>
-        <p className="mt-3 text-lg text-ink-muted">
-          Invite students with a class code. Track dapim studied, quizzes, and
-          notes from home or Chromebook study — without leaving the forest calm
-          of Guide.
-        </p>
-      </header>
-      <EducationPanel />
+    <div>
+      <section className="bg-sky-soft">
+        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-forest-600">
+            Guide for Education
+          </p>
+          <h1 className="display mt-2 text-4xl text-forest-950 sm:text-5xl">
+            Rebbe panel
+          </h1>
+          <p className="mt-3 max-w-2xl text-lg text-ink-muted">
+            Invite students with a class code. Track dapim studied, quizzes, and
+            notes from home or Chromebook study — clear and calm.
+          </p>
+        </div>
+      </section>
+      <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
+        <EducationPanel />
+      </div>
     </div>
   );
 }

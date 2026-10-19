@@ -77,7 +77,7 @@ export function DafPicker({ visitedIds }: Props) {
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {byPage.map(([page, sides]) => (
-          <div key={page} className="panel !p-3">
+          <div key={page} className="panel !rounded-2xl !p-3 shadow-[0_8px_24px_rgba(22,53,40,0.04)]">
             <div className="mb-2 flex items-center justify-between px-1">
               <span className="display text-lg font-semibold text-forest-900">
                 דף {page}

@@ -1,26 +1,32 @@
 @import "tailwindcss";
 
 :root {
-  --forest-950: #0a1a12;
-  --forest-900: #123024;
-  --forest-800: #1a4332;
-  --forest-700: #225a42;
-  --forest-600: #2d7052;
-  --forest-500: #3a8a64;
-  --forest-400: #5aa57e;
-  --forest-300: #8fc4a6;
-  --forest-200: #c5e0d1;
-  --forest-100: #e8f3ec;
-  --moss: #6f9b58;
-  --paper: #f5f8f5;
-  --ink: #14241b;
-  --ink-muted: #4a6356;
-  --line: #d3e2d9;
+  /* Clever-like clarity, Guide forest identity */
+  --forest-950: #0e2218;
+  --forest-900: #163528;
+  --forest-800: #1f4a36;
+  --forest-700: #276348;
+  --forest-600: #2f7a57;
+  --forest-500: #3d9168;
+  --forest-400: #5aab80;
+  --forest-300: #8fc9a9;
+  --forest-200: #c8e5d5;
+  --forest-100: #eaf5ef;
+  --moss: #7cb05f;
+  --sun: #f0c96a;
+  --sky-soft: #dceee4;
+  --paper: #f7faf8;
+  --ink: #1a2b22;
+  --ink-muted: #5a6f63;
+  --line: #d7e5dc;
+  --surface: #ffffff;
   --background: var(--paper);
   --foreground: var(--ink);
   --font-display: var(--font-fraunces);
-  --font-body: var(--font-source-sans);
+  --font-body: var(--font-manrope);
   --font-hebrew: var(--font-frank-ruhl);
+  --radius: 1.25rem;
+  --shadow-soft: 0 18px 40px rgba(22, 53, 40, 0.08);
 }
 
 @theme inline {
@@ -37,10 +43,13 @@
   --color-forest-200: var(--forest-200);
   --color-forest-100: var(--forest-100);
   --color-moss: var(--moss);
+  --color-sun: var(--sun);
+  --color-sky-soft: var(--sky-soft);
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
   --color-line: var(--line);
+  --color-surface: var(--surface);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
   --font-hebrew: var(--font-hebrew);
@@ -58,21 +67,9 @@ body {
   margin: 0;
   min-height: 100vh;
   color: var(--foreground);
-  font-family: var(--font-body), Georgia, serif;
-  background:
-    linear-gradient(180deg, #eef5f0 0%, var(--paper) 38%, #e4efe8 100%);
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.55;
-  background:
-    radial-gradient(ellipse 70% 45% at 15% 0%, rgba(90, 165, 126, 0.18), transparent 60%),
-    radial-gradient(ellipse 50% 40% at 95% 10%, rgba(45, 112, 82, 0.12), transparent 55%);
+  font-family: var(--font-body), "Segoe UI", sans-serif;
+  background: var(--paper);
+  line-height: 1.55;
 }
 
 .site-shell {
@@ -89,7 +86,9 @@ body::before {
 
 .display {
   font-family: var(--font-display), Georgia, serif;
-  letter-spacing: -0.025em;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
 }
 
 .btn-primary {
@@ -98,11 +97,12 @@ body::before {
   justify-content: center;
   gap: 0.45rem;
   border: 0;
-  border-radius: 0.55rem;
-  padding: 0.8rem 1.35rem;
+  border-radius: 999px;
+  padding: 0.85rem 1.45rem;
   background: var(--forest-700);
-  color: #f7fbf8;
-  font-weight: 600;
+  color: #fff;
+  font-weight: 650;
+  font-size: 0.98rem;
   text-decoration: none;
   transition: background 160ms ease, transform 160ms ease;
 }
@@ -123,33 +123,53 @@ body::before {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  border: 1px solid var(--forest-700);
-  border-radius: 0.55rem;
-  padding: 0.75rem 1.25rem;
+  border: 1.5px solid var(--forest-700);
+  border-radius: 999px;
+  padding: 0.8rem 1.35rem;
   background: transparent;
   color: var(--forest-800);
-  font-weight: 600;
+  font-weight: 650;
+  font-size: 0.98rem;
   text-decoration: none;
-  transition: background 160ms ease;
+  transition: background 160ms ease, border-color 160ms ease;
 }
 
 .btn-secondary:hover {
   background: var(--forest-100);
 }
 
+.btn-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.45rem;
+  background: #fff;
+  color: var(--forest-900);
+  font-weight: 650;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  box-shadow: 0 8px 20px rgba(14, 34, 24, 0.12);
+}
+
+.btn-light:hover {
+  transform: translateY(-1px);
+}
+
 .panel {
   border: 1px solid var(--line);
-  border-radius: 1rem;
-  background: #fff;
-  padding: 1.25rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 1.35rem;
 }
 
 .field {
   width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 0.65rem;
+  border: 1.5px solid var(--line);
+  border-radius: 0.85rem;
   background: #fff;
-  padding: 0.7rem 0.9rem;
+  padding: 0.8rem 1rem;
   color: var(--ink);
   font: inherit;
   outline: none;
@@ -159,10 +179,31 @@ body::before {
   border-color: var(--forest-500);
 }
 
+.section-pad {
+  padding: 4.5rem 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .section-pad {
+    padding: 5.5rem 2rem;
+  }
+}
+
+.color-block {
+  border-radius: calc(var(--radius) + 0.35rem);
+  padding: 1.75rem;
+}
+
+.facet-frame {
+  border-radius: 1.5rem 1.5rem 2.5rem 1.15rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -170,37 +211,37 @@ body::before {
   }
 }
 
-@keyframes leaf-sway {
+@keyframes float-soft {
   0%,
   100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-8px);
   }
 }
 
 .animate-rise {
-  animation: rise-in 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: rise-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-rise-delay {
-  animation: rise-in 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms both;
+  animation: rise-in 850ms cubic-bezier(0.22, 1, 0.36, 1) 90ms both;
 }
 
 .animate-rise-late {
-  animation: rise-in 900ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+  animation: rise-in 950ms cubic-bezier(0.22, 1, 0.36, 1) 180ms both;
 }
 
-.leaf-motion {
-  animation: leaf-sway 8s ease-in-out infinite;
+.float-soft {
+  animation: float-soft 7s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-rise,
   .animate-rise-delay,
   .animate-rise-late,
-  .leaf-motion {
+  .float-soft {
     animation: none;
   }
 }
