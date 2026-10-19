@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 type PublicQuestion = {
@@ -17,9 +18,10 @@ type GradedQuestion = PublicQuestion & {
 type Props = {
   dafId: string;
   hasNotes: boolean;
+  signedIn: boolean;
 };
 
-export function QuizPanel({ dafId, hasNotes }: Props) {
+export function QuizPanel({ dafId, hasNotes, signedIn }: Props) {
   const [mode, setMode] = useState<"daf" | "notes" | "mixed">("daf");
   const [quizId, setQuizId] = useState<string | null>(null);
   const [questions, setQuestions] = useState<PublicQuestion[]>([]);
@@ -30,6 +32,22 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  if (!signedIn) {
+    return (
+      <section className="panel">
+        <h3 className="display text-2xl font-semibold text-forest-900">
+          Quiz yourself
+        </h3>
+        <p className="mt-2 text-ink-muted">
+          <Link href="/auth/sign-in" className="font-semibold text-forest-700">
+            Sign in
+          </Link>{" "}
+          to start a quiz and keep your scores.
+        </p>
+      </section>
+    );
+  }
 
   async function startQuiz() {
     setBusy(true);
@@ -79,7 +97,7 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
         <h3 className="display text-2xl font-semibold text-forest-900">
           Quiz yourself
         </h3>
-        <p className="mt-1 text-ink-soft">
+        <p className="mt-1 text-ink-muted">
           Check what stuck from the page — or from your uploaded notes.
         </p>
       </div>
@@ -99,10 +117,10 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
               type="button"
               disabled={disabled}
               onClick={() => setMode(value)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 ${
+              className={`rounded-lg px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 ${
                 mode === value
                   ? "bg-forest-700 text-white"
-                  : "bg-white/70 text-forest-800 hover:bg-white"
+                  : "bg-forest-100 text-forest-800 hover:bg-forest-200"
               }`}
             >
               {label}
@@ -115,13 +133,13 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
         type="button"
         onClick={() => void startQuiz()}
         disabled={busy}
-        className="btn-primary disabled:opacity-60"
+        className="btn-primary"
       >
         {busy && !questions.length ? "Building quiz…" : "Start quiz"}
       </button>
 
       {error && (
-        <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
+        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
           {error}
         </p>
       )}
@@ -129,10 +147,7 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
       {questions.length > 0 && !result && (
         <div className="space-y-5">
           {questions.map((q, qi) => (
-            <fieldset
-              key={q.id}
-              className="rounded-[1.25rem] border border-forest-800/10 bg-white/65 p-4 sm:p-5"
-            >
+            <fieldset key={q.id} className="panel">
               <legend className="px-1 text-sm font-semibold text-forest-600">
                 Question {qi + 1}
               </legend>
@@ -143,10 +158,10 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
                 {q.choices.map((choice, ci) => (
                   <label
                     key={ci}
-                    className={`flex cursor-pointer items-start gap-3 rounded-xl border px-3 py-2.5 transition ${
+                    className={`flex cursor-pointer items-start gap-3 rounded-lg border px-3 py-2.5 transition ${
                       answers[qi] === ci
                         ? "border-forest-500 bg-forest-100"
-                        : "border-forest-800/10 bg-white/70 hover:border-forest-400"
+                        : "border-line bg-white hover:border-forest-400"
                     }`}
                   >
                     <input
@@ -170,7 +185,7 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
             type="button"
             onClick={() => void submit()}
             disabled={busy || answers.some((a) => a === null)}
-            className="btn-primary disabled:opacity-50"
+            className="btn-primary"
           >
             {busy ? "Scoring…" : "Submit answers"}
           </button>
@@ -179,8 +194,8 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
 
       {result && (
         <div className="space-y-4">
-          <div className="rounded-[1.25rem] bg-forest-800 px-5 py-6 text-white">
-            <p className="text-sm uppercase tracking-[0.18em] text-forest-200">
+          <div className="rounded-xl bg-forest-800 px-5 py-6 text-white">
+            <p className="text-sm uppercase tracking-[0.16em] text-forest-200">
               Score
             </p>
             <p className="display mt-1 text-5xl font-semibold">{result.score}%</p>
@@ -192,14 +207,14 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
                 key={q.id}
                 className={`rounded-xl border px-4 py-3 ${
                   correct
-                    ? "border-forest-300 bg-forest-100/70"
+                    ? "border-forest-300 bg-forest-100"
                     : "border-amber-300 bg-amber-50"
                 }`}
               >
                 <p className="font-semibold text-forest-950">
                   {qi + 1}. {correct ? "Correct" : "Review"}
                 </p>
-                <p className="mt-1 whitespace-pre-wrap text-sm text-ink-soft">
+                <p className="mt-1 whitespace-pre-wrap text-sm text-ink-muted">
                   {q.explanation}
                 </p>
               </div>
@@ -207,7 +222,7 @@ export function QuizPanel({ dafId, hasNotes }: Props) {
           })}
           <button
             type="button"
-            className="btn-ghost"
+            className="btn-secondary"
             onClick={() => {
               setQuizId(null);
               setQuestions([]);

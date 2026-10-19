@@ -14,9 +14,9 @@ export default function StudyIndexPage() {
         <h1 className="display mt-2 text-4xl font-semibold text-forest-950 sm:text-5xl">
           Choose a daf
         </h1>
-        <p className="mt-3 text-lg text-ink-soft">
-          Open any page of Bava Metzia. אלו מציאות begins at 21a — a good place
-          to start if you&apos;re learning that sugya.
+        <p className="mt-3 text-lg text-ink-muted">
+          Open any page of Bava Metzia. אלו מציאות begins at דף כ״א ע״א — a strong
+          place to start that sugya.
         </p>
       </header>
       <DafPicker />

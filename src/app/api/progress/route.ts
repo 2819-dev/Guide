@@ -3,41 +3,46 @@ import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { parseDafId } from "@/lib/daf";
-import { getOrCreateLearner } from "@/lib/session";
+import { requireProfile } from "@/lib/profile";
 import { progress } from "@/lib/schema";
 
-const visitSchema = z.object({
-  dafId: z.string(),
-});
-
 export async function GET() {
+  const authz = await requireProfile(["customer", "rebbe", "admin"]);
+  if (!authz) {
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
   try {
-    const learner = await getOrCreateLearner();
     const db = getDb();
     const rows = await db
       .select()
       .from(progress)
-      .where(eq(progress.learnerId, learner.id));
+      .where(eq(progress.profileId, authz.profile.id));
     return NextResponse.json({ progress: rows });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to load progress" }, { status: 500 });
+    return NextResponse.json({ error: "Could not load progress" }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
+  const authz = await requireProfile(["customer", "rebbe", "admin"]);
+  if (!authz) {
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
   try {
-    const body = visitSchema.parse(await request.json());
+    const body = z.object({ dafId: z.string() }).parse(await request.json());
     if (!parseDafId(body.dafId)) {
-      return NextResponse.json({ error: "Invalid dafId" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid daf" }, { status: 400 });
     }
-    const learner = await getOrCreateLearner();
     const db = getDb();
     const existing = await db
       .select()
       .from(progress)
       .where(
-        and(eq(progress.learnerId, learner.id), eq(progress.dafId, body.dafId)),
+        and(
+          eq(progress.profileId, authz.profile.id),
+          eq(progress.dafId, body.dafId),
+        ),
       )
       .limit(1);
 
@@ -53,7 +58,7 @@ export async function POST(request: Request) {
     const [row] = await db
       .insert(progress)
       .values({
-        learnerId: learner.id,
+        profileId: authz.profile.id,
         dafId: body.dafId,
         visited: true,
       })
@@ -61,9 +66,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ progress: row }, { status: 201 });
   } catch (error) {
     console.error(error);
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.flatten() }, { status: 400 });
-    }
-    return NextResponse.json({ error: "Failed to save progress" }, { status: 500 });
+    return NextResponse.json({ error: "Could not save progress" }, { status: 500 });
   }
 }

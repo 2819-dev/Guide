@@ -79,13 +79,13 @@ export function parseDafId(id: string): { page: number; side: DafSide } | null {
 export function makeDaf(page: number, side: DafSide): DafRef {
   const id = `${page}${side}`;
   const heNum = toHebrewNumeral(page);
-  const heSide = side === "a" ? "א" : "ב";
+  const heSide = side === "a" ? "ע״א" : "ע״ב";
   return {
     page,
     side,
     id,
     sefariaRef: `Bava_Metzia.${id}`,
-    hebrewLabel: `בבא מציעא ${heNum} ${heSide}`,
+    hebrewLabel: `בבא מציעא דף ${heNum} ${heSide}`,
     englishLabel: `Bava Metzia ${id}`,
     isEiluMetzios: page >= EILU_METZIOS_START,
   };

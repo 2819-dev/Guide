@@ -15,12 +15,12 @@ export function GemaraReader({ text }: Props) {
     <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="hebrew text-2xl text-forest-800">{text.heRef}</p>
+          <p className="hebrew text-2xl text-forest-700">{text.heRef}</p>
           <h2 className="display text-3xl font-semibold text-forest-950">
             {text.daf.englishLabel}
           </h2>
         </div>
-        <label className="flex items-center gap-2 rounded-full border border-forest-800/15 bg-white/60 px-3 py-2 text-sm font-semibold text-forest-800">
+        <label className="flex items-center gap-2 text-sm font-semibold text-forest-800">
           <input
             type="checkbox"
             checked={showEnglish}
@@ -31,41 +31,28 @@ export function GemaraReader({ text }: Props) {
         </label>
       </div>
 
-      <div className="space-y-4 rounded-[1.5rem] border border-forest-800/10 bg-white/65 p-5 shadow-[0_20px_50px_rgba(16,32,24,0.08)] backdrop-blur-sm sm:p-8">
+      <div className="panel space-y-4 sm:!p-8">
         {max === 0 && (
-          <p className="text-ink-soft">
-            Text for this daf isn&apos;t available from Sefaria right now.
+          <p className="text-ink-muted">
+            This daf isn&apos;t available right now. Try another page.
           </p>
         )}
         {Array.from({ length: max }).map((_, i) => (
           <article
             key={i}
-            className="grid gap-3 border-b border-forest-800/8 pb-4 last:border-0 last:pb-0 sm:grid-cols-2"
+            className="grid gap-3 border-b border-line pb-4 last:border-0 last:pb-0 sm:grid-cols-2"
           >
-            <p className="hebrew text-xl text-forest-950 sm:text-[1.35rem]">
+            <p className="hebrew text-right text-xl text-forest-950 sm:text-[1.35rem]">
               {text.hebrew[i] ?? ""}
             </p>
             {showEnglish && (
-              <p className="text-[1.05rem] leading-relaxed text-ink-soft">
+              <p className="text-[1.05rem] leading-relaxed text-ink-muted">
                 {text.english[i] ?? ""}
               </p>
             )}
           </article>
         ))}
       </div>
-
-      <p className="text-xs text-ink-soft">
-        Text courtesy of{" "}
-        <a
-          href={`https://www.sefaria.org/${text.daf.sefariaRef}`}
-          className="font-semibold text-forest-700 underline-offset-2 hover:underline"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Sefaria
-        </a>
-        .
-      </p>
     </div>
   );
 }

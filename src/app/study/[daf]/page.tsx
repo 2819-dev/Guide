@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StudyWorkspace } from "@/components/study-workspace";
 import { adjacentDaf, parseDafId } from "@/lib/daf";
+import { ensureProfile } from "@/lib/profile";
 import { fetchDafText } from "@/lib/sefaria";
 
 export const instant = false;
@@ -28,6 +29,7 @@ export default async function StudyDafPage({ params }: Props) {
     notFound();
   }
 
+  const session = await ensureProfile().catch(() => null);
   const prev = adjacentDaf(daf, -1);
   const next = adjacentDaf(daf, 1);
 
@@ -42,18 +44,18 @@ export default async function StudyDafPage({ params }: Props) {
         </Link>
         <div className="flex gap-2">
           {prev && (
-            <Link href={`/study/${prev.id}`} className="btn-ghost !py-2 text-sm">
+            <Link href={`/study/${prev.id}`} className="btn-secondary !py-2 text-sm">
               {prev.id}
             </Link>
           )}
           {next && (
-            <Link href={`/study/${next.id}`} className="btn-ghost !py-2 text-sm">
+            <Link href={`/study/${next.id}`} className="btn-secondary !py-2 text-sm">
               {next.id}
             </Link>
           )}
         </div>
       </div>
-      <StudyWorkspace text={text} />
+      <StudyWorkspace text={text} signedIn={Boolean(session)} />
     </div>
   );
 }

@@ -4,8 +4,8 @@ import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { parseDafId } from "@/lib/daf";
 import { buildQuiz, scoreAnswers } from "@/lib/quiz";
+import { requireProfile } from "@/lib/profile";
 import { fetchDafText } from "@/lib/sefaria";
-import { getOrCreateLearner } from "@/lib/session";
 import { progress, quizSessions, studyNotes } from "@/lib/schema";
 
 const startSchema = z.object({
@@ -20,9 +20,13 @@ const submitSchema = z.object({
 });
 
 export async function POST(request: Request) {
+  const authz = await requireProfile(["customer", "rebbe", "admin"]);
+  if (!authz) {
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
+
   try {
     const json = await request.json();
-    const learner = await getOrCreateLearner();
     const db = getDb();
 
     if ("quizId" in json) {
@@ -33,11 +37,10 @@ export async function POST(request: Request) {
         .where(
           and(
             eq(quizSessions.id, body.quizId),
-            eq(quizSessions.learnerId, learner.id),
+            eq(quizSessions.profileId, authz.profile.id),
           ),
         )
         .limit(1);
-
       if (!session) {
         return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
       }
@@ -58,7 +61,7 @@ export async function POST(request: Request) {
         .from(progress)
         .where(
           and(
-            eq(progress.learnerId, learner.id),
+            eq(progress.profileId, authz.profile.id),
             eq(progress.dafId, session.dafId),
           ),
         )
@@ -75,7 +78,7 @@ export async function POST(request: Request) {
           .where(eq(progress.id, existing[0].id));
       } else {
         await db.insert(progress).values({
-          learnerId: learner.id,
+          profileId: authz.profile.id,
           dafId: session.dafId,
           quizAttempts: 1,
           bestScore: score,
@@ -94,12 +97,12 @@ export async function POST(request: Request) {
 
     const body = startSchema.parse(json);
     if (!parseDafId(body.dafId)) {
-      return NextResponse.json({ error: "Invalid dafId" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid daf" }, { status: 400 });
     }
 
     const dafText = await fetchDafText(body.dafId);
     let notesContent: string | null = null;
-    let noteId: string | undefined = body.noteId;
+    let noteId = body.noteId;
 
     if (body.mode !== "daf") {
       if (noteId) {
@@ -109,7 +112,7 @@ export async function POST(request: Request) {
           .where(
             and(
               eq(studyNotes.id, noteId),
-              eq(studyNotes.learnerId, learner.id),
+              eq(studyNotes.profileId, authz.profile.id),
             ),
           )
           .limit(1);
@@ -120,7 +123,7 @@ export async function POST(request: Request) {
           .from(studyNotes)
           .where(
             and(
-              eq(studyNotes.learnerId, learner.id),
+              eq(studyNotes.profileId, authz.profile.id),
               eq(studyNotes.dafId, body.dafId),
             ),
           )
@@ -129,29 +132,23 @@ export async function POST(request: Request) {
         notesContent = latest?.content ?? null;
         noteId = latest?.id;
       }
-
       if (!notesContent) {
         return NextResponse.json(
-          { error: "Upload study notes before starting a notes-based quiz." },
+          { error: "Save study notes before starting a notes quiz." },
           { status: 400 },
         );
       }
     }
 
     const questions = buildQuiz({
-      dafEnglish: dafText.english.length
-        ? dafText.english
-        : dafText.hebrew,
+      dafEnglish: dafText.english.length ? dafText.english : dafText.hebrew,
       notesContent,
       mode: body.mode,
     });
 
     if (questions.length === 0) {
       return NextResponse.json(
-        {
-          error:
-            "Not enough text yet to build a quiz. Try another daf or add longer notes.",
-        },
+        { error: "Not enough material yet for a quiz. Try another daf or longer notes." },
         { status: 422 },
       );
     }
@@ -159,7 +156,7 @@ export async function POST(request: Request) {
     const [quiz] = await db
       .insert(quizSessions)
       .values({
-        learnerId: learner.id,
+        profileId: authz.profile.id,
         dafId: body.dafId,
         mode: body.mode,
         noteId,
@@ -167,8 +164,6 @@ export async function POST(request: Request) {
       })
       .returning();
 
-    // Public payload omits correctIndex until submit? Actually for self-study we can
-    // keep correct answers server-side only for scoring — strip for client start.
     const publicQuestions = questions.map(
       ({ correctIndex: _c, explanation: _e, ...rest }) => rest,
     );
@@ -184,8 +179,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error(error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.flatten() }, { status: 400 });
+      return NextResponse.json({ error: "Invalid quiz request" }, { status: 400 });
     }
-    return NextResponse.json({ error: "Quiz request failed" }, { status: 500 });
+    return NextResponse.json({ error: "Quiz failed" }, { status: 500 });
   }
 }

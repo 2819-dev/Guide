@@ -54,38 +54,33 @@ export function DafPicker({ visitedIds }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <label className="flex flex-1 flex-col gap-1.5">
-          <span className="text-sm font-semibold text-forest-800">
-            Find a daf
-          </span>
+          <span className="text-sm font-semibold text-forest-800">Find a daf</span>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="e.g. 21a or כ״א"
-            className="w-full rounded-2xl border border-forest-800/15 bg-white/70 px-4 py-3 text-base text-ink outline-none ring-forest-500/30 focus:ring-2"
+            className="field"
           />
         </label>
-        <label className="mt-1 flex items-center gap-2 text-sm font-semibold text-forest-800 sm:mt-6">
+        <label className="flex items-center gap-2 text-sm font-semibold text-forest-800">
           <input
             type="checkbox"
             checked={focusEilu}
             onChange={(e) => setFocusEilu(e.target.checked)}
             className="size-4 accent-forest-600"
           />
-          אלו מציאות only ({EILU_METZIOS_START}a+)
+          אלו מציאות only (from דף {EILU_METZIOS_START})
         </label>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {byPage.map(([page, sides]) => (
-          <div
-            key={page}
-            className="rounded-2xl border border-forest-800/10 bg-white/50 p-3 backdrop-blur-sm"
-          >
+          <div key={page} className="panel !p-3">
             <div className="mb-2 flex items-center justify-between px-1">
               <span className="display text-lg font-semibold text-forest-900">
-                Daf {page}
+                דף {page}
               </span>
               {page >= EILU_METZIOS_START && (
                 <span className="hebrew text-xs text-forest-600">אלו מציאות</span>
@@ -98,9 +93,9 @@ export function DafPicker({ visitedIds }: Props) {
                   <Link
                     key={daf.id}
                     href={`/study/${daf.id}`}
-                    className={`flex-1 rounded-xl px-3 py-3 text-center text-sm font-semibold no-underline transition ${
+                    className={`flex-1 rounded-lg px-3 py-3 text-center text-sm font-semibold no-underline transition ${
                       seen
-                        ? "bg-forest-600 text-white"
+                        ? "bg-forest-700 text-white"
                         : "bg-forest-100 text-forest-900 hover:bg-forest-200"
                     }`}
                   >
@@ -117,7 +112,7 @@ export function DafPicker({ visitedIds }: Props) {
       </div>
 
       {byPage.length === 0 && (
-        <p className="text-ink-soft">No dapim match that search.</p>
+        <p className="text-ink-muted">No dapim match that search.</p>
       )}
     </div>
   );

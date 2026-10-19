@@ -1,0 +1,105 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { eq } from "drizzle-orm";
+import { getDb } from "@/lib/db";
+import { ensureProfile, requireProfile } from "@/lib/profile";
+import { isRole } from "@/lib/roles";
+import { profiles } from "@/lib/schema";
+
+export async function GET() {
+  const result = await ensureProfile();
+  if (!result) {
+    return NextResponse.json({ user: null, profile: null });
+  }
+  return NextResponse.json({
+    user: {
+      id: result.user.id,
+      name: result.user.name,
+      email: result.user.email,
+    },
+    profile: {
+      id: result.profile.id,
+      role: result.profile.role,
+      displayName: result.profile.displayName,
+    },
+  });
+}
+
+export async function PATCH(request: Request) {
+  const authz = await requireProfile();
+  if (!authz) {
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
+
+  try {
+    const body = z
+      .object({
+        displayName: z.string().min(1).max(120).optional(),
+        /** Only allowed at signup upgrade path for customer→rebbe once */
+        becomeRebbe: z.boolean().optional(),
+      })
+      .parse(await request.json());
+
+    const db = getDb();
+    const patch: Partial<typeof profiles.$inferInsert> = {
+      updatedAt: new Date(),
+    };
+    if (body.displayName) patch.displayName = body.displayName;
+    if (
+      body.becomeRebbe &&
+      authz.profile.role === "customer"
+    ) {
+      patch.role = "rebbe";
+    }
+
+    const [updated] = await db
+      .update(profiles)
+      .set(patch)
+      .where(eq(profiles.id, authz.profile.id))
+      .returning();
+
+    return NextResponse.json({
+      profile: {
+        id: updated.id,
+        role: updated.role,
+        displayName: updated.displayName,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Could not update profile" }, { status: 400 });
+  }
+}
+
+/** Internal seed helper — sets role when email matches allowlist patterns used at signup */
+export async function PUT(request: Request) {
+  const authz = await requireProfile(["admin"]);
+  if (!authz) {
+    return NextResponse.json({ error: "Admin only" }, { status: 403 });
+  }
+  try {
+    const body = z
+      .object({
+        profileId: z.string().uuid(),
+        role: z.string(),
+      })
+      .parse(await request.json());
+    if (!isRole(body.role)) {
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+    }
+    const db = getDb();
+    const [updated] = await db
+      .update(profiles)
+      .set({ role: body.role, updatedAt: new Date() })
+      .where(eq(profiles.id, body.profileId))
+      .returning({
+        id: profiles.id,
+        role: profiles.role,
+        displayName: profiles.displayName,
+      });
+    return NextResponse.json({ profile: updated });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Could not set role" }, { status: 400 });
+  }
+}

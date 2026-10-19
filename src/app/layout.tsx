@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Fraunces, Source_Sans_3, Frank_Ruhl_Libre } from "next/font/google";
-import { SessionBootstrap } from "@/components/session-bootstrap";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
@@ -22,11 +21,11 @@ const frankRuhl = Frank_Ruhl_Libre({
 
 export const metadata: Metadata = {
   title: {
-    default: "Guide — Bava Metzia study",
+    default: "Guide — לימוד בבא מציעא",
     template: "%s · Guide",
   },
   description:
-    "Study Bava Metzia with Guide: open a daf, read the Gemara, and quiz yourself — including from your own notes.",
+    "Guide helps you study Bava Metzia — open a daf, read the Gemara, quiz yourself, and review with your notes.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -36,7 +35,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fraunces.variable} ${sourceSans.variable} ${frankRuhl.variable} h-full`}
     >
       <body className="site-shell min-h-full flex flex-col antialiased">
-        <SessionBootstrap />
         <SiteHeader />
         <main className="flex-1">{children}</main>
       </body>

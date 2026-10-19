@@ -3,7 +3,7 @@ import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { parseDafId } from "@/lib/daf";
-import { getOrCreateLearner } from "@/lib/session";
+import { requireProfile } from "@/lib/profile";
 import { studyNotes } from "@/lib/schema";
 
 const postSchema = z.object({
@@ -14,54 +14,57 @@ const postSchema = z.object({
 });
 
 export async function GET(request: Request) {
+  const authz = await requireProfile(["customer", "rebbe", "admin"]);
+  if (!authz) {
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
   try {
-    const { searchParams } = new URL(request.url);
-    const dafId = searchParams.get("dafId");
+    const dafId = new URL(request.url).searchParams.get("dafId");
     if (!dafId || !parseDafId(dafId)) {
-      return NextResponse.json({ error: "Valid dafId required" }, { status: 400 });
+      return NextResponse.json({ error: "Valid daf required" }, { status: 400 });
     }
-    const learner = await getOrCreateLearner();
     const db = getDb();
     const notes = await db
       .select()
       .from(studyNotes)
-      .where(eq(studyNotes.learnerId, learner.id))
+      .where(eq(studyNotes.profileId, authz.profile.id))
       .orderBy(desc(studyNotes.createdAt));
-
     return NextResponse.json({
       notes: notes.filter((n) => n.dafId === dafId),
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to load notes" }, { status: 500 });
+    return NextResponse.json({ error: "Could not load notes" }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
+  const authz = await requireProfile(["customer", "rebbe", "admin"]);
+  if (!authz) {
+    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+  }
   try {
     const body = postSchema.parse(await request.json());
     if (!parseDafId(body.dafId)) {
-      return NextResponse.json({ error: "Invalid dafId" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid daf" }, { status: 400 });
     }
-    const learner = await getOrCreateLearner();
     const db = getDb();
     const [note] = await db
       .insert(studyNotes)
       .values({
-        learnerId: learner.id,
+        profileId: authz.profile.id,
         dafId: body.dafId,
         title: body.title ?? "Study notes",
         content: body.content,
         sourceFilename: body.sourceFilename,
       })
       .returning();
-
     return NextResponse.json({ note }, { status: 201 });
   } catch (error) {
     console.error(error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.flatten() }, { status: 400 });
+      return NextResponse.json({ error: "Invalid notes" }, { status: 400 });
     }
-    return NextResponse.json({ error: "Failed to save notes" }, { status: 500 });
+    return NextResponse.json({ error: "Could not save notes" }, { status: 500 });
   }
 }
