@@ -5,7 +5,10 @@ type MarkProps = {
   title?: string;
 };
 
-/** Quiet mark — open page, single forest accent */
+/**
+ * Guide mark (v3) — solid forest rounded square + two white strokes.
+ * Flat, geometric, quiet space. No illustration.
+ */
 export function GuideMark({ className = "h-8 w-8", title }: MarkProps) {
   return (
     <svg
@@ -18,24 +21,10 @@ export function GuideMark({ className = "h-8 w-8", title }: MarkProps) {
       aria-label={title}
     >
       {title ? <title>{title}</title> : null}
-      <rect width="40" height="40" rx="8" fill="#1c3d2e" />
-      <path
-        d="M12 11.5h7.1c.4 0 .75.15 1.02.42l1.2 1.15c.27.26.63.4 1.01.4H28c.83 0 1.5.67 1.5 1.5V28c0 .83-.67 1.5-1.5 1.5H12c-.83 0-1.5-.67-1.5-1.5V13c0-.83.67-1.5 1.5-1.5Z"
-        fill="#e8f0eb"
-      />
-      <path
-        d="M20 12v16.5"
-        stroke="#1c3d2e"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        opacity="0.28"
-      />
-      <path
-        d="M14.5 20.5h11"
-        stroke="#245239"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
+      <rect width="40" height="40" rx="10" fill="#1C3D2E" />
+      {/* Two horizontal strokes — abstract open page / guide lines */}
+      <rect x="10" y="15.25" width="20" height="3.5" rx="1.75" fill="#FFFFFF" />
+      <rect x="13" y="21.25" width="14" height="3.5" rx="1.75" fill="#FFFFFF" />
     </svg>
   );
 }
@@ -48,12 +37,12 @@ type WordmarkProps = {
 };
 
 const sizeMap = {
-  sm: { mark: "h-7 w-7", text: "text-lg" },
-  md: { mark: "h-8 w-8", text: "text-[1.35rem]" },
-  lg: { mark: "h-10 w-10", text: "text-2xl" },
+  sm: { mark: "h-7 w-7", text: "text-[1.05rem]", gap: "gap-2" },
+  md: { mark: "h-8 w-8", text: "text-[1.2rem]", gap: "gap-2" },
+  lg: { mark: "h-10 w-10", text: "text-xl", gap: "gap-2.5" },
 } as const;
 
-/** Brand lockup: mark + “Guide” only */
+/** Brand lockup: mark + “Guide” only — modern sans pairing */
 export function GuideWordmark({
   href = "/",
   className = "",
@@ -64,10 +53,11 @@ export function GuideWordmark({
   const textColor = tone === "onDark" ? "text-white" : "text-forest-900";
 
   const inner = (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
+    <span className={`inline-flex items-center ${s.gap} ${className}`}>
       <GuideMark className={s.mark} title="Guide" />
       <span
-        className={`display leading-none font-medium ${s.text} ${textColor}`}
+        className={`font-semibold leading-none tracking-tight ${s.text} ${textColor}`}
+        style={{ fontFamily: "var(--font-manrope), var(--font-body), sans-serif" }}
       >
         Guide
       </span>
