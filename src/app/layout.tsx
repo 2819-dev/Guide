@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
-import { Fraunces, Manrope, Frank_Ruhl_Libre } from "next/font/google";
+import { Manrope, Frank_Ruhl_Libre } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-});
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -26,16 +21,16 @@ export const metadata: Metadata = {
     template: "%s · Guide",
   },
   description:
-    "Guide helps students study Mishnayos and Gemara with clarity — open a daf, read, quiz yourself, and review with your notes.",
+    "The calm place for Mishnayos and Gemara — open a daf, Test Yourself, and keep your notes.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${manrope.variable} ${frankRuhl.variable} h-full`}
+      className={`${manrope.variable} ${frankRuhl.variable} h-full`}
     >
-      <body className="site-shell min-h-full flex flex-col antialiased">
+      <body className="site-shell flex min-h-full flex-col antialiased">
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

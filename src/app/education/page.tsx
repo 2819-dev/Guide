@@ -35,17 +35,17 @@ export default async function EducationLandingPage() {
   return (
     <div>
       <section className="hero-band">
-        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 lg:py-16">
+        <div className="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 sm:py-20">
           <p className="eyebrow">Guide for Education</p>
-          <h1 className="display mt-3 max-w-3xl text-[2.15rem] text-forest-950 sm:text-4xl lg:text-[2.75rem]">
+          <h1 className="display mt-3 text-[2.25rem] text-forest-950 sm:text-5xl">
             Follow Mishnayos and Gemara study at home
           </h1>
-          <p className="mt-4 max-w-2xl text-base text-ink-muted sm:text-lg">
+          <p className="mx-auto mt-5 max-w-xl text-base text-ink-muted sm:text-lg">
             Schools apply once. After approval, Rebbeim create a class, share an
             invite code, and see dapim, quizzes, and notes — so Chromebook and
             after-school study stay connected to shiur.
           </p>
-          <div className="mt-7 flex flex-wrap gap-2.5">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {canOpenPanel ? (
               <Link href="/education/panel" className="btn-primary">
                 Open Rebbe panel

@@ -12,7 +12,7 @@ type Me = {
 };
 
 const navLink =
-  "rounded-md px-2.5 py-1.5 text-sm font-medium text-ink no-underline hover:bg-forest-100";
+  "rounded-full px-3 py-2 text-[0.9375rem] font-medium text-ink no-underline hover:bg-forest-100";
 
 export function SiteHeader() {
   const [me, setMe] = useState<Me | null>(null);
@@ -29,9 +29,9 @@ export function SiteHeader() {
     role === "rebbe" || role === "admin" ? "/education/panel" : "/education";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
-        <GuideWordmark />
+    <header className="site-header sticky top-0 z-40">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+        <GuideWordmark size="lg" />
         <nav className="flex flex-wrap items-center justify-end gap-0.5 sm:gap-1">
           <Link href="/study" className={navLink}>
             Study
@@ -55,15 +55,7 @@ export function SiteHeader() {
               <SignOutButton />
             </>
           ) : (
-            <>
-              <LoginMenu variant="nav" />
-              <Link
-                href="/auth/sign-up?as=family"
-                className="btn-primary !px-3 !py-1.5 text-sm"
-              >
-                Get started
-              </Link>
-            </>
+            <LoginMenu variant="primary" />
           )}
         </nav>
       </div>

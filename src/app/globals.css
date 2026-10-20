@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Forest identity — restrained edtech, not decorative SaaS */
+  /* Forest identity — Clever-like calm edtech, not decorative SaaS */
   --forest-950: #0f1f18;
   --forest-900: #152a20;
   --forest-800: #1c3d2e;
@@ -14,19 +14,22 @@
   --forest-100: #e8f0eb;
   --moss: #5f8f4e;
   --sun: #c9a24a;
-  --sky-soft: #eef4f0;
-  --paper: #f6f8f6;
-  --ink: #18241d;
-  --ink-muted: #5c6b62;
-  --line: #d8e2db;
+  --sky-soft: #f0f5f2;
+  --paper: #ffffff;
+  --ink: #1a2420;
+  --ink-muted: #5a6b62;
+  --line: #e3ebe6;
   --surface: #ffffff;
   --background: var(--paper);
   --foreground: var(--ink);
-  --font-display: var(--font-fraunces);
+  --font-display: var(--font-manrope);
   --font-body: var(--font-manrope);
   --font-hebrew: var(--font-frank-ruhl);
-  --radius: 0.625rem;
+  /* Clever-like soft rounding on controls */
+  --radius: 0.75rem;
+  --radius-pill: 999px;
   --shadow-soft: 0 1px 2px rgba(15, 31, 24, 0.04);
+  --shadow-menu: 0 12px 32px rgba(15, 31, 24, 0.1);
 }
 
 @theme inline {
@@ -69,9 +72,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-body), "Segoe UI", sans-serif;
   background: var(--paper);
-  line-height: 1.6;
-  font-size: 1rem;
-  letter-spacing: -0.011em;
+  line-height: 1.65;
+  font-size: 1.0625rem;
+  letter-spacing: -0.012em;
 }
 
 .site-shell {
@@ -87,11 +90,12 @@ body {
   letter-spacing: 0;
 }
 
+/* Clever-like marketing headlines: clean sans, strong weight, tight tracking */
 .display {
-  font-family: var(--font-display), Georgia, serif;
-  font-weight: 550;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
+  font-family: var(--font-display), var(--font-body), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.032em;
+  line-height: 1.12;
 }
 
 .btn-primary {
@@ -100,15 +104,15 @@ body {
   justify-content: center;
   gap: 0.4rem;
   border: 0;
-  border-radius: var(--radius);
-  padding: 0.7rem 1.15rem;
+  border-radius: var(--radius-pill);
+  padding: 0.8rem 1.35rem;
   background: var(--forest-800);
   color: #fff;
   font-weight: 600;
   font-size: 0.9375rem;
   letter-spacing: -0.01em;
   text-decoration: none;
-  transition: background 140ms ease;
+  transition: background 140ms ease, transform 140ms ease;
 }
 
 .btn-primary:hover {
@@ -125,10 +129,10 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 0.7rem 1.15rem;
-  background: var(--surface);
+  border: 1.5px solid var(--forest-800);
+  border-radius: var(--radius-pill);
+  padding: 0.75rem 1.3rem;
+  background: transparent;
   color: var(--forest-900);
   font-weight: 600;
   font-size: 0.9375rem;
@@ -139,16 +143,15 @@ body {
 
 .btn-secondary:hover {
   background: var(--forest-100);
-  border-color: var(--forest-300);
 }
 
 .btn-light {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: var(--radius);
-  padding: 0.7rem 1.15rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-pill);
+  padding: 0.75rem 1.3rem;
   background: #fff;
   color: var(--forest-900);
   font-weight: 600;
@@ -163,9 +166,9 @@ body {
 
 .panel {
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: calc(var(--radius) + 0.15rem);
   background: var(--surface);
-  padding: 1.25rem;
+  padding: 1.35rem;
 }
 
 .field {
@@ -173,7 +176,7 @@ body {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: #fff;
-  padding: 0.7rem 0.9rem;
+  padding: 0.75rem 0.95rem;
   color: var(--ink);
   font: inherit;
   outline: none;
@@ -181,45 +184,67 @@ body {
 
 .field:focus {
   border-color: var(--forest-500);
+  box-shadow: 0 0 0 3px rgba(36, 82, 57, 0.12);
 }
 
 .section-pad {
-  padding: 3.25rem 1.25rem;
+  padding: 4.5rem 1.25rem;
 }
 
 @media (min-width: 640px) {
   .section-pad {
-    padding: 4rem 2rem;
+    padding: 5.5rem 2rem;
   }
-}
-
-.color-block {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  padding: 1.35rem 1.4rem;
 }
 
 .eyebrow {
   margin: 0;
   font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--forest-700);
 }
 
 .hero-band {
-  background: var(--sky-soft);
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 20%, rgba(232, 240, 235, 0.9), transparent 55%),
+    linear-gradient(180deg, var(--sky-soft) 0%, #ffffff 100%);
   border-bottom: 1px solid var(--line);
 }
 
 .feature-rail {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  background: var(--surface);
+  background: var(--sky-soft);
 }
 
 .cta-band {
   border-top: 1px solid var(--line);
   background: var(--forest-100);
+}
+
+.site-header {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.capability-grid {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .capability-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem 2.5rem;
+  }
+}
+
+.auth-shell {
+  min-height: calc(100vh - 8rem);
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(232, 240, 235, 0.85), transparent 60%),
+    var(--paper);
 }
