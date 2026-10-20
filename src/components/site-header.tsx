@@ -8,7 +8,13 @@ import { SignOutButton } from "@/components/sign-out-button";
 import type { Role } from "@/lib/roles";
 
 type Me = {
-  profile: { id: string; role: Role; displayName: string } | null;
+  profile: {
+    id: string;
+    role: Role;
+    displayName: string;
+    schoolId?: string | null;
+    badgeCode?: string | null;
+  } | null;
 };
 
 const navLink =
@@ -33,6 +39,11 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
         <GuideWordmark size="lg" />
         <nav className="flex flex-wrap items-center justify-end gap-0.5 sm:gap-1">
+          {me?.profile?.schoolId || me?.profile?.badgeCode ? (
+            <Link href="/student" className={navLink}>
+              Student
+            </Link>
+          ) : null}
           <Link href="/study" className={navLink}>
             Study
           </Link>

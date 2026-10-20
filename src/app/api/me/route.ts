@@ -21,6 +21,8 @@ export async function GET() {
       id: result.profile.id,
       role: result.profile.role,
       displayName: result.profile.displayName,
+      schoolId: result.profile.schoolId,
+      badgeCode: result.profile.badgeCode,
     },
   });
 }

@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation";
+import { AdminBadgesPanel } from "@/components/admin-badges-panel";
 import { AdminSchoolsPanel } from "@/components/admin-schools-panel";
+import { AdminSuggestionsPanel } from "@/components/admin-suggestions-panel";
 import { AdminSupportPanel } from "@/components/admin-support-panel";
 import { requireProfile } from "@/lib/profile";
 
 export const instant = false;
-export const metadata = { title: "Operations" };
+export const metadata = { title: "Guide Official" };
 
 export default async function AdminPage() {
   const authz = await requireProfile(["admin", "moderator"]);
@@ -16,19 +18,20 @@ export default async function AdminPage() {
     <div>
       <section className="hero-band">
         <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
-          <p className="eyebrow">Operations</p>
+          <p className="eyebrow">Guide Official</p>
           <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
-            {isAdmin ? "Support & schools" : "School applications"}
+            Schools, badges, and suggestions
           </h1>
           <p className="mt-3 max-w-2xl text-base text-ink-muted">
-            {isAdmin
-              ? "Review school applications and support tickets. Support tickets hide personal details by design; school applications show contact info needed for approval."
-              : "Review school applications for Guide for Education."}
+            Approve schools, issue student badges, and publish suggestions for
+            the student Suggestions pad.
           </p>
         </div>
       </section>
       <div className="mx-auto max-w-6xl space-y-14 px-5 py-10 sm:px-8">
         <AdminSchoolsPanel />
+        <AdminBadgesPanel />
+        <AdminSuggestionsPanel />
         {isAdmin && <AdminSupportPanel />}
       </div>
     </div>

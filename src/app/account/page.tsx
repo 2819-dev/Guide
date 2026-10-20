@@ -55,6 +55,14 @@ export default async function AccountPage() {
         </p>
       )}
 
+      {showStudentBadge && (
+        <p className="text-sm">
+          <Link href="/student" className="font-semibold text-forest-800">
+            ← Back to Student hub
+          </Link>
+        </p>
+      )}
+
       {(role === "customer" || role === "rebbe") && <JoinClass />}
 
       {showStudentBadge && (

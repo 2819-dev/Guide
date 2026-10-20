@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { TeacherMessages } from "@/components/teacher-messages";
+import { TeacherSuggestionsAccess } from "@/components/teacher-suggestions-access";
 
 type Student = {
   id: string;
@@ -62,6 +64,9 @@ export function EducationPanel() {
 
   return (
     <div className="space-y-10">
+      <TeacherSuggestionsAccess />
+      <TeacherMessages />
+
       <section className="panel space-y-3">
         <h2 className="display text-2xl font-semibold text-forest-900">
           New class

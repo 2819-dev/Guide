@@ -227,3 +227,93 @@ export const schools = pgTable(
   },
   (t) => [uniqueIndex("schools_slug_idx").on(t.slug)],
 );
+
+/** Guide Official–authored suggestions for the student Suggestions pad. */
+export const suggestions = pgTable("suggestions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: varchar("title", { length: 200 }).notNull(),
+  body: text("body").notNull(),
+  createdByProfileId: uuid("created_by_profile_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  published: boolean("published").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/**
+ * Teacher blocks students from Suggestions.
+ * studentId null = entire classroom blocked.
+ */
+export const suggestionBlocks = pgTable(
+  "suggestion_blocks",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    classroomId: uuid("classroom_id")
+      .notNull()
+      .references(() => classrooms.id, { onDelete: "cascade" }),
+    studentId: uuid("student_id").references(() => profiles.id, {
+      onDelete: "cascade",
+    }),
+    blockedByProfileId: uuid("blocked_by_profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    uniqueIndex("suggestion_block_class_student_idx").on(
+      t.classroomId,
+      t.studentId,
+    ),
+  ],
+);
+
+/** Student ↔ Rebbe message threads (one per student–teacher pair). */
+export const messageThreads = pgTable(
+  "message_threads",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    studentId: uuid("student_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    teacherId: uuid("teacher_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    classroomId: uuid("classroom_id").references(() => classrooms.id, {
+      onDelete: "set null",
+    }),
+    subject: varchar("subject", { length: 200 }).notNull().default("Message"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    uniqueIndex("message_thread_student_teacher_idx").on(
+      t.studentId,
+      t.teacherId,
+    ),
+  ],
+);
+
+export const messages = pgTable("messages", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  threadId: uuid("thread_id")
+    .notNull()
+    .references(() => messageThreads.id, { onDelete: "cascade" }),
+  senderId: uuid("sender_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  body: text("body").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

@@ -21,7 +21,7 @@ function destinationFor(as: LoginAs, role: Role, educationOk: boolean): string {
       if (role === "admin" || role === "moderator") return "/admin";
       return "/account";
     case "student":
-      return "/account";
+      return "/student";
     case "family":
     default:
       if (role === "admin") return "/admin";
