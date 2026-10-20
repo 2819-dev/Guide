@@ -122,19 +122,19 @@ function GuideHomePage() {
 
   return (
     <div>
+      {/* Clever-like: one product one-liner, short support, dual CTAs */}
       <section className="hero-band">
         <div className="mx-auto max-w-3xl px-5 py-20 text-center sm:px-8 sm:py-24 lg:py-28">
           <h1 className="display text-[2.5rem] text-forest-950 sm:text-5xl lg:text-[3.35rem]">
-            The school platform for learning apps
+            The identity platform for schools
           </h1>
           <p className="mx-auto mt-5 max-w-lg text-base text-ink-muted sm:text-lg">
-            Guide is Clever-like for schools — student and teacher portals, app
-            library, messaging, and Suggestions. Learning for everyone lives on{" "}
-            {FIRST_APP_NAME}.
+            One secure place for students and teachers to open learning apps,
+            message, and stay in sync — without cluttering the top bar.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link href="/auth/sign-in?as=student" className="btn-primary">
-              Log in as a student
+              Log In
             </Link>
             <Link href="/education" className="btn-secondary">
               Guide for Education
@@ -148,47 +148,83 @@ function GuideHomePage() {
           What is Guide?
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-ink-muted sm:text-lg">
-          Log in as a Student, Teacher or School Administrator, or Guide
-          Official. Teachers add apps to classes; students open them from My
-          apps. {FIRST_APP_NAME} is the first app — also available to everyone
-          on its own site.
+          Guide is built for schools. Log in as a Student, Teacher or School
+          Administrator, or Guide Official. Teachers add apps to a class;
+          students open them from My apps on their portal — just like Clever.
         </p>
       </section>
 
       <section className="feature-rail">
         <div className="section-pad mx-auto max-w-6xl">
-          <p className="eyebrow text-center">Learning app</p>
+          <p className="eyebrow text-center">Power classroom learning</p>
           <h2 className="display mx-auto mt-3 max-w-2xl text-center text-2xl text-forest-950 sm:text-3xl">
-            {FIRST_APP_NAME}
+            Apps live in the portal
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-center text-base text-ink-muted">
-            Mishnayos and Gemara · Test Yourself. Teachers add {FIRST_APP_NAME}{" "}
-            to a class in Guide; anyone can study on the {FIRST_APP_NAME} site
-            without a school login.
-          </p>
-          <div className="mt-8 flex justify-center gap-3">
-            <a href={amudHref} className="btn-primary">
-              Open {FIRST_APP_NAME}
-            </a>
-            <Link href="/apps" className="btn-secondary">
-              App library
-            </Link>
+          <div className="capability-grid mt-14">
+            <div>
+              <p className="text-sm font-semibold text-forest-600">01</p>
+              <h3 className="mt-2 text-lg font-semibold text-forest-950">
+                Log in once
+              </h3>
+              <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
+                School picker and badge login for students; Education access for
+                teachers after school approval.
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-forest-600">02</p>
+              <h3 className="mt-2 text-lg font-semibold text-forest-950">
+                Open My apps
+              </h3>
+              <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
+                Your portal is the launcher. Teachers add {FIRST_APP_NAME};{" "}
+                students tap the tile — not a list of apps in the header.
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-forest-600">03</p>
+              <h3 className="mt-2 text-lg font-semibold text-forest-950">
+                Stay connected
+              </h3>
+              <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
+                Messaging and Suggestions sit with the portal. {FIRST_APP_NAME}{" "}
+                also has its own public site for anyone.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="section-pad mx-auto max-w-6xl">
-        <p className="eyebrow">Guide for Education</p>
-        <h2 className="display mt-3 text-2xl text-forest-950 sm:text-3xl">
-          Classes, apps, and home learning in one place
-        </h2>
-        <p className="mt-4 max-w-xl text-base text-ink-muted">
-          Apply once. After approval, Rebbeim create classes, add apps, and
-          follow student progress.
-        </p>
-        <Link href="/education" className="btn-secondary mt-7 inline-flex">
-          Explore Education
-        </Link>
+        <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <p className="eyebrow">Guide for Education</p>
+            <h2 className="display mt-3 text-2xl text-forest-950 sm:text-3xl">
+              Classes and apps in one place
+            </h2>
+            <p className="mt-4 max-w-md text-base leading-relaxed text-ink-muted">
+              Apply once. After approval, Rebbeim create classes, add apps, and
+              follow student progress.
+            </p>
+            <Link href="/education" className="btn-secondary mt-7 inline-flex">
+              Explore Education
+            </Link>
+          </div>
+          <div className="border-t border-line pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-1">
+            <p className="eyebrow">{FIRST_APP_NAME}</p>
+            <h2 className="display mt-3 text-2xl text-forest-950 sm:text-3xl">
+              Learning for everyone
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-ink-muted">
+              Mishnayos and Gemara · Test Yourself. Schools add it in Guide;
+              anyone can study on the {FIRST_APP_NAME} site without a school
+              login.
+            </p>
+            <a href={amudHref} className="btn-secondary mt-7 inline-flex">
+              Visit {FIRST_APP_NAME}
+            </a>
+          </div>
+        </div>
       </section>
     </div>
   );

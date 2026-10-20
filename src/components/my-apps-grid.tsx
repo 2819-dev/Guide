@@ -4,45 +4,30 @@ import { appHomePath, type GuideApp } from "@/lib/apps";
 type Props = {
   apps: GuideApp[];
   emptyHint?: string;
-  /** When true, show catalog apps as available for personal use (family). */
-  personalLibrary?: boolean;
 };
 
+/** Clever-style portal app launcher — tiles only; not in the top bar. */
 export function MyAppsGrid({
   apps,
   emptyHint = "No apps yet. When your teacher adds an app to your class, it shows up here.",
-  personalLibrary = false,
 }: Props) {
   if (apps.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-line bg-sky-soft/40 px-5 py-8 sm:px-6">
+      <div
+        id="apps"
+        className="rounded-2xl border border-dashed border-line bg-sky-soft/40 px-5 py-8 sm:px-6"
+      >
         <p className="text-lg font-semibold text-forest-950">My apps</p>
         <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
           {emptyHint}
         </p>
-        {personalLibrary && (
-          <Link
-            href="/apps"
-            className="mt-4 inline-flex text-sm font-semibold text-forest-800 no-underline hover:underline"
-          >
-            Browse the app library →
-          </Link>
-        )}
       </div>
     );
   }
 
   return (
-    <div>
-      <div className="mb-4 flex items-baseline justify-between gap-3">
-        <h2 className="text-lg font-semibold text-forest-950">My apps</h2>
-        <Link
-          href="/apps"
-          className="text-sm font-semibold text-forest-800 no-underline hover:underline"
-        >
-          Library
-        </Link>
-      </div>
+    <div id="apps">
+      <h2 className="mb-4 text-lg font-semibold text-forest-950">My apps</h2>
       <ul className="grid gap-3 sm:grid-cols-2">
         {apps.map((app) => (
           <li key={app.slug}>
