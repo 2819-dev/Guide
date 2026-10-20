@@ -1,10 +1,6 @@
-/** Clever-style “Log in as” roles — consumer-facing labels. */
+/** Clever-style “Log in as a …” roles — consumer-facing labels. */
 
-export type LoginAs =
-  | "student"
-  | "teacher"
-  | "school"
-  | "official";
+export type LoginAs = "family" | "student" | "educator" | "official";
 
 export type LoginRoleOption = {
   id: LoginAs;
@@ -15,22 +11,24 @@ export type LoginRoleOption = {
 
 export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
+    id: "family",
+    label: "Parent or family",
+    description:
+      "Study Mishnayos and Gemara at home — Test Yourself, notes, and progress",
+    href: "/auth/sign-in?as=family",
+  },
+  {
     id: "student",
     label: "Student",
-    description: "Study Mishnayos and Gemara, Test Yourself, save notes",
+    description: "School student — join a class with an invite code from your Rebbe",
     href: "/auth/sign-in?as=student",
   },
   {
-    id: "teacher",
-    label: "Teacher / Rebbe",
-    description: "Guide for Education — classes and home study progress",
-    href: "/auth/sign-in?as=teacher",
-  },
-  {
-    id: "school",
-    label: "School or district administrator",
-    description: "Apply for your school and manage Education access",
-    href: "/auth/sign-in?as=school",
+    id: "educator",
+    label: "Teacher or School Administrator",
+    description:
+      "Guide for Education — apply for your school, classes, and student progress",
+    href: "/auth/sign-in?as=educator",
   },
   {
     id: "official",
@@ -41,15 +39,20 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
 ];
 
 export function parseLoginAs(value: string | null | undefined): LoginAs {
+  // Legacy query params from the previous four-way split
+  if (value === "teacher" || value === "school") return "educator";
+  if (value === "learner" || value === "home" || value === "customer") {
+    return "family";
+  }
   if (
+    value === "family" ||
     value === "student" ||
-    value === "teacher" ||
-    value === "school" ||
+    value === "educator" ||
     value === "official"
   ) {
     return value;
   }
-  return "student";
+  return "family";
 }
 
 export function loginAsCopy(as: LoginAs): {
@@ -59,38 +62,38 @@ export function loginAsCopy(as: LoginAs): {
   joinLabel: string | null;
 } {
   switch (as) {
-    case "teacher":
+    case "student":
       return {
-        title: "Log in as Teacher / Rebbe",
+        title: "Student",
         subtitle:
-          "Access Guide for Education after your school is approved — classes, invite codes, and student progress.",
-        joinHref: "/auth/sign-up?as=teacher",
-        joinLabel: "Create a Rebbe account",
+          "Log in to study Mishnayos and Gemara, Test Yourself, and join your class with an invite code.",
+        joinHref: "/auth/sign-up?as=student",
+        joinLabel: "Create a student account",
       };
-    case "school":
+    case "educator":
       return {
-        title: "Log in as school administrator",
+        title: "Teacher or School Administrator",
         subtitle:
-          "Apply for Guide for Education or check your school’s application status.",
-        joinHref: "/auth/sign-up?as=school",
+          "Log in for Guide for Education. After your school is approved, open classes, invite codes, and student progress.",
+        joinHref: "/auth/sign-up?as=educator",
         joinLabel: "Create an account to apply",
       };
     case "official":
       return {
-        title: "Log in as Guide Official",
+        title: "Guide Official",
         subtitle:
           "Internal staff access for school approvals and support operations.",
         joinHref: null,
         joinLabel: null,
       };
-    case "student":
+    case "family":
     default:
       return {
-        title: "Log in as Student",
+        title: "Parent or family",
         subtitle:
-          "Continue Mishnayos and Gemara study, Test Yourself, and keep your notes.",
-        joinHref: "/auth/sign-up?as=student",
-        joinLabel: "Create a student account",
+          "Continue Mishnayos and Gemara at home — Test Yourself, notes, and saved progress.",
+        joinHref: "/auth/sign-up?as=family",
+        joinLabel: "Create a family account",
       };
   }
 }
@@ -102,19 +105,19 @@ export function signupAsCopy(as: LoginAs): {
   showRoleChooser: boolean;
 } {
   switch (as) {
-    case "teacher":
+    case "student":
       return {
-        title: "Join as Teacher / Rebbe",
+        title: "Join as a Student",
         subtitle:
-          "Create an account, then apply for your school. Education tools unlock after approval.",
-        roleValue: "rebbe",
+          "Save progress and Test Yourself scores. After you sign up, join your class from Account with an invite code.",
+        roleValue: "customer",
         showRoleChooser: false,
       };
-    case "school":
+    case "educator":
       return {
-        title: "Join as school administrator",
+        title: "Join as Teacher or School Administrator",
         subtitle:
-          "Create an account and submit a school application for Guide for Education.",
+          "Create an account, then apply for your school. Education tools unlock after approval.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -125,12 +128,12 @@ export function signupAsCopy(as: LoginAs): {
         roleValue: "moderator",
         showRoleChooser: false,
       };
-    case "student":
+    case "family":
     default:
       return {
-        title: "Join as Student",
+        title: "Join as Parent or family",
         subtitle:
-          "Save progress, notes, and Test Yourself scores for Mishnayos and Gemara.",
+          "Study Mishnayos and Gemara at home — Test Yourself, notes, and progress on your account.",
         roleValue: "customer",
         showRoleChooser: false,
       };

@@ -21,7 +21,7 @@ function SignInForm() {
         <LoginMenu variant="nav" />
       </div>
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.14em] text-forest-600">
-        Log in as
+        Log in as a
       </p>
       <h1 className="display mt-1.5 text-2xl text-forest-950 sm:text-3xl">
         {copy.title.replace(/^Log in as /, "")}

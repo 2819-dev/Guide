@@ -15,11 +15,11 @@ export async function signUpWithEmail(
   const email = String(formData.get("email") ?? "").trim();
   const name = String(formData.get("name") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const as = parseLoginAs(String(formData.get("as") ?? "student"));
+  const as = parseLoginAs(String(formData.get("as") ?? "family"));
   const roleRaw = String(formData.get("role") ?? "customer");
 
-  // Public signup never creates admin. Officials are provisioned separately.
-  // Teacher path stays customer until school approval promotes to rebbe.
+  // Public signup never creates admin/rebbe. Officials are staff-provisioned.
+  // Educator path stays customer until school approval promotes to rebbe.
   let role: Role = "customer";
   if (roleRaw === "moderator" && as === "official") {
     role = "moderator";
@@ -27,7 +27,7 @@ export async function signUpWithEmail(
     role = roleRaw;
   }
 
-  const wantsEducation = as === "teacher" || as === "school" || roleRaw === "rebbe";
+  const wantsEducation = as === "educator" || roleRaw === "rebbe";
 
   if (!email || !password || password.length < 8) {
     return { error: "Use a valid email and a password of at least 8 characters." };
@@ -76,5 +76,6 @@ export async function signUpWithEmail(
   }
 
   if (wantsEducation) redirect("/education#apply");
+  if (as === "student") redirect("/account");
   redirect("/study");
 }

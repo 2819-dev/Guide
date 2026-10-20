@@ -46,7 +46,7 @@ export function LoginMenu({ variant = "nav", className = "" }: Props) {
         onClick={() => setOpen((v) => !v)}
         className={triggerClass}
       >
-        Log in
+        Log In
         <svg
           width="12"
           height="12"
@@ -69,11 +69,11 @@ export function LoginMenu({ variant = "nav", className = "" }: Props) {
         <div
           id={menuId}
           role="menu"
-          aria-label="Log in as"
-          className="absolute right-0 z-50 mt-2 w-[min(100vw-2rem,20rem)] overflow-hidden rounded-lg border border-line bg-surface shadow-[0_8px_24px_rgba(15,31,24,0.08)]"
+          aria-label="Log in as a"
+          className="absolute right-0 z-50 mt-2 w-[min(100vw-2rem,20.5rem)] overflow-hidden rounded-lg border border-line bg-surface shadow-[0_8px_24px_rgba(15,31,24,0.08)]"
         >
           <p className="border-b border-line bg-paper px-3.5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-forest-700">
-            Log in as
+            Log in as a
           </p>
           <ul className="py-1">
             {LOGIN_AS_OPTIONS.map((opt) => (

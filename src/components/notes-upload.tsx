@@ -95,10 +95,10 @@ export function NotesUpload({
         </h3>
         <p className="mt-2 text-ink-muted">
           <Link
-            href="/auth/sign-in?as=student"
+            href="/auth/sign-in?as=family"
             className="font-semibold text-forest-700"
           >
-            Log in as Student
+            Log In
           </Link>{" "}
           to save notes and get quizzes tailored to what you wrote.
         </p>

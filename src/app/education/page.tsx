@@ -121,13 +121,12 @@ export default async function EducationLandingPage() {
           <p className="mt-4 text-sm text-ink-muted">
             Tip:{" "}
             <Link
-              href="/auth/sign-in?as=school"
+              href="/auth/sign-in?as=educator"
               className="font-semibold text-forest-700"
             >
-              Log in as school administrator
+              Log in as Teacher or School Administrator
             </Link>{" "}
-            (or Teacher / Rebbe) before applying so approval can unlock Education
-            automatically.
+            before applying so approval can unlock Education automatically.
           </p>
         )}
       </section>

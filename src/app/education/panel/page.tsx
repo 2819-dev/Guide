@@ -9,7 +9,7 @@ export const metadata = { title: "Rebbe panel" };
 
 export default async function EducationPanelPage() {
   const authz = await requireProfile(["rebbe", "admin"]);
-  if (!authz) redirect("/auth/sign-in?as=teacher");
+  if (!authz) redirect("/auth/sign-in?as=educator");
 
   const allowed = await hasEducationAccess(authz.profile);
   if (!allowed) {

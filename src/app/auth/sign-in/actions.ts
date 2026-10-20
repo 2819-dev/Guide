@@ -9,16 +9,17 @@ import type { Role } from "@/lib/roles";
 
 function destinationFor(as: LoginAs, role: Role, educationOk: boolean): string {
   switch (as) {
-    case "teacher":
+    case "educator":
       if (role === "rebbe" && educationOk) return "/education/panel";
       if (role === "admin") return "/education/panel";
-      return "/education";
-    case "school":
       return "/education";
     case "official":
       if (role === "admin" || role === "moderator") return "/admin";
       return "/account";
     case "student":
+      // School students study + join class from Account
+      return "/account";
+    case "family":
     default:
       if (role === "admin") return "/admin";
       if (role === "rebbe" && educationOk) return "/education/panel";
@@ -30,7 +31,7 @@ export async function signInWithEmail(
   _prev: { error: string } | null,
   formData: FormData,
 ) {
-  const as = parseLoginAs(String(formData.get("as") ?? "student"));
+  const as = parseLoginAs(String(formData.get("as") ?? "family"));
 
   const { error } = await auth.signIn.email({
     email: String(formData.get("email") ?? ""),

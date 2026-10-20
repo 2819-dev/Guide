@@ -58,7 +58,7 @@ export function SiteHeader() {
             <>
               <LoginMenu variant="nav" />
               <Link
-                href="/auth/sign-up?as=student"
+                href="/auth/sign-up?as=family"
                 className="btn-primary !px-3 !py-1.5 text-sm"
               >
                 Get started

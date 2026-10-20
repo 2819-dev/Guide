@@ -26,16 +26,16 @@ export function SiteFooter() {
             Education
           </Link>
           <Link
-            href="/auth/sign-up?as=student"
+            href="/auth/sign-up?as=family"
             className="text-forest-100 no-underline hover:text-white"
           >
             Join
           </Link>
           <Link
-            href="/auth/sign-in?as=student"
+            href="/auth/sign-in?as=family"
             className="text-forest-100 no-underline hover:text-white"
           >
-            Log in
+            Log In
           </Link>
           <Link
             href="/account"
