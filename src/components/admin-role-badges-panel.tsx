@@ -121,18 +121,13 @@ export function AdminRoleBadgesPanel() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="display text-2xl font-semibold text-forest-900">
-          Roles
-        </h2>
-        <p className="mt-1 text-sm text-ink-muted">
-          Discord-style roles with a name, color, and optional icon. Separate
-          from school <span className="font-medium">scan credentials</span> used
-          at student Log In.
-        </p>
-      </div>
+      <p className="text-sm text-ink-muted">
+        Discord-style roles with a name, color, and optional icon. Separate from
+        school <span className="font-medium">scan credentials</span> used at
+        student Log In.
+      </p>
 
-      <div className="panel space-y-4">
+      <div className="portal-panel space-y-4">
         <h3 className="text-sm font-semibold text-forest-800">Create a role</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm font-semibold text-forest-900">
@@ -193,7 +188,7 @@ export function AdminRoleBadgesPanel() {
         </button>
       </div>
 
-      <div className="panel space-y-4">
+      <div className="portal-panel space-y-4">
         <h3 className="text-sm font-semibold text-forest-800">
           Assign to a person
         </h3>

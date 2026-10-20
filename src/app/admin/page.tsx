@@ -4,6 +4,7 @@ import { AdminRoleBadgesPanel } from "@/components/admin-role-badges-panel";
 import { AdminSchoolsPanel } from "@/components/admin-schools-panel";
 import { AdminSuggestionsPanel } from "@/components/admin-suggestions-panel";
 import { AdminSupportPanel } from "@/components/admin-support-panel";
+import { PortalShell } from "@/components/portal-shell";
 import { requireProfile } from "@/lib/profile";
 
 export const instant = false;
@@ -16,30 +17,40 @@ export default async function AdminPage() {
   const isAdmin = authz.profile.role === "admin";
 
   return (
-    <div>
-      <section className="hero-band">
-        <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
-          <p className="eyebrow">Official portal</p>
-          <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
-            Schools, roles, and suggestions
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-ink-muted">
-            Approve schools, create Discord-style roles with icons, issue school
-            scan credentials, and publish Suggestions.
-          </p>
-        </div>
-      </section>
-      <div className="mx-auto max-w-6xl space-y-14 px-5 py-10 sm:px-8">
+    <PortalShell
+      eyebrow="Official portal"
+      title={`Hi, ${authz.profile.displayName}`}
+      subtitle="Approve schools, manage roles, issue scan credentials, and publish Suggestions."
+      chips={[
+        { href: "#schools", label: "Schools" },
+        { href: "#roles", label: "Roles" },
+        { href: "#credentials", label: "Credentials" },
+        { href: "#suggestions", label: "Suggestions" },
+        ...(isAdmin ? [{ href: "#support", label: "Get help queue" }] : []),
+      ]}
+    >
+      <section id="schools">
+        <h2 className="portal-section-title">Schools</h2>
         <AdminSchoolsPanel />
-        <div id="roles">
-          <AdminRoleBadgesPanel />
-        </div>
+      </section>
+      <section id="roles">
+        <h2 className="portal-section-title">Roles</h2>
+        <AdminRoleBadgesPanel />
+      </section>
+      <section id="credentials">
+        <h2 className="portal-section-title">Scan credentials</h2>
         <AdminBadgesPanel />
-        <div id="suggestions">
-          <AdminSuggestionsPanel />
-        </div>
-        {isAdmin && <AdminSupportPanel />}
-      </div>
-    </div>
+      </section>
+      <section id="suggestions">
+        <h2 className="portal-section-title">Suggestions</h2>
+        <AdminSuggestionsPanel />
+      </section>
+      {isAdmin ? (
+        <section id="support">
+          <h2 className="portal-section-title">Get help queue</h2>
+          <AdminSupportPanel />
+        </section>
+      ) : null}
+    </PortalShell>
   );
 }

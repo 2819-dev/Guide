@@ -78,19 +78,19 @@ export function TeacherMessages() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="display text-2xl font-semibold text-forest-900">
-          Student messages
-        </h2>
-        <p className="mt-1 text-sm text-ink-muted">
+        <h2 className="portal-section-title">Messages</h2>
+        <p className="-mt-2 text-sm text-ink-muted">
           Replies from students who joined your classes.
         </p>
       </div>
       {error && <p className="text-sm text-red-700">{error}</p>}
       {threads.length === 0 ? (
-        <p className="panel text-ink-muted">No student messages yet.</p>
+        <p className="portal-panel text-sm text-ink-muted">
+          No student messages yet.
+        </p>
       ) : (
         <div className="grid gap-4 lg:grid-cols-[14rem_1fr]">
-          <ul className="divide-y divide-line rounded-xl border border-line">
+          <ul className="divide-y divide-line rounded-[10px] border border-line bg-white">
             {threads.map((t) => (
               <li key={t.id}>
                 <button

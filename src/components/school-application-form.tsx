@@ -27,8 +27,8 @@ export function SchoolApplicationForm({
 
   if (locked) {
     return (
-      <div className="panel">
-        <h2 className="display text-2xl font-semibold text-forest-900">
+      <div className="portal-panel">
+        <h2 className="text-2xl font-semibold tracking-tight text-forest-900">
           School application
         </h2>
         <p className="mt-2 text-ink-muted">
@@ -41,13 +41,13 @@ export function SchoolApplicationForm({
 
   if (done) {
     return (
-      <div className="panel">
-        <h2 className="display text-2xl font-semibold text-forest-900">
+      <div className="portal-panel">
+        <h2 className="text-2xl font-semibold tracking-tight text-forest-900">
           Application received
         </h2>
         <p className="mt-2 text-ink-muted">
           Thanks — your school request is pending review. Once approved, you can
-          open the Rebbe panel and invite students.
+          open the teacher portal and invite students.
         </p>
       </div>
     );
@@ -81,14 +81,14 @@ export function SchoolApplicationForm({
   }
 
   return (
-    <form onSubmit={(e) => void submit(e)} className="panel space-y-4">
+    <form onSubmit={(e) => void submit(e)} className="portal-panel space-y-4">
       <div>
-        <h2 className="display text-2xl font-semibold text-forest-900">
+        <h2 className="text-2xl font-semibold tracking-tight text-forest-900">
           Apply for your school
         </h2>
         <p className="mt-2 text-sm text-ink-muted">
-          Tell us a little about your school. After approval, Rebbeim can create
-          classes and follow home Mishnayos and Gemara study.
+          Tell us a little about your school. After approval, teachers can
+          create classes and follow home Mishnayos and Gemara study.
         </p>
       </div>
 

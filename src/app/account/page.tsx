@@ -55,14 +55,22 @@ export default async function AccountPage() {
     Boolean(authz.profile.schoolId || authz.profile.badgeCode);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-10 px-5 py-12 sm:px-8">
-      <header>
-        <h1 className="display text-3xl text-forest-950 sm:text-4xl">
-          Account
+    <div className="portal-page">
+      <div className="content-band portal-page__inner max-w-3xl space-y-8">
+      <p className="text-sm">
+        <Link href={backHref} className="font-semibold text-forest-800">
+          ← Back to {backLabel}
+        </Link>
+      </p>
+      <header className="portal-hero !mb-0">
+        <p className="text-sm font-semibold text-forest-700">Account</p>
+        <h1 className="display-feature mt-1.5">
+          {authz.profile.displayName}
         </h1>
         <p className="mt-2 text-ink-muted">
-          Signed in as {authz.profile.displayName}
+          Signed in
           {isOfficial ? "" : ` · ${roleLabel(role)}`}
+          {schoolName ? ` · ${schoolName}` : ""}
         </p>
         {roles.length > 0 && (
           <ul className="mt-4 flex flex-wrap gap-2">
@@ -79,12 +87,6 @@ export default async function AccountPage() {
         )}
       </header>
 
-      <p className="text-sm">
-        <Link href={backHref} className="font-semibold text-forest-800">
-          ← Back to {backLabel}
-        </Link>
-      </p>
-
       {(role === "customer" || role === "rebbe") && <JoinClass />}
 
       {showScanCredential && (
@@ -97,6 +99,7 @@ export default async function AccountPage() {
       )}
 
       <SupportForm />
+      </div>
     </div>
   );
 }

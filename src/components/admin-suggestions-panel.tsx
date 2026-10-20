@@ -54,17 +54,12 @@ export function AdminSuggestionsPanel() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="display text-2xl font-semibold text-forest-900">
-          Create suggestions
-        </h2>
-        <p className="mt-1 text-sm text-ink-muted">
-          Posts appear in the student Suggestions pad (unless a teacher has
-          paused access).
-        </p>
-      </div>
+      <p className="text-sm text-ink-muted">
+        Posts appear in the student Suggestions pad (unless a teacher has paused
+        access).
+      </p>
 
-      <div className="panel space-y-3">
+      <div className="portal-panel space-y-3">
         <label className="block text-sm font-semibold text-forest-900">
           Title
           <input

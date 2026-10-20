@@ -69,24 +69,19 @@ export function AdminBadgesPanel() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="display text-2xl font-semibold text-forest-900">
-          School scan credentials
-        </h2>
-        <p className="mt-1 text-sm text-ink-muted">
-          Issue a Clever-style <span className="font-medium">login badge code</span>{" "}
-          so a student can scan or type at Log In. Not the same as Discord-style
-          Roles above.
-        </p>
-      </div>
+      <p className="text-sm text-ink-muted">
+        Issue a <span className="font-medium">login badge code</span> so a
+        student can scan or type at Log In. Not the same as Discord-style Roles
+        above.
+      </p>
 
       {schools.length === 0 ? (
-        <p className="panel text-ink-muted">
+        <p className="portal-panel text-sm text-ink-muted">
           Approve a school first — then you can issue scan credentials for its
           students.
         </p>
       ) : (
-        <div className="panel space-y-3">
+        <div className="portal-panel space-y-3">
           <label className="block text-sm font-semibold text-forest-900">
             Student name
             <input

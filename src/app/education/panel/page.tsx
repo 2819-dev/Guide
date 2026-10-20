@@ -1,11 +1,11 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EducationPanel } from "@/components/education-panel";
+import { PortalShell } from "@/components/portal-shell";
 import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 
 export const instant = false;
-export const metadata = { title: "Rebbe panel" };
+export const metadata = { title: "Teacher portal" };
 
 export default async function EducationPanelPage() {
   const authz = await requireProfile(["rebbe", "admin"]);
@@ -17,29 +17,18 @@ export default async function EducationPanelPage() {
   }
 
   return (
-    <div>
-      <section className="hero-band">
-        <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
-          <Link
-            href="/education"
-            className="text-sm font-medium text-forest-700 no-underline hover:underline"
-          >
-            ← Apply for your school
-          </Link>
-          <p className="eyebrow mt-4">Teacher portal</p>
-          <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
-            Classes and students
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-ink-muted">
-            Invite with a class code, add apps (like Amud), pause
-            Suggestions, message students, and follow progress from home or
-            Chromebook.
-          </p>
-        </div>
-      </section>
-      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
-        <EducationPanel />
-      </div>
-    </div>
+    <PortalShell
+      eyebrow="Teacher portal"
+      title={`Hi, ${authz.profile.displayName}`}
+      subtitle="Add apps to a class, invite students, pause Suggestions, and message — Clever-style tools inside Guide."
+      chips={[
+        { href: "#apps", label: "Apps" },
+        { href: "#classes", label: "Classes" },
+        { href: "#suggestions-access", label: "Suggestions pause" },
+        { href: "#messages", label: "Messages" },
+      ]}
+    >
+      <EducationPanel />
+    </PortalShell>
   );
 }

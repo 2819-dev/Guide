@@ -68,20 +68,17 @@ export function TeacherSuggestionsAccess() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
-        <h2 className="display text-2xl font-semibold text-forest-900">
-          Suggestions access
-        </h2>
-        <p className="mt-1 text-sm text-ink-muted">
-          Pause Suggestions for a whole class or for individual students —
-          Clever-style access control.
+        <h2 className="portal-section-title">Suggestions pause</h2>
+        <p className="-mt-2 text-sm text-ink-muted">
+          Pause Suggestions for a whole class or for individual students.
         </p>
       </div>
       {error && <p className="text-sm text-red-700">{error}</p>}
 
       {classrooms.map((room) => (
-        <section key={room.classroomId} className="panel space-y-4">
+        <section key={room.classroomId} className="portal-panel space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-lg font-semibold text-forest-950">
               {room.classroomName}

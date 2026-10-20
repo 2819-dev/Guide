@@ -6,46 +6,45 @@ type Props = {
   emptyHint?: string;
 };
 
-/** Clever-style portal app launcher — tiles only; not in the top bar. */
+/** Clever Instant Login app launcher — square tiles in the portal only. */
 export function MyAppsGrid({
   apps,
   emptyHint = "No apps yet. When your teacher adds an app to your class, it shows up here.",
 }: Props) {
   if (apps.length === 0) {
     return (
-      <div
-        id="apps"
-        className="rounded-[10px] border border-dashed border-line bg-sky-soft/40 px-5 py-8 sm:px-6"
-      >
-        <p className="text-lg font-semibold text-forest-950">My apps</p>
-        <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-          {emptyHint}
-        </p>
-      </div>
+      <section id="apps">
+        <h2 className="portal-section-title">My apps</h2>
+        <div className="portal-panel border-dashed bg-sky-soft/40">
+          <p className="text-base font-semibold text-forest-950">No apps yet</p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+            {emptyHint}
+          </p>
+        </div>
+      </section>
     );
   }
 
   return (
-    <div id="apps">
-      <h2 className="mb-4 text-lg font-semibold text-forest-950">My apps</h2>
-      <ul className="grid gap-3 sm:grid-cols-2">
+    <section id="apps">
+      <h2 className="portal-section-title">My apps</h2>
+      <ul className="portal-apps-grid">
         {apps.map((app) => (
           <li key={app.slug}>
-            <Link href={appHomePath(app.slug)} className="portal-tile">
-              <p className="text-xl font-semibold tracking-tight text-forest-950">
-                {app.name}
-              </p>
-              <p className="mt-1 text-sm text-forest-700">{app.tagline}</p>
-              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                {app.description}
-              </p>
-              <p className="mt-4 text-sm font-semibold text-forest-800">
-                Open {app.name} →
-              </p>
+            <Link
+              href={appHomePath(app.slug)}
+              className="portal-app-tile"
+              aria-label={`Open ${app.name}`}
+            >
+              <span className="portal-app-tile__mark" aria-hidden>
+                {app.name.slice(0, 1)}
+              </span>
+              <span className="portal-app-tile__name">{app.name}</span>
+              <span className="portal-app-tile__tag">{app.tagline}</span>
             </Link>
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }

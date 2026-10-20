@@ -53,32 +53,37 @@ export function TeacherAppsPanel() {
   return (
     <section id="apps" className="space-y-4">
       <div>
-        <h2 className="display text-2xl font-semibold text-forest-900">
-          Apps
-        </h2>
-        <p className="mt-1 text-sm text-ink-muted">
+        <h2 className="portal-section-title">Apps</h2>
+        <p className="-mt-2 text-sm text-ink-muted">
           Add apps from the Guide library to a class. Students see them under
-          My apps on their portal.
+          My apps on their portal — not in the top bar.
         </p>
       </div>
 
       {classrooms.length === 0 ? (
-        <p className="panel text-sm text-ink-muted">
+        <p className="portal-panel text-sm text-ink-muted">
           Create a class first, then add apps here.
         </p>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {catalog.map((app) => (
-            <div key={app.slug} className="panel space-y-4">
+            <div key={app.slug} className="portal-panel space-y-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-xl font-semibold text-forest-950">
-                    {app.name}
-                  </p>
-                  <p className="mt-1 text-sm text-forest-700">{app.tagline}</p>
-                  <p className="mt-2 max-w-xl text-sm text-ink-muted">
-                    {app.description}
-                  </p>
+                <div className="flex items-start gap-3">
+                  <span
+                    className="portal-app-tile__mark !h-12 !w-12 !text-lg"
+                    aria-hidden
+                  >
+                    {app.name.slice(0, 1)}
+                  </span>
+                  <div>
+                    <p className="text-lg font-semibold text-forest-950">
+                      {app.name}
+                    </p>
+                    <p className="mt-0.5 text-sm text-forest-700">
+                      {app.tagline}
+                    </p>
+                  </div>
                 </div>
                 <a
                   href={appHomePath(app.slug)}
@@ -87,7 +92,7 @@ export function TeacherAppsPanel() {
                   Open app
                 </a>
               </div>
-              <ul className="divide-y divide-line rounded-xl border border-line">
+              <ul className="divide-y divide-line rounded-[10px] border border-line">
                 {classrooms.map((room) => {
                   const installed =
                     installsByClassroom[room.id]?.includes(app.slug) ?? false;

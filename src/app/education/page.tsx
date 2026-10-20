@@ -34,9 +34,9 @@ export default async function EducationLandingPage() {
         : undefined;
 
   return (
-    <div>
-      <section className="hero-band">
-        <div className="content-band py-16 text-center sm:py-20">
+    <div className="portal-page">
+      <section className="bg-paper">
+        <div className="content-band py-14 text-center sm:py-16">
           <p className="eyebrow">For schools</p>
           <h1 className="display-hero mx-auto mt-3 max-w-[18ch]">
             Classes, apps, and home learning in one place
@@ -62,8 +62,7 @@ export default async function EducationLandingPage() {
         </div>
       </section>
 
-      <section className="section-pad">
-        <div className="content-band">
+      <section className="content-band py-12 sm:py-14">
           <h2 className="display-feature max-w-2xl">
             For schools who want home learning to stay visible
           </h2>
@@ -103,11 +102,9 @@ export default async function EducationLandingPage() {
               </p>
             </li>
           </ol>
-        </div>
       </section>
 
-      <section id="apply" className="section-pad !pt-0">
-        <div className="content-band max-w-3xl">
+      <section id="apply" className="content-band max-w-3xl pb-16">
           <SchoolApplicationForm
             defaultName={session?.profile.displayName ?? ""}
             defaultEmail={session?.user.email ?? ""}
@@ -133,7 +130,6 @@ export default async function EducationLandingPage() {
               automatically.
             </p>
           )}
-        </div>
       </section>
     </div>
   );

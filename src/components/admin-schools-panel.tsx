@@ -61,26 +61,23 @@ export function AdminSchoolsPanel() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="display text-2xl font-semibold text-forest-900">
-          School applications
-        </h2>
-        <p className="mt-1 text-sm text-ink-muted">
-          Approve a school so teachers can use Guide. Contact details are shown
-          here for review.
-        </p>
-      </div>
+      <p className="text-sm text-ink-muted">
+        Approve a school so teachers can use Guide. Contact details are shown
+        here for review.
+      </p>
 
       {error && <p className="text-sm text-red-700">{error}</p>}
 
       {applications.length === 0 ? (
-        <p className="panel text-ink-muted">No school applications yet.</p>
+        <p className="portal-panel text-sm text-ink-muted">
+          No school applications yet.
+        </p>
       ) : (
         <>
           {pending.length > 0 && (
             <ul className="space-y-4">
               {pending.map((a) => (
-                <li key={a.id} className="panel space-y-3">
+                <li key={a.id} className="portal-panel space-y-3">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
@@ -129,7 +126,7 @@ export function AdminSchoolsPanel() {
               </h3>
               <ul className="space-y-3">
                 {others.map((a) => (
-                  <li key={a.id} className="panel !py-3">
+                  <li key={a.id} className="portal-panel !py-3">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                       <p className="font-semibold text-forest-950">
                         {a.schoolName}
