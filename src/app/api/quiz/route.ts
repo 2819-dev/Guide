@@ -151,9 +151,11 @@ export async function POST(request: Request) {
     }
 
     const questions = buildQuiz({
-      dafEnglish: dafText.english.length ? dafText.english : dafText.hebrew,
+      dafHebrew: dafText.hebrew,
+      dafEnglish: dafText.english,
       notesContent,
       mode: body.mode,
+      count: 8,
     });
 
     if (questions.length === 0) {

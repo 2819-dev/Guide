@@ -118,6 +118,12 @@ export type QuizQuestionRecord = {
   correctIndex: number;
   explanation: string;
   source: "daf" | "notes" | "mixed";
+  kind:
+    | "translation"
+    | "comprehension"
+    | "key_term"
+    | "attribution"
+    | "notes";
 };
 
 export const quizSessions = pgTable("quiz_sessions", {

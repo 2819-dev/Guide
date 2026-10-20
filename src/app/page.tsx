@@ -16,9 +16,9 @@ export default function HomePage() {
               Study Mishnayos and Gemara with clarity
             </h1>
             <p className="mt-4 max-w-lg text-base text-ink-muted sm:text-lg">
-              Open a daf, read Hebrew and English together, then quiz yourself.
-              After school, upload your notes for a second pass grounded in what
-              you actually wrote.
+              Open a daf, read Hebrew and English together, then Test Yourself —
+              translation and other real study questions from the page. After
+              school, upload notes for a second pass grounded in what you wrote.
             </p>
             <div className="mt-7 flex flex-wrap gap-2.5">
               <Link href={startHref} className="btn-primary">
@@ -84,11 +84,11 @@ export default function HomePage() {
           <li className="p-5">
             <p className="text-xs font-semibold text-forest-600">03</p>
             <h3 className="mt-2 text-base font-semibold text-forest-950">
-              Quiz and notes
+              Test Yourself
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-              Check the daf, your notes, or both. Progress stays with your
-              account.
+              Translation, comprehension, key terms, and who-says-what — scored
+              and saved to your account.
             </p>
           </li>
         </ol>
@@ -113,7 +113,7 @@ export default function HomePage() {
             </li>
             <li className="flex gap-3 border-b border-line pb-3">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-forest-700" />
-              Quizzes from the daf, notes, or mixed
+              Test Yourself from the daf, notes, or mixed
             </li>
             <li className="flex gap-3">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-forest-700" />

@@ -85,67 +85,74 @@ export function EducationPanel() {
         {error && <p className="text-sm text-red-700">{error}</p>}
       </section>
 
-      {classrooms.map((room) => (
-        <section key={room.id} className="space-y-4">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 className="display text-2xl font-semibold text-forest-900">
-                {room.name}
-              </h2>
-              <p className="mt-1 text-sm text-ink-muted">
-                Invite code:{" "}
-                <span className="font-mono font-semibold text-forest-800">
-                  {room.inviteCode}
-                </span>{" "}
-                — students enter this after signing in.
-              </p>
+      {classrooms.length === 0 ? (
+        <p className="panel text-ink-muted">
+          No classes yet. Create one above — student progress appears here after
+          they join with the invite code.
+        </p>
+      ) : (
+        classrooms.map((room) => (
+          <section key={room.id} className="space-y-4">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2 className="display text-2xl font-semibold text-forest-900">
+                  {room.name}
+                </h2>
+                <p className="mt-1 text-sm text-ink-muted">
+                  Invite code:{" "}
+                  <span className="font-mono font-semibold text-forest-800">
+                    {room.inviteCode}
+                  </span>{" "}
+                  — students enter this after signing in.
+                </p>
+              </div>
             </div>
-          </div>
 
-          {room.students.length === 0 ? (
-            <p className="panel text-ink-muted">No students yet.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-                <thead>
-                  <tr className="border-b border-line text-forest-700">
-                    <th className="py-2 pr-3 font-semibold">Student</th>
-                    <th className="py-2 pr-3 font-semibold">Dapim</th>
-                    <th className="py-2 pr-3 font-semibold">Quizzes</th>
-                    <th className="py-2 pr-3 font-semibold">Best</th>
-                    <th className="py-2 pr-3 font-semibold">Avg</th>
-                    <th className="py-2 pr-3 font-semibold">Notes</th>
-                    <th className="py-2 font-semibold">Recent</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {room.students.map((s) => (
-                    <tr key={s.id} className="border-b border-line/70">
-                      <td className="py-3 pr-3 font-medium text-forest-950">
-                        {s.displayName}
-                      </td>
-                      <td className="py-3 pr-3">{s.dapimStudied}</td>
-                      <td className="py-3 pr-3">{s.quizAttempts}</td>
-                      <td className="py-3 pr-3">
-                        {s.bestScore == null ? "—" : `${s.bestScore}%`}
-                      </td>
-                      <td className="py-3 pr-3">
-                        {s.averageQuizScore == null
-                          ? "—"
-                          : `${s.averageQuizScore}%`}
-                      </td>
-                      <td className="py-3 pr-3">{s.notesSubmitted}</td>
-                      <td className="py-3 text-ink-muted">
-                        {s.recentDafim.join(", ") || "—"}
-                      </td>
+            {room.students.length === 0 ? (
+              <p className="panel text-ink-muted">No students yet.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-line text-forest-700">
+                      <th className="py-2 pr-3 font-semibold">Student</th>
+                      <th className="py-2 pr-3 font-semibold">Dapim</th>
+                      <th className="py-2 pr-3 font-semibold">Quizzes</th>
+                      <th className="py-2 pr-3 font-semibold">Best</th>
+                      <th className="py-2 pr-3 font-semibold">Avg</th>
+                      <th className="py-2 pr-3 font-semibold">Notes</th>
+                      <th className="py-2 font-semibold">Recent</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </section>
-      ))}
+                  </thead>
+                  <tbody>
+                    {room.students.map((s) => (
+                      <tr key={s.id} className="border-b border-line/70">
+                        <td className="py-3 pr-3 font-medium text-forest-950">
+                          {s.displayName}
+                        </td>
+                        <td className="py-3 pr-3">{s.dapimStudied}</td>
+                        <td className="py-3 pr-3">{s.quizAttempts}</td>
+                        <td className="py-3 pr-3">
+                          {s.bestScore == null ? "—" : `${s.bestScore}%`}
+                        </td>
+                        <td className="py-3 pr-3">
+                          {s.averageQuizScore == null
+                            ? "—"
+                            : `${s.averageQuizScore}%`}
+                        </td>
+                        <td className="py-3 pr-3">{s.notesSubmitted}</td>
+                        <td className="py-3 text-ink-muted">
+                          {s.recentDafim.join(", ") || "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        ))
+      )}
     </div>
   );
 }

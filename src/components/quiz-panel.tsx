@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { QUIZ_KIND_LABEL, type QuizKind } from "@/lib/quiz-kinds";
 
 type PublicQuestion = {
   id: string;
   prompt: string;
   choices: string[];
   source: "daf" | "notes" | "mixed";
+  kind?: QuizKind;
 };
 
 type GradedQuestion = PublicQuestion & {
@@ -21,6 +23,11 @@ type Props = {
   hasNotes: boolean;
   signedIn: boolean;
 };
+
+function kindLabel(kind?: QuizKind): string | null {
+  if (!kind) return null;
+  return QUIZ_KIND_LABEL[kind] ?? null;
+}
 
 export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
   const [mode, setMode] = useState<"daf" | "notes" | "mixed">("daf");
@@ -38,13 +45,15 @@ export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
     return (
       <section className="panel">
         <h3 className="display text-2xl font-semibold text-forest-900">
-          Quiz yourself
+          Test Yourself
         </h3>
         <p className="mt-2 text-ink-muted">
+          Translation, comprehension, key terms, and who-says-what — drawn from
+          this daf.{" "}
           <Link href="/auth/sign-in" className="font-semibold text-forest-700">
             Sign in
           </Link>{" "}
-          to start a quiz and keep your scores.
+          to start and keep your scores.
         </p>
       </section>
     );
@@ -96,10 +105,12 @@ export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
     <section className="space-y-4">
       <div>
         <h3 className="display text-2xl font-semibold text-forest-900">
-          Quiz yourself
+          Test Yourself
         </h3>
         <p className="mt-1 text-ink-muted">
-          Check what stuck from the page — or from your uploaded notes.
+          Real questions from this page — Hebrew ↔ English translation plus
+          comprehension, key terms, and sugya attribution when the text
+          supports them. A new shuffle each run.
         </p>
       </div>
 
@@ -136,7 +147,7 @@ export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
         disabled={busy}
         className="btn-primary"
       >
-        {busy && !questions.length ? "Building quiz…" : "Start quiz"}
+        {busy && !questions.length ? "Building questions…" : "Start Test Yourself"}
       </button>
 
       {error && (
@@ -147,41 +158,52 @@ export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
 
       {questions.length > 0 && !result && (
         <div className="space-y-5">
-          {questions.map((q, qi) => (
-            <fieldset key={q.id} className="panel">
-              <legend className="px-1 text-sm font-semibold text-forest-600">
-                Question {qi + 1}
-              </legend>
-              <p className="mt-1 whitespace-pre-wrap font-medium text-forest-950">
-                {q.prompt}
-              </p>
-              <div className="mt-3 space-y-2">
-                {q.choices.map((choice, ci) => (
-                  <label
-                    key={ci}
-                    className={`flex cursor-pointer items-start gap-3 rounded-lg border px-3 py-2.5 transition ${
-                      answers[qi] === ci
-                        ? "border-forest-500 bg-forest-100"
-                        : "border-line bg-white hover:border-forest-400"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name={q.id}
-                      checked={answers[qi] === ci}
-                      onChange={() => {
-                        const next = [...answers];
-                        next[qi] = ci;
-                        setAnswers(next);
-                      }}
-                      className="mt-1 accent-forest-600"
-                    />
-                    <span className="text-ink">{choice}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-          ))}
+          {questions.map((q, qi) => {
+            const label = kindLabel(q.kind);
+            return (
+              <fieldset key={q.id} className="panel">
+                <legend className="px-1 text-sm font-semibold text-forest-600">
+                  Question {qi + 1}
+                  {label ? ` · ${label}` : ""}
+                </legend>
+                <p className="mt-1 whitespace-pre-wrap font-medium text-forest-950">
+                  {q.prompt}
+                </p>
+                <div className="mt-3 space-y-2">
+                  {q.choices.map((choice, ci) => (
+                    <label
+                      key={ci}
+                      className={`flex cursor-pointer items-start gap-3 rounded-lg border px-3 py-2.5 transition ${
+                        answers[qi] === ci
+                          ? "border-forest-500 bg-forest-100"
+                          : "border-line bg-white hover:border-forest-400"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name={q.id}
+                        checked={answers[qi] === ci}
+                        onChange={() => {
+                          const next = [...answers];
+                          next[qi] = ci;
+                          setAnswers(next);
+                        }}
+                        className="mt-1 accent-forest-600"
+                      />
+                      <span
+                        className={`text-ink ${
+                          /[\u0590-\u05FF]/.test(choice) ? "hebrew text-right" : ""
+                        }`}
+                        dir={/[\u0590-\u05FF]/.test(choice) ? "rtl" : undefined}
+                      >
+                        {choice}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            );
+          })}
           <button
             type="button"
             onClick={() => void submit()}
@@ -197,12 +219,16 @@ export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
         <div className="space-y-4">
           <div className="rounded-xl bg-forest-800 px-5 py-6 text-white">
             <p className="text-sm uppercase tracking-[0.16em] text-forest-200">
-              Score
+              Score saved
             </p>
             <p className="display mt-1 text-5xl font-semibold">{result.score}%</p>
+            <p className="mt-2 text-sm text-forest-200">
+              Kept with your account for this daf.
+            </p>
           </div>
           {result.questions.map((q, qi) => {
             const correct = answers[qi] === q.correctIndex;
+            const label = kindLabel(q.kind);
             return (
               <div
                 key={q.id}
@@ -214,6 +240,7 @@ export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
               >
                 <p className="font-semibold text-forest-950">
                   {qi + 1}. {correct ? "Correct" : "Review"}
+                  {label ? ` · ${label}` : ""}
                 </p>
                 <p className="mt-1 whitespace-pre-wrap text-sm text-ink-muted">
                   {q.explanation}
@@ -231,7 +258,7 @@ export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
               setResult(null);
             }}
           >
-            Try another set
+            New set of questions
           </button>
         </div>
       )}

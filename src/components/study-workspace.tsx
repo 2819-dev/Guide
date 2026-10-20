@@ -28,17 +28,17 @@ export function StudyWorkspace({ text, signedIn }: Props) {
   return (
     <div className="space-y-14">
       <GemaraReader text={text} />
-      <NotesUpload
-        dafId={dafId}
-        tractateSlug={tractateSlug}
-        signedIn={signedIn}
-        onNotesChange={(notes) => setHasNotes(notes.length > 0)}
-      />
       <QuizPanel
         dafId={dafId}
         tractateSlug={tractateSlug}
         hasNotes={hasNotes}
         signedIn={signedIn}
+      />
+      <NotesUpload
+        dafId={dafId}
+        tractateSlug={tractateSlug}
+        signedIn={signedIn}
+        onNotesChange={(notes) => setHasNotes(notes.length > 0)}
       />
     </div>
   );

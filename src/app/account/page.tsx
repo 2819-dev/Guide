@@ -31,8 +31,7 @@ export default async function AccountPage() {
             Moderator
           </h2>
           <p className="mt-2 text-ink-muted">
-            Your moderator account is ready. Tools for this role will arrive in a
-            later release.
+            No moderator tools are available yet. Your account role is saved.
           </p>
         </div>
       )}
