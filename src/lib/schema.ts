@@ -164,3 +164,33 @@ export const supportTickets = pgTable("support_tickets", {
     .defaultNow()
     .notNull(),
 });
+
+/** Schools apply for Guide Education; admin/moderator approve before Rebbe access. */
+export const schoolApplications = pgTable("school_applications", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  schoolName: varchar("school_name", { length: 200 }).notNull(),
+  contactName: varchar("contact_name", { length: 120 }).notNull(),
+  contactEmail: varchar("contact_email", { length: 254 }).notNull(),
+  contactRole: varchar("contact_role", { length: 120 }).notNull(),
+  studentCountEstimate: varchar("student_count_estimate", {
+    length: 64,
+  }).notNull(),
+  intendedUse: text("intended_use").notNull(),
+  status: varchar("status", { length: 24 }).notNull().default("pending"),
+  applicantProfileId: uuid("applicant_profile_id").references(
+    () => profiles.id,
+    { onDelete: "set null" },
+  ),
+  reviewNote: text("review_note"),
+  reviewedByProfileId: uuid("reviewed_by_profile_id").references(
+    () => profiles.id,
+    { onDelete: "set null" },
+  ),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

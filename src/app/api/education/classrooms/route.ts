@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
+import { hasEducationAccess } from "@/lib/education-access";
 import { makeInviteCode } from "@/lib/invite";
 import { requireProfile } from "@/lib/profile";
 import {
@@ -17,6 +18,12 @@ export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
     return NextResponse.json({ error: "Rebbe access required" }, { status: 403 });
+  }
+  if (!(await hasEducationAccess(authz.profile))) {
+    return NextResponse.json(
+      { error: "School approval required" },
+      { status: 403 },
+    );
   }
 
   const db = getDb();
@@ -120,9 +127,15 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const authz = await requireProfile(["rebbe"]);
+  const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
     return NextResponse.json({ error: "Rebbe access required" }, { status: 403 });
+  }
+  if (!(await hasEducationAccess(authz.profile))) {
+    return NextResponse.json(
+      { error: "School approval required" },
+      { status: 403 },
+    );
   }
 
   try {

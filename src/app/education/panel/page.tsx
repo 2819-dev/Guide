@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EducationPanel } from "@/components/education-panel";
+import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 
 export const instant = false;
@@ -8,7 +9,12 @@ export const metadata = { title: "Rebbe panel" };
 
 export default async function EducationPanelPage() {
   const authz = await requireProfile(["rebbe", "admin"]);
-  if (!authz) redirect("/auth/sign-in");
+  if (!authz) redirect("/auth/sign-in?next=/education");
+
+  const allowed = await hasEducationAccess(authz.profile);
+  if (!allowed) {
+    redirect("/education#apply");
+  }
 
   return (
     <div>

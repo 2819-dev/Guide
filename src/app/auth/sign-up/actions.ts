@@ -15,8 +15,9 @@ export async function signUpWithEmail(
   const name = String(formData.get("name") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const roleRaw = String(formData.get("role") ?? "customer");
-  const role: Role =
-    roleRaw === "rebbe" || roleRaw === "moderator" ? roleRaw : "customer";
+  // Rebbe access requires an approved school application — signup stays customer.
+  const role: Role = roleRaw === "moderator" ? "moderator" : "customer";
+  const wantsEducation = roleRaw === "rebbe";
 
   if (!email || !password || password.length < 8) {
     return { error: "Use a valid email and a password of at least 8 characters." };
@@ -58,6 +59,6 @@ export async function signUpWithEmail(
     }
   }
 
-  if (role === "rebbe") redirect("/education/panel");
+  if (wantsEducation) redirect("/education#apply");
   redirect("/study");
 }

@@ -25,7 +25,7 @@ export default function HomePage() {
                 Start with {featured.englishName}
               </Link>
               <Link href="/study" className="btn-secondary">
-                Browse tractates
+                Choose what to learn
               </Link>
             </div>
           </div>
@@ -37,9 +37,14 @@ export default function HomePage() {
               {featuredSugya ? ` · ${featuredSugya}` : ""}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-ink-muted sm:text-base">
-              First tractate open — including{" "}
-              {featuredSugya ?? "the opening dapim"}. More masechtot will appear
-              in the catalog as they are ready.
+              Start with {featured.englishName}
+              {featuredSugya ? (
+                <>
+                  {" "}
+                  — including <span className="hebrew">{featuredSugya}</span>
+                </>
+              ) : null}
+              . More Mishnayos and Gemara will open here as they are ready.
             </p>
             <Link href={startHref} className="btn-primary mt-5 inline-flex">
               Open {startDaf}
@@ -58,7 +63,7 @@ export default function HomePage() {
           <li className="border-b border-line p-5 lg:border-b-0 lg:border-r">
             <p className="text-xs font-semibold text-forest-600">01</p>
             <h3 className="mt-2 text-base font-semibold text-forest-950">
-              Pick a tractate
+              Pick a Gemara
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-ink-muted">
               {featured.englishName} (
@@ -138,7 +143,7 @@ export default function HomePage() {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2.5">
           <Link href="/study" className="btn-primary">
-            Browse tractates
+            Choose what to learn
           </Link>
           <Link href="/auth/sign-up" className="btn-secondary">
             Create account

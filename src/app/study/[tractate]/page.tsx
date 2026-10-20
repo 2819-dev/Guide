@@ -17,7 +17,7 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const { tractate: slug } = await params;
   const tractate = getTractate(slug);
-  if (!tractate) return { title: "Tractate" };
+  if (!tractate) return { title: "Study" };
   return { title: tractate.englishName };
 }
 
@@ -42,7 +42,7 @@ export default async function TractateStudyPage({ params }: Props) {
               href="/study"
               className="text-sm font-medium text-forest-700 no-underline hover:underline"
             >
-              ← All tractates
+              ← Choose what to learn
             </Link>
             <p className="hebrew mt-4 text-lg text-forest-800">
               {tractate.hebrewName}
@@ -52,7 +52,7 @@ export default async function TractateStudyPage({ params }: Props) {
             </h1>
             <p className="mt-3 max-w-2xl text-base text-ink-muted">
               Coming soon. Create an account so you&apos;re ready when this
-              masechta opens.
+              opens.
             </p>
             <Link href="/auth/sign-up" className="btn-primary mt-6 inline-flex">
               Create account
@@ -73,7 +73,7 @@ export default async function TractateStudyPage({ params }: Props) {
             href="/study"
             className="text-sm font-medium text-forest-700 no-underline hover:underline"
           >
-            ← All tractates
+            ← Choose what to learn
           </Link>
           <p className="hebrew mt-4 text-lg text-forest-800">
             {tractate.hebrewName}

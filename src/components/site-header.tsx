@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GuideWordmark } from "@/components/guide-logo";
 import { SignOutButton } from "@/components/sign-out-button";
-import { roleLabel, type Role } from "@/lib/roles";
+import type { Role } from "@/lib/roles";
 
 type Me = {
   profile: { id: string; role: Role; displayName: string } | null;
@@ -38,18 +38,9 @@ export function SiteHeader() {
           <Link href={educationHref} className={navLink}>
             Education
           </Link>
-          {role === "admin" && (
+          {(role === "admin" || role === "moderator") && (
             <Link href="/admin" className={navLink}>
-              Support
-            </Link>
-          )}
-          {role === "moderator" && (
-            <Link
-              href="/account"
-              className="rounded-md px-2.5 py-1.5 text-sm text-ink-muted no-underline"
-              title={roleLabel("moderator")}
-            >
-              Moderator
+              {role === "admin" ? "Ops" : "Schools"}
             </Link>
           )}
           {me?.profile ? (

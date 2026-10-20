@@ -75,7 +75,7 @@ export default function SignUpPage() {
                   value="rebbe"
                   defaultChecked={defaultRole === "rebbe"}
                 />
-                Rebbe (Guide for Education)
+                Rebbe — I will apply for Guide for Education
               </label>
               <label className="flex items-center gap-2 text-sm text-ink">
                 <input type="radio" name="role" value="moderator" />
