@@ -50,8 +50,11 @@ export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
         <p className="mt-2 text-ink-muted">
           Translation, comprehension, key terms, and who-says-what — drawn from
           this daf.{" "}
-          <Link href="/auth/sign-in" className="font-semibold text-forest-700">
-            Sign in
+          <Link
+            href="/auth/sign-in?as=student"
+            className="font-semibold text-forest-700"
+          >
+            Log in as Student
           </Link>{" "}
           to start and keep your scores.
         </p>

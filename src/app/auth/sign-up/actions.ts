@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
+import { parseLoginAs } from "@/lib/login-roles";
 import { isRole, type Role } from "@/lib/roles";
 import { profiles } from "@/lib/schema";
 
@@ -14,13 +15,28 @@ export async function signUpWithEmail(
   const email = String(formData.get("email") ?? "").trim();
   const name = String(formData.get("name") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  const as = parseLoginAs(String(formData.get("as") ?? "student"));
   const roleRaw = String(formData.get("role") ?? "customer");
-  // Rebbe access requires an approved school application — signup stays customer.
-  const role: Role = roleRaw === "moderator" ? "moderator" : "customer";
-  const wantsEducation = roleRaw === "rebbe";
+
+  // Public signup never creates admin. Officials are provisioned separately.
+  // Teacher path stays customer until school approval promotes to rebbe.
+  let role: Role = "customer";
+  if (roleRaw === "moderator" && as === "official") {
+    role = "moderator";
+  } else if (isRole(roleRaw) && roleRaw !== "admin" && roleRaw !== "rebbe") {
+    role = roleRaw;
+  }
+
+  const wantsEducation = as === "teacher" || as === "school" || roleRaw === "rebbe";
 
   if (!email || !password || password.length < 8) {
     return { error: "Use a valid email and a password of at least 8 characters." };
+  }
+
+  if (as === "official") {
+    return {
+      error: "Guide Official accounts are provisioned internally. Please log in.",
+    };
   }
 
   const { error } = await auth.signUp.email({
@@ -36,7 +52,7 @@ export async function signUpWithEmail(
   const { data: session } = await auth.getSession();
   if (session?.user?.id) {
     const db = getDb();
-    let finalRole: Role = isRole(role) ? role : "customer";
+    let finalRole: Role = role;
     if (email.toLowerCase() === "admin@bighappysmiley.com") {
       finalRole = "admin";
     }

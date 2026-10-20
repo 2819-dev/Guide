@@ -10,7 +10,7 @@ export const metadata = { title: "Account" };
 
 export default async function AccountPage() {
   const authz = await requireProfile();
-  if (!authz) redirect("/auth/sign-in");
+  if (!authz) redirect("/auth/sign-in?as=student");
 
   const role = authz.profile.role as Role;
 

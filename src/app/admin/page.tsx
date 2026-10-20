@@ -8,7 +8,7 @@ export const metadata = { title: "Operations" };
 
 export default async function AdminPage() {
   const authz = await requireProfile(["admin", "moderator"]);
-  if (!authz) redirect("/auth/sign-in");
+  if (!authz) redirect("/auth/sign-in?as=official");
 
   const isAdmin = authz.profile.role === "admin";
 

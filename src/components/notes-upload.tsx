@@ -94,8 +94,11 @@ export function NotesUpload({
           Study notes
         </h3>
         <p className="mt-2 text-ink-muted">
-          <Link href="/auth/sign-in" className="font-semibold text-forest-700">
-            Sign in
+          <Link
+            href="/auth/sign-in?as=student"
+            className="font-semibold text-forest-700"
+          >
+            Log in as Student
           </Link>{" "}
           to save notes and get quizzes tailored to what you wrote.
         </p>

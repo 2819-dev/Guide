@@ -120,10 +120,13 @@ export default async function EducationLandingPage() {
         {!session && (
           <p className="mt-4 text-sm text-ink-muted">
             Tip:{" "}
-            <Link href="/auth/sign-in" className="font-semibold text-forest-700">
-              Sign in
+            <Link
+              href="/auth/sign-in?as=school"
+              className="font-semibold text-forest-700"
+            >
+              Log in as school administrator
             </Link>{" "}
-            before applying so approval can unlock your Rebbe panel
+            (or Teacher / Rebbe) before applying so approval can unlock Education
             automatically.
           </p>
         )}

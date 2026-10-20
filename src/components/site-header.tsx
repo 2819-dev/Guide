@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GuideWordmark } from "@/components/guide-logo";
+import { LoginMenu } from "@/components/login-menu";
 import { SignOutButton } from "@/components/sign-out-button";
 import type { Role } from "@/lib/roles";
 
@@ -55,11 +56,9 @@ export function SiteHeader() {
             </>
           ) : (
             <>
-              <Link href="/auth/sign-in" className={navLink}>
-                Log in
-              </Link>
+              <LoginMenu variant="nav" />
               <Link
-                href="/auth/sign-up"
+                href="/auth/sign-up?as=student"
                 className="btn-primary !px-3 !py-1.5 text-sm"
               >
                 Get started

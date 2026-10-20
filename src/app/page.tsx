@@ -145,7 +145,7 @@ export default function HomePage() {
           <Link href="/study" className="btn-primary">
             Choose what to learn
           </Link>
-          <Link href="/auth/sign-up" className="btn-secondary">
+          <Link href="/auth/sign-up?as=student" className="btn-secondary">
             Create account
           </Link>
         </div>
