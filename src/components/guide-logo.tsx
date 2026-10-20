@@ -8,14 +8,14 @@ type WordmarkProps = {
 };
 
 const sizeMap = {
-  sm: "text-lg",
-  md: "text-[1.35rem]",
-  lg: "text-2xl",
+  sm: "text-[1.0625rem]",
+  md: "text-[1.25rem]",
+  lg: "text-[1.625rem]",
 } as const;
 
 /**
- * Soft fallback lockup: “Guide” wordmark only.
- * No decorative mark until a direction is picked (guide-alt-* pending).
+ * Locked brand lockup: typographic “Guide” only.
+ * No icon mark — weight, tracking, and forest color do the work.
  */
 export function GuideWordmark({
   href = "/",
@@ -27,9 +27,9 @@ export function GuideWordmark({
 
   const inner = (
     <span
-      className={`font-semibold leading-none tracking-tight ${sizeMap[size]} ${textColor} ${className}`}
+      className={`inline-block font-medium leading-none tracking-[-0.035em] ${sizeMap[size]} ${textColor} ${className}`}
       style={{
-        fontFamily: "var(--font-manrope), var(--font-body), sans-serif",
+        fontFamily: "var(--font-manrope), var(--font-body), system-ui, sans-serif",
       }}
     >
       Guide
@@ -42,20 +42,5 @@ export function GuideWordmark({
     <Link href={href} className="no-underline" aria-label="Guide home">
       {inner}
     </Link>
-  );
-}
-
-/** @deprecated Mark deferred — wordmark-only until user picks guide-alt-* */
-export function GuideMark({
-  className = "hidden",
-  title,
-}: {
-  className?: string;
-  title?: string;
-}) {
-  return (
-    <span className={className} aria-hidden title={title}>
-      Guide
-    </span>
   );
 }
