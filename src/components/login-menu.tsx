@@ -5,11 +5,11 @@ import { useEffect, useId, useRef, useState } from "react";
 import { LOGIN_AS_OPTIONS } from "@/lib/login-roles";
 
 type Props = {
-  /** Primary filled style (Clever-like) vs quiet text */
   variant?: "primary" | "nav";
   className?: string;
 };
 
+/** Clever-style header Log In control (~50px tall, 10px radius). */
 export function LoginMenu({ variant = "primary", className = "" }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -33,8 +33,8 @@ export function LoginMenu({ variant = "primary", className = "" }: Props) {
 
   const triggerClass =
     variant === "primary"
-      ? "btn-primary inline-flex items-center gap-1.5 !px-4 !py-2 text-sm"
-      : "inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-ink hover:bg-forest-100";
+      ? "inline-flex h-[50px] items-center gap-2 rounded-[10px] bg-forest-800 px-7 text-base font-semibold text-white transition hover:bg-forest-700"
+      : "inline-flex items-center gap-1.5 rounded-[10px] border border-line bg-surface px-3 py-2 text-sm font-semibold text-forest-900 hover:bg-forest-100";
 
   return (
     <div ref={rootRef} className={`relative ${className}`}>
@@ -46,13 +46,24 @@ export function LoginMenu({ variant = "primary", className = "" }: Props) {
         onClick={() => setOpen((v) => !v)}
         className={triggerClass}
       >
+        {variant === "primary" ? (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.7" />
+            <path
+              d="M5 19.5c1.5-3.2 4-4.8 7-4.8s5.5 1.6 7 4.8"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+            />
+          </svg>
+        ) : null}
         Log In
         <svg
           width="12"
           height="12"
           viewBox="0 0 12 12"
           aria-hidden
-          className={`opacity-80 transition ${open ? "rotate-180" : ""}`}
+          className={`opacity-90 transition ${open ? "rotate-180" : ""}`}
         >
           <path
             d="M2.5 4.5 6 8l3.5-3.5"
@@ -70,10 +81,10 @@ export function LoginMenu({ variant = "primary", className = "" }: Props) {
           id={menuId}
           role="menu"
           aria-label="Log in as a"
-          className="absolute right-0 z-50 mt-2.5 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-line bg-surface"
+          className="absolute right-0 z-50 mt-2.5 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-[10px] border border-line bg-surface"
           style={{ boxShadow: "var(--shadow-menu)" }}
         >
-          <p className="border-b border-line bg-sky-soft/80 px-4 py-3 text-sm font-semibold text-forest-900">
+          <p className="border-b border-line bg-sky-soft px-4 py-3 text-sm font-semibold text-forest-900">
             Log in as a
           </p>
           <ul className="py-1">
@@ -85,10 +96,10 @@ export function LoginMenu({ variant = "primary", className = "" }: Props) {
                   onClick={() => setOpen(false)}
                   className="block px-4 py-3.5 no-underline transition hover:bg-forest-100"
                 >
-                  <span className="block text-[0.95rem] font-semibold text-forest-950">
+                  <span className="block text-base font-semibold text-forest-950">
                     {opt.label}
                   </span>
-                  <span className="mt-0.5 block text-[0.8rem] leading-snug text-ink-muted">
+                  <span className="mt-0.5 block text-[0.8125rem] leading-snug text-ink-muted">
                     {opt.description}
                   </span>
                 </Link>

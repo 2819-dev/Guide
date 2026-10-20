@@ -20,7 +20,7 @@ export function AuthCard({
       <div className="mb-5 flex justify-end">
         <LoginMenu variant="nav" />
       </div>
-      <div className="rounded-2xl border border-line bg-surface px-6 py-8 sm:px-8 sm:py-9">
+      <div className="rounded-[10px] border border-line bg-surface px-6 py-8 shadow-[var(--shadow-card)] sm:px-8 sm:py-9">
         {eyebrow ? (
           <p className="text-sm font-semibold text-forest-700">{eyebrow}</p>
         ) : null}

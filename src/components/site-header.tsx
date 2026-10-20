@@ -24,15 +24,13 @@ type Me = {
   educationOk?: boolean;
 };
 
-/**
- * Clever-like school chrome:
- * - Logged out: wordmark · Education · Log In (no apps in the bar)
- * - Logged in: portal home · Messaging · Suggestions · account
- * Apps live inside the portal launcher, not the top bar.
- */
 const navLink =
-  "rounded-full px-3 py-2 text-[0.9375rem] font-medium text-ink no-underline hover:bg-forest-100";
+  "px-2 py-2 text-base font-normal text-forest-950 no-underline hover:text-forest-700";
 
+/**
+ * Clever 1:1 header structure — Guide wordmark + forest CTAs.
+ * Apps never appear in the top bar.
+ */
 export function SiteHeader() {
   const [me, setMe] = useState<Me | null>(null);
 
@@ -68,9 +66,9 @@ export function SiteHeader() {
 
   return (
     <header className="site-header sticky top-0 z-40">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+      <div className="site-header__inner">
         <GuideWordmark size="lg" />
-        <nav className="flex flex-wrap items-center justify-end gap-0.5 sm:gap-1">
+        <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-5">
           {loggedIn ? (
             <>
               <Link href={portalHref} className={`${navLink} font-semibold`}>
@@ -89,17 +87,14 @@ export function SiteHeader() {
                   </Link>
                 </>
               ) : null}
-              <Link
-                href="/account"
-                className={`hidden sm:inline ${navLink}`}
-              >
+              <Link href="/account" className={`hidden sm:inline ${navLink}`}>
                 {profile!.displayName}
               </Link>
               <SignOutButton />
             </>
           ) : (
             <>
-              <Link href="/education" className={navLink}>
+              <Link href="/education" className={`hidden sm:inline ${navLink}`}>
                 Education
               </Link>
               <LoginMenu variant="primary" />

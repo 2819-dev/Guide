@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AuthCard } from "@/components/auth-card";
+import { GuideWordmark } from "@/components/guide-logo";
 import { SchoolPickerField } from "@/components/school-picker-field";
 import { parseLoginAs, signupAsCopy } from "@/lib/login-roles";
 import { signUpWithEmail } from "./actions";
@@ -101,11 +102,14 @@ function SignUpForm() {
 
 export default function SignUpPage() {
   return (
-    <div className="auth-shell">
-      <div className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center px-5 py-12 sm:px-8 sm:py-16">
+    <div className="auth-shell flex min-h-screen flex-col">
+      <div className="flex items-center px-6 py-5 sm:px-8">
+        <GuideWordmark href="/" size="lg" />
+      </div>
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
         <Suspense
           fallback={
-            <div className="w-full max-w-md rounded-2xl border border-line bg-surface px-6 py-8">
+            <div className="w-full max-w-md rounded-[10px] border border-line bg-surface px-6 py-8">
               <p className="text-ink-muted">Loading…</p>
             </div>
           }

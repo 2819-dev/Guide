@@ -11,26 +11,20 @@ export default function AppsLibraryPage() {
   return (
     <div>
       <section className="hero-band">
-        <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
+        <div className="content-band py-12 sm:py-14">
           <p className="eyebrow">Guide</p>
-          <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
-            Apps
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-ink-muted">
-            Clever-style library for schools. Teachers add an app to a class;
-            students open it from My apps. Amud is also available to everyone on
-            its own site.
+          <h1 className="display-feature mt-2">Apps</h1>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-muted">
+            School app library. Teachers add an app to a class; students open it
+            from My apps on their portal — not from the top bar.
           </p>
         </div>
       </section>
-      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
+      <div className="content-band pb-14 sm:pb-16">
         <ul className="grid gap-4 sm:grid-cols-2">
           {APP_CATALOG.map((app) => (
             <li key={app.slug}>
-              <Link
-                href={appHomePath(app.slug)}
-                className="block rounded-2xl border border-line bg-surface px-6 py-7 no-underline transition hover:border-forest-400 hover:bg-forest-100"
-              >
+              <Link href={appHomePath(app.slug)} className="portal-tile">
                 <p className="text-2xl font-semibold tracking-tight text-forest-950">
                   {app.name}
                 </p>

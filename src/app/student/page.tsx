@@ -35,10 +35,10 @@ export default async function StudentHubPage() {
   );
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
-      <header className="mb-10">
+    <div className="content-band py-12 sm:py-16">
+      <header className="mb-10 max-w-3xl">
         <p className="text-sm font-semibold text-forest-700">Student portal</p>
-        <h1 className="display mt-1.5 text-3xl text-forest-950 sm:text-4xl">
+        <h1 className="display-feature mt-1.5">
           Hi, {authz.profile.displayName}
         </h1>
         {roles.length > 0 && (
@@ -71,10 +71,7 @@ export default async function StudentHubPage() {
 
       <ul className="space-y-3">
         <li>
-          <Link
-            href="/student/messages"
-            className="block rounded-2xl border border-line bg-surface px-5 py-6 no-underline transition hover:border-forest-400 hover:bg-forest-100 sm:px-6"
-          >
+          <Link href="/student/messages" className="portal-tile">
             <p className="text-lg font-semibold text-forest-950">
               Message your teachers
             </p>
@@ -88,7 +85,7 @@ export default async function StudentHubPage() {
         </li>
         <li>
           {suggestionsAccess.blocked ? (
-            <div className="rounded-2xl border border-dashed border-line bg-sky-soft/40 px-5 py-6 sm:px-6">
+            <div className="rounded-[10px] border border-dashed border-line bg-sky-soft/40 px-5 py-6 sm:px-6">
               <p className="text-lg font-semibold text-forest-950">
                 Suggestions
               </p>
@@ -100,10 +97,7 @@ export default async function StudentHubPage() {
               </p>
             </div>
           ) : (
-            <Link
-              href="/student/suggestions"
-              className="block rounded-2xl border border-line bg-surface px-5 py-6 no-underline transition hover:border-forest-400 hover:bg-forest-100 sm:px-6"
-            >
+            <Link href="/student/suggestions" className="portal-tile">
               <p className="text-lg font-semibold text-forest-950">
                 Suggestions
               </p>
