@@ -24,7 +24,7 @@ export default async function EducationPanelPage() {
             href="/education"
             className="text-sm font-medium text-forest-700 no-underline hover:underline"
           >
-            ← Guide for Education
+            ← Apply for your school
           </Link>
           <p className="eyebrow mt-4">Teacher portal</p>
           <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">

@@ -93,12 +93,7 @@ export function SiteHeader() {
               <SignOutButton />
             </>
           ) : (
-            <>
-              <Link href="/education" className={`hidden sm:inline ${navLink}`}>
-                Education
-              </Link>
-              <LoginMenu variant="primary" />
-            </>
+            <LoginMenu variant="primary" />
           )}
         </nav>
       </div>

@@ -54,7 +54,7 @@ function GuideHomePage() {
                 </span>
               </Link>
               <div className="grid gap-5 sm:grid-cols-2">
-                <Link href="/education" className="hero-link-card">
+                <Link href="/education#apply" className="hero-link-card">
                   <span className="hero-link-card__label">For schools</span>
                   <span className="hero-link-card__arrow">
                     <ArrowIcon />
@@ -126,7 +126,7 @@ function GuideHomePage() {
               </h3>
               <p className="mt-2 text-base leading-relaxed text-ink-muted">
                 School picker and badge or password login for students.
-                Education tools unlock after school approval.
+                School tools unlock after your school is approved.
               </p>
             </div>
             <div>
@@ -156,16 +156,19 @@ function GuideHomePage() {
       <section className="section-pad">
         <div className="content-band grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
-            <p className="eyebrow">Guide for Education</p>
+            <p className="eyebrow">For schools</p>
             <h2 className="display-feature mt-3">
               Classes and apps in one place
             </h2>
             <p className="mt-4 max-w-md text-base leading-relaxed text-ink-muted">
-              Apply once. After approval, Rebbeim create classes, add apps, and
-              follow student progress.
+              Apply once. After approval, teachers create classes, add apps, and
+              follow student progress — all inside Guide.
             </p>
-            <Link href="/education" className="btn-secondary mt-8 inline-flex">
-              Explore Education
+            <Link
+              href="/education#apply"
+              className="btn-secondary mt-8 inline-flex"
+            >
+              Apply for your school
             </Link>
           </div>
           <div className="border-t border-line pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-1">

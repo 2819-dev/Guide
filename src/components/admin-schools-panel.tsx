@@ -66,8 +66,8 @@ export function AdminSchoolsPanel() {
           School applications
         </h2>
         <p className="mt-1 text-sm text-ink-muted">
-          Approve a school so Rebbeim can use Guide for Education. Contact
-          details are shown here for review.
+          Approve a school so teachers can use Guide. Contact details are shown
+          here for review.
         </p>
       </div>
 

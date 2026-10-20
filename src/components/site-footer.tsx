@@ -17,15 +17,10 @@ export function SiteFooter() {
         <div className="mb-10">
           <GuideWordmark href="/" size="md" />
         </div>
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className={colHead}>Schools</p>
             <ul className="space-y-2">
-              <li>
-                <Link href="/education" className={link}>
-                  Guide for Education
-                </Link>
-              </li>
               <li>
                 <Link href="/education#apply" className={link}>
                   Apply for your school
@@ -34,6 +29,11 @@ export function SiteFooter() {
               <li>
                 <Link href="/auth/sign-in?as=educator" className={link}>
                   Teacher log in
+                </Link>
+              </li>
+              <li>
+                <Link href="/education/panel" className={link}>
+                  Teacher portal
                 </Link>
               </li>
             </ul>
@@ -59,11 +59,16 @@ export function SiteFooter() {
             </ul>
           </div>
           <div>
-            <p className={colHead}>Platform</p>
+            <p className={colHead}>Guide</p>
             <ul className="space-y-2">
               <li>
                 <Link href="/#what" className={link}>
                   What is Guide?
+                </Link>
+              </li>
+              <li>
+                <Link href="/apps" className={link}>
+                  App library
                 </Link>
               </li>
               <li>
@@ -74,21 +79,6 @@ export function SiteFooter() {
               <li>
                 <Link href="/auth/sign-in?as=official" className={link}>
                   Guide Official
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <p className={colHead}>Education</p>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/education/panel" className={link}>
-                  Teacher portal
-                </Link>
-              </li>
-              <li>
-                <Link href="/education" className={link}>
-                  Classes &amp; apps
                 </Link>
               </li>
             </ul>

@@ -4,7 +4,7 @@ import type { Profile } from "@/lib/profile";
 import { schoolApplications } from "@/lib/schema";
 import type { Role } from "@/lib/roles";
 
-/** Admins always have Education access. Rebbeim need an approved school application. */
+/** Admins always have school-tool access. Teachers need an approved school application. */
 export async function hasEducationAccess(profile: Profile): Promise<boolean> {
   const role = profile.role as Role;
   if (role === "admin") return true;

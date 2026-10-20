@@ -191,8 +191,8 @@ export function StudentSignIn() {
                       No schools yet
                     </p>
                     <p className="mt-2">
-                      Ask your teacher to apply for Guide for Education. Once
-                      approved, your school will show up here.
+                      Ask your teacher to apply for Guide. Once approved, your
+                      school will show up here.
                     </p>
                   </div>
                 )}

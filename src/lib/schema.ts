@@ -180,7 +180,7 @@ export const supportTickets = pgTable("support_tickets", {
     .notNull(),
 });
 
-/** Schools apply for Guide Education; approve before Rebbe access. */
+/** Schools apply for Guide; approve before teacher portal access. */
 export const schoolApplications = pgTable("school_applications", {
   id: uuid("id").defaultRandom().primaryKey(),
   schoolName: varchar("school_name", { length: 200 }).notNull(),

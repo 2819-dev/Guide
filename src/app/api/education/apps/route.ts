@@ -19,7 +19,7 @@ export async function GET() {
     return NextResponse.json({ error: "Access required" }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "Education access required" }, { status: 403 });
+    return NextResponse.json({ error: "School access required" }, { status: 403 });
   }
 
   const db = getDb();
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Access required" }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "Education access required" }, { status: 403 });
+    return NextResponse.json({ error: "School access required" }, { status: 403 });
   }
 
   try {

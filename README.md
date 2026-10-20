@@ -1,17 +1,16 @@
 # Guide
 
-Consumer **Mishnayos and Gemara** study — calm dapim, quizzes, and notes — with **Guide for Education** for Rebbeim on a separate `/education` surface.
+**Guide** is a Clever-like **school identity platform** (Student · Teacher or School Administrator · Guide Official). Apps launch from portals — not the top bar.
 
-Bava Metzia (בבא מציעא), including אלו מציאות, is the first available tractate. More masechtot will open in the catalog as content is added.
+**Amud** (Mishnayos and Gemara · Test Yourself) is a separate public site; schools can also add it as a Guide class app.
 
-Brand lockup is **Guide** only (logo mark + wordmark). Supporting copy says “Mishnayos and Gemara.”
+Brand lockup is **Guide** only (wordmark). There is no separate “Guide Education” product brand — school apply and the teacher panel live under Guide (`/education` routes for teachers).
 
 ## Roles
 
-- **Customer** — study, notes, quizzes
-- **Rebbe** — Education landing + Rebbe panel (`/education/panel`)
-- **Moderator** — account stub
-- **Admin** — support panel (no PII)
+- **Student** — school portal, My apps, messages, Suggestions
+- **Teacher / School Administrator** — apply → teacher portal (`/education/panel`)
+- **Guide Official** — school approvals, Roles, scan credentials
 
 ## Stack
 
