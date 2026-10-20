@@ -70,25 +70,25 @@ export function LoginMenu({ variant = "primary", className = "" }: Props) {
           id={menuId}
           role="menu"
           aria-label="Log in as a"
-          className="absolute right-0 z-50 mt-2.5 w-[min(100vw-2rem,21rem)] overflow-hidden rounded-2xl border border-line bg-surface"
+          className="absolute right-0 z-50 mt-2.5 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-line bg-surface"
           style={{ boxShadow: "var(--shadow-menu)" }}
         >
           <p className="border-b border-line bg-sky-soft/80 px-4 py-3 text-sm font-semibold text-forest-900">
             Log in as a
           </p>
-          <ul className="py-1.5">
+          <ul className="py-1">
             {LOGIN_AS_OPTIONS.map((opt) => (
               <li key={opt.id} role="none">
                 <Link
                   role="menuitem"
                   href={opt.href}
                   onClick={() => setOpen(false)}
-                  className="block px-4 py-3 no-underline transition hover:bg-forest-100"
+                  className="block px-4 py-3.5 no-underline transition hover:bg-forest-100"
                 >
-                  <span className="block text-[0.9375rem] font-semibold text-forest-950">
+                  <span className="block text-[0.95rem] font-semibold text-forest-950">
                     {opt.label}
                   </span>
-                  <span className="mt-0.5 block text-xs leading-snug text-ink-muted">
+                  <span className="mt-0.5 block text-[0.8rem] leading-snug text-ink-muted">
                     {opt.description}
                   </span>
                 </Link>

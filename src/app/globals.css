@@ -188,12 +188,12 @@ body {
 }
 
 .section-pad {
-  padding: 4.5rem 1.25rem;
+  padding: 5rem 1.25rem;
 }
 
 @media (min-width: 640px) {
   .section-pad {
-    padding: 5.5rem 2rem;
+    padding: 6rem 2rem;
   }
 }
 
@@ -247,4 +247,8 @@ body {
   background:
     radial-gradient(ellipse 70% 50% at 50% 0%, rgba(232, 240, 235, 0.85), transparent 60%),
     var(--paper);
+}
+
+.auth-shell .field {
+  border-radius: 0.65rem;
 }

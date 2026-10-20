@@ -41,9 +41,8 @@ export default async function EducationLandingPage() {
             Follow Mishnayos and Gemara study at home
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-base text-ink-muted sm:text-lg">
-            Schools apply once. After approval, Rebbeim create a class, share an
-            invite code, and see dapim, quizzes, and notes — so Chromebook and
-            after-school study stay connected to shiur.
+            Apply once. After approval, Rebbeim invite a class and see dapim,
+            quizzes, and notes from home or Chromebook.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {canOpenPanel ? (

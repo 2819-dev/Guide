@@ -44,7 +44,7 @@ export function SiteFooter() {
             </li>
             <li>
               <Link href="/education#apply" className={link}>
-                School application
+                For schools
               </Link>
             </li>
           </ul>
