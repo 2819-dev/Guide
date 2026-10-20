@@ -47,7 +47,7 @@ export function SupportForm() {
         >
           <option value="study">Study</option>
           <option value="account">Account</option>
-          <option value="education">Education</option>
+          <option value="education">Schools</option>
           <option value="billing">Billing</option>
           <option value="other">Other</option>
         </select>
