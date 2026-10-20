@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth/server";
+import { provisionStudentBadge } from "@/lib/badge-auth";
 import { getDb } from "@/lib/db";
 import { parseLoginAs } from "@/lib/login-roles";
 import { isRole, type Role } from "@/lib/roles";
@@ -17,6 +18,7 @@ export async function signUpWithEmail(
   const password = String(formData.get("password") ?? "");
   const as = parseLoginAs(String(formData.get("as") ?? "family"));
   const roleRaw = String(formData.get("role") ?? "customer");
+  const schoolId = String(formData.get("schoolId") ?? "").trim() || null;
 
   // Public signup never creates admin/rebbe. Officials are staff-provisioned.
   // Educator path stays customer until school approval promotes to rebbe.
@@ -35,8 +37,12 @@ export async function signUpWithEmail(
 
   if (as === "official") {
     return {
-      error: "Guide Official accounts are provisioned internally. Please log in.",
+      error: "Please log in with your Guide Official account.",
     };
+  }
+
+  if (as === "student" && !schoolId) {
+    return { error: "Choose your school to create a student account." };
   }
 
   const { error } = await auth.signUp.email({
@@ -61,17 +67,45 @@ export async function signUpWithEmail(
       .from(profiles)
       .where(eq(profiles.authUserId, session.user.id))
       .limit(1);
+
+    let profileId: string;
     if (existing[0]) {
-      await db
+      const [updated] = await db
         .update(profiles)
-        .set({ role: finalRole, displayName: name || existing[0].displayName })
-        .where(eq(profiles.id, existing[0].id));
+        .set({
+          role: finalRole,
+          displayName: name || existing[0].displayName,
+          loginEmail: email.toLowerCase(),
+          schoolId: schoolId ?? existing[0].schoolId,
+          updatedAt: new Date(),
+        })
+        .where(eq(profiles.id, existing[0].id))
+        .returning();
+      profileId = updated.id;
     } else {
-      await db.insert(profiles).values({
-        authUserId: session.user.id,
-        displayName: name || "Learner",
-        role: finalRole,
+      const [created] = await db
+        .insert(profiles)
+        .values({
+          authUserId: session.user.id,
+          displayName: name || "Learner",
+          role: finalRole,
+          loginEmail: email.toLowerCase(),
+          schoolId,
+        })
+        .returning();
+      profileId = created.id;
+    }
+
+    if (as === "student" && schoolId) {
+      const badge = await provisionStudentBadge({
+        profileId,
+        schoolId,
+        displayName: name || "Student",
       });
+      if (badge.error) {
+        // Account exists; badge can be activated from Account
+        console.error("badge provision:", badge.error);
+      }
     }
   }
 

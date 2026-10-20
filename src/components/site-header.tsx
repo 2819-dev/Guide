@@ -41,7 +41,7 @@ export function SiteHeader() {
           </Link>
           {(role === "admin" || role === "moderator") && (
             <Link href="/admin" className={navLink}>
-              {role === "admin" ? "Ops" : "Schools"}
+              Guide Official
             </Link>
           )}
           {me?.profile ? (

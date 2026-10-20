@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { ensureProfile, requireProfile } from "@/lib/profile";
 import { profiles, schoolApplications } from "@/lib/schema";
+import { syncSchoolFromApplication } from "@/lib/schools";
 
 const submitSchema = z.object({
   schoolName: z.string().trim().min(2).max(200),
@@ -128,17 +129,20 @@ export async function PATCH(request: Request) {
       .where(eq(schoolApplications.id, body.applicationId))
       .returning();
 
-    if (body.status === "approved" && updated.applicantProfileId) {
-      const [profile] = await db
-        .select()
-        .from(profiles)
-        .where(eq(profiles.id, updated.applicantProfileId))
-        .limit(1);
-      if (profile && profile.role === "customer") {
-        await db
-          .update(profiles)
-          .set({ role: "rebbe", updatedAt: new Date() })
-          .where(eq(profiles.id, profile.id));
+    if (body.status === "approved") {
+      await syncSchoolFromApplication(updated.id);
+      if (updated.applicantProfileId) {
+        const [profile] = await db
+          .select()
+          .from(profiles)
+          .where(eq(profiles.id, updated.applicantProfileId))
+          .limit(1);
+        if (profile && profile.role === "customer") {
+          await db
+            .update(profiles)
+            .set({ role: "rebbe", updatedAt: new Date() })
+            .where(eq(profiles.id, profile.id));
+        }
       }
     }
 

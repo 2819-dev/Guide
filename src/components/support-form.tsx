@@ -33,8 +33,11 @@ export function SupportForm() {
   return (
     <div className="panel space-y-3">
       <h2 className="display text-2xl font-semibold text-forest-900">
-        Contact support
+        Get help
       </h2>
+      <p className="text-sm text-ink-muted">
+        Tell us what you need — we read every message.
+      </p>
       <label className="block text-sm font-semibold text-forest-800">
         Category
         <select

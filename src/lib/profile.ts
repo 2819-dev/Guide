@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { auth } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
 import { isRole, type Role } from "@/lib/roles";
@@ -15,7 +15,14 @@ export async function getSessionUser() {
 
 export async function ensureProfile(opts?: {
   preferredRole?: Role;
-}): Promise<{ user: NonNullable<Awaited<ReturnType<typeof getSessionUser>>>; profile: Profile } | null> {
+  schoolId?: string | null;
+  badgeCode?: string | null;
+  loginEmail?: string | null;
+  badgeAuthUserId?: string | null;
+}): Promise<{
+  user: NonNullable<Awaited<ReturnType<typeof getSessionUser>>>;
+  profile: Profile;
+} | null> {
   const user = await getSessionUser();
   if (!user?.id) return null;
 
@@ -23,7 +30,12 @@ export async function ensureProfile(opts?: {
   const existing = await db
     .select()
     .from(profiles)
-    .where(eq(profiles.authUserId, user.id))
+    .where(
+      or(
+        eq(profiles.authUserId, user.id),
+        eq(profiles.badgeAuthUserId, user.id),
+      ),
+    )
     .limit(1);
 
   if (existing[0]) {
@@ -35,6 +47,28 @@ export async function ensureProfile(opts?: {
       const [updated] = await db
         .update(profiles)
         .set({ role: "admin", updatedAt: new Date() })
+        .where(eq(profiles.id, existing[0].id))
+        .returning();
+      return { user, profile: updated };
+    }
+
+    const patch: Partial<Profile> = {};
+    if (opts?.schoolId && !existing[0].schoolId) {
+      patch.schoolId = opts.schoolId;
+    }
+    if (opts?.badgeCode && !existing[0].badgeCode) {
+      patch.badgeCode = opts.badgeCode;
+    }
+    if (opts?.loginEmail && !existing[0].loginEmail) {
+      patch.loginEmail = opts.loginEmail;
+    }
+    if (opts?.badgeAuthUserId && !existing[0].badgeAuthUserId) {
+      patch.badgeAuthUserId = opts.badgeAuthUserId;
+    }
+    if (Object.keys(patch).length > 0) {
+      const [updated] = await db
+        .update(profiles)
+        .set({ ...patch, updatedAt: new Date() })
         .where(eq(profiles.id, existing[0].id))
         .returning();
       return { user, profile: updated };
@@ -55,6 +89,10 @@ export async function ensureProfile(opts?: {
       authUserId: user.id,
       displayName: user.name?.trim() || "Learner",
       role,
+      schoolId: opts?.schoolId ?? null,
+      badgeCode: opts?.badgeCode ?? null,
+      loginEmail: opts?.loginEmail ?? user.email?.toLowerCase() ?? null,
+      badgeAuthUserId: opts?.badgeAuthUserId ?? null,
     })
     .returning();
 

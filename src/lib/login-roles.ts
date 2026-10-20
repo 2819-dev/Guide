@@ -13,33 +13,31 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "family",
     label: "Parent or family",
-    description:
-      "Study Mishnayos and Gemara at home — Test Yourself, notes, and progress",
+    description: "Study at home — Test Yourself, notes, and progress",
     href: "/auth/sign-in?as=family",
   },
   {
     id: "student",
     label: "Student",
-    description: "School student — join a class with an invite code from your Rebbe",
+    description: "Pick your school — username & password or badge",
     href: "/auth/sign-in?as=student",
   },
   {
     id: "educator",
     label: "Teacher or School Administrator",
-    description:
-      "Guide for Education — apply for your school, classes, and student progress",
+    description: "Guide for Education — classes and school study",
     href: "/auth/sign-in?as=educator",
   },
   {
     id: "official",
     label: "Guide Official",
-    description: "Internal staff — school approvals and support",
+    description: "Continue with a Guide Official account",
     href: "/auth/sign-in?as=official",
   },
 ];
 
 export function parseLoginAs(value: string | null | undefined): LoginAs {
-  // Legacy query params from the previous four-way split
+  // Legacy query params from earlier role splits
   if (value === "teacher" || value === "school") return "educator";
   if (value === "learner" || value === "home" || value === "customer") {
     return "family";
@@ -66,7 +64,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Student",
         subtitle:
-          "Log in to study Mishnayos and Gemara, Test Yourself, and join your class with an invite code.",
+          "Choose your school, then log in with your username and password or scan your badge.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
@@ -74,15 +72,14 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Teacher or School Administrator",
         subtitle:
-          "Log in for Guide for Education. After your school is approved, open classes, invite codes, and student progress.",
+          "Open Guide for Education. After your school is approved, invite a class and follow student study.",
         joinHref: "/auth/sign-up?as=educator",
         joinLabel: "Create an account to apply",
       };
     case "official":
       return {
         title: "Guide Official",
-        subtitle:
-          "Internal staff access for school approvals and support operations.",
+        subtitle: "Welcome back.",
         joinHref: null,
         joinLabel: null,
       };
@@ -109,7 +106,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Join as a Student",
         subtitle:
-          "Save progress and Test Yourself scores. After you sign up, join your class from Account with an invite code.",
+          "Choose your school, create your account, and get a badge code for quick login. Join your class from Account with an invite code.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -124,7 +121,7 @@ export function signupAsCopy(as: LoginAs): {
     case "official":
       return {
         title: "Guide Official",
-        subtitle: "Staff accounts are provisioned internally — please log in.",
+        subtitle: "Please log in with your Guide Official account.",
         roleValue: "moderator",
         showRoleChooser: false,
       };

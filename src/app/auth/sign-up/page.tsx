@@ -5,6 +5,7 @@ import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { GuideWordmark } from "@/components/guide-logo";
 import { LoginMenu } from "@/components/login-menu";
+import { SchoolPickerField } from "@/components/school-picker-field";
 import { parseLoginAs, signupAsCopy } from "@/lib/login-roles";
 import { signUpWithEmail } from "./actions";
 
@@ -26,14 +27,13 @@ function SignUpForm() {
             Guide Official
           </h1>
           <p className="mt-3 text-[0.95rem] text-ink-muted">
-            Staff accounts are provisioned internally. Use Log in as a → Guide
-            Official if you already have access.
+            Please log in with your Guide Official account.
           </p>
           <Link
             href="/auth/sign-in?as=official"
             className="btn-primary mt-6 inline-flex"
           >
-            Log In as Guide Official
+            Log In
           </Link>
         </div>
       </div>
@@ -58,6 +58,7 @@ function SignUpForm() {
         <form action={formAction} className="mt-8 space-y-4">
           <input type="hidden" name="as" value={as} />
           <input type="hidden" name="role" value={copy.roleValue} />
+          {as === "student" && <SchoolPickerField required />}
           <label className="block text-sm font-semibold text-forest-900">
             Name
             <input

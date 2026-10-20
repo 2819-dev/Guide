@@ -5,6 +5,7 @@ import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { GuideWordmark } from "@/components/guide-logo";
 import { LoginMenu } from "@/components/login-menu";
+import { StudentSignIn } from "@/components/student-sign-in";
 import { loginAsCopy, parseLoginAs } from "@/lib/login-roles";
 import { signInWithEmail } from "./actions";
 
@@ -13,6 +14,10 @@ function SignInForm() {
   const as = parseLoginAs(params.get("as"));
   const copy = loginAsCopy(as);
   const [state, formAction, pending] = useActionState(signInWithEmail, null);
+
+  if (as === "student") {
+    return <StudentSignIn />;
+  }
 
   return (
     <div className="w-full max-w-md">
@@ -78,7 +83,7 @@ function SignInForm() {
               </Link>
             </>
           ) : (
-            <>Guide Official accounts are provisioned by the team.</>
+            <>Need a different role? Use Log in as a above.</>
           )}
         </p>
       </div>

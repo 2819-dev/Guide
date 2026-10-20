@@ -25,6 +25,17 @@ export const profiles = pgTable(
     authUserId: varchar("auth_user_id", { length: 128 }).notNull(),
     role: roleEnum("role").notNull().default("customer"),
     displayName: varchar("display_name", { length: 120 }).notNull(),
+    /** School chosen at student login / signup (approved schools). */
+    schoolId: uuid("school_id"),
+    /** Clever-style badge code for student login (unique when set). */
+    badgeCode: varchar("badge_code", { length: 32 }),
+    /** Real email from signup (username/password path). */
+    loginEmail: varchar("login_email", { length: 254 }),
+    /**
+     * Neon Auth user id for badge.{slug}.{code}@guide.student identity.
+     * ensureProfile resolves sessions for either authUserId or this id.
+     */
+    badgeAuthUserId: varchar("badge_auth_user_id", { length: 128 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -32,7 +43,11 @@ export const profiles = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (t) => [uniqueIndex("profiles_auth_user_idx").on(t.authUserId)],
+  (t) => [
+    uniqueIndex("profiles_auth_user_idx").on(t.authUserId),
+    uniqueIndex("profiles_badge_code_idx").on(t.badgeCode),
+    uniqueIndex("profiles_badge_auth_user_idx").on(t.badgeAuthUserId),
+  ],
 );
 
 export const classrooms = pgTable("classrooms", {
@@ -165,7 +180,7 @@ export const supportTickets = pgTable("support_tickets", {
     .notNull(),
 });
 
-/** Schools apply for Guide Education; admin/moderator approve before Rebbe access. */
+/** Schools apply for Guide Education; approve before Rebbe access. */
 export const schoolApplications = pgTable("school_applications", {
   id: uuid("id").defaultRandom().primaryKey(),
   schoolName: varchar("school_name", { length: 200 }).notNull(),
@@ -194,3 +209,21 @@ export const schoolApplications = pgTable("school_applications", {
     .defaultNow()
     .notNull(),
 });
+
+/** Approved schools — students pick one at Clever-style login. */
+export const schools = pgTable(
+  "schools",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: varchar("name", { length: 200 }).notNull(),
+    slug: varchar("slug", { length: 120 }).notNull(),
+    applicationId: uuid("application_id").references(
+      () => schoolApplications.id,
+      { onDelete: "set null" },
+    ),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [uniqueIndex("schools_slug_idx").on(t.slug)],
+);
