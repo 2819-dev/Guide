@@ -7,27 +7,28 @@ import { badgeAuthEmail, normalizeBadgeCode } from "@/lib/badge";
 import { getDb } from "@/lib/db";
 import { hasEducationAccess } from "@/lib/education-access";
 import { parseLoginAs, type LoginAs } from "@/lib/login-roles";
+import { portalFor } from "@/lib/portals";
 import { ensureProfile } from "@/lib/profile";
 import type { Role } from "@/lib/roles";
 import { profiles, schools } from "@/lib/schema";
 
-function destinationFor(as: LoginAs, role: Role, educationOk: boolean): string {
-  switch (as) {
-    case "educator":
-      if (role === "rebbe" && educationOk) return "/education/panel";
-      if (role === "admin") return "/education/panel";
-      return "/education";
-    case "official":
-      if (role === "admin" || role === "moderator") return "/admin";
-      return "/account";
-    case "student":
-      return "/student";
-    case "family":
-    default:
-      if (role === "admin") return "/admin";
-      if (role === "rebbe" && educationOk) return "/education/panel";
-      return "/study";
+function destinationFor(
+  as: LoginAs,
+  role: Role,
+  educationOk: boolean,
+  schoolId: string | null,
+  badgeCode: string | null,
+): string {
+  if (as === "educator" && role !== "rebbe" && role !== "admin") {
+    return "/education";
   }
+  return portalFor({
+    as,
+    role,
+    schoolId,
+    badgeCode,
+    educationOk,
+  }).href;
 }
 
 export async function signInWithEmail(
@@ -49,7 +50,7 @@ export async function signInWithEmail(
   const session = await ensureProfile(
     schoolId ? { schoolId } : undefined,
   );
-  if (!session) redirect("/study");
+  if (!session) redirect("/family");
 
   if (schoolId && session.profile.schoolId !== schoolId) {
     const db = getDb();
@@ -61,7 +62,15 @@ export async function signInWithEmail(
 
   const role = session.profile.role as Role;
   const educationOk = await hasEducationAccess(session.profile);
-  redirect(destinationFor(as, role, educationOk));
+  redirect(
+    destinationFor(
+      as,
+      role,
+      educationOk,
+      schoolId ?? session.profile.schoolId,
+      session.profile.badgeCode,
+    ),
+  );
 }
 
 export async function signInStudentBadge(
@@ -114,7 +123,6 @@ export async function signInStudentBadge(
     };
   }
 
-  const session = await ensureProfile();
-  if (!session) redirect("/account");
-  redirect("/account");
+  await ensureProfile();
+  redirect("/student");
 }

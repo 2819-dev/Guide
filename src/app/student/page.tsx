@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
+import { RoleBadgeChip } from "@/components/role-badge-chip";
 import { getDb } from "@/lib/db";
 import { requireProfile } from "@/lib/profile";
+import { listRolesForProfile } from "@/lib/role-badges";
 import { schools } from "@/lib/schema";
 import { isStudentSuggestionsBlocked } from "@/lib/suggestions-access";
 
 export const instant = false;
-export const metadata = { title: "Student" };
+export const metadata = { title: "Student portal" };
 
 export default async function StudentHubPage() {
   const authz = await requireProfile();
@@ -24,6 +26,7 @@ export default async function StudentHubPage() {
     schoolName = school?.name ?? null;
   }
 
+  const roles = await listRolesForProfile(authz.profile.id);
   const suggestionsAccess = await isStudentSuggestionsBlocked(
     authz.profile.id,
   );
@@ -35,7 +38,6 @@ export default async function StudentHubPage() {
       description: "Choose what to learn and Test Yourself on the daf.",
       cta: "Open study →",
       locked: false,
-      lockReason: null as string | null,
     },
     {
       href: "/student/messages",
@@ -43,7 +45,6 @@ export default async function StudentHubPage() {
       description: "Write to the Rebbeim of classes you joined.",
       cta: "Open messages →",
       locked: false,
-      lockReason: null as string | null,
     },
     {
       href: suggestionsAccess.blocked ? "#" : "/student/suggestions",
@@ -53,17 +54,30 @@ export default async function StudentHubPage() {
         : "Open the Suggestions pad from Guide.",
       cta: suggestionsAccess.blocked ? "Paused" : "Open Suggestions →",
       locked: suggestionsAccess.blocked,
-      lockReason: suggestionsAccess.reason,
     },
   ];
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
       <header className="mb-10">
-        <p className="text-sm font-semibold text-forest-700">Student</p>
+        <p className="text-sm font-semibold text-forest-700">Student portal</p>
         <h1 className="display mt-1.5 text-3xl text-forest-950 sm:text-4xl">
           Hi, {authz.profile.displayName}
         </h1>
+        {roles.length > 0 && (
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {roles.map((r) => (
+              <li key={r.id}>
+                <RoleBadgeChip
+                  name={r.name}
+                  color={r.color}
+                  iconUrl={r.iconUrl}
+                  size="sm"
+                />
+              </li>
+            ))}
+          </ul>
+        )}
         <p className="mt-3 text-ink-muted">
           {schoolName
             ? `${schoolName} · Choose where to go next.`
@@ -107,7 +121,7 @@ export default async function StudentHubPage() {
       </ul>
 
       <p className="mt-10 text-sm text-ink-muted">
-        Need your badge or class invite?{" "}
+        Scan credential or class invite ·{" "}
         <Link href="/account" className="font-semibold text-forest-800">
           Account
         </Link>

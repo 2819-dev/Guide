@@ -71,16 +71,19 @@ export function AdminBadgesPanel() {
     <div className="space-y-6">
       <div>
         <h2 className="display text-2xl font-semibold text-forest-900">
-          Create badges
+          School scan credentials
         </h2>
         <p className="mt-1 text-sm text-ink-muted">
-          Issue a Clever-style badge for a student at an approved school.
+          Issue a Clever-style <span className="font-medium">login badge code</span>{" "}
+          so a student can scan or type at Log In. Not the same as Discord-style
+          Roles above.
         </p>
       </div>
 
       {schools.length === 0 ? (
         <p className="panel text-ink-muted">
-          Approve a school first — then you can create badges for its students.
+          Approve a school first — then you can issue scan credentials for its
+          students.
         </p>
       ) : (
         <div className="panel space-y-3">
@@ -140,11 +143,11 @@ export function AdminBadgesPanel() {
             onClick={() => void create()}
             className="btn-primary"
           >
-            {busy ? "Creating…" : "Create badge"}
+            {busy ? "Creating…" : "Create scan credential"}
           </button>
           {createdCode && (
             <p className="rounded-xl border border-line bg-sky-soft/50 px-3 py-2 text-sm text-forest-900">
-              Badge ready:{" "}
+              Scan code ready:{" "}
               <span className="font-mono text-lg font-semibold tracking-wider">
                 {createdCode}
               </span>
@@ -157,7 +160,7 @@ export function AdminBadgesPanel() {
       {badges.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-semibold text-forest-800">
-            Recent badges
+            Recent scan credentials
           </h3>
           <ul className="divide-y divide-line rounded-xl border border-line">
             {badges.slice(0, 12).map((b) => (

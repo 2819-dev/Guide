@@ -111,5 +111,5 @@ export async function signUpWithEmail(
 
   if (wantsEducation) redirect("/education#apply");
   if (as === "student") redirect("/student");
-  redirect("/study");
+  redirect("/family");
 }

@@ -317,3 +317,53 @@ export const messages = pgTable("messages", {
     .defaultNow()
     .notNull(),
 });
+
+/**
+ * Discord-style Roles (Official) — name, color, uploadable icon.
+ * Distinct from student school scan credentials (`profiles.badgeCode`).
+ */
+export const roleBadges = pgTable(
+  "role_badges",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: varchar("name", { length: 80 }).notNull(),
+    slug: varchar("slug", { length: 100 }).notNull(),
+    /** Hex color e.g. #3a7d58 */
+    color: varchar("color", { length: 7 }).notNull().default("#245239"),
+    /** data:image/… URL or absolute https URL for the role icon */
+    iconUrl: text("icon_url"),
+    iconMime: varchar("icon_mime", { length: 64 }),
+    createdByProfileId: uuid("created_by_profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [uniqueIndex("role_badges_slug_idx").on(t.slug)],
+);
+
+export const roleBadgeAssignments = pgTable(
+  "role_badge_assignments",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    roleBadgeId: uuid("role_badge_id")
+      .notNull()
+      .references(() => roleBadges.id, { onDelete: "cascade" }),
+    profileId: uuid("profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    assignedByProfileId: uuid("assigned_by_profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    uniqueIndex("role_badge_assignment_unique").on(t.roleBadgeId, t.profileId),
+  ],
+);

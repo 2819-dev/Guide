@@ -26,13 +26,13 @@ export default async function EducationPanelPage() {
           >
             ← Guide for Education
           </Link>
-          <p className="eyebrow mt-4">Guide for Education</p>
+          <p className="eyebrow mt-4">Teacher portal</p>
           <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
-            Rebbe panel
+            Classes and students
           </h1>
           <p className="mt-3 max-w-2xl text-base text-ink-muted">
-            Invite students with a class code. Track Mishnayos and Gemara study
-            — dapim, quizzes, and notes from home or Chromebook.
+            Invite with a class code, pause Suggestions, message students, and
+            follow Mishnayos and Gemara study from home or Chromebook.
           </p>
         </div>
       </section>

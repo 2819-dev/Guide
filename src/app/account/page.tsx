@@ -2,13 +2,17 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { JoinClass } from "@/components/join-class";
+import { RoleBadgeChip } from "@/components/role-badge-chip";
 import { StudentBadgePanel } from "@/components/student-badge-panel";
 import { SupportForm } from "@/components/support-form";
 import { getDb } from "@/lib/db";
+import { portalFor } from "@/lib/portals";
 import { roleLabel } from "@/lib/roles";
 import { requireProfile } from "@/lib/profile";
+import { listRolesForProfile } from "@/lib/role-badges";
 import type { Role } from "@/lib/roles";
 import { schools } from "@/lib/schema";
+import { hasEducationAccess } from "@/lib/education-access";
 
 export const instant = false;
 export const metadata = { title: "Account" };
@@ -19,6 +23,13 @@ export default async function AccountPage() {
 
   const role = authz.profile.role as Role;
   const isOfficial = role === "admin" || role === "moderator";
+  const educationOk = await hasEducationAccess(authz.profile);
+  const portal = portalFor({
+    role,
+    schoolId: authz.profile.schoolId,
+    badgeCode: authz.profile.badgeCode,
+    educationOk,
+  });
 
   let schoolName: string | null = null;
   if (authz.profile.schoolId) {
@@ -31,7 +42,8 @@ export default async function AccountPage() {
     schoolName = school?.name ?? null;
   }
 
-  const showStudentBadge =
+  const roles = await listRolesForProfile(authz.profile.id);
+  const showScanCredential =
     (role === "customer" || role === "rebbe") &&
     Boolean(authz.profile.schoolId || authz.profile.badgeCode);
 
@@ -45,27 +57,30 @@ export default async function AccountPage() {
           Signed in as {authz.profile.displayName}
           {isOfficial ? "" : ` · ${roleLabel(role)}`}
         </p>
+        {roles.length > 0 && (
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {roles.map((r) => (
+              <li key={r.id}>
+                <RoleBadgeChip
+                  name={r.name}
+                  color={r.color}
+                  iconUrl={r.iconUrl}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
       </header>
 
-      {isOfficial && (
-        <p className="text-sm text-ink-muted">
-          <Link href="/admin" className="font-semibold text-forest-800">
-            Continue as Guide Official
-          </Link>
-        </p>
-      )}
-
-      {showStudentBadge && (
-        <p className="text-sm">
-          <Link href="/student" className="font-semibold text-forest-800">
-            ← Back to Student hub
-          </Link>
-        </p>
-      )}
+      <p className="text-sm">
+        <Link href={portal.href} className="font-semibold text-forest-800">
+          ← Back to {portal.label}
+        </Link>
+      </p>
 
       {(role === "customer" || role === "rebbe") && <JoinClass />}
 
-      {showStudentBadge && (
+      {showScanCredential && (
         <StudentBadgePanel
           schoolName={schoolName}
           badgeCode={authz.profile.badgeCode}

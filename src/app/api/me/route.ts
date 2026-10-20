@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
+import { hasEducationAccess } from "@/lib/education-access";
 import { ensureProfile, requireProfile } from "@/lib/profile";
 import { isRole } from "@/lib/roles";
 import { profiles } from "@/lib/schema";
@@ -9,8 +10,9 @@ import { profiles } from "@/lib/schema";
 export async function GET() {
   const result = await ensureProfile();
   if (!result) {
-    return NextResponse.json({ user: null, profile: null });
+    return NextResponse.json({ user: null, profile: null, educationOk: false });
   }
+  const educationOk = await hasEducationAccess(result.profile);
   return NextResponse.json({
     user: {
       id: result.user.id,
@@ -24,6 +26,7 @@ export async function GET() {
       schoolId: result.profile.schoolId,
       badgeCode: result.profile.badgeCode,
     },
+    educationOk,
   });
 }
 

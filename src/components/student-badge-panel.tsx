@@ -63,7 +63,7 @@ export function StudentBadgePanel({
   return (
     <div className="panel space-y-3">
       <h2 className="display text-2xl font-semibold text-forest-900">
-        Student badge
+        School scan credential
       </h2>
       {schoolName && (
         <p className="text-sm text-ink-muted">School: {schoolName}</p>
@@ -75,12 +75,12 @@ export function StudentBadgePanel({
           </p>
           <p className="text-sm text-ink-muted">
             {ready
-              ? "Use this code (or a printout) on Log in as a → Student → Badge."
-              : "Badge code saved — activate badge login to use it at sign-in."}
+              ? "Use this scan code (or a printout) on Log in as a → Student → Badge."
+              : "Scan code saved — activate it to use at student Log In."}
           </p>
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={printBadge} className="btn-secondary">
-              Print badge
+              Print scan card
             </button>
             {!ready && canActivate && (
               <button
@@ -89,7 +89,7 @@ export function StudentBadgePanel({
                 onClick={() => void activate()}
                 className="btn-primary"
               >
-                {busy ? "Setting up…" : "Activate badge login"}
+                {busy ? "Setting up…" : "Activate scan login"}
               </button>
             )}
           </div>
@@ -97,8 +97,8 @@ export function StudentBadgePanel({
       ) : (
         <>
           <p className="text-sm text-ink-muted">
-            Set up a Clever-style badge so you can log in by scanning or typing a
-            code at your school.
+            Set up a Clever-style scan credential so you can log in by camera or
+            typing a code. Separate from any Roles Guide Official assigns you.
           </p>
           {canActivate && (
             <button
@@ -107,7 +107,7 @@ export function StudentBadgePanel({
               onClick={() => void activate()}
               className="btn-primary"
             >
-              {busy ? "Setting up…" : "Create badge"}
+              {busy ? "Setting up…" : "Create scan credential"}
             </button>
           )}
         </>

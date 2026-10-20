@@ -64,8 +64,12 @@ export function EducationPanel() {
 
   return (
     <div className="space-y-10">
-      <TeacherSuggestionsAccess />
-      <TeacherMessages />
+      <div id="suggestions-access">
+        <TeacherSuggestionsAccess />
+      </div>
+      <div id="messages">
+        <TeacherMessages />
+      </div>
 
       <section className="panel space-y-3">
         <h2 className="display text-2xl font-semibold text-forest-900">
