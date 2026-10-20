@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GuideWordmark } from "@/components/guide-logo";
+import { FIRST_APP_NAME, appHomePath, studyPath } from "@/lib/apps";
 
 const link =
   "text-sm font-medium text-ink-muted no-underline hover:text-forest-900";
@@ -11,22 +12,27 @@ export function SiteFooter() {
         <div className="sm:col-span-2 lg:col-span-1">
           <GuideWordmark href="/" size="md" />
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink-muted">
-            The calm place for Mishnayos and Gemara. Guide for Education is
-            separate for schools and Rebbeim.
+            The school platform for learning apps. Guide for Education is for
+            schools and Rebbeim.
           </p>
         </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-forest-700">
-            Study
+            Apps
           </p>
           <ul className="mt-3 space-y-2">
             <li>
-              <Link href="/study" className={link}>
-                Choose what to learn
+              <Link href="/apps" className={link}>
+                App library
               </Link>
             </li>
             <li>
-              <Link href="/study/bava-metzia" className={link}>
+              <Link href={appHomePath()} className={link}>
+                {FIRST_APP_NAME}
+              </Link>
+            </li>
+            <li>
+              <Link href={studyPath("bava-metzia")} className={link}>
                 Bava Metzia
               </Link>
             </li>

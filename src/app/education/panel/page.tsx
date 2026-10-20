@@ -31,8 +31,9 @@ export default async function EducationPanelPage() {
             Classes and students
           </h1>
           <p className="mt-3 max-w-2xl text-base text-ink-muted">
-            Invite with a class code, pause Suggestions, message students, and
-            follow Mishnayos and Gemara study from home or Chromebook.
+            Invite with a class code, add apps (like Chazarah), pause
+            Suggestions, message students, and follow progress from home or
+            Chromebook.
           </p>
         </div>
       </section>

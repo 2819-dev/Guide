@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
+import { MyAppsGrid } from "@/components/my-apps-grid";
 import { RoleBadgeChip } from "@/components/role-badge-chip";
+import { listAppsForStudent } from "@/lib/app-installs";
 import { getDb } from "@/lib/db";
 import { requireProfile } from "@/lib/profile";
 import { listRolesForProfile } from "@/lib/role-badges";
@@ -27,35 +29,10 @@ export default async function StudentHubPage() {
   }
 
   const roles = await listRolesForProfile(authz.profile.id);
+  const apps = await listAppsForStudent(authz.profile.id);
   const suggestionsAccess = await isStudentSuggestionsBlocked(
     authz.profile.id,
   );
-
-  const tiles = [
-    {
-      href: "/study",
-      label: "Your learning",
-      description: "Choose what to learn and Test Yourself on the daf.",
-      cta: "Open study →",
-      locked: false,
-    },
-    {
-      href: "/student/messages",
-      label: "Message your teachers",
-      description: "Write to the Rebbeim of classes you joined.",
-      cta: "Open messages →",
-      locked: false,
-    },
-    {
-      href: suggestionsAccess.blocked ? "#" : "/student/suggestions",
-      label: "Suggestions",
-      description: suggestionsAccess.blocked
-        ? (suggestionsAccess.reason ?? "Suggestions are paused for now.")
-        : "Open the Suggestions pad from Guide.",
-      cta: suggestionsAccess.blocked ? "Paused" : "Open Suggestions →",
-      locked: suggestionsAccess.blocked,
-    },
-  ];
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
@@ -80,44 +57,65 @@ export default async function StudentHubPage() {
         )}
         <p className="mt-3 text-ink-muted">
           {schoolName
-            ? `${schoolName} · Choose where to go next.`
-            : "Choose where to go next."}
+            ? `${schoolName} · Your apps and school tools.`
+            : "Your apps and school tools."}
         </p>
       </header>
 
+      <div className="mb-10">
+        <MyAppsGrid
+          apps={apps}
+          emptyHint="No apps yet. Join a class from Account, then ask your teacher to add an app (like Chazarah)."
+        />
+      </div>
+
       <ul className="space-y-3">
-        {tiles.map((tile) => (
-          <li key={tile.label}>
-            {tile.locked ? (
-              <div className="rounded-2xl border border-dashed border-line bg-sky-soft/40 px-5 py-6 sm:px-6">
-                <p className="text-lg font-semibold text-forest-950">
-                  {tile.label}
-                </p>
-                <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-                  {tile.description}
-                </p>
-                <p className="mt-4 text-sm font-semibold text-forest-700">
-                  {tile.cta}
-                </p>
-              </div>
-            ) : (
-              <Link
-                href={tile.href}
-                className="block rounded-2xl border border-line bg-surface px-5 py-6 no-underline transition hover:border-forest-400 hover:bg-forest-100 sm:px-6"
-              >
-                <p className="text-lg font-semibold text-forest-950">
-                  {tile.label}
-                </p>
-                <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-                  {tile.description}
-                </p>
-                <p className="mt-4 text-sm font-semibold text-forest-800">
-                  {tile.cta}
-                </p>
-              </Link>
-            )}
-          </li>
-        ))}
+        <li>
+          <Link
+            href="/student/messages"
+            className="block rounded-2xl border border-line bg-surface px-5 py-6 no-underline transition hover:border-forest-400 hover:bg-forest-100 sm:px-6"
+          >
+            <p className="text-lg font-semibold text-forest-950">
+              Message your teachers
+            </p>
+            <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
+              Write to the Rebbeim of classes you joined.
+            </p>
+            <p className="mt-4 text-sm font-semibold text-forest-800">
+              Open messages →
+            </p>
+          </Link>
+        </li>
+        <li>
+          {suggestionsAccess.blocked ? (
+            <div className="rounded-2xl border border-dashed border-line bg-sky-soft/40 px-5 py-6 sm:px-6">
+              <p className="text-lg font-semibold text-forest-950">
+                Suggestions
+              </p>
+              <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
+                {suggestionsAccess.reason ?? "Suggestions are paused for now."}
+              </p>
+              <p className="mt-4 text-sm font-semibold text-forest-700">
+                Paused
+              </p>
+            </div>
+          ) : (
+            <Link
+              href="/student/suggestions"
+              className="block rounded-2xl border border-line bg-surface px-5 py-6 no-underline transition hover:border-forest-400 hover:bg-forest-100 sm:px-6"
+            >
+              <p className="text-lg font-semibold text-forest-950">
+                Suggestions
+              </p>
+              <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
+                Open the Suggestions pad from Guide.
+              </p>
+              <p className="mt-4 text-sm font-semibold text-forest-800">
+                Open Suggestions →
+              </p>
+            </Link>
+          )}
+        </li>
       </ul>
 
       <p className="mt-10 text-sm text-ink-muted">

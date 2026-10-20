@@ -63,27 +63,15 @@ export function SiteHeader() {
               <Link href={portalHref} className={`${navLink} font-semibold`}>
                 My portal
               </Link>
-              <Link
-                href={messagesHrefFor(portalId)}
-                className={navLink}
-              >
+              <Link href={messagesHrefFor(portalId)} className={navLink}>
                 Messaging
               </Link>
-              <Link
-                href={suggestionsHrefFor(portalId)}
-                className={navLink}
-              >
+              <Link href={suggestionsHrefFor(portalId)} className={navLink}>
                 Suggestions
               </Link>
-              {portalId === "teacher" || portalId === "official" ? (
-                <Link href="/study" className={`hidden sm:inline ${navLink}`}>
-                  Study
-                </Link>
-              ) : (
-                <Link href="/study" className={`hidden sm:inline ${navLink}`}>
-                  Learning
-                </Link>
-              )}
+              <Link href="/apps" className={`hidden sm:inline ${navLink}`}>
+                Apps
+              </Link>
               <Link
                 href="/account"
                 className={`hidden sm:inline ${navLink}`}
@@ -94,8 +82,8 @@ export function SiteHeader() {
             </>
           ) : (
             <>
-              <Link href="/study" className={navLink}>
-                Study
+              <Link href="/apps" className={navLink}>
+                Apps
               </Link>
               <Link href="/education" className={navLink}>
                 Education

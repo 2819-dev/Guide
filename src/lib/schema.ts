@@ -367,3 +367,28 @@ export const roleBadgeAssignments = pgTable(
     uniqueIndex("role_badge_assignment_unique").on(t.roleBadgeId, t.profileId),
   ],
 );
+
+/**
+ * Clever-style: teacher adds a catalog app to a class.
+ * Students see installed apps on their portal. Catalog lives in code (`lib/apps`).
+ */
+export const classroomAppInstalls = pgTable(
+  "classroom_app_installs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    classroomId: uuid("classroom_id")
+      .notNull()
+      .references(() => classrooms.id, { onDelete: "cascade" }),
+    /** Matches GuideApp.slug — e.g. chazarah */
+    appSlug: varchar("app_slug", { length: 64 }).notNull(),
+    installedByProfileId: uuid("installed_by_profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    uniqueIndex("classroom_app_install_unique").on(t.classroomId, t.appSlug),
+  ],
+);

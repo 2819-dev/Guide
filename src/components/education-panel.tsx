@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { TeacherAppsPanel } from "@/components/teacher-apps-panel";
 import { TeacherMessages } from "@/components/teacher-messages";
 import { TeacherSuggestionsAccess } from "@/components/teacher-suggestions-access";
 
@@ -64,6 +65,8 @@ export function EducationPanel() {
 
   return (
     <div className="space-y-10">
+      <TeacherAppsPanel />
+
       <div id="suggestions-access">
         <TeacherSuggestionsAccess />
       </div>

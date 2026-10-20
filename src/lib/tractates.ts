@@ -1,7 +1,9 @@
 /**
  * Tractate catalog — add new masechtot here as content becomes available.
- * Study routes: /study → /study/[slug] → /study/[slug]/[daf]
+ * Learning routes live under the first Guide app (see `lib/apps` studyPath).
  */
+
+export { studyPath, studyIndexPath } from "@/lib/apps";
 
 export type TractateKind = "talmud" | "mishnah";
 
@@ -90,9 +92,4 @@ export function getFeaturedTractate(): Tractate {
     getAvailableTractates()[0] ??
     TRACTATES.find((t) => t.slug === "bava-metzia")!
   );
-}
-
-export function studyPath(tractateSlug: string, dafId?: string): string {
-  if (dafId) return `/study/${tractateSlug}/${dafId}`;
-  return `/study/${tractateSlug}`;
 }

@@ -1,28 +1,9 @@
-import { TractatePicker } from "@/components/tractate-picker";
+import { redirect } from "next/navigation";
+import { studyIndexPath } from "@/lib/apps";
 
 export const instant = false;
 
-export const metadata = {
-  title: "Choose what to learn",
-};
-
-export default function StudyIndexPage() {
-  return (
-    <div>
-      <section className="hero-band">
-        <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
-          <h1 className="display text-3xl text-forest-950 sm:text-4xl">
-            Choose what to learn
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-ink-muted">
-            Pick a Gemara or Mishnah that is open today, or see what is coming
-            next. Bava Metzia is available now.
-          </p>
-        </div>
-      </section>
-      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
-        <TractatePicker />
-      </div>
-    </div>
-  );
+/** Legacy /study → first Guide app. */
+export default function StudyRedirectPage() {
+  redirect(studyIndexPath());
 }

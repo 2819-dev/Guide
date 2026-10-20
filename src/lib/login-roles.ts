@@ -13,7 +13,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "family",
     label: "Parent or family",
-    description: "Study at home with Test Yourself and notes",
+    description: "Home portal and learning apps",
     href: "/auth/sign-in?as=family",
   },
   {
@@ -25,7 +25,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "educator",
     label: "Teacher or School Administrator",
-    description: "Classes and school study in Guide for Education",
+    description: "Classes, apps, and school tools in Guide for Education",
     href: "/auth/sign-in?as=educator",
   },
   {
@@ -87,7 +87,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Parent or family",
         subtitle:
-          "Sign in to keep Test Yourself scores, notes, and progress at home.",
+          "Sign in for your family portal and learning apps at home.",
         joinHref: "/auth/sign-up?as=family",
         joinLabel: "Create a family account",
       };
@@ -129,7 +129,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Join as Parent or family",
         subtitle:
-          "Study Mishnayos and Gemara at home — Test Yourself, notes, and progress on your account.",
+          "Open learning apps at home — notes and progress stay on your account.",
         roleValue: "customer",
         showRoleChooser: false,
       };

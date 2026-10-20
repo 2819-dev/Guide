@@ -11,7 +11,7 @@ export const instant = false;
 export const metadata = {
   title: "Guide for Education",
   description:
-    "Guide for Education helps schools and Rebbeim invite students and see Mishnayos and Gemara study from home or Chromebook — dapim, quizzes, and notes.",
+    "Guide for Education helps schools and Rebbeim invite students, add apps like Chazarah, and see progress from home or Chromebook.",
 };
 
 export default async function EducationLandingPage() {
@@ -38,24 +38,24 @@ export default async function EducationLandingPage() {
         <div className="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8 sm:py-20">
           <p className="eyebrow">Guide for Education</p>
           <h1 className="display mt-3 text-[2.25rem] text-forest-950 sm:text-5xl">
-            Follow Mishnayos and Gemara study at home
+            Classes, apps, and home learning in one place
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-base text-ink-muted sm:text-lg">
-            Apply once. After approval, Rebbeim invite a class and see dapim,
-            quizzes, and notes from home or Chromebook.
+            Apply once. After approval, Rebbeim invite a class, add apps from
+            the Guide library, and follow progress from home or Chromebook.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {canOpenPanel ? (
               <Link href="/education/panel" className="btn-primary">
-                Open Rebbe panel
+                Open teacher portal
               </Link>
             ) : (
               <a href="#apply" className="btn-primary">
                 Apply for your school
               </a>
             )}
-            <Link href="/study" className="btn-secondary">
-              Student study
+            <Link href="/apps" className="btn-secondary">
+              App library
             </Link>
           </div>
         </div>
@@ -66,8 +66,8 @@ export default async function EducationLandingPage() {
           For schools who want home learning to stay visible
         </h2>
         <p className="mt-3 max-w-2xl text-base text-ink-muted">
-          Students study on Guide. After your school is approved, Rebbeim see
-          progress without turning after-school work into a noisy dashboard.
+          Students open apps on Guide. After your school is approved, Rebbeim
+          add apps to classes and see progress without a noisy dashboard.
         </p>
         <ol className="mt-8 grid gap-0 border border-line bg-surface lg:grid-cols-3">
           <li className="border-b border-line p-5 lg:border-b-0 lg:border-r">

@@ -1,39 +1,33 @@
 import Link from "next/link";
-import { getFeaturedTractate, studyPath } from "@/lib/tractates";
+import { FIRST_APP_NAME, appHomePath, studyPath } from "@/lib/apps";
+import { getFeaturedTractate } from "@/lib/tractates";
 
 export default function HomePage() {
   const featured = getFeaturedTractate();
   const startDaf = featured.featuredChapter?.startDaf ?? "2a";
   const startHref = studyPath(featured.slug, startDaf);
   const featuredSugya = featured.featuredChapter?.hebrew;
+  const chazarahHome = appHomePath();
 
   return (
     <div>
-      {/* Clever-like hero: one product one-liner, short support, dual CTAs */}
       <section className="hero-band">
         <div className="mx-auto max-w-3xl px-5 py-20 text-center sm:px-8 sm:py-24 lg:py-28">
           <h1 className="display text-[2.5rem] text-forest-950 sm:text-5xl lg:text-[3.35rem]">
-            The calm place for Mishnayos and Gemara
+            The school platform for learning apps
           </h1>
           <p className="mx-auto mt-5 max-w-lg text-base text-ink-muted sm:text-lg">
-            Open a daf, read Hebrew and English together, then Test Yourself
-            with questions from the page.
+            Guide is Clever-like identity for schools — portals, login, and an
+            app library. Teachers add apps; students open them from My apps.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <Link href={startHref} className="btn-primary">
-              Start with {featured.englishName}
+            <Link href="/apps" className="btn-primary">
+              Browse apps
             </Link>
-            <Link href="/study" className="btn-secondary">
-              Choose what to learn
+            <Link href="/education" className="btn-secondary">
+              Guide for Education
             </Link>
           </div>
-          <p className="mx-auto mt-7 max-w-md text-sm text-ink-muted">
-            Available now:{" "}
-            <span className="hebrew font-medium text-forest-800">
-              {featured.hebrewName}
-              {featuredSugya ? ` · ${featuredSugya}` : ""}
-            </span>
-          </p>
         </div>
       </section>
 
@@ -42,18 +36,23 @@ export default function HomePage() {
           What is Guide?
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-ink-muted sm:text-lg">
-          Guide is built for evenings after shiur — read the daf, keep your
-          notes, and check what stuck. Schools use Guide for Education
-          separately to follow home and Chromebook study.
+          Guide is the platform: Log in as a student, teacher, family, or
+          Official; message; Suggestions; Discord-style roles. Learning products
+          live as installable apps — starting with {FIRST_APP_NAME}.
         </p>
       </section>
 
       <section className="feature-rail">
         <div className="section-pad mx-auto max-w-6xl">
-          <p className="eyebrow text-center">How it works</p>
+          <p className="eyebrow text-center">First app</p>
           <h2 className="display mx-auto mt-3 max-w-2xl text-center text-2xl text-forest-950 sm:text-3xl">
-            From the page to Test Yourself
+            {FIRST_APP_NAME}
           </h2>
+          <p className="mx-auto mt-4 max-w-xl text-center text-base text-ink-muted">
+            Mishnayos and Gemara — open a daf, keep notes, and Test Yourself
+            with questions from the page. Teachers add {FIRST_APP_NAME} to a
+            class; students launch it from their portal.
+          </p>
           <div className="capability-grid mt-14">
             <div>
               <p className="text-sm font-semibold text-forest-600">01</p>
@@ -73,10 +72,10 @@ export default function HomePage() {
                 .
               </p>
               <Link
-                href="/study"
+                href={chazarahHome}
                 className="mt-5 inline-flex text-sm font-semibold text-forest-800 no-underline hover:underline"
               >
-                Choose what to learn →
+                Open {FIRST_APP_NAME} →
               </Link>
             </div>
             <div>
@@ -119,12 +118,12 @@ export default function HomePage() {
           <div>
             <p className="eyebrow">Guide for Education</p>
             <h2 className="display mt-3 text-2xl text-forest-950 sm:text-3xl">
-              For schools that want home learning to stay visible
+              For schools that want apps and progress in one place
             </h2>
             <p className="mt-4 max-w-md text-base leading-relaxed text-ink-muted">
-              Apply once. After approval, Rebbeim invite a class and see dapim,
-              quizzes, and notes — without mixing school tools into the
-              consumer study home.
+              Apply once. After approval, Rebbeim create classes, add apps from
+              the library, and follow student work — without mixing school tools
+              into the consumer home.
             </p>
             <Link href="/education" className="btn-secondary mt-7 inline-flex">
               Explore Education
@@ -133,8 +132,9 @@ export default function HomePage() {
           <div className="border-t border-line pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-1">
             <p className="hebrew text-xl text-forest-800">למד. רשום. בדוק.</p>
             <p className="mt-4 text-base leading-relaxed text-ink-muted">
-              Students study on Guide. Teachers and school administrators follow
-              progress after the school is approved.
+              Students open apps on Guide. Teachers and school administrators
+              add {FIRST_APP_NAME} and follow progress after the school is
+              approved.
             </p>
           </div>
         </div>
@@ -143,13 +143,7 @@ export default function HomePage() {
       <section className="cta-band">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-5 py-16 text-center sm:px-8 lg:py-20">
           <h2 className="display max-w-xl text-2xl text-forest-950 sm:text-3xl">
-            Begin with {featured.englishName}
-            {featuredSugya ? (
-              <>
-                {" "}
-                (<span className="hebrew">{featuredSugya}</span>)
-              </>
-            ) : null}
+            Try {FIRST_APP_NAME} with {featured.englishName}
           </h2>
           <p className="max-w-md text-base text-ink-muted">
             Or create an account so notes and Test Yourself scores stay with
