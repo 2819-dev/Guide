@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { AppWordmark } from "@/components/app-wordmark";
-import { getApp } from "@/lib/apps";
+import { FIRST_APP_SLUG, getApp, studyIndexPath } from "@/lib/apps";
+import { isAmudSite } from "@/lib/site";
 
 export const instant = false;
 
@@ -14,6 +15,11 @@ export default async function AppShellLayout({ children, params }: Props) {
   const { appSlug } = await params;
   const app = getApp(appSlug);
   if (!app) notFound();
+
+  // On the public Amud site, learning lives at /learn — not buried under /apps.
+  if (isAmudSite() && appSlug === FIRST_APP_SLUG) {
+    redirect(studyIndexPath());
+  }
 
   return (
     <div>

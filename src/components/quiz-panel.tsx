@@ -51,7 +51,7 @@ export function QuizPanel({ dafId, tractateSlug, hasNotes, signedIn }: Props) {
           Translation, comprehension, key terms, and who-says-what — drawn from
           this daf.{" "}
           <Link
-            href="/auth/sign-in?as=family"
+            href="/auth/sign-in?as=learner"
             className="font-semibold text-forest-700"
           >
             Log In

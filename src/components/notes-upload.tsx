@@ -95,7 +95,7 @@ export function NotesUpload({
         </h3>
         <p className="mt-2 text-ink-muted">
           <Link
-            href="/auth/sign-in?as=family"
+            href="/auth/sign-in?as=learner"
             className="font-semibold text-forest-700"
           >
             Log In

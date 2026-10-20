@@ -65,7 +65,7 @@ export default async function StudentHubPage() {
       <div className="mb-10">
         <MyAppsGrid
           apps={apps}
-          emptyHint="No apps yet. Join a class from Account, then ask your teacher to add an app (like Chazarah)."
+          emptyHint="No apps yet. Join a class from Account, then ask your teacher to add an app (like Amud)."
         />
       </div>
 

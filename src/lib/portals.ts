@@ -1,7 +1,7 @@
 import type { LoginAs } from "@/lib/login-roles";
 import type { Role } from "@/lib/roles";
 
-/** Clever-like portal homes per audience. */
+/** Clever-like school portal homes (Guide only — no family portal). */
 export const PORTALS = {
   student: {
     id: "student" as const,
@@ -21,19 +21,13 @@ export const PORTALS = {
     href: "/official",
     short: "Official",
   },
-  family: {
-    id: "family" as const,
-    label: "My portal",
-    href: "/family",
-    short: "Family",
-  },
 } as const;
 
 export type PortalId = keyof typeof PORTALS;
 
 /**
- * Resolve portal from login-as intent + profile.
- * Students (schoolId/badge) win over plain customer family portal.
+ * Resolve school portal from login-as intent + profile.
+ * Learners without school affiliation are not Guide portal users.
  */
 export function portalFor(opts: {
   as?: LoginAs | null;
@@ -41,19 +35,19 @@ export function portalFor(opts: {
   schoolId?: string | null;
   badgeCode?: string | null;
   educationOk?: boolean;
-}): (typeof PORTALS)[PortalId] {
+}): (typeof PORTALS)[PortalId] | null {
   const { as, role, schoolId, badgeCode, educationOk } = opts;
 
   if (as === "official" || role === "admin" || role === "moderator") {
     return PORTALS.official;
   }
   if (as === "educator" || role === "rebbe") {
-    return educationOk === false ? PORTALS.family : PORTALS.teacher;
+    return educationOk === false ? null : PORTALS.teacher;
   }
   if (as === "student" || schoolId || badgeCode) {
     return PORTALS.student;
   }
-  return PORTALS.family;
+  return null;
 }
 
 export function messagesHrefFor(portal: PortalId): string {
@@ -61,13 +55,9 @@ export function messagesHrefFor(portal: PortalId): string {
     case "student":
       return "/student/messages";
     case "teacher":
-      // Alias /teacher redirects to panel — hash must target the real page.
       return "/education/panel#messages";
     case "official":
       return "/admin#suggestions";
-    case "family":
-    default:
-      return "/family/messages";
   }
 }
 
@@ -79,8 +69,5 @@ export function suggestionsHrefFor(portal: PortalId): string {
       return "/education/panel#suggestions-access";
     case "official":
       return "/admin#suggestions";
-    case "family":
-    default:
-      return "/family/suggestions";
   }
 }

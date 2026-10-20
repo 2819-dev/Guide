@@ -11,7 +11,7 @@ export const instant = false;
 export const metadata = {
   title: "Guide for Education",
   description:
-    "Guide for Education helps schools and Rebbeim invite students, add apps like Chazarah, and see progress from home or Chromebook.",
+    "Guide for Education helps schools and Rebbeim invite students, add apps like Amud, and see progress from home or Chromebook.",
 };
 
 export default async function EducationLandingPage() {

@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
@@ -13,29 +12,39 @@ const nextConfig: NextConfig = {
     },
   },
   /**
-   * Legacy /study URLs → first Guide app (Chazarah).
-   * Rename the app via FIRST_APP_SLUG in lib/apps.ts and update these destinations.
+   * Legacy /study and old Chazarah slug → Amud.
+   * FIRST_APP_SLUG is `amud` — update destinations if renamed.
    */
   async redirects() {
     return [
       {
         source: "/study",
-        destination: "/apps/chazarah",
+        destination: "/apps/amud",
         permanent: false,
       },
       {
         source: "/study/:daf(\\d{1,3}[abAB])",
-        destination: "/apps/chazarah/bava-metzia/:daf",
+        destination: "/apps/amud/bava-metzia/:daf",
         permanent: false,
       },
       {
         source: "/study/:tractate",
-        destination: "/apps/chazarah/:tractate",
+        destination: "/apps/amud/:tractate",
         permanent: false,
       },
       {
         source: "/study/:tractate/:daf",
-        destination: "/apps/chazarah/:tractate/:daf",
+        destination: "/apps/amud/:tractate/:daf",
+        permanent: false,
+      },
+      {
+        source: "/apps/chazarah",
+        destination: "/apps/amud",
+        permanent: false,
+      },
+      {
+        source: "/apps/chazarah/:path*",
+        destination: "/apps/amud/:path*",
         permanent: false,
       },
     ];

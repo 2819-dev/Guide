@@ -1,6 +1,6 @@
-/** Clever-style “Log in as a …” roles — consumer-facing labels. */
+/** Clever-style “Log in as a …” — Guide school roles only (no family). */
 
-export type LoginAs = "family" | "student" | "educator" | "official";
+export type LoginAs = "student" | "educator" | "official" | "learner";
 
 export type LoginRoleOption = {
   id: LoginAs;
@@ -9,13 +9,8 @@ export type LoginRoleOption = {
   href: string;
 };
 
+/** Guide school Log In menu — Student / Teacher / Official. */
 export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
-  {
-    id: "family",
-    label: "Parent or family",
-    description: "Home portal and learning apps",
-    href: "/auth/sign-in?as=family",
-  },
   {
     id: "student",
     label: "Student",
@@ -37,20 +32,20 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
 ];
 
 export function parseLoginAs(value: string | null | undefined): LoginAs {
-  // Legacy query params from earlier role splits
   if (value === "teacher" || value === "school") return "educator";
-  if (value === "learner" || value === "home" || value === "customer") {
-    return "family";
-  }
+  // Legacy family/home → Amud learner (not a Guide school role)
   if (
     value === "family" ||
-    value === "student" ||
-    value === "educator" ||
-    value === "official"
+    value === "learner" ||
+    value === "home" ||
+    value === "customer"
   ) {
+    return "learner";
+  }
+  if (value === "student" || value === "educator" || value === "official") {
     return value;
   }
-  return "family";
+  return "student";
 }
 
 export function loginAsCopy(as: LoginAs): {
@@ -71,7 +66,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Teacher or School Administrator",
         subtitle:
-          "Sign in for Guide for Education. After your school is approved, invite a class and follow student study.",
+          "Sign in for Guide for Education. After your school is approved, invite a class and add apps.",
         joinHref: "/auth/sign-up?as=educator",
         joinLabel: "Create an account to apply",
       };
@@ -82,14 +77,13 @@ export function loginAsCopy(as: LoginAs): {
         joinHref: null,
         joinLabel: null,
       };
-    case "family":
+    case "learner":
     default:
       return {
-        title: "Parent or family",
-        subtitle:
-          "Sign in for your family portal and learning apps at home.",
-        joinHref: "/auth/sign-up?as=family",
-        joinLabel: "Create a family account",
+        title: "Log in",
+        subtitle: "Keep Test Yourself scores and notes on your Amud account.",
+        joinHref: "/auth/sign-up?as=learner",
+        joinLabel: "Create an account",
       };
   }
 }
@@ -124,12 +118,12 @@ export function signupAsCopy(as: LoginAs): {
         roleValue: "moderator",
         showRoleChooser: false,
       };
-    case "family":
+    case "learner":
     default:
       return {
-        title: "Join as Parent or family",
+        title: "Create an Amud account",
         subtitle:
-          "Open learning apps at home — notes and progress stay on your account.",
+          "Save Test Yourself scores and notes. No school login required.",
         roleValue: "customer",
         showRoleChooser: false,
       };

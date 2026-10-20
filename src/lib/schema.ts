@@ -379,7 +379,7 @@ export const classroomAppInstalls = pgTable(
     classroomId: uuid("classroom_id")
       .notNull()
       .references(() => classrooms.id, { onDelete: "cascade" }),
-    /** Matches GuideApp.slug — e.g. chazarah */
+    /** Matches GuideApp.slug — e.g. amud */
     appSlug: varchar("app_slug", { length: 64 }).notNull(),
     installedByProfileId: uuid("installed_by_profile_id")
       .notNull()

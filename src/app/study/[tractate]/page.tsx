@@ -9,7 +9,7 @@ type Props = {
   params: Promise<{ tractate: string }>;
 };
 
-/** Legacy /study/:tractate → /apps/chazarah/... */
+/** Legacy /study/:tractate → /apps/amud/... */
 export default async function StudyTractateRedirect({ params }: Props) {
   const { tractate: slug } = await params;
   const featured = getFeaturedTractate();

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope, Frank_Ruhl_Libre } from "next/font/google";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteChrome } from "@/components/site-chrome";
+import { FIRST_APP_NAME } from "@/lib/apps";
+import { isAmudSite } from "@/lib/site";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -15,14 +16,25 @@ const frankRuhl = Frank_Ruhl_Libre({
   weight: ["400", "500", "700"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Guide",
-    template: "%s · Guide",
-  },
-  description:
-    "The calm place for Mishnayos and Gemara — open a daf, Test Yourself, and keep your notes.",
-};
+const amud = isAmudSite();
+
+export const metadata: Metadata = amud
+  ? {
+      title: {
+        default: FIRST_APP_NAME,
+        template: `%s · ${FIRST_APP_NAME}`,
+      },
+      description:
+        "Amud — Mishnayos and Gemara. Open a daf, Test Yourself, and keep your notes. For everyone.",
+    }
+  : {
+      title: {
+        default: "Guide",
+        template: "%s · Guide",
+      },
+      description:
+        "Guide — Clever-like school platform for learning apps, portals, and classroom tools.",
+    };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -31,9 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${manrope.variable} ${frankRuhl.variable} h-full`}
     >
       <body className="site-shell flex min-h-full flex-col antialiased">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

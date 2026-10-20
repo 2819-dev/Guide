@@ -13,13 +13,16 @@ import { listRolesForProfile } from "@/lib/role-badges";
 import type { Role } from "@/lib/roles";
 import { schools } from "@/lib/schema";
 import { hasEducationAccess } from "@/lib/education-access";
+import { isAmudSite } from "@/lib/site";
 
 export const instant = false;
 export const metadata = { title: "Account" };
 
 export default async function AccountPage() {
   const authz = await requireProfile();
-  if (!authz) redirect("/auth/sign-in?as=family");
+  if (!authz) {
+    redirect(isAmudSite() ? "/auth/sign-in?as=learner" : "/auth/sign-in?as=student");
+  }
 
   const role = authz.profile.role as Role;
   const isOfficial = role === "admin" || role === "moderator";
@@ -30,6 +33,10 @@ export default async function AccountPage() {
     badgeCode: authz.profile.badgeCode,
     educationOk,
   });
+  const backHref = isAmudSite()
+    ? "/learn"
+    : (portal?.href ?? (role === "rebbe" ? "/education#apply" : "/apps"));
+  const backLabel = isAmudSite() ? "Amud" : (portal?.label ?? "Guide");
 
   let schoolName: string | null = null;
   if (authz.profile.schoolId) {
@@ -73,8 +80,8 @@ export default async function AccountPage() {
       </header>
 
       <p className="text-sm">
-        <Link href={portal.href} className="font-semibold text-forest-800">
-          ← Back to {portal.label}
+        <Link href={backHref} className="font-semibold text-forest-800">
+          ← Back to {backLabel}
         </Link>
       </p>
 

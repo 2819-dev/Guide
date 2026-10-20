@@ -1,13 +1,13 @@
 /**
- * Guide app catalog (Clever-like).
+ * Guide school app catalog (Clever-like).
  *
- * Rename the first learning app in ONE place:
- *   FIRST_APP_NAME + FIRST_APP_SLUG
- * e.g. Amud / Limud / Bechina — URLs and wordmark follow the slug/name.
+ * First learning app name/slug — change only here (and next.config redirects).
  */
 
-export const FIRST_APP_NAME = "Chazarah";
-export const FIRST_APP_SLUG = "chazarah";
+import { isAmudSite } from "@/lib/site";
+
+export const FIRST_APP_NAME = "Amud";
+export const FIRST_APP_SLUG = "amud";
 
 export type GuideApp = {
   slug: string;
@@ -22,7 +22,7 @@ export const APP_CATALOG: GuideApp[] = [
     name: FIRST_APP_NAME,
     tagline: "Mishnayos and Gemara · Test Yourself",
     description:
-      "Open a daf, read Hebrew and English, keep notes, and Test Yourself with questions from the page.",
+      "Open a daf, read Hebrew and English, keep notes, and Test Yourself with questions from the page. Available to everyone on the Amud site; schools can also add it in Guide.",
   },
 ];
 
@@ -38,18 +38,22 @@ export function isKnownAppSlug(slug: string): boolean {
   return APP_CATALOG.some((a) => a.slug === slug);
 }
 
-/** App home — e.g. /apps/chazarah */
+/** In-Guide school app path — e.g. /apps/amud */
 export function appHomePath(slug: string = FIRST_APP_SLUG): string {
   return `/apps/${slug}`;
 }
 
-/** Learning paths inside the first app (Chazarah). */
+/**
+ * Learning paths:
+ * - Amud site → /learn/...
+ * - Guide site → /apps/amud/...
+ */
 export function studyPath(tractateSlug: string, dafId?: string): string {
-  const base = appHomePath(FIRST_APP_SLUG);
+  const base = isAmudSite() ? "/learn" : appHomePath(FIRST_APP_SLUG);
   if (dafId) return `${base}/${tractateSlug}/${dafId}`;
   return `${base}/${tractateSlug}`;
 }
 
 export function studyIndexPath(): string {
-  return appHomePath(FIRST_APP_SLUG);
+  return isAmudSite() ? "/learn" : appHomePath(FIRST_APP_SLUG);
 }

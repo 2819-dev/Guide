@@ -10,6 +10,7 @@ import { parseLoginAs, type LoginAs } from "@/lib/login-roles";
 import { portalFor } from "@/lib/portals";
 import { ensureProfile } from "@/lib/profile";
 import type { Role } from "@/lib/roles";
+import { isAmudSite } from "@/lib/site";
 import { profiles, schools } from "@/lib/schema";
 
 function destinationFor(
@@ -19,23 +20,29 @@ function destinationFor(
   schoolId: string | null,
   badgeCode: string | null,
 ): string {
+  if (as === "learner" || isAmudSite()) {
+    return "/learn";
+  }
   if (as === "educator" && role !== "rebbe" && role !== "admin") {
     return "/education";
   }
-  return portalFor({
+  const portal = portalFor({
     as,
     role,
     schoolId,
     badgeCode,
     educationOk,
-  }).href;
+  });
+  if (portal) return portal.href;
+  if (role === "rebbe") return "/education#apply";
+  return "/apps";
 }
 
 export async function signInWithEmail(
   _prev: { error: string } | null,
   formData: FormData,
 ) {
-  const as = parseLoginAs(String(formData.get("as") ?? "family"));
+  const as = parseLoginAs(String(formData.get("as") ?? "student"));
   const schoolId = String(formData.get("schoolId") ?? "").trim() || null;
 
   const { error } = await auth.signIn.email({
@@ -50,7 +57,7 @@ export async function signInWithEmail(
   const session = await ensureProfile(
     schoolId ? { schoolId } : undefined,
   );
-  if (!session) redirect("/family");
+  if (!session) redirect(isAmudSite() ? "/learn" : "/apps");
 
   if (schoolId && session.profile.schoolId !== schoolId) {
     const db = getDb();

@@ -16,7 +16,7 @@ export async function signUpWithEmail(
   const email = String(formData.get("email") ?? "").trim();
   const name = String(formData.get("name") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const as = parseLoginAs(String(formData.get("as") ?? "family"));
+  const as = parseLoginAs(String(formData.get("as") ?? "student"));
   const roleRaw = String(formData.get("role") ?? "customer");
   const schoolId = String(formData.get("schoolId") ?? "").trim() || null;
 
@@ -111,5 +111,6 @@ export async function signUpWithEmail(
 
   if (wantsEducation) redirect("/education#apply");
   if (as === "student") redirect("/student");
-  redirect("/family");
+  if (as === "learner") redirect("/learn");
+  redirect("/apps");
 }
