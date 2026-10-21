@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { GuideBrandBanner } from "@/components/guide-brand-banner";
+import { INVITE_BANNER_SRC } from "@/lib/brand";
 import { amudPublicUrl, guidePublicUrl } from "@/lib/site";
 
 export const runtime = "edge";
@@ -21,7 +22,7 @@ const AMUD_HOST_PATH = AMUD_URL.replace(/^https?:\/\//, "");
 /**
  * Safari invite letter for Yeshivas Ohr Reuven.
  * Canonical copy: /cursor/stores/self/docs/ohr-reuven-invite-canva.html
- * Forest brand (not Canva blue/navy chrome). CTA → teacher apply, not this page.
+ * Shared Guide banner (blue grain). CTA → teacher apply, not this page.
  */
 export default function OhrReuvenInvitePage() {
   return (
@@ -45,27 +46,11 @@ export default function OhrReuvenInvitePage() {
           id="invite-letter"
           className="mx-auto max-w-[640px] overflow-hidden rounded border border-[#d5e0d9] bg-white font-[Georgia,'Times_New_Roman',Times,serif] text-[#152A20] shadow-[0_1px_0_rgba(21,42,32,0.04)]"
         >
-          <div className="bg-white px-7 pb-[18px] pt-8 text-center sm:px-8">
-            <Image
-              src="/invite/ohr-reuven/wordmark.png"
-              alt="Guide"
-              width={148}
-              height={40}
-              className="mx-auto h-auto w-[148px]"
-              priority
-            />
-          </div>
-
-          <div className="leading-[0]">
-            <Image
-              src="/invite/ohr-reuven/banner.jpg"
-              alt="Guide"
-              width={640}
-              height={200}
-              className="h-auto w-full"
-              priority
-            />
-          </div>
+          <GuideBrandBanner
+            variant="full"
+            src={INVITE_BANNER_SRC}
+            priority
+          />
 
           <div className="px-6 pb-2 pt-10 text-[17px] leading-[1.7] text-[#2a3f34] sm:px-11">
             <p className="mb-[18px] font-semibold text-[#152A20]">Hello,</p>

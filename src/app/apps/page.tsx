@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { APP_CATALOG, appHomePath } from "@/lib/apps";
 
 export const runtime = 'edge';
@@ -11,6 +12,7 @@ export const metadata = {
 export default function AppsLibraryPage() {
   return (
     <div className="portal-page">
+      <GuideBrandBanner variant="strip" />
       <div className="content-band portal-page__inner">
         <header className="portal-hero">
           <p className="portal-eyebrow">For schools</p>

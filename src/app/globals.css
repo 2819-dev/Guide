@@ -460,16 +460,71 @@ body {
 .login-split__visual {
   display: none;
   position: relative;
-  background:
-    linear-gradient(160deg, rgba(15, 31, 24, 0.35), rgba(28, 61, 46, 0.55)),
-    radial-gradient(ellipse at 30% 40%, var(--forest-300), var(--forest-900));
+  overflow: hidden;
+  background: #0c3d6e;
 }
 
 @media (min-width: 900px) {
   .login-split__visual {
-    display: grid;
-    place-items: center;
+    display: block;
   }
+}
+
+/* Shared Guide brand banner (blue grain + white wordmark + diagonal cut) */
+.guide-banner-strip {
+  line-height: 0;
+  overflow: hidden;
+  background: #0c3d6e;
+}
+
+.guide-banner-strip .guide-banner__img {
+  display: block;
+  width: 100%;
+  height: clamp(5.5rem, 14vw, 9.5rem);
+  object-fit: cover;
+  object-position: center 42%;
+}
+
+.guide-banner-panel {
+  position: relative;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: 10px;
+  line-height: 0;
+  background: #0c3d6e;
+}
+
+@media (min-width: 1024px) {
+  .guide-banner-panel {
+    min-height: 320px;
+  }
+}
+
+.guide-banner-panel .guide-banner__img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.guide-banner-full {
+  line-height: 0;
+  overflow: hidden;
+  background: #0c3d6e;
+}
+
+.guide-banner-full .guide-banner__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.guide-banner-login {
+  position: absolute;
+  inset: 0;
+}
+
+.guide-banner-login__img {
+  object-fit: cover;
+  object-position: center;
 }
 
 .login-split__panel {

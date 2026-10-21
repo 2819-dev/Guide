@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useCallback, useEffect, useRef, useState } from "react";
+import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { GuideWordmark } from "@/components/guide-logo";
 import { LoginMenu } from "@/components/login-menu";
 import { loginAsCopy } from "@/lib/login-roles";
@@ -135,8 +136,8 @@ export function StudentSignIn() {
 
   return (
     <div className="login-split">
-      <div className="login-split__visual">
-        <GuideWordmark href="/" size="lg" tone="onDark" />
+      <div className="login-split__visual" aria-hidden>
+        <GuideBrandBanner variant="login" />
       </div>
 
       <div className="login-split__panel">

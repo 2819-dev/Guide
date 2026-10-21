@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AmudHomePage } from "@/components/amud-home";
+import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { FIRST_APP_NAME, appHomePath } from "@/lib/apps";
 import { amudPublicUrl, isAmudSite } from "@/lib/site";
 
@@ -65,27 +66,7 @@ function GuideHomePage() {
             </div>
           </div>
 
-          <div
-            className="relative min-h-[260px] overflow-hidden rounded-[10px] lg:min-h-[320px]"
-            aria-hidden
-          >
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(145deg, #c5dccf 0%, #5a9a76 42%, #1c3d2e 100%)",
-              }}
-            />
-            <div className="absolute inset-0 opacity-40">
-              <div className="absolute -left-10 top-10 h-40 w-40 rounded-full bg-forest-100/80 blur-2xl" />
-              <div className="absolute bottom-8 right-6 h-48 w-48 rounded-full bg-sun/30 blur-2xl" />
-            </div>
-            <div className="absolute inset-0 flex items-end p-8">
-              <p className="max-w-[15rem] text-lg font-semibold leading-snug text-white drop-shadow-sm">
-                Students and teachers. One place to open learning apps.
-              </p>
-            </div>
-          </div>
+          <GuideBrandBanner variant="panel" priority />
         </div>
       </section>
 

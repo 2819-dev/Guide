@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { GuideBrandBanner } from "@/components/guide-brand-banner";
 
 export type PortalChip = {
   href: string;
@@ -17,8 +18,8 @@ type Props = {
 };
 
 /**
- * Clever Instant Login–style portal chrome: soft page band, greeting header,
- * optional section chips. Apps stay in-page — never the top bar.
+ * Clever Instant Login–style portal chrome: Guide banner strip, soft page band,
+ * greeting header, optional section chips. Apps stay in-page — never the top bar.
  */
 export function PortalShell({
   eyebrow,
@@ -31,6 +32,7 @@ export function PortalShell({
 }: Props) {
   return (
     <div className="portal-page">
+      <GuideBrandBanner variant="strip" priority />
       <div className="content-band portal-page__inner">
         {backHref ? (
           <p className="mb-4">
