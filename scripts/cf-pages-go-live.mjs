@@ -73,10 +73,9 @@ function envFromProcess() {
   const guideUrl =
     process.env.NEXT_PUBLIC_GUIDE_URL || "https://guidelearning.org";
   const site = process.env.NEXT_PUBLIC_SITE || "guide";
-  // Prefer env; else known Amud host from invite copy (do not invent a new one).
+  // Public Amud is mounted at /amudsite on the Guide Pages host.
   const amud =
-    process.env.NEXT_PUBLIC_AMUD_URL ||
-    "https://amud-big-happy-smiley.vercel.app";
+    process.env.NEXT_PUBLIC_AMUD_URL || `${guideUrl}/amudsite`;
 
   return {
     DATABASE_URL: process.env.DATABASE_URL,

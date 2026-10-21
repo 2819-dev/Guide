@@ -8,9 +8,11 @@ import { studyPath, type Tractate } from "@/lib/tractates";
 type Props = {
   tractate: Tractate;
   visitedIds?: string[];
+  /** Override learn base (e.g. /amudsite/learn on Guide public Amud). */
+  learnBase?: string;
 };
 
-export function DafPicker({ tractate, visitedIds }: Props) {
+export function DafPicker({ tractate, visitedIds, learnBase }: Props) {
   const [query, setQuery] = useState("");
   const hasFeatured = Boolean(tractate.featuredChapter);
   const [focusFeatured, setFocusFeatured] = useState(hasFeatured);
@@ -97,7 +99,7 @@ export function DafPicker({ tractate, visitedIds }: Props) {
                 return (
                   <Link
                     key={daf.id}
-                    href={studyPath(tractate.slug, daf.id)}
+                    href={studyPath(tractate.slug, daf.id, learnBase)}
                     className={`flex-1 rounded-md px-3 py-2.5 text-center text-sm font-semibold no-underline transition ${
                       seen
                         ? "bg-forest-800 text-white"

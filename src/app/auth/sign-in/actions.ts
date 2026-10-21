@@ -10,7 +10,7 @@ import { parseLoginAs, type LoginAs } from "@/lib/login-roles";
 import { portalFor } from "@/lib/portals";
 import { ensureProfile } from "@/lib/profile";
 import type { Role } from "@/lib/roles";
-import { isAmudSite } from "@/lib/site";
+import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 import { profiles, schools } from "@/lib/schema";
 
 function destinationFor(
@@ -21,7 +21,7 @@ function destinationFor(
   badgeCode: string | null,
 ): string {
   if (as === "learner" || isAmudSite()) {
-    return "/learn";
+    return publicAmudLearnBase();
   }
   if (as === "educator") {
     if (role === "admin") return "/official";
@@ -59,7 +59,7 @@ export async function signInWithEmail(
   const session = await ensureProfile(
     schoolId ? { schoolId } : undefined,
   );
-  if (!session) redirect(isAmudSite() ? "/learn" : "/apps");
+  if (!session) redirect(isAmudSite() ? publicAmudLearnBase() : "/apps");
 
   if (schoolId && session.profile.schoolId !== schoolId) {
     const db = getDb();

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { AppWordmark } from "@/components/app-wordmark";
-import { FIRST_APP_SLUG, getApp, studyIndexPath } from "@/lib/apps";
-import { isAmudSite } from "@/lib/site";
+import { FIRST_APP_SLUG, getApp } from "@/lib/apps";
+import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 type Props = {
   children: React.ReactNode;
@@ -16,9 +16,9 @@ export default async function AppShellLayout({ children, params }: Props) {
   const app = getApp(appSlug);
   if (!app) notFound();
 
-  // On the public Amud site, learning lives at /learn — not buried under /apps.
+  // On the dedicated Amud deploy, learning lives at /learn — not under /apps.
   if (isAmudSite() && appSlug === FIRST_APP_SLUG) {
-    redirect(studyIndexPath());
+    redirect(publicAmudLearnBase());
   }
 
   return (

@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { StudyWorkspace } from "@/components/study-workspace";
 import { studyPath } from "@/lib/apps";
 import { adjacentDaf, resolveTractateAndDaf } from "@/lib/daf";
 import { ensureProfile } from "@/lib/profile";
+import { isGuideSite, publicAmudLearnBase } from "@/lib/site";
 import { fetchDafText } from "@/lib/sefaria";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 type Props = {
   params: Promise<{ tractate: string; daf: string }>;
@@ -23,6 +24,11 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function LearnDafPage({ params }: Props) {
   const { tractate: slug, daf } = await params;
+
+  if (isGuideSite()) {
+    redirect(`${publicAmudLearnBase()}/${slug}/${daf}`);
+  }
+
   const resolved = resolveTractateAndDaf(slug, daf);
   if (!resolved) notFound();
 

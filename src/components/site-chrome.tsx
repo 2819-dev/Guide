@@ -5,7 +5,7 @@ import { AmudFooter } from "@/components/amud-footer";
 import { AmudHeader } from "@/components/amud-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { isAmudSite } from "@/lib/site";
+import { isAmudPublicPath, isAmudSite } from "@/lib/site";
 
 /** Picks Guide school chrome vs public Amud chrome. Auth is full-bleed (Clever login). */
 export function SiteChrome({ children }: { children: React.ReactNode }) {
@@ -13,7 +13,9 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   const bare =
     pathname.startsWith("/auth/") || pathname.startsWith("/invite/");
 
-  if (isAmudSite()) {
+  const amudChrome = isAmudSite() || isAmudPublicPath(pathname);
+
+  if (amudChrome) {
     if (bare) {
       return <main className="flex-1">{children}</main>;
     }

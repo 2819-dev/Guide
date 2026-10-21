@@ -19,6 +19,7 @@ Full iOS/dashboard steps (no CLI):
 | Build output directory | `.vercel/output/static` |
 | Compatibility flag | `nodejs_compat` |
 | Production URL env | `NEXT_PUBLIC_GUIDE_URL=https://guidelearning.org` |
+| Public Amud URL | `NEXT_PUBLIC_AMUD_URL=https://guidelearning.org/amudsite` |
 
 ## Local / agent only (not required for the iOS owner)
 

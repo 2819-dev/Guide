@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import { AppWordmark } from "@/components/app-wordmark";
 import { SignOutButton } from "@/components/sign-out-button";
 import { FIRST_APP_NAME } from "@/lib/apps";
-import { guidePublicUrl } from "@/lib/site";
+import {
+  guidePublicUrl,
+  publicAmudHomePath,
+  publicAmudLearnBase,
+} from "@/lib/site";
 
 type Me = {
   profile: { displayName: string } | null;
@@ -26,13 +30,15 @@ export function AmudHeader() {
   }, []);
 
   const loggedIn = Boolean(me?.profile);
+  const home = publicAmudHomePath();
+  const learn = publicAmudLearnBase();
 
   return (
     <header className="site-header sticky top-0 z-40">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
-        <AppWordmark name={FIRST_APP_NAME} href="/" size="lg" />
+        <AppWordmark name={FIRST_APP_NAME} href={home} size="lg" />
         <nav className="flex flex-wrap items-center justify-end gap-0.5 sm:gap-1">
-          <Link href="/learn" className={navLink}>
+          <Link href={learn} className={navLink}>
             Learn
           </Link>
           {loggedIn ? (

@@ -3,9 +3,10 @@ import { notFound, redirect } from "next/navigation";
 import { DafPicker } from "@/components/daf-picker";
 import { studyIndexPath, studyPath } from "@/lib/apps";
 import { parseDafId } from "@/lib/daf";
+import { isGuideSite, publicAmudLearnBase } from "@/lib/site";
 import { getFeaturedTractate, getTractate } from "@/lib/tractates";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 type Props = {
   params: Promise<{ tractate: string }>;
@@ -20,6 +21,10 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function LearnTractatePage({ params }: Props) {
   const { tractate: slug } = await params;
+
+  if (isGuideSite()) {
+    redirect(`${publicAmudLearnBase()}/${slug}`);
+  }
 
   const featured = getFeaturedTractate();
   if (parseDafId(slug, featured)) {

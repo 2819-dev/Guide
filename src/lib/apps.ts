@@ -4,7 +4,10 @@
  * First learning app name/slug — change only here (and next.config redirects).
  */
 
-import { isAmudSite } from "@/lib/site";
+import {
+  isAmudSite,
+  publicAmudLearnBase,
+} from "@/lib/site";
 
 export const FIRST_APP_NAME = "Amud";
 export const FIRST_APP_SLUG = "amud";
@@ -44,16 +47,39 @@ export function appHomePath(slug: string = FIRST_APP_SLUG): string {
 }
 
 /**
- * Learning paths:
- * - Amud site → /learn/...
- * - Guide site → /apps/amud/...
+ * Default learning base for the current site mode:
+ * - Dedicated Amud deploy → /learn
+ * - Guide deploy (classroom) → /apps/amud
+ *
+ * Pass `learnBase` explicitly for the public /amudsite mount.
  */
-export function studyPath(tractateSlug: string, dafId?: string): string {
-  const base = isAmudSite() ? "/learn" : appHomePath(FIRST_APP_SLUG);
+export function defaultLearnBase(): string {
+  return isAmudSite() ? "/learn" : appHomePath(FIRST_APP_SLUG);
+}
+
+/**
+ * Learning paths. Optional `learnBase` overrides (use publicAmudLearnBase()
+ * under /amudsite).
+ */
+export function studyPath(
+  tractateSlug: string,
+  dafId?: string,
+  learnBase?: string,
+): string {
+  const base = learnBase ?? defaultLearnBase();
   if (dafId) return `${base}/${tractateSlug}/${dafId}`;
   return `${base}/${tractateSlug}`;
 }
 
-export function studyIndexPath(): string {
-  return isAmudSite() ? "/learn" : appHomePath(FIRST_APP_SLUG);
+export function studyIndexPath(learnBase?: string): string {
+  return learnBase ?? defaultLearnBase();
+}
+
+/** Public Amud study helpers ( /learn or /amudsite/learn ). */
+export function publicStudyPath(tractateSlug: string, dafId?: string): string {
+  return studyPath(tractateSlug, dafId, publicAmudLearnBase());
+}
+
+export function publicStudyIndexPath(): string {
+  return publicAmudLearnBase();
 }

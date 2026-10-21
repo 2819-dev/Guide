@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { guidePublicUrl } from "@/lib/site";
+import { amudPublicUrl, guidePublicUrl } from "@/lib/site";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export const metadata: Metadata = {
   title: "Invitation to try Guide for your class · Guide",
@@ -15,7 +15,8 @@ export const metadata: Metadata = {
 const GUIDE_URL = guidePublicUrl();
 const GUIDE_HOST = GUIDE_URL.replace(/^https?:\/\//, "");
 const TEACHER_APPLY_URL = `${GUIDE_URL}/education?as=teacher#apply`;
-const AMUD_URL = "https://amud-big-happy-smiley.vercel.app";
+const AMUD_URL = amudPublicUrl();
+const AMUD_HOST_PATH = AMUD_URL.replace(/^https?:\/\//, "");
 
 /**
  * Safari-friendly invite letter — professional teacher/class invitation.
@@ -151,7 +152,7 @@ export default function OhrReuvenInvitePage() {
               <br />
               Guide: {GUIDE_HOST}
               <br />
-              Amud: amud-big-happy-smiley.vercel.app
+              Amud: {AMUD_HOST_PATH}
             </p>
           </div>
 

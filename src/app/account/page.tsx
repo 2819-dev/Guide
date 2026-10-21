@@ -13,16 +13,20 @@ import { listRolesForProfile } from "@/lib/role-badges";
 import type { Role } from "@/lib/roles";
 import { schools } from "@/lib/schema";
 import { hasEducationAccess } from "@/lib/education-access";
-import { isAmudSite } from "@/lib/site";
+import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export const metadata = { title: "Account" };
 
 export default async function AccountPage() {
   const authz = await requireProfile();
   if (!authz) {
-    redirect(isAmudSite() ? "/auth/sign-in?as=learner" : "/auth/sign-in?as=student");
+    redirect(
+      isAmudSite()
+        ? "/auth/sign-in?as=learner"
+        : "/auth/sign-in?as=student",
+    );
   }
 
   const role = authz.profile.role as Role;
@@ -35,7 +39,7 @@ export default async function AccountPage() {
     educationOk,
   });
   const backHref = isAmudSite()
-    ? "/learn"
+    ? publicAmudLearnBase()
     : (portal?.href ?? (role === "rebbe" ? "/education" : "/apps"));
   const backLabel = isAmudSite() ? "Amud" : (portal?.label ?? "Guide");
 

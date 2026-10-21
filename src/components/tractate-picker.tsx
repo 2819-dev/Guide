@@ -1,11 +1,18 @@
 import Link from "next/link";
 import { TRACTATES, studyPath } from "@/lib/tractates";
 
-export function TractatePicker() {
+type Props = {
+  /** Override learn base (e.g. /amudsite/learn on Guide public Amud). */
+  learnBase?: string;
+};
+
+export function TractatePicker({ learnBase }: Props) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {TRACTATES.map((t) => {
-        const href = t.available ? studyPath(t.slug) : undefined;
+        const href = t.available
+          ? studyPath(t.slug, undefined, learnBase)
+          : undefined;
         const Inner = (
           <>
             <div className="flex items-start justify-between gap-3">

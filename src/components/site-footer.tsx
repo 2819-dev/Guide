@@ -8,8 +8,7 @@ const link =
 const colHead = "mb-3 text-sm font-semibold text-forest-950";
 
 export function SiteFooter() {
-  const amudHref =
-    amudPublicUrl() || "https://amud-big-happy-smiley.vercel.app";
+  const amudHref = amudPublicUrl();
 
   return (
     <footer className="border-t border-line bg-paper">

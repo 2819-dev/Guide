@@ -1,14 +1,20 @@
+import { redirect } from "next/navigation";
 import { TractatePicker } from "@/components/tractate-picker";
 import { FIRST_APP_NAME } from "@/lib/apps";
+import { isGuideSite, publicAmudLearnBase } from "@/lib/site";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export const metadata = {
   title: "Choose what to learn",
 };
 
-/** Public Amud learning index (also reachable on Guide via redirect). */
+/** Public Amud learning index. On Guide, canonical is /amudsite/learn. */
 export default function LearnIndexPage() {
+  if (isGuideSite()) {
+    redirect(publicAmudLearnBase());
+  }
+
   return (
     <div>
       <section className="hero-band">
