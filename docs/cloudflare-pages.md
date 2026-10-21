@@ -30,3 +30,10 @@ npx wrangler pages deploy .vercel/output/static --project-name=guide
 ```
 
 Do **not** use `npx wrangler deploy` (Workers app).
+
+## Email (Zoho + Resend)
+
+Inbox / template compose: **Zoho Mail** on `guidelearning.org` (owns MX).  
+Transactional (Neon Auth): **Resend** SMTP — configure in Neon Console; see `.env.example` comments.  
+Full DNS order + phone steps: `/cursor/stores/self/docs/guidelearning-email-setup.md`.  
+Do **not** enable Cloudflare Email Routing (MX conflict with Zoho).
