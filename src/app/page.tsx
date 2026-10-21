@@ -102,10 +102,18 @@ function GuideHomePage() {
         </div>
       </section>
 
-      {/* —— Feature rows (Clever alternating image / copy) —— */}
+      {/* —— Feature rows: media alternates L/R; each frame shape differs —— */}
       <section className="clever-feature">
         <div className="content-band clever-feature__grid">
-          <div className="clever-feature__visual" aria-hidden>
+          <div
+            className="clever-feature__visual clever-feature__visual--frame-a"
+            aria-hidden
+          >
+            <div className="feature-scene feature-scene--classes">
+              <span className="feature-scene__chip">My class</span>
+              <span className="feature-scene__chip">Apps</span>
+              <span className="feature-scene__chip">Progress</span>
+            </div>
             <span className="clever-feature__mark">01</span>
           </div>
           <div className="clever-feature__copy">
@@ -141,9 +149,13 @@ function GuideHomePage() {
             </Link>
           </div>
           <div
-            className="clever-feature__visual clever-feature__visual--b"
+            className="clever-feature__visual clever-feature__visual--frame-b"
             aria-hidden
           >
+            <div className="feature-scene feature-scene--badge">
+              <span className="feature-scene__badge-ring" />
+              <span className="feature-scene__badge-label">Badge</span>
+            </div>
             <span className="clever-feature__mark">02</span>
           </div>
         </div>
@@ -152,9 +164,15 @@ function GuideHomePage() {
       <section className="clever-feature">
         <div className="content-band clever-feature__grid">
           <div
-            className="clever-feature__visual clever-feature__visual--c"
+            className="clever-feature__visual clever-feature__visual--frame-c"
             aria-hidden
           >
+            <div className="feature-scene feature-scene--apps">
+              <span className="feature-scene__tile" />
+              <span className="feature-scene__tile" />
+              <span className="feature-scene__tile" />
+              <span className="feature-scene__tile" />
+            </div>
             <span className="clever-feature__mark">03</span>
           </div>
           <div className="clever-feature__copy">
@@ -187,9 +205,14 @@ function GuideHomePage() {
             </Link>
           </div>
           <div
-            className="clever-feature__visual clever-feature__visual--d"
+            className="clever-feature__visual clever-feature__visual--frame-d"
             aria-hidden
           >
+            <div className="feature-scene feature-scene--teams">
+              <span className="feature-scene__row" />
+              <span className="feature-scene__row" />
+              <span className="feature-scene__row feature-scene__row--accent" />
+            </div>
             <span className="clever-feature__mark">04</span>
           </div>
         </div>
