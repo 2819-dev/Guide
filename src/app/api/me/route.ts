@@ -76,7 +76,7 @@ export async function PATCH(request: Request) {
   }
 }
 
-/** Internal seed helper — sets role when email matches allowlist patterns used at signup */
+/** Guide Official: set a profile role. */
 export async function PUT(request: Request) {
   const authz = await requireProfile(["admin"]);
   if (!authz) {

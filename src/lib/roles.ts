@@ -10,11 +10,11 @@ export function roleLabel(role: Role): string {
     case "customer":
       return "Student";
     case "rebbe":
-      return "Rebbe";
+      return "Teacher";
     case "moderator":
-      return "Moderator";
+      return "Guide Official";
     case "admin":
-      return "Admin";
+      return "Guide Official";
   }
 }
 

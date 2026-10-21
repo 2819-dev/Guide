@@ -174,7 +174,7 @@ export function StudentMessages() {
                 <Link href="/account" className="font-semibold text-forest-800">
                   Account
                 </Link>{" "}
-                with your Rebbe’s invite code, then you can message them here.
+                with your teacher’s invite code, then you can message them here.
               </p>
             ) : (
               <>
@@ -209,7 +209,7 @@ export function StudentMessages() {
                     onChange={(e) => setDraft(e.target.value)}
                     rows={5}
                     className="field mt-1.5"
-                    placeholder="Write to your Rebbe…"
+                    placeholder="Write to your teacher…"
                   />
                 </label>
                 <button

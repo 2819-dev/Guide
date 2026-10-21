@@ -49,13 +49,13 @@ export async function isStudentSuggestionsBlocked(
         ?.classroomName ?? "your class";
     return {
       blocked: true,
-      reason: `Suggestions are paused for ${name}. Ask your Rebbe if you need access.`,
+      reason: `Suggestions are paused for ${name}. Ask your teacher if you need access.`,
     };
   }
 
   return {
     blocked: true,
     reason:
-      "Suggestions are paused for your account. Ask your Rebbe if you need access.",
+      "Suggestions are paused for your account. Ask your teacher if you need access.",
   };
 }

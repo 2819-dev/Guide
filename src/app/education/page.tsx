@@ -11,7 +11,7 @@ export const instant = false;
 export const metadata = {
   title: "Apply for your school",
   description:
-    "Apply so your school can use Guide — invite students, add apps like Amud, and follow progress from home or Chromebook.",
+    "Apply so your school or district can use Guide — invite students, add learning apps, and follow progress from anywhere.",
 };
 
 /** School apply landing — routes under /education remain; brand is Guide only. */
@@ -43,7 +43,7 @@ export default async function EducationLandingPage() {
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg font-medium leading-[1.65] text-ink">
             Apply once. After approval, teachers invite a class, add apps from
-            the Guide library, and follow progress from home or Chromebook.
+            the Guide library, and follow progress from school or home.
           </p>
           <div className="mt-8 flex flex-col items-center gap-3">
             {canOpenPanel ? (
@@ -64,7 +64,7 @@ export default async function EducationLandingPage() {
 
       <section className="content-band py-12 sm:py-14">
           <h2 className="display-feature max-w-2xl">
-            For schools who want home learning to stay visible
+            For schools and districts who want learning to stay visible
           </h2>
           <p className="mt-3 max-w-2xl text-base text-ink-muted">
             Students open apps on Guide. After your school is approved, teachers
@@ -94,11 +94,11 @@ export default async function EducationLandingPage() {
             <li className="p-6">
               <p className="text-xs font-semibold text-forest-600">03</p>
               <h3 className="mt-2 text-lg font-semibold text-forest-950">
-                Track home study
+                Follow student progress
               </h3>
               <p className="mt-2 text-base leading-relaxed text-ink-muted">
-                See dapim visited, quizzes taken, and notes from home or
-                Chromebook.
+                See app activity and progress from school or home — without a
+                noisy dashboard.
               </p>
             </li>
           </ol>

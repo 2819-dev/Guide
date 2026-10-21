@@ -17,7 +17,7 @@ export async function POST() {
     return NextResponse.json(
       {
         error:
-          "Choose your school first — log in as Student and select your school, or ask your Rebbe.",
+          "Choose your school first — log in as Student and select your school, or ask your teacher.",
       },
       { status: 400 },
     );

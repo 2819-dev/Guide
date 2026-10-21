@@ -1,5 +1,6 @@
 /**
- * Seeds admin account + sample support tickets via Neon Auth HTTP + SQL.
+ * Promotes the Guide Official admin profile via Neon Auth HTTP + SQL.
+ * Does not insert schools, classes, students, or sample tickets.
  * Run: node --env-file=.env.local scripts/seed-admin.mjs
  */
 import { neon } from "@neondatabase/serverless";
@@ -51,7 +52,6 @@ async function main() {
   const { json } = await signIn();
   const authUserId = json?.user?.id;
   if (!authUserId) {
-    // try listing neon_auth users via SQL if available
     console.log("Could not get auth user id from sign-in; checking DB…");
   }
 
@@ -64,19 +64,7 @@ async function main() {
     `;
     console.log("Admin profile upserted");
   } else {
-    // Fallback: promote any profile matching later sign-in via ensureProfile
     console.log("Admin will be promoted on first app sign-in via email match");
-  }
-
-  const existing = await sql`SELECT count(*)::int AS c FROM support_tickets`;
-  if ((existing[0]?.c ?? 0) === 0) {
-    await sql`
-      INSERT INTO support_tickets (ticket_number, category, subject, body, status, reporter_code)
-      VALUES
-        ('G-SEED0001', 'study', 'Daf text slow to load', 'Occasionally the Gemara page takes a long time on Chromebooks.', 'open', 'Student-SEED0001'),
-        ('G-SEED0002', 'education', 'Invite code unclear', 'A Rebbe asked where students enter the class code.', 'in_progress', 'Student-SEED0002')
-    `;
-    console.log("Sample tickets inserted");
   }
 
   console.log("Done. Admin email:", ADMIN_EMAIL);

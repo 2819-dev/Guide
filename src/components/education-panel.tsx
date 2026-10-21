@@ -75,7 +75,7 @@ export function EducationPanel() {
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Evening Gemara · בבא מציעא"
+              placeholder="e.g. Period 3 Algebra · Grade 9"
               className="field max-w-md"
             />
             <button
@@ -122,7 +122,7 @@ export function EducationPanel() {
                     <thead>
                       <tr className="border-b border-line text-forest-700">
                         <th className="py-2 pr-3 font-semibold">Student</th>
-                        <th className="py-2 pr-3 font-semibold">Dapim</th>
+                        <th className="py-2 pr-3 font-semibold">Visited</th>
                         <th className="py-2 pr-3 font-semibold">Quizzes</th>
                         <th className="py-2 pr-3 font-semibold">Best</th>
                         <th className="py-2 pr-3 font-semibold">Avg</th>

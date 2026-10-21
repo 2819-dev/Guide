@@ -124,7 +124,7 @@ function GuideHomePage() {
                 Portal app launcher
               </h3>
               <p className="mt-2 text-base leading-relaxed text-ink-muted">
-                Teachers add {FIRST_APP_NAME} to a class. Students open it from
+                Teachers add learning apps to a class. Students open them from
                 My apps on their portal.
               </p>
             </div>
@@ -134,8 +134,8 @@ function GuideHomePage() {
                 Messaging &amp; Suggestions
               </h3>
               <p className="mt-2 text-base leading-relaxed text-ink-muted">
-                Platform actions stay with the portal. Learning for everyone
-                also lives on the {FIRST_APP_NAME} site.
+                Messaging and Suggestions stay with the portal — alongside the
+                apps your school chooses.
               </p>
             </div>
           </div>

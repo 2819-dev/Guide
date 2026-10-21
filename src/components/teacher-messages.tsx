@@ -16,7 +16,7 @@ type Msg = {
   createdAt: string;
 };
 
-/** Rebbe inbox — reply to student threads. */
+/** Teacher inbox — reply to student threads. */
 export function TeacherMessages() {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);

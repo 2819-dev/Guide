@@ -112,7 +112,7 @@ export async function signInStudentBadge(
   if (!profile || !profile.badgeAuthUserId) {
     return {
       error:
-        "We couldn’t find that badge for this school. Check the code or ask your Rebbe.",
+        "We couldn’t find that badge for this school. Check the code or ask your teacher.",
     };
   }
 

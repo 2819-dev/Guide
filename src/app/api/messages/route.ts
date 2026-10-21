@@ -22,7 +22,7 @@ const replySchema = z.object({
   body: z.string().trim().min(1).max(4000),
 });
 
-/** Teachers available to the student (Rebbeim of classes they joined). */
+/** Teachers available to the student (teachers of classes they joined). */
 async function teachersForStudent(studentId: string) {
   const db = getDb();
   const rows = await db
@@ -192,7 +192,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "Join a class first — you can message the Rebbe who invited you.",
+            "Join a class first — you can message the teacher who invited you.",
         },
         { status: 400 },
       );

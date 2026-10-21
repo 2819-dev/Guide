@@ -67,7 +67,7 @@ function SignUpForm() {
             type="email"
             required
             className="field mt-1.5"
-            placeholder="you@example.com"
+            placeholder="you@school.org"
           />
         </label>
         <label className="block text-sm font-semibold text-forest-900">

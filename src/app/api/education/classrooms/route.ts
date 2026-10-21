@@ -17,7 +17,7 @@ import {
 export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Rebbe access required" }, { status: 403 });
+    return NextResponse.json({ error: "Teacher access required" }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
     return NextResponse.json(
@@ -129,7 +129,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Rebbe access required" }, { status: 403 });
+    return NextResponse.json({ error: "Teacher access required" }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
     return NextResponse.json(

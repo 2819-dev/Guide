@@ -87,8 +87,8 @@ export function SchoolApplicationForm({
           Apply for your school
         </h2>
         <p className="mt-2 text-sm text-ink-muted">
-          Tell us a little about your school. After approval, teachers can
-          create classes and follow home Mishnayos and Gemara study.
+          Tell us a little about your school or district. After approval,
+          teachers can create classes, add apps, and follow student progress.
         </p>
       </div>
 
@@ -99,7 +99,7 @@ export function SchoolApplicationForm({
           value={schoolName}
           onChange={(e) => setSchoolName(e.target.value)}
           className="field mt-1.5"
-          placeholder="e.g. Yeshiva High School"
+          placeholder="e.g. Lincoln High School"
         />
       </label>
 
@@ -135,7 +135,7 @@ export function SchoolApplicationForm({
             value={contactRole}
             onChange={(e) => setContactRole(e.target.value)}
             className="field mt-1.5"
-            placeholder="e.g. Rebbe, Menahel, Admin"
+            placeholder="e.g. Teacher, Principal, Administrator"
           />
         </label>
         <label className="block text-sm font-semibold text-forest-800">
@@ -163,7 +163,7 @@ export function SchoolApplicationForm({
           value={intendedUse}
           onChange={(e) => setIntendedUse(e.target.value)}
           className="field mt-1.5"
-          placeholder="Classes, after-school review, Chromebook study…"
+          placeholder="Classes, homework apps, after-school programs…"
         />
       </label>
 
