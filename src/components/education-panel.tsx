@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TeacherAppsPanel } from "@/components/teacher-apps-panel";
+import { TeacherInvitesPanel } from "@/components/teacher-invites-panel";
 import { TeacherMessages } from "@/components/teacher-messages";
 import { TeacherSuggestionsAccess } from "@/components/teacher-suggestions-access";
 
@@ -66,6 +67,7 @@ export function EducationPanel() {
   return (
     <>
       <TeacherAppsPanel />
+      <TeacherInvitesPanel />
 
       <section id="classes" className="space-y-4">
         <div>

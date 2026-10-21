@@ -5,6 +5,7 @@ import { and, eq } from "drizzle-orm";
 import { auth } from "@/lib/auth/server";
 import { badgeAuthEmail, normalizeBadgeCode } from "@/lib/badge";
 import { getDb } from "@/lib/db";
+import { hasDeveloperAccess } from "@/lib/developer-access";
 import { hasEducationAccess } from "@/lib/education-access";
 import { parseLoginAs, type LoginAs } from "@/lib/login-roles";
 import { portalFor } from "@/lib/portals";
@@ -19,6 +20,7 @@ function destinationFor(
   educationOk: boolean,
   schoolId: string | null,
   badgeCode: string | null,
+  developerOk: boolean,
 ): string {
   if (as === "learner" || isAmudSite()) {
     return publicAmudLearnBase();
@@ -28,12 +30,17 @@ function destinationFor(
     if (educationOk) return "/teacher";
     return "/education";
   }
+  if (as === "developer") {
+    if (developerOk) return "/developer";
+    return "/developers/apply";
+  }
   const portal = portalFor({
     as,
     role,
     schoolId,
     badgeCode,
     educationOk,
+    developerOk,
   });
   if (portal) return portal.href;
   if (role === "rebbe") return "/education";
@@ -71,6 +78,7 @@ export async function signInWithEmail(
 
   const role = session.profile.role as Role;
   const educationOk = await hasEducationAccess(session.profile);
+  const developerOk = await hasDeveloperAccess(session.profile);
   redirect(
     destinationFor(
       as,
@@ -78,6 +86,7 @@ export async function signInWithEmail(
       educationOk,
       schoolId ?? session.profile.schoolId,
       session.profile.badgeCode,
+      developerOk,
     ),
   );
 }

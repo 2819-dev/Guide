@@ -30,8 +30,6 @@ export async function signUpWithEmail(
     role = roleRaw;
   }
 
-  const wantsEducation = as === "educator" || roleRaw === "rebbe";
-
   if (!email || !password || password.length < 8) {
     return { error: "Use a valid email and a password of at least 8 characters." };
   }
@@ -39,6 +37,14 @@ export async function signUpWithEmail(
   if (as === "official") {
     return {
       error: "Please log in with your Guide Official account.",
+    };
+  }
+
+  // Teachers = login only via school invite. School admins use /education apply.
+  if (as === "educator") {
+    return {
+      error:
+        "Teachers log in with a school invite. School administrators apply at /education.",
     };
   }
 
@@ -110,7 +116,7 @@ export async function signUpWithEmail(
     }
   }
 
-  if (wantsEducation) redirect("/education#apply");
+  if (as === "developer") redirect("/developers/apply");
   if (as === "student") redirect("/student");
   if (as === "learner") redirect(publicAmudLearnBase());
   redirect("/apps");

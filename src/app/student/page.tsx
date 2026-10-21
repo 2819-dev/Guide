@@ -42,7 +42,7 @@ export default async function StudentHubPage() {
       title={`Hi, ${authz.profile.displayName}`}
       subtitle={schoolName ?? "Your apps and tools are below."}
       chips={[
-        { href: "#apps", label: "My apps" },
+        { href: "#apps", label: "My apps", active: true },
         { href: "#tools", label: "Tools" },
       ]}
     >

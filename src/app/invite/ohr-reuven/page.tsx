@@ -7,22 +7,24 @@ import { amudPublicUrl, guidePublicUrl } from "@/lib/site";
 export const runtime = "edge";
 
 export const metadata: Metadata = {
-  title: "Invitation to try Guide for your class · Guide",
+  title: "Invitation to try Guide · Guide",
   description:
-    "Invitation for Yeshivas Ohr Reuven to try Guide with your class.",
+    "Invitation for Yeshivas Ohr Reuven to try Guide with your school.",
   robots: { index: false, follow: false },
 };
 
 const GUIDE_URL = guidePublicUrl();
 const GUIDE_HOST = GUIDE_URL.replace(/^https?:\/\//, "");
-const TEACHER_APPLY_URL = `${GUIDE_URL}/education?as=teacher#apply`;
+const SCHOOL_APPLY_URL = `${GUIDE_URL}/education#apply`;
+const TEACHER_LOGIN_URL = `${GUIDE_URL}/auth/sign-in?as=educator`;
+const MEETING_URL = `${GUIDE_URL}/schools/meeting`;
+const DEMO_URL = `${GUIDE_URL}/schools/demo`;
 const AMUD_URL = amudPublicUrl();
 const AMUD_HOST_PATH = AMUD_URL.replace(/^https?:\/\//, "");
 
 /**
  * Safari invite letter for Yeshivas Ohr Reuven.
- * Canonical copy: /cursor/stores/self/docs/ohr-reuven-invite-canva.html
- * Shared Guide banner (blue grain). CTA → teacher apply, not this page.
+ * Aligned with teacher-login-only + school/district apply + meeting.
  */
 export default function OhrReuvenInvitePage() {
   return (
@@ -36,7 +38,7 @@ export default function OhrReuvenInvitePage() {
           tap the letter below → <strong>Select All</strong> →{" "}
           <strong>Copy</strong> → paste into Zoho Mail. Subject:{" "}
           <span className="font-medium text-[#152A20]">
-            An invitation to try Guide with your class
+            An invitation to try Guide with your school
           </span>
         </p>
       </div>
@@ -53,18 +55,19 @@ export default function OhrReuvenInvitePage() {
           />
 
           <div className="px-6 pb-2 pt-10 text-[17px] leading-[1.7] text-[#2a3f34] sm:px-11">
-            <p className="mb-[18px] font-semibold text-[#152A20]">Hello,</p>
+            <p className="mb-[18px] font-semibold text-[#152A20]">Dear Teacher,</p>
             <p className="mb-[18px]">
               Guide is a school platform that gives teachers and students one
               place to sign in and open the learning apps they use for class.
               Built with Jewish schools in mind, it is designed to support the
               way Torah subjects are taught and learned. We would be honored to
               welcome Yeshivas Ohr Reuven as the first school to use Guide, and
-              we would like to invite you to try it with your class at no cost.
+              we would like to invite you to try it at no cost.
             </p>
             <p className="mb-[18px]">
-              This invitation is for your classroom use. It is not a requirement
-              that the entire school adopts the platform.
+              Schools and districts apply on Guide. After approval, administrators
+              invite teachers by email. Teachers log in with that account — there
+              is no separate teacher-only signup.
             </p>
             <p className="mb-[18px]">
               <a
@@ -77,20 +80,38 @@ export default function OhrReuvenInvitePage() {
               practice for Mishnayos and Gemara. It includes a Test Yourself
               experience with varied question types, including translation.
               Students can review after class, and teachers can follow their
-              progress as they work. Additional apps will be added over time, and
-              teachers choose which apps to make available to each class.
+              progress as they work.
             </p>
             <p className="mb-[18px]">
-              If you are interested, you can{" "}
+              You can{" "}
               <a
-                href={TEACHER_APPLY_URL}
+                href={DEMO_URL}
                 className="font-semibold text-[#1b4332] underline underline-offset-2"
               >
-                join Guide as a teacher for your class
+                view the school demo
+              </a>{" "}
+              on desktop or iPad,{" "}
+              <a
+                href={MEETING_URL}
+                className="font-semibold text-[#1b4332] underline underline-offset-2"
+              >
+                book a meeting
               </a>
-              , and our team will help you get started. You can use the links
-              below or reply to this email to schedule a brief walkthrough at a
-              time that works for you.
+              , or{" "}
+              <a
+                href={SCHOOL_APPLY_URL}
+                className="font-semibold text-[#1b4332] underline underline-offset-2"
+              >
+                apply for your school
+              </a>
+              . Teachers who already have an invite can{" "}
+              <a
+                href={TEACHER_LOGIN_URL}
+                className="font-semibold text-[#1b4332] underline underline-offset-2"
+              >
+                log in here
+              </a>
+              .
             </p>
             <p className="mb-[18px]">
               Guide is available for free at{" "}
@@ -110,15 +131,19 @@ export default function OhrReuvenInvitePage() {
 
           <div className="px-6 pb-7 pt-2 text-center sm:px-11">
             <Link
-              href={TEACHER_APPLY_URL}
+              href={SCHOOL_APPLY_URL}
               className="inline-block bg-[#1b4332] px-[34px] py-[15px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-base font-semibold text-white no-underline"
             >
-              Join as a teacher
+              Apply for your school
             </Link>
             <p className="mt-[18px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-sm leading-[1.55] text-[#5a7264]">
-              Teacher apply: {GUIDE_HOST}/education?as=teacher
+              Apply: {GUIDE_HOST}/education
               <br />
-              Guide: {GUIDE_HOST}
+              Teacher log in: {GUIDE_HOST}/auth/sign-in?as=educator
+              <br />
+              Demo: {GUIDE_HOST}/schools/demo
+              <br />
+              Meeting: {GUIDE_HOST}/schools/meeting
               <br />
               Amud: {AMUD_HOST_PATH}
             </p>
@@ -160,8 +185,12 @@ export default function OhrReuvenInvitePage() {
         </article>
 
         <p className="mx-auto mt-5 max-w-[640px] select-none text-center font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-xs text-[#5a7264]">
-          <a href={TEACHER_APPLY_URL} className="font-semibold text-[#1b4332]">
-            Teacher apply
+          <a href={SCHOOL_APPLY_URL} className="font-semibold text-[#1b4332]">
+            School apply
+          </a>
+          {" · "}
+          <a href={TEACHER_LOGIN_URL} className="font-semibold text-[#1b4332]">
+            Teacher log in
           </a>
           {" · "}
           <a href={GUIDE_URL} className="font-semibold text-[#1b4332]">

@@ -4,7 +4,7 @@ import { PortalShell } from "@/components/portal-shell";
 import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export const metadata = { title: "Teacher portal" };
 
@@ -14,7 +14,6 @@ export default async function EducationPanelPage() {
 
   const allowed = await hasEducationAccess(authz.profile);
   if (!allowed) {
-    // Pending / declined / no application — wait or re-apply on /education.
     redirect("/education");
   }
 
@@ -22,9 +21,10 @@ export default async function EducationPanelPage() {
     <PortalShell
       eyebrow="Teacher or School Administrator"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Add apps to a class, invite students, manage Suggestions, and message."
+      subtitle="Tabs across the top. Add apps, invite teachers, manage classes, and message — Clever-like density."
       chips={[
-        { href: "#apps", label: "Apps" },
+        { href: "#apps", label: "Apps", active: true },
+        { href: "#teachers", label: "Teachers" },
         { href: "#classes", label: "Classes" },
         { href: "#suggestions-access", label: "Suggestions" },
         { href: "#messages", label: "Messages" },

@@ -21,6 +21,12 @@ export const PORTALS = {
     href: "/official",
     short: "Official",
   },
+  developer: {
+    id: "developer" as const,
+    label: "My portal",
+    href: "/developer",
+    short: "Developer",
+  },
 } as const;
 
 export type PortalId = keyof typeof PORTALS;
@@ -35,11 +41,15 @@ export function portalFor(opts: {
   schoolId?: string | null;
   badgeCode?: string | null;
   educationOk?: boolean;
+  developerOk?: boolean;
 }): (typeof PORTALS)[PortalId] | null {
-  const { as, role, schoolId, badgeCode, educationOk } = opts;
+  const { as, role, schoolId, badgeCode, educationOk, developerOk } = opts;
 
   if (as === "official" || role === "admin" || role === "moderator") {
     return PORTALS.official;
+  }
+  if (as === "developer" || developerOk === true) {
+    return PORTALS.developer;
   }
   if (as === "educator" || role === "rebbe") {
     // Teacher / School Administrator portal stays locked until approved.
@@ -59,6 +69,8 @@ export function messagesHrefFor(portal: PortalId): string {
       return "/education/panel#messages";
     case "official":
       return "/admin#suggestions";
+    case "developer":
+      return "/developer#docs";
   }
 }
 
@@ -70,5 +82,7 @@ export function suggestionsHrefFor(portal: PortalId): string {
       return "/education/panel#suggestions-access";
     case "official":
       return "/admin#suggestions";
+    case "developer":
+      return "/developer#docs";
   }
 }

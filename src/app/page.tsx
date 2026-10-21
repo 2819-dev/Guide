@@ -4,7 +4,7 @@ import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { FIRST_APP_NAME, appHomePath } from "@/lib/apps";
 import { amudPublicUrl, isAmudSite } from "@/lib/site";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export default function HomePage() {
   if (isAmudSite()) {
@@ -36,6 +36,7 @@ function GuideHomePage() {
       <section className="hero-band">
         <div className="content-band hero-band__grid">
           <div>
+            <p className="eyebrow">Guide</p>
             <h1 className="display-hero max-w-[18ch]">
               The{" "}
               <span className="sun-underline">identity</span> platform for
@@ -47,22 +48,12 @@ function GuideHomePage() {
             </p>
 
             <div className="mt-9 max-w-[40rem]">
-              <Link
-                href="/auth/sign-in?as=student"
-                className="btn-hero-bar"
-              >
+              <Link href="/auth/sign-in?as=student" className="btn-hero-bar">
                 <span>Log in as a student</span>
                 <span className="btn-hero-bar__arrow">
                   <ArrowIcon />
                 </span>
               </Link>
-              <p className="hero-secondary-links">
-                <Link href="/education#apply">For schools</Link>
-                <span aria-hidden className="hero-secondary-links__dot">
-                  ·
-                </span>
-                <Link href="/auth/sign-in?as=educator">For teachers</Link>
-              </p>
             </div>
           </div>
 
@@ -70,13 +61,57 @@ function GuideHomePage() {
         </div>
       </section>
 
-      <section id="what" className="section-pad">
+      <section className="section-pad !pt-10 !pb-6">
+        <div className="content-band home-role-grid">
+          <div className="home-role-box">
+            <p className="home-role-box__eyebrow">Schools</p>
+            <h2 className="home-role-box__title">For schools</h2>
+            <p className="home-role-box__body">
+              See how teachers manage classes and apps, book a walkthrough, or
+              apply for your school. Teachers log in with a school invite — no
+              separate teacher signup.
+            </p>
+            <div className="home-role-box__actions">
+              <Link href="/schools/demo" className="btn-primary">
+                Demo
+              </Link>
+              <Link href="/schools/meeting" className="btn-secondary">
+                Book a meeting
+              </Link>
+            </div>
+            <p className="home-role-box__links">
+              <Link href="/education#apply">Apply for your school</Link>
+              <span aria-hidden>·</span>
+              <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
+            </p>
+          </div>
+
+          <div className="home-role-box">
+            <p className="home-role-box__eyebrow">Partners</p>
+            <h2 className="home-role-box__title">For developers</h2>
+            <p className="home-role-box__body">
+              Verified partners only. Tell us about your app and website; Guide
+              Official reviews each application before portal access.
+            </p>
+            <div className="home-role-box__actions">
+              <Link href="/developers/apply" className="btn-primary">
+                Apply as a developer
+              </Link>
+            </div>
+            <p className="home-role-box__links">
+              <Link href="/auth/sign-in?as=developer">Partner log in</Link>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="what" className="section-pad !pt-8">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="display-section">What is Guide?</h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
-            Guide is an identity platform for schools. Log in as a Student,
-            Teacher or School Administrator, or Guide Official. Teachers add
-            apps to a class; students open them from My apps on their portal.
+            Guide is an identity platform for schools. Students open apps from
+            their portal. Teachers manage classes after a school invite. School
+            administrators apply once; Guide Official approves.
           </p>
         </div>
       </section>
@@ -97,8 +132,8 @@ function GuideHomePage() {
                 Secure school identity
               </h3>
               <p className="mt-2 text-base leading-relaxed text-ink-muted">
-                School picker and badge or password login for students.
-                School tools unlock after your school is approved.
+                School picker and badge or password login for students. School
+                tools unlock after your school is approved.
               </p>
             </div>
             <div>
@@ -133,8 +168,9 @@ function GuideHomePage() {
               Classes and apps in one place
             </h2>
             <p className="mt-4 max-w-md text-base leading-relaxed text-ink-muted">
-              Apply once. After approval, teachers create classes, add apps, and
-              follow student progress — all inside Guide.
+              Apply once as a school or district. After approval, invite
+              teachers by email, create classes, and add apps — all inside
+              Guide.
             </p>
             <Link
               href="/education#apply"
@@ -163,10 +199,7 @@ function GuideHomePage() {
           <h2 className="display-section max-w-xl !text-white">
             Connecting every student to the apps they need
           </h2>
-          <Link
-            href="/auth/sign-in?as=student"
-            className="btn-light shrink-0"
-          >
+          <Link href="/auth/sign-in?as=student" className="btn-light shrink-0">
             Log in as a student
           </Link>
         </div>

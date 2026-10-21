@@ -395,3 +395,113 @@ export const classroomAppInstalls = pgTable(
     uniqueIndex("classroom_app_install_unique").on(t.classroomId, t.appSlug),
   ],
 );
+
+/** School demo “Book a meeting” requests — Guide Official reviews. */
+export const meetingRequests = pgTable("meeting_requests", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  contactName: varchar("contact_name", { length: 120 }).notNull(),
+  contactEmail: varchar("contact_email", { length: 254 }).notNull(),
+  organization: varchar("organization", { length: 200 }).notNull(),
+  contactRole: varchar("contact_role", { length: 120 }).notNull(),
+  message: text("message").notNull().default(""),
+  preferredTime: varchar("preferred_time", { length: 200 }),
+  status: varchar("status", { length: 24 }).notNull().default("pending"),
+  reviewNote: text("review_note"),
+  reviewedByProfileId: uuid("reviewed_by_profile_id").references(
+    () => profiles.id,
+    { onDelete: "set null" },
+  ),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/**
+ * School/district invites teachers by email (setup link).
+ * Teachers log in only — no public teacher signup.
+ */
+export const teacherInvites = pgTable(
+  "teacher_invites",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    email: varchar("email", { length: 254 }).notNull(),
+    schoolId: uuid("school_id").references(() => schools.id, {
+      onDelete: "set null",
+    }),
+    schoolName: varchar("school_name", { length: 200 }).notNull(),
+    invitedByProfileId: uuid("invited_by_profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    token: varchar("token", { length: 64 }).notNull(),
+    status: varchar("status", { length: 24 }).notNull().default("pending"),
+    acceptedProfileId: uuid("accepted_profile_id").references(
+      () => profiles.id,
+      { onDelete: "set null" },
+    ),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [uniqueIndex("teacher_invites_token_idx").on(t.token)],
+);
+
+/** Verified developer partner applications — Official approves. */
+export const developerApplications = pgTable("developer_applications", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  contactName: varchar("contact_name", { length: 120 }).notNull(),
+  contactEmail: varchar("contact_email", { length: 254 }).notNull(),
+  organization: varchar("organization", { length: 200 }).notNull(),
+  websiteUrl: varchar("website_url", { length: 500 }).notNull(),
+  appName: varchar("app_name", { length: 160 }).notNull(),
+  appAbout: text("app_about").notNull(),
+  status: varchar("status", { length: 24 }).notNull().default("pending"),
+  applicantProfileId: uuid("applicant_profile_id").references(
+    () => profiles.id,
+    { onDelete: "set null" },
+  ),
+  reviewNote: text("review_note"),
+  reviewedByProfileId: uuid("reviewed_by_profile_id").references(
+    () => profiles.id,
+    { onDelete: "set null" },
+  ),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/** Apps owned by an approved developer partner. */
+export const developerApps = pgTable(
+  "developer_apps",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    ownerProfileId: uuid("owner_profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    applicationId: uuid("application_id").references(
+      () => developerApplications.id,
+      { onDelete: "set null" },
+    ),
+    name: varchar("name", { length: 160 }).notNull(),
+    slug: varchar("slug", { length: 64 }).notNull(),
+    websiteUrl: varchar("website_url", { length: 500 }),
+    about: text("about").notNull().default(""),
+    status: varchar("status", { length: 24 }).notNull().default("active"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [uniqueIndex("developer_apps_slug_idx").on(t.slug)],
+);

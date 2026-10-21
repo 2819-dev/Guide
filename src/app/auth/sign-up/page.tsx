@@ -1,6 +1,6 @@
 "use client";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
@@ -33,9 +33,42 @@ function SignUpForm() {
     );
   }
 
+  // Teachers = login only (school email invite). School admins apply on /education.
+  if (as === "educator") {
+    return (
+      <AuthCard
+        eyebrow="For schools"
+        title="Teachers log in only"
+        subtitle="Teachers receive a setup invite from their school. School and district administrators apply for Guide — there is no separate teacher signup."
+        footer={
+          <>
+            Already invited?{" "}
+            <Link
+              href="/auth/sign-in?as=educator"
+              className="font-semibold text-forest-800"
+            >
+              Log in
+            </Link>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-3">
+          <Link href="/auth/sign-in?as=educator" className="btn-primary inline-flex justify-center">
+            Teacher log in
+          </Link>
+          <Link href="/education#apply" className="btn-secondary inline-flex justify-center">
+            Apply for your school
+          </Link>
+        </div>
+      </AuthCard>
+    );
+  }
+
   return (
     <AuthCard
-      eyebrow={as === "educator" ? "Join as a" : as === "student" ? "Join as a" : null}
+      eyebrow={
+        as === "student" ? "Join as a" : as === "developer" ? "Partners" : null
+      }
       title={copy.title}
       subtitle={copy.subtitle}
       footer={
@@ -65,7 +98,7 @@ function SignUpForm() {
           />
         </label>
         <label className="block text-sm font-semibold text-forest-900">
-          {as === "educator" ? "Work email" : "Email"}
+          Email
           <input
             name="email"
             type="email"
@@ -88,10 +121,10 @@ function SignUpForm() {
           />
         </label>
 
-        {as === "educator" ? (
+        {as === "developer" ? (
           <p className="text-[0.8125rem] leading-snug text-ink-muted">
-            Next you will apply for your school. The portal unlocks after Guide
-            Official accepts the application.
+            Next, submit a developer application. The portal unlocks after Guide
+            Official verifies you.
           </p>
         ) : null}
 
@@ -101,14 +134,10 @@ function SignUpForm() {
           </p>
         )}
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="btn-primary w-full"
-        >
+        <button type="submit" disabled={pending} className="btn-primary w-full">
           {pending
             ? "Creating…"
-            : as === "educator"
+            : as === "developer"
               ? "Create account"
               : "Get started"}
         </button>

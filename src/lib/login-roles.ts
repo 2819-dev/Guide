@@ -1,6 +1,11 @@
 /** Clever-style “Log in as a …” — Guide school roles only (no family). */
 
-export type LoginAs = "student" | "educator" | "official" | "learner";
+export type LoginAs =
+  | "student"
+  | "educator"
+  | "official"
+  | "learner"
+  | "developer";
 
 export type LoginRoleOption = {
   id: LoginAs;
@@ -20,7 +25,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "educator",
     label: "Teacher or School Administrator",
-    description: "Apply for your school, then open classes and apps",
+    description: "Log in with your school account",
     href: "/auth/sign-in?as=educator",
   },
   {
@@ -33,6 +38,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
 
 export function parseLoginAs(value: string | null | undefined): LoginAs {
   if (value === "teacher" || value === "school") return "educator";
+  if (value === "partner" || value === "developer") return "developer";
   // Legacy family/home → Amud learner (not a Guide school role)
   if (
     value === "family" ||
@@ -42,7 +48,12 @@ export function parseLoginAs(value: string | null | undefined): LoginAs {
   ) {
     return "learner";
   }
-  if (value === "student" || value === "educator" || value === "official") {
+  if (
+    value === "student" ||
+    value === "educator" ||
+    value === "official" ||
+    value === "developer"
+  ) {
     return value;
   }
   return "student";
@@ -66,9 +77,10 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Teacher or School Administrator",
         subtitle:
-          "Log in to apply for your school or open your portal after approval.",
-        joinHref: "/auth/sign-up?as=educator",
-        joinLabel: "Create an account",
+          "Teachers log in with the account from your school invite. School administrators apply for a school, then log in.",
+        // Teachers = login only. School/district apply stays for admins.
+        joinHref: "/education#apply",
+        joinLabel: "Apply for your school",
       };
     case "official":
       return {
@@ -76,6 +88,14 @@ export function loginAsCopy(as: LoginAs): {
         subtitle: "Sign in to continue.",
         joinHref: null,
         joinLabel: null,
+      };
+    case "developer":
+      return {
+        title: "Developer",
+        subtitle:
+          "Verified partners only. Apply first; log in after Guide Official approves.",
+        joinHref: "/developers/apply",
+        joinLabel: "Apply as a developer",
       };
     case "learner":
     default:
@@ -105,9 +125,9 @@ export function signupAsCopy(as: LoginAs): {
       };
     case "educator":
       return {
-        title: "Teacher or School Administrator",
+        title: "School administrator",
         subtitle:
-          "Create your Guide account, then apply for your school. The portal unlocks after approval.",
+          "Teachers are invited by their school — use Log in instead. School or district administrators can apply below.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -116,6 +136,14 @@ export function signupAsCopy(as: LoginAs): {
         title: "Guide Official",
         subtitle: "Please log in with your Guide Official account.",
         roleValue: "moderator",
+        showRoleChooser: false,
+      };
+    case "developer":
+      return {
+        title: "Developer partner",
+        subtitle:
+          "Create an account only after you apply and Guide Official verifies you.",
+        roleValue: "customer",
         showRoleChooser: false,
       };
     case "learner":

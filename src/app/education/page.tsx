@@ -7,28 +7,16 @@ import {
 } from "@/lib/education-access";
 import { ensureProfile } from "@/lib/profile";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export const metadata = {
   title: "Apply for Guide",
   description:
-    "Teachers can add a class, or school administrators can apply for a school — portal unlocks after approval.",
+    "School and district administrators apply for Guide. Teachers are invited by email.",
 };
 
-type Props = {
-  searchParams?: Promise<{ as?: string }>;
-};
-
-/** Teacher-class or school apply + lock states. */
-export default async function EducationLandingPage({ searchParams }: Props) {
-  const params = (await searchParams) ?? {};
-  const initialPath =
-    params.as === "teacher"
-      ? ("teacher" as const)
-      : params.as === "school"
-        ? ("school" as const)
-        : ("choose" as const);
-
+/** School/district apply + lock states. Teachers = login / invite only. */
+export default async function EducationLandingPage() {
   const session = await ensureProfile().catch(() => null);
   const canOpenPanel = session
     ? await hasEducationAccess(session.profile)
@@ -42,39 +30,28 @@ export default async function EducationLandingPage({ searchParams }: Props) {
   const isApproved = appStatus.status === "approved";
   const showPortalCta =
     isApproved || (canOpenPanel && !isPending && !isRejected);
-  const isTeacherApp = appStatus.kind === "teacher";
 
   if (isPending || isApproved) {
-    const pendingLabel = isTeacherApp
-      ? appStatus.className
-        ? `Your class “${appStatus.className}” is under review.`
-        : "Your teacher application is under review."
-      : appStatus.schoolName
-        ? `${appStatus.schoolName} is under review.`
-        : "Your school application is under review.";
-    const approvedLabel = isTeacherApp
-      ? appStatus.className
-        ? `Your class “${appStatus.className}” is approved.`
-        : "Your teacher application is approved."
-      : appStatus.schoolName
-        ? `${appStatus.schoolName} is approved.`
-        : "Your school is approved.";
+    const pendingLabel = appStatus.schoolName
+      ? `${appStatus.schoolName} is under review.`
+      : "Your school application is under review.";
+    const approvedLabel = appStatus.schoolName
+      ? `${appStatus.schoolName} is approved.`
+      : "Your school is approved.";
 
     return (
       <div className="portal-page">
         <GuideBrandBanner variant="strip" />
         <div className="content-band portal-page__inner max-w-2xl">
           <header className="portal-hero !border-0 !pb-0">
-            <p className="portal-eyebrow">
-              Teacher or School Administrator
-            </p>
+            <p className="portal-eyebrow">School administrator</p>
             <h1 className="display-feature mt-1">
               {isPending ? "Application pending" : "Approved"}
             </h1>
             <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
               {isPending
-                ? `${pendingLabel} The portal stays locked until Guide Official accepts or declines. Classes, apps, and messaging are not available yet.`
-                : `${approvedLabel} Open your portal to create classes, add apps, and message students.`}
+                ? `${pendingLabel} The portal stays locked until Guide Official accepts or declines.`
+                : `${approvedLabel} Open your portal to invite teachers, create classes, and add apps.`}
             </p>
           </header>
 
@@ -90,10 +67,10 @@ export default async function EducationLandingPage({ searchParams }: Props) {
             ) : (
               <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-[0.95rem] leading-relaxed text-ink-muted">
-                  Your teacher portal is unlocked.
+                  Your school portal is unlocked.
                 </p>
                 <Link href="/education/panel" className="btn-primary shrink-0">
-                  Open teacher portal
+                  Open portal
                 </Link>
               </div>
             )}
@@ -113,26 +90,30 @@ export default async function EducationLandingPage({ searchParams }: Props) {
             Classes, apps, and home learning in one place
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-[1.65] text-ink-muted">
-            Teachers can apply for a class. School administrators can apply for
-            a school. After approval, invite students, add apps, and follow
-            progress.
+            School and district administrators apply here. After approval,
+            invite teachers by email, add apps, and follow progress. Teachers
+            log in with their invite — no separate teacher signup.
           </p>
           <div className="mt-7 flex flex-col items-center gap-2">
             {showPortalCta ? (
               <Link href="/education/panel" className="btn-primary">
-                Open teacher portal
+                Open portal
               </Link>
             ) : (
               <a href="#apply" className="btn-primary">
-                {isRejected ? "Re-apply" : "Get started"}
+                {isRejected ? "Re-apply" : "Apply for your school"}
               </a>
             )}
             <p className="hero-secondary-links !mt-2">
-              <Link href="/auth/sign-in?as=educator">Log in</Link>
+              <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
               <span aria-hidden className="hero-secondary-links__dot">
                 ·
               </span>
-              <Link href="/apps">App library</Link>
+              <Link href="/schools/demo">Demo</Link>
+              <span aria-hidden className="hero-secondary-links__dot">
+                ·
+              </span>
+              <Link href="/schools/meeting">Book a meeting</Link>
             </p>
           </div>
         </div>
@@ -146,18 +127,16 @@ export default async function EducationLandingPage({ searchParams }: Props) {
               Apply
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Choose teacher/class or school apply. Tools stay locked until
-              accepted.
+              School or district application. Tools stay locked until accepted.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
             <p className="text-xs font-semibold text-forest-600">02</p>
             <h2 className="mt-2 text-lg font-semibold text-forest-950">
-              Invite a class
+              Invite teachers
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Create a class and share an invite code. Students join after they
-              sign up.
+              Type teacher emails in your portal. Guide sends setup links.
             </p>
           </li>
           <li className="p-6">
@@ -166,7 +145,8 @@ export default async function EducationLandingPage({ searchParams }: Props) {
               Follow progress
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              See app activity from school or home — without a noisy dashboard.
+              Teachers create classes and add apps. Students open them from My
+              apps.
             </p>
           </li>
         </ol>
@@ -177,11 +157,9 @@ export default async function EducationLandingPage({ searchParams }: Props) {
           <div className="portal-empty mb-5 !border-solid">
             <p className="portal-empty__title">Application declined</p>
             <p className="portal-empty__body">
-              {isTeacherApp && appStatus.className
-                ? `Your class “${appStatus.className}” was not approved.`
-                : appStatus.schoolName
-                  ? `${appStatus.schoolName} was not approved.`
-                  : "Your previous application was not approved."}{" "}
+              {appStatus.schoolName
+                ? `${appStatus.schoolName} was not approved.`
+                : "Your previous application was not approved."}{" "}
               Update the details and re-apply below. The portal stays locked
               until an application is accepted.
             </p>
@@ -190,7 +168,6 @@ export default async function EducationLandingPage({ searchParams }: Props) {
         <EducationApply
           defaultName={session?.profile.displayName ?? ""}
           defaultEmail={session?.user.email ?? ""}
-          initialPath={initialPath}
         />
         {!session && (
           <p className="mt-4 text-center text-sm text-ink-muted sm:text-left">

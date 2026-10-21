@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
+import { hasDeveloperAccess } from "@/lib/developer-access";
 import {
   getApplicantEducationStatus,
   hasEducationAccess,
@@ -10,7 +11,7 @@ import { ensureProfile, requireProfile } from "@/lib/profile";
 import { isRole } from "@/lib/roles";
 import { profiles } from "@/lib/schema";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export async function GET() {
   const result = await ensureProfile();
@@ -19,10 +20,12 @@ export async function GET() {
       user: null,
       profile: null,
       educationOk: false,
+      developerOk: false,
       schoolApplicationStatus: "none",
     });
   }
   const educationOk = await hasEducationAccess(result.profile);
+  const developerOk = await hasDeveloperAccess(result.profile);
   const appStatus = await getApplicantEducationStatus(result.profile.id);
   return NextResponse.json({
     user: {
@@ -38,6 +41,7 @@ export async function GET() {
       badgeCode: result.profile.badgeCode,
     },
     educationOk,
+    developerOk,
     schoolApplicationStatus: appStatus.status,
   });
 }

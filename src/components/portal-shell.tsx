@@ -5,12 +5,14 @@ import { GuideBrandBanner } from "@/components/guide-brand-banner";
 export type PortalChip = {
   href: string;
   label: string;
+  active?: boolean;
 };
 
 type Props = {
   eyebrow: string;
   title: string;
   subtitle?: string | null;
+  /** Top tabs shared across all portal roles */
   chips?: PortalChip[];
   backHref?: string;
   backLabel?: string;
@@ -18,8 +20,8 @@ type Props = {
 };
 
 /**
- * Clever Instant Login–style portal chrome: Guide banner strip, soft page band,
- * greeting header, optional section chips. Apps stay in-page — never the top bar.
+ * Shared portal chrome: Guide banner + top tabs for every role.
+ * Apps stay in-page — never the site header.
  */
 export function PortalShell({
   eyebrow,
@@ -45,6 +47,22 @@ export function PortalShell({
           </p>
         ) : null}
 
+        {chips && chips.length > 0 ? (
+          <nav className="portal-tabs" aria-label="Portal sections">
+            {chips.map((chip) => (
+              <a
+                key={chip.href + chip.label}
+                href={chip.href}
+                className={
+                  chip.active ? "portal-tab portal-tab--active" : "portal-tab"
+                }
+              >
+                {chip.label}
+              </a>
+            ))}
+          </nav>
+        ) : null}
+
         <header className="portal-hero">
           <p className="portal-eyebrow">{eyebrow}</p>
           <h1 className="display-feature mt-1">{title}</h1>
@@ -52,18 +70,6 @@ export function PortalShell({
             <p className="mt-1.5 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
               {subtitle}
             </p>
-          ) : null}
-          {chips && chips.length > 0 ? (
-            <nav
-              className="portal-chips"
-              aria-label="Portal sections"
-            >
-              {chips.map((chip) => (
-                <a key={chip.href} href={chip.href} className="portal-chip">
-                  {chip.label}
-                </a>
-              ))}
-            </nav>
           ) : null}
         </header>
 

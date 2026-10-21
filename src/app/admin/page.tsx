@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { AdminBadgesPanel } from "@/components/admin-badges-panel";
+import { AdminDevelopersPanel } from "@/components/admin-developers-panel";
+import { AdminMeetingsPanel } from "@/components/admin-meetings-panel";
 import { AdminRoleBadgesPanel } from "@/components/admin-role-badges-panel";
 import { AdminSchoolsPanel } from "@/components/admin-schools-panel";
 import { AdminSuggestionsPanel } from "@/components/admin-suggestions-panel";
@@ -7,7 +9,7 @@ import { AdminSupportPanel } from "@/components/admin-support-panel";
 import { PortalShell } from "@/components/portal-shell";
 import { requireProfile } from "@/lib/profile";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export const metadata = { title: "Guide Official" };
 
@@ -21,18 +23,28 @@ export default async function AdminPage() {
     <PortalShell
       eyebrow="Guide Official"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Approve schools, manage Roles, issue badge logins, and publish Suggestions."
+      subtitle="Approve schools and developers, follow meeting requests, manage Roles, badge logins, and Suggestions."
       chips={[
+        { href: "#meetings", label: "Meetings", active: true },
         { href: "#schools", label: "Schools" },
+        { href: "#developers", label: "Developers" },
         { href: "#roles", label: "Roles" },
         { href: "#credentials", label: "Badge logins" },
         { href: "#suggestions", label: "Suggestions" },
         ...(isAdmin ? [{ href: "#support", label: "Get help" }] : []),
       ]}
     >
+      <section id="meetings">
+        <h2 className="portal-section-title">Meeting requests</h2>
+        <AdminMeetingsPanel />
+      </section>
       <section id="schools">
         <h2 className="portal-section-title">Schools</h2>
         <AdminSchoolsPanel />
+      </section>
+      <section id="developers">
+        <h2 className="portal-section-title">Developers</h2>
+        <AdminDevelopersPanel />
       </section>
       <section id="roles">
         <h2 className="portal-section-title">Roles</h2>

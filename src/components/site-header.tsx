@@ -23,6 +23,7 @@ type Me = {
     badgeCode?: string | null;
   } | null;
   educationOk?: boolean;
+  developerOk?: boolean;
   schoolApplicationStatus?: SchoolApplicationStatus;
 };
 
@@ -59,6 +60,7 @@ export function SiteHeader() {
       schoolId: profile.schoolId,
       badgeCode: profile.badgeCode,
       educationOk: me?.educationOk,
+      developerOk: me?.developerOk,
     });
     if (portal) {
       portalId = portal.id;
@@ -66,6 +68,9 @@ export function SiteHeader() {
     } else if (profile.role === "admin" || profile.role === "moderator") {
       portalHref = "/official";
       portalId = "official";
+    } else if (me?.developerOk) {
+      portalHref = "/developer";
+      portalId = "developer";
     } else if (awaitingSchool) {
       // Teacher / School Administrator — locked until approved.
       portalHref = "/education";
