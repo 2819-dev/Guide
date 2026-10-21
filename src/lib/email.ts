@@ -1,11 +1,11 @@
 import { guidePublicUrl } from "@/lib/site";
 
-const FROM =
-  process.env.RESEND_FROM_EMAIL?.trim() || "Guide <noreply@guidelearning.org>";
+/** Locked From for all transactional Guide mail (welcome + teacher invites). */
+export const GUIDE_FROM_EMAIL = "Guide <noreply@guidelearning.org>";
 
 export type SendEmailResult =
-  | { ok: true; id?: string; stubbed?: boolean }
-  | { ok: false; error: string; stubbed?: boolean };
+  | { ok: true; id?: string; stubbed?: boolean; from?: string }
+  | { ok: false; error: string; stubbed?: boolean; from?: string };
 
 export function resendConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY?.trim());
@@ -18,15 +18,18 @@ export async function sendEmail(opts: {
   html: string;
   text?: string;
 }): Promise<SendEmailResult> {
+  const from = GUIDE_FROM_EMAIL;
   const key = process.env.RESEND_API_KEY?.trim();
   if (!key) {
     console.info(
-      "[email] RESEND_API_KEY missing — stubbed send:",
+      "[email] RESEND_API_KEY missing — stubbed send from",
+      from,
+      ":",
       opts.subject,
       "→",
       opts.to,
     );
-    return { ok: true, stubbed: true };
+    return { ok: true, stubbed: true, from };
   }
 
   try {
@@ -37,7 +40,7 @@ export async function sendEmail(opts: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: FROM,
+        from,
         to: opts.to,
         subject: opts.subject,
         html: opts.html,
@@ -52,13 +55,15 @@ export async function sendEmail(opts: {
       return {
         ok: false,
         error: data.message || `Resend HTTP ${res.status}`,
+        from,
       };
     }
-    return { ok: true, id: data.id };
+    return { ok: true, id: data.id, from };
   } catch (e) {
     return {
       ok: false,
       error: e instanceof Error ? e.message : "Send failed",
+      from,
     };
   }
 }
