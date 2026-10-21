@@ -70,9 +70,9 @@ export function TeacherSuggestionsAccess() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="portal-section-title">Suggestions pause</h2>
-        <p className="-mt-2 text-sm text-ink-muted">
-          Pause Suggestions for a whole class or for individual students.
+        <h2 className="portal-section-title">Suggestions</h2>
+        <p className="-mt-1 mb-1 text-sm text-ink-muted">
+          Pause for a whole class or for individual students.
         </p>
       </div>
       {error && <p className="text-sm text-red-700">{error}</p>}

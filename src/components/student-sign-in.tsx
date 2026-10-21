@@ -143,17 +143,15 @@ export function StudentSignIn() {
         <div className="absolute right-4 top-4 sm:right-6 sm:top-5">
           <Link
             href="/auth/sign-in?as=official"
-            className="inline-flex items-center gap-1.5 rounded-full border border-forest-400 bg-surface px-3 py-1.5 text-xs font-semibold text-forest-800 no-underline"
+            className="inline-flex items-center gap-1.5 rounded-[10px] border border-forest-300 bg-surface px-3 py-1.5 text-xs font-semibold text-forest-800 no-underline"
           >
             Official
           </Link>
         </div>
 
         <div className="w-full max-w-[700px]">
-          <h1 className="text-center text-[2.25rem] font-semibold tracking-tight text-forest-950">
-            Log in with Guide
-          </h1>
-          <p className="mx-auto mt-2 max-w-md text-center text-sm text-ink-muted">
+          <h1 className="login-title">Log in with Guide</h1>
+          <p className="mx-auto mt-2.5 max-w-md text-center text-[0.9375rem] leading-relaxed text-ink-muted">
             {!school
               ? copy.subtitle
               : mode === "choose"
@@ -163,9 +161,9 @@ export function StudentSignIn() {
                   : "Use the username and password from your school."}
           </p>
 
-          <div className="mt-10">
+          <div className="mt-9">
             {!school ? (
-              <div className="mx-auto max-w-md space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)]">
+              <div className="mx-auto max-w-md space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)] sm:p-7">
                 <label className="block text-sm font-semibold text-forest-900">
                   Find your school
                   <input
@@ -186,11 +184,9 @@ export function StudentSignIn() {
                   </p>
                 )}
                 {!loadingSchools && schools.length === 0 && !loadError && (
-                  <div className="rounded-[10px] border border-dashed border-line px-4 py-6 text-center text-sm text-ink-muted">
-                    <p className="font-semibold text-forest-900">
-                      No schools yet
-                    </p>
-                    <p className="mt-2">
+                  <div className="portal-empty !py-7">
+                    <p className="portal-empty__title">No schools yet</p>
+                    <p className="portal-empty__body">
                       Ask your teacher to apply for Guide. Once approved, your
                       school will show up here.
                     </p>
@@ -206,7 +202,7 @@ export function StudentSignIn() {
                           setMode("choose");
                           setQuery("");
                         }}
-                        className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left text-base font-semibold text-forest-950 transition hover:bg-forest-100"
+                        className="flex min-h-[52px] w-full items-center justify-between gap-3 px-4 py-3.5 text-left text-base font-semibold text-forest-950 transition hover:bg-forest-100"
                       >
                         <span>{s.name}</span>
                         <span aria-hidden className="text-forest-600">

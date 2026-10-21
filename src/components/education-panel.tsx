@@ -91,10 +91,13 @@ export function EducationPanel() {
         </div>
 
         {classrooms.length === 0 ? (
-          <p className="portal-panel text-sm text-ink-muted">
-            No classes yet. Create one above — student progress appears here
-            after they join with the invite code.
-          </p>
+          <div className="portal-empty">
+            <p className="portal-empty__title">No classes yet</p>
+            <p className="portal-empty__body">
+              Create one above — student progress appears after they join with
+              the invite code.
+            </p>
+          </div>
         ) : (
           classrooms.map((room) => (
             <div key={room.id} className="portal-panel space-y-4">

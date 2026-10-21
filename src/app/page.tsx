@@ -31,19 +31,19 @@ function GuideHomePage() {
   return (
     <div>
       <section className="hero-band">
-        <div className="content-band grid items-center gap-12 py-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.95fr)] lg:gap-10 lg:py-20">
+        <div className="content-band hero-band__grid">
           <div>
-            <h1 className="display-hero max-w-[20ch]">
+            <h1 className="display-hero max-w-[18ch]">
               The{" "}
               <span className="sun-underline">identity</span> platform for
               schools
             </h1>
-            <p className="mt-5 max-w-[32rem] text-lg font-medium leading-[1.65] text-ink">
+            <p className="mt-4 max-w-[30rem] text-lg font-medium leading-[1.6] text-ink">
               One secure place for students and teachers to open learning apps,
-              message, and stay in sync — without cluttering the top bar.
+              message, and stay in sync.
             </p>
 
-            <div className="mt-10 max-w-[40rem] space-y-6">
+            <div className="mt-9 max-w-[40rem] space-y-5">
               <Link
                 href="/auth/sign-in?as=student"
                 className="btn-hero-bar"
@@ -53,7 +53,7 @@ function GuideHomePage() {
                   <ArrowIcon />
                 </span>
               </Link>
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <Link href="/education#apply" className="hero-link-card">
                   <span className="hero-link-card__label">For schools</span>
                   <span className="hero-link-card__arrow">
@@ -74,7 +74,7 @@ function GuideHomePage() {
           </div>
 
           <div
-            className="relative min-h-[280px] overflow-hidden rounded-[10px] lg:min-h-[340px]"
+            className="relative min-h-[260px] overflow-hidden rounded-[10px] lg:min-h-[320px]"
             aria-hidden
           >
             <div

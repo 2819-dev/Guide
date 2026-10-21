@@ -26,7 +26,7 @@ export default async function AdminPage() {
         { href: "#roles", label: "Roles" },
         { href: "#credentials", label: "Credentials" },
         { href: "#suggestions", label: "Suggestions" },
-        ...(isAdmin ? [{ href: "#support", label: "Get help queue" }] : []),
+        ...(isAdmin ? [{ href: "#support", label: "Get help" }] : []),
       ]}
     >
       <section id="schools">

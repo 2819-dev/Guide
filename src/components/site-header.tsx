@@ -25,7 +25,7 @@ type Me = {
 };
 
 const navLink =
-  "px-2 py-2 text-base font-normal text-forest-950 no-underline hover:text-forest-700";
+  "px-2.5 py-2 text-[0.9375rem] font-medium text-forest-950 no-underline hover:text-forest-700";
 
 /**
  * Clever 1:1 header structure — Guide wordmark + forest CTAs.

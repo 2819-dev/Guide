@@ -69,9 +69,12 @@ export function AdminSchoolsPanel() {
       {error && <p className="text-sm text-red-700">{error}</p>}
 
       {applications.length === 0 ? (
-        <p className="portal-panel text-sm text-ink-muted">
-          No school applications yet.
-        </p>
+        <div className="portal-empty">
+          <p className="portal-empty__title">No school applications yet</p>
+          <p className="portal-empty__body">
+            New applications appear here when a school applies for Guide.
+          </p>
+        </div>
       ) : (
         <>
           {pending.length > 0 && (

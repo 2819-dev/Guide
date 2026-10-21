@@ -36,8 +36,8 @@ export default async function StudentHubPage() {
   );
 
   const subtitle = schoolName
-    ? `${schoolName} · Open apps from My apps. Tools stay with your portal.`
-    : "Open apps from My apps. Tools stay with your portal.";
+    ? `${schoolName} · Apps launch here — not from the top bar.`
+    : "Apps launch here — not from the top bar.";
 
   return (
     <PortalShell
@@ -46,7 +46,7 @@ export default async function StudentHubPage() {
       subtitle={subtitle}
       chips={[
         { href: "#apps", label: "My apps" },
-        { href: "#tools", label: "School tools" },
+        { href: "#tools", label: "Tools" },
       ]}
     >
       {roles.length > 0 ? (
@@ -66,17 +66,17 @@ export default async function StudentHubPage() {
 
       <MyAppsGrid
         apps={apps}
-        emptyHint="No apps yet. Join a class from Account, then ask your teacher to add an app (like Amud)."
+        emptyHint="Join a class from Account, then ask your teacher to add an app (like Amud)."
       />
 
       <section id="tools">
-        <h2 className="portal-section-title">School tools</h2>
+        <h2 className="portal-section-title">Tools</h2>
         <div className="portal-tools-grid">
           <PortalToolTile
             href="/student/messages"
             title="Messages"
-            description="Write to the teachers of classes you joined."
-            cta="Open messages →"
+            description="Write to teachers of classes you joined."
+            cta="Open →"
           />
           {suggestionsAccess.blocked ? (
             <PortalToolTile
@@ -92,7 +92,7 @@ export default async function StudentHubPage() {
               href="/student/suggestions"
               title="Suggestions"
               description="Ideas and study prompts from Guide."
-              cta="Open Suggestions →"
+              cta="Open →"
             />
           )}
         </div>

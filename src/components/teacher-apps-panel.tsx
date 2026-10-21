@@ -61,9 +61,12 @@ export function TeacherAppsPanel() {
       </div>
 
       {classrooms.length === 0 ? (
-        <p className="portal-panel text-sm text-ink-muted">
-          Create a class first, then add apps here.
-        </p>
+        <div className="portal-empty">
+          <p className="portal-empty__title">Create a class first</p>
+          <p className="portal-empty__body">
+            Then add apps here so students see them under My apps.
+          </p>
+        </div>
       ) : (
         <div className="space-y-4">
           {catalog.map((app) => (

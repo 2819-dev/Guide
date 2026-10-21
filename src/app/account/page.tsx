@@ -63,11 +63,11 @@ export default async function AccountPage() {
         </Link>
       </p>
       <header className="portal-hero !mb-0">
-        <p className="text-sm font-semibold text-forest-700">Account</p>
-        <h1 className="display-feature mt-1.5">
+        <p className="portal-eyebrow">Account</p>
+        <h1 className="display-feature mt-1">
           {authz.profile.displayName}
         </h1>
-        <p className="mt-2 text-ink-muted">
+        <p className="mt-1.5 text-[0.95rem] text-ink-muted">
           Signed in
           {isOfficial ? "" : ` · ${roleLabel(role)}`}
           {schoolName ? ` · ${schoolName}` : ""}

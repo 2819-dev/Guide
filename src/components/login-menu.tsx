@@ -94,9 +94,9 @@ export function LoginMenu({ variant = "primary", className = "" }: Props) {
                   role="menuitem"
                   href={opt.href}
                   onClick={() => setOpen(false)}
-                  className="block px-4 py-3.5 no-underline transition hover:bg-forest-100"
+                  className="block min-h-[52px] px-4 py-3 no-underline transition hover:bg-forest-100"
                 >
-                  <span className="block text-base font-semibold text-forest-950">
+                  <span className="block text-[0.9375rem] font-semibold text-forest-950">
                     {opt.label}
                   </span>
                   <span className="mt-0.5 block text-[0.8125rem] leading-snug text-ink-muted">

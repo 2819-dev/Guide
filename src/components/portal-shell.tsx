@@ -44,10 +44,10 @@ export function PortalShell({
         ) : null}
 
         <header className="portal-hero">
-          <p className="text-sm font-semibold text-forest-700">{eyebrow}</p>
-          <h1 className="display-feature mt-1.5">{title}</h1>
+          <p className="portal-eyebrow">{eyebrow}</p>
+          <h1 className="display-feature mt-1">{title}</h1>
           {subtitle ? (
-            <p className="mt-2 max-w-2xl text-base leading-relaxed text-ink-muted">
+            <p className="mt-1.5 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
               {subtitle}
             </p>
           ) : null}

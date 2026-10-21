@@ -9,17 +9,15 @@ type Props = {
 /** Clever Instant Login app launcher — square tiles in the portal only. */
 export function MyAppsGrid({
   apps,
-  emptyHint = "No apps yet. When your teacher adds an app to your class, it shows up here.",
+  emptyHint = "When your teacher adds an app to your class, it shows up here.",
 }: Props) {
   if (apps.length === 0) {
     return (
       <section id="apps">
         <h2 className="portal-section-title">My apps</h2>
-        <div className="portal-panel border-dashed bg-sky-soft/40">
-          <p className="text-base font-semibold text-forest-950">No apps yet</p>
-          <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-            {emptyHint}
-          </p>
+        <div className="portal-empty">
+          <p className="portal-empty__title">No apps yet</p>
+          <p className="portal-empty__body">{emptyHint}</p>
         </div>
       </section>
     );
