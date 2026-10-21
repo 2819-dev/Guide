@@ -47,3 +47,6 @@ next-env.d.ts
 
 # Cloudflare agent skills (installed in env; do not commit)
 .agents/skills/
+
+# agent Pages go-live status (no secrets)
+.cf-pages-go-live-status.json
