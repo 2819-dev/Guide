@@ -33,18 +33,16 @@ function ArrowIcon({ size = 16 }: { size?: number }) {
 }
 
 /**
- * Clever.com cover 1:1 structure — Guide forest only.
+ * Full Clever.com marketing home 1:1 — Guide forest only.
+ * Cover + mid feature rows + closing band (footer is SiteFooter).
  * Spec: internal/clever-layout-spec-forest-replica.md
- * Refs: media/clever-1to1/guide-clever-home.png · artifacts/screenshots/clever-home.png
- *
- * Left: H1 + lede + primary bar + twin white cards under it.
- * Right: hero visual. Soft wave behind CTA stack. No banner.
  */
 function GuideHomePage() {
   const amudHref = amudPublicUrl() || appHomePath();
 
   return (
-    <div>
+    <div className="guide-home">
+      {/* —— Cover (Clever hero) —— */}
       <section className="hero-band">
         <div className="content-band hero-band__grid">
           <div className="hero-copy">
@@ -91,98 +89,116 @@ function GuideHomePage() {
         </div>
       </section>
 
-      <section id="what" className="section-pad !pt-14 !pb-10">
-        <div className="mx-auto max-w-3xl text-center">
+      {/* —— What is Guide? (Clever centered intro) —— */}
+      <section id="what" className="clever-intro">
+        <div className="content-band clever-intro__inner">
           <h2 className="display-section">What is Guide?</h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
-            Guide is an identity platform for schools. Students open apps from
-            their portal. Teachers manage classes after a school invite. School
-            administrators apply once; Guide Official approves.
+          <p className="clever-intro__body">
+            Guide is the identity platform for schools. Students log in once and
+            open the apps their teachers add. Teachers manage classes after a
+            school invite. Administrators apply for a school; Guide Official
+            approves.
           </p>
         </div>
       </section>
 
-      <section className="feature-rail">
-        <div className="content-band section-pad !pt-16 !pb-20">
-          <h2 className="display-feature max-w-2xl">
-            Power classroom learning
-          </h2>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-muted">
-            One secure place for teachers and students to open the apps they
-            depend on — right from their portal.
-          </p>
-          <div className="capability-grid mt-14">
-            <div>
-              <p className="text-sm font-semibold text-forest-600">01</p>
-              <h3 className="mt-2 text-xl font-semibold text-forest-950">
-                Secure school identity
-              </h3>
-              <p className="mt-2 text-base leading-relaxed text-ink-muted">
-                School picker and badge or password login for students. School
-                tools unlock after your school is approved.
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-forest-600">02</p>
-              <h3 className="mt-2 text-xl font-semibold text-forest-950">
-                Portal app launcher
-              </h3>
-              <p className="mt-2 text-base leading-relaxed text-ink-muted">
-                Teachers add learning apps to a class. Students open them from
-                My apps on their portal.
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-forest-600">03</p>
-              <h3 className="mt-2 text-xl font-semibold text-forest-950">
-                Messaging &amp; Suggestions
-              </h3>
-              <p className="mt-2 text-base leading-relaxed text-ink-muted">
-                Messaging and Suggestions stay with the portal — alongside the
-                apps your school chooses.
-              </p>
-            </div>
+      {/* —— Feature rows (Clever alternating image / copy) —— */}
+      <section className="clever-feature">
+        <div className="content-band clever-feature__grid">
+          <div className="clever-feature__visual" aria-hidden>
+            <span className="clever-feature__mark">01</span>
           </div>
-        </div>
-      </section>
-
-      <section className="section-pad">
-        <div className="content-band grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
-          <div>
-            <p className="eyebrow">For schools</p>
-            <h2 className="display-feature mt-3">
-              Classes and apps in one place
-            </h2>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-ink-muted">
-              Apply once as a school or district. After approval, invite
-              teachers by email, create classes, and add apps — all inside
-              Guide.
+          <div className="clever-feature__copy">
+            <h2 className="display-feature">Power classroom learning</h2>
+            <p className="clever-feature__body">
+              Teachers create classes, add apps, and follow progress. Students
+              open everything from My apps on their portal — not a cluttered
+              top bar.
             </p>
-            <Link
-              href="/education#apply"
-              className="btn-secondary mt-8 inline-flex"
-            >
-              Apply for your school
+            <Link href="/education" className="clever-feature__link">
+              Explore for schools
+              <span aria-hidden>→</span>
             </Link>
           </div>
-          <div className="border-t border-line pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-1">
-            <p className="eyebrow">{FIRST_APP_NAME}</p>
-            <h2 className="display-feature mt-3">Learning for everyone</h2>
-            <p className="mt-4 text-base leading-relaxed text-ink-muted">
-              Mishnayos and Gemara · Test Yourself. Schools add it in Guide;
-              anyone can study on the {FIRST_APP_NAME} site without a school
-              login.
+        </div>
+      </section>
+
+      <section className="clever-feature clever-feature--alt">
+        <div className="content-band clever-feature__grid clever-feature__grid--flip">
+          <div className="clever-feature__copy">
+            <h2 className="display-feature">Secure school identity</h2>
+            <p className="clever-feature__body">
+              Students pick their school, then sign in with a badge or password.
+              School tools unlock after your school is approved — calm, locked
+              wait states while pending.
             </p>
-            <a href={amudHref} className="btn-secondary mt-8 inline-flex">
+            <Link
+              href="/auth/sign-in?as=student"
+              className="clever-feature__link"
+            >
+              Log in as a student
+              <span aria-hidden>→</span>
+            </Link>
+          </div>
+          <div
+            className="clever-feature__visual clever-feature__visual--b"
+            aria-hidden
+          >
+            <span className="clever-feature__mark">02</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="clever-feature">
+        <div className="content-band clever-feature__grid">
+          <div
+            className="clever-feature__visual clever-feature__visual--c"
+            aria-hidden
+          >
+            <span className="clever-feature__mark">03</span>
+          </div>
+          <div className="clever-feature__copy">
+            <h2 className="display-feature">Apps open from the portal</h2>
+            <p className="clever-feature__body">
+              Teachers install learning apps on a class. Students see them in
+              the center of their portal. Messaging and Suggestions stay
+              alongside — including {FIRST_APP_NAME} when your school adds it.
+            </p>
+            <a href={amudHref} className="clever-feature__link">
               Visit {FIRST_APP_NAME}
+              <span aria-hidden>→</span>
             </a>
           </div>
         </div>
       </section>
 
+      <section className="clever-feature clever-feature--alt">
+        <div className="content-band clever-feature__grid clever-feature__grid--flip">
+          <div className="clever-feature__copy">
+            <h2 className="display-feature">Built for school teams</h2>
+            <p className="clever-feature__body">
+              School and district administrators apply once, then invite
+              teachers by email. Verified developers partner with Guide after
+              Official review — not a public marketplace.
+            </p>
+            <Link href="/schools/meeting" className="clever-feature__link">
+              Book a meeting
+              <span aria-hidden>→</span>
+            </Link>
+          </div>
+          <div
+            className="clever-feature__visual clever-feature__visual--d"
+            aria-hidden
+          >
+            <span className="clever-feature__mark">04</span>
+          </div>
+        </div>
+      </section>
+
+      {/* —— Closing band (Clever blue band → forest) —— */}
       <section className="cta-band">
-        <div className="content-band flex flex-col items-start gap-6 py-16 sm:py-20 lg:flex-row lg:items-center lg:justify-between">
-          <h2 className="display-section max-w-xl !text-white">
+        <div className="content-band cta-band__inner">
+          <h2 className="display-section cta-band__title">
             Connecting every student to the apps they need
           </h2>
           <Link href="/auth/sign-in?as=student" className="btn-light shrink-0">

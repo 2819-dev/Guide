@@ -3,101 +3,158 @@ import { GuideWordmark } from "@/components/guide-logo";
 import { FIRST_APP_NAME } from "@/lib/apps";
 import { amudPublicUrl } from "@/lib/site";
 
-const link =
-  "block text-sm leading-[1.55] text-ink-muted no-underline hover:text-forest-900";
-const colHead = "mb-3 text-sm font-semibold text-forest-950";
-
+/**
+ * Clever footer density — 5 columns + forest legal bar.
+ * Guide school language only (no Clever trademarks).
+ */
 export function SiteFooter() {
   const amudHref = amudPublicUrl();
 
   return (
     <footer className="border-t border-line bg-paper">
       <div className="content-band py-14 sm:py-16">
-        <div className="mb-10">
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <GuideWordmark href="/" size="md" />
+          <p className="text-sm text-ink-muted">
+            The identity platform for schools
+          </p>
         </div>
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+
+        <div className="site-footer-cols">
           <div>
-            <p className={colHead}>Schools</p>
-            <ul className="space-y-2">
+            <p className="site-footer-col-head">Schools</p>
+            <ul className="space-y-1">
               <li>
-                <Link href="/education#apply" className={link}>
+                <Link href="/education" className="site-footer-link">
+                  For schools
+                </Link>
+              </li>
+              <li>
+                <Link href="/education#apply" className="site-footer-link">
                   Apply for your school
                 </Link>
               </li>
               <li>
-                <Link href="/auth/sign-in?as=educator" className={link}>
-                  Teacher log in
+                <Link href="/schools/demo" className="site-footer-link">
+                  Demo
                 </Link>
               </li>
               <li>
-                <Link href="/education/panel" className={link}>
-                  Teacher portal
+                <Link href="/schools/meeting" className="site-footer-link">
+                  Book a meeting
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/auth/sign-in?as=educator"
+                  className="site-footer-link"
+                >
+                  Teacher log in
                 </Link>
               </li>
             </ul>
           </div>
+
           <div>
-            <p className={colHead}>Students</p>
-            <ul className="space-y-2">
+            <p className="site-footer-col-head">Students</p>
+            <ul className="space-y-1">
               <li>
-                <Link href="/auth/sign-in?as=student" className={link}>
+                <Link
+                  href="/auth/sign-in?as=student"
+                  className="site-footer-link"
+                >
                   Student log in
                 </Link>
               </li>
               <li>
-                <Link href="/student" className={link}>
+                <Link href="/student" className="site-footer-link">
                   Student portal
                 </Link>
               </li>
               <li>
-                <Link href="/account" className={link}>
+                <Link href="/account" className="site-footer-link">
                   Account
                 </Link>
               </li>
             </ul>
           </div>
+
           <div>
-            <p className={colHead}>Guide</p>
-            <ul className="space-y-2">
+            <p className="site-footer-col-head">Platform</p>
+            <ul className="space-y-1">
               <li>
-                <Link href="/#what" className={link}>
+                <Link href="/#what" className="site-footer-link">
                   What is Guide?
                 </Link>
               </li>
               <li>
-                <Link href="/apps" className={link}>
+                <Link href="/apps" className="site-footer-link">
                   App library
                 </Link>
               </li>
               <li>
-                <a href={amudHref} className={link}>
-                  {FIRST_APP_NAME} learning app
+                <a href={amudHref} className="site-footer-link">
+                  {FIRST_APP_NAME}
                 </a>
               </li>
               <li>
-                <Link href="/auth/sign-in?as=official" className={link}>
+                <Link
+                  href="/auth/sign-in?as=official"
+                  className="site-footer-link"
+                >
                   Guide Official
                 </Link>
               </li>
             </ul>
           </div>
+
           <div>
-            <p className={colHead}>Help</p>
-            <ul className="space-y-2">
+            <p className="site-footer-col-head">Developers</p>
+            <ul className="space-y-1">
               <li>
-                <Link href="/account" className={link}>
+                <Link href="/developers/apply" className="site-footer-link">
+                  Apply as a developer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/auth/sign-in?as=developer"
+                  className="site-footer-link"
+                >
+                  Partner log in
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="site-footer-col-head">Help</p>
+            <ul className="space-y-1">
+              <li>
+                <Link href="/account" className="site-footer-link">
                   Get help
                 </Link>
+              </li>
+              <li>
+                <a
+                  href="mailto:hello@guidelearning.org"
+                  className="site-footer-link"
+                >
+                  hello@guidelearning.org
+                </a>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <div className="border-t border-line bg-forest-100">
-        <div className="content-band flex flex-col gap-2 py-3.5 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 Guide</p>
-          <p className="sm:text-right">School identity platform</p>
+
+      <div className="site-footer-legal">
+        <div className="content-band site-footer-legal__inner">
+          <p>Copyright © 2026 Guide</p>
+          <p className="flex flex-wrap gap-x-4 gap-y-1">
+            <span>School identity platform</span>
+            <a href="mailto:hello@guidelearning.org">Contact</a>
+          </p>
         </div>
       </div>
     </footer>
