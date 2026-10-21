@@ -205,16 +205,17 @@ body {
   background: var(--forest-100);
 }
 
-/* Clever hero primary bar — full width, arrow circle */
+/* Clever hero primary bar — ~660×60, 10px radius, arrow circle */
 .btn-hero-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 64px;
-  padding: 0.9rem 1rem 0.9rem 1.65rem;
+  min-height: 60px;
+  height: 60px;
+  padding: 0 0.85rem 0 1.65rem;
   border: 0;
-  border-radius: var(--clever-radius);
+  border-radius: 10px;
   background: var(--forest-800);
   color: #fff;
   font-weight: 600;
@@ -239,94 +240,42 @@ body {
   flex-shrink: 0;
 }
 
-/* Clever cover — single column; student CTA leads; role boxes sit under it */
-.clever-cover {
-  max-width: 40rem;
-  padding: 3.25rem 0 3.75rem;
+/* Clever cover left column */
+.hero-copy {
   position: relative;
   z-index: 1;
+  max-width: 40.5rem;
 }
 
-@media (min-width: 640px) {
-  .clever-cover {
-    padding: 4.25rem 0 4.75rem;
-  }
-}
-
-.clever-cover__title {
-  margin-top: 0.65rem;
-  max-width: 16ch;
-}
-
-.clever-cover__lede {
-  margin: 1.1rem 0 0;
-  max-width: 30rem;
+.hero-lede {
+  margin: 1rem 0 0;
+  max-width: 31.5rem;
   font-size: 1.125rem;
   font-weight: 500;
-  line-height: 1.6;
+  line-height: 1.67;
   color: var(--ink);
 }
 
-.clever-cover__stack {
-  margin-top: 2.15rem;
+/* Primary bar, then twin cards — Clever CTA stack (~24px gap) */
+.hero-cta-stack {
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  max-width: 41.25rem;
+}
+
+.hero-link-row {
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 0.85rem;
 }
 
-.clever-cover__roles {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-/* White boxes under the green CTA — secondary to student login */
-.home-role-box {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: var(--clever-radius);
-  padding: 1.15rem 1.25rem 1.2rem;
-  color: #111;
-  box-shadow: var(--shadow-soft);
-}
-
-.home-role-box__title {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 650;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: #111;
-}
-
-.home-role-box__body {
-  margin: 0.4rem 0 0;
-  max-width: 42ch;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: #1a1a1a;
-}
-
-.home-role-box__links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.5rem;
-  margin: 0.75rem 0 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #333;
-}
-
-.home-role-box__links a {
-  color: #111;
-  font-weight: 650;
-  text-decoration: none;
-}
-
-.home-role-box__links a:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
+@media (min-width: 640px) {
+  .hero-link-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
 }
 
 /* Portal top tabs (shared chrome) */
@@ -504,15 +453,16 @@ body {
   opacity: 0.7;
 }
 
-/* Kept for library / non-cover use */
+/* Clever twin secondary cards — ~323×130, white, outline arrow */
 .hero-link-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  min-height: 128px;
-  padding: 2rem 1.55rem;
-  border-radius: var(--clever-radius);
+  min-height: 130px;
+  height: 130px;
+  padding: 2.15rem 1.55rem;
+  border-radius: 10px;
   background: #fff;
   box-shadow: var(--shadow-card);
   text-decoration: none;
@@ -530,6 +480,7 @@ body {
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.2;
+  color: #111;
 }
 
 .hero-link-card__arrow {
@@ -597,7 +548,15 @@ body {
   display: grid;
   align-items: center;
   gap: 2.75rem;
-  padding: 3.5rem 0 4rem;
+  padding: 3.75rem 0 4.25rem;
+}
+
+@media (min-width: 1024px) {
+  .hero-band__grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+    gap: 2.5rem;
+    padding: 4.75rem 0 5.25rem;
+  }
 }
 
 .hero-band::after {
@@ -695,10 +654,14 @@ body {
     linear-gradient(160deg, var(--forest-900) 0%, var(--forest-700) 48%, var(--forest-800) 100%);
 }
 
-/* Homepage hero atmosphere panel (not the invite banner) */
+/* Clever right-column visual — forest stand-in for classroom photo */
 .hero-visual-panel {
-  min-height: 260px;
+  position: relative;
+  z-index: 1;
+  display: none;
+  min-height: 320px;
   border-radius: 10px;
+  overflow: hidden;
   background:
     radial-gradient(ellipse 70% 55% at 70% 30%, rgba(201, 162, 74, 0.18), transparent 50%),
     radial-gradient(ellipse 80% 60% at 20% 80%, rgba(90, 154, 118, 0.28), transparent 55%),
@@ -707,8 +670,23 @@ body {
 
 @media (min-width: 1024px) {
   .hero-visual-panel {
-    min-height: 320px;
+    display: block;
+    min-height: 360px;
   }
+}
+
+.hero-visual-panel__caption {
+  position: absolute;
+  left: 1.5rem;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  margin: 0;
+  max-width: 18ch;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: #fff;
 }
 
 @media (min-width: 900px) {

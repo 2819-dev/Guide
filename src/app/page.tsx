@@ -12,9 +12,15 @@ export default function HomePage() {
   return <GuideHomePage />;
 }
 
-function ArrowIcon() {
+function ArrowIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+    >
       <path
         d="M3 8h9M8 3.5 12.5 8 8 12.5"
         stroke="currentColor"
@@ -27,9 +33,12 @@ function ArrowIcon() {
 }
 
 /**
- * Clever 1:1 cover — one composition:
- * Guide brand + headline → big green student CTA → For schools / For developers under it.
- * No banner. Guide forest only.
+ * Clever.com cover 1:1 structure — Guide forest only.
+ * Spec: internal/clever-layout-spec-forest-replica.md
+ * Refs: media/clever-1to1/guide-clever-home.png · artifacts/screenshots/clever-home.png
+ *
+ * Left: H1 + lede + primary bar + twin white cards under it.
+ * Right: hero visual. Soft wave behind CTA stack. No banner.
  */
 function GuideHomePage() {
   const amudHref = amudPublicUrl() || appHomePath();
@@ -37,56 +46,47 @@ function GuideHomePage() {
   return (
     <div>
       <section className="hero-band">
-        <div className="content-band clever-cover">
-          <p className="eyebrow">Guide</p>
-          <h1 className="display-hero clever-cover__title">
-            The{" "}
-            <span className="sun-underline">identity</span> platform for schools
-          </h1>
-          <p className="clever-cover__lede">
-            One secure place for students and teachers to open learning apps,
-            message, and stay in sync.
-          </p>
+        <div className="content-band hero-band__grid">
+          <div className="hero-copy">
+            <h1 className="display-hero max-w-[16ch]">
+              The{" "}
+              <span className="sun-underline">identity</span> platform for
+              schools
+            </h1>
+            <p className="hero-lede">
+              One secure place for students and teachers to open learning apps,
+              message, and stay in sync.
+            </p>
 
-          <div className="clever-cover__stack">
-            <Link href="/auth/sign-in?as=student" className="btn-hero-bar">
-              <span>Log in as a student</span>
-              <span className="btn-hero-bar__arrow">
-                <ArrowIcon />
-              </span>
-            </Link>
+            <div className="hero-cta-stack">
+              <Link href="/auth/sign-in?as=student" className="btn-hero-bar">
+                <span>Log in as a student</span>
+                <span className="btn-hero-bar__arrow">
+                  <ArrowIcon />
+                </span>
+              </Link>
 
-            <div className="clever-cover__roles">
-              <div className="home-role-box">
-                <h2 className="home-role-box__title">For schools</h2>
-                <p className="home-role-box__body">
-                  Demo, book a meeting, or apply for your school. Teachers log
-                  in with a school invite — no separate teacher signup.
-                </p>
-                <p className="home-role-box__links">
-                  <Link href="/schools/demo">Demo</Link>
-                  <span aria-hidden>·</span>
-                  <Link href="/schools/meeting">Book a meeting</Link>
-                  <span aria-hidden>·</span>
-                  <Link href="/education#apply">Apply</Link>
-                  <span aria-hidden>·</span>
-                  <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
-                </p>
-              </div>
-
-              <div className="home-role-box">
-                <h2 className="home-role-box__title">For developers</h2>
-                <p className="home-role-box__body">
-                  Verified partners only. Apply with your app and website; Guide
-                  Official reviews before portal access.
-                </p>
-                <p className="home-role-box__links">
-                  <Link href="/developers/apply">Apply as a developer</Link>
-                  <span aria-hidden>·</span>
-                  <Link href="/auth/sign-in?as=developer">Partner log in</Link>
-                </p>
+              <div className="hero-link-row">
+                <Link href="/education" className="hero-link-card">
+                  <span className="hero-link-card__label">For schools</span>
+                  <span className="hero-link-card__arrow" aria-hidden>
+                    <ArrowIcon size={15} />
+                  </span>
+                </Link>
+                <Link href="/developers/apply" className="hero-link-card">
+                  <span className="hero-link-card__label">For developers</span>
+                  <span className="hero-link-card__arrow" aria-hidden>
+                    <ArrowIcon size={15} />
+                  </span>
+                </Link>
               </div>
             </div>
+          </div>
+
+          <div className="hero-visual-panel" aria-hidden>
+            <p className="hero-visual-panel__caption">
+              Students and teachers. One place to open learning apps.
+            </p>
           </div>
         </div>
       </section>
