@@ -14,7 +14,12 @@ export const runtime = "edge";
 export const metadata = { title: "Guide Official" };
 
 export default async function AdminPage() {
-  const authz = await requireProfile(["admin", "moderator"]);
+  let authz = null;
+  try {
+    authz = await requireProfile(["admin", "moderator"]);
+  } catch {
+    redirect("/auth/sign-in?as=official");
+  }
   if (!authz) redirect("/auth/sign-in?as=official");
 
   const isAdmin = authz.profile.role === "admin";
