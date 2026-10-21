@@ -68,41 +68,52 @@ export function EducationPanel() {
       <TeacherAppsPanel />
 
       <section id="classes" className="space-y-4">
-        <h2 className="portal-section-title">Classes</h2>
+        <div>
+          <h2 className="portal-section-title">Classes</h2>
+          <p className="-mt-2 text-sm text-ink-muted">
+            Create a class, share the invite code, then follow student progress.
+          </p>
+        </div>
         <div className="portal-panel space-y-3">
-          <p className="text-sm font-semibold text-forest-950">New class</p>
-          <div className="flex flex-wrap gap-3">
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Period 3 Algebra · Grade 9"
-              className="field max-w-md"
-            />
-            <button
-              type="button"
-              disabled={busy || name.trim().length < 2}
-              onClick={() => void createClass()}
-              className="btn-primary"
-            >
-              Create
-            </button>
-          </div>
-          {error && <p className="text-sm text-red-700">{error}</p>}
+          <label className="block text-sm font-semibold text-forest-900">
+            Class name
+            <div className="mt-1.5 flex flex-wrap gap-3">
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Period 3 Algebra · Grade 9"
+                className="field min-w-[14rem] flex-1"
+              />
+              <button
+                type="button"
+                disabled={busy || name.trim().length < 2}
+                onClick={() => void createClass()}
+                className="btn-primary"
+              >
+                {busy ? "Creating…" : "Create class"}
+              </button>
+            </div>
+          </label>
+          {error && (
+            <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+              {error}
+            </p>
+          )}
         </div>
 
         {classrooms.length === 0 ? (
           <div className="portal-empty">
             <p className="portal-empty__title">No classes yet</p>
             <p className="portal-empty__body">
-              Create one above — student progress appears after they join with
-              the invite code.
+              Create a class above. Student progress appears after they join
+              with the invite code from Account.
             </p>
           </div>
         ) : (
           classrooms.map((room) => (
             <div key={room.id} className="portal-panel space-y-4">
               <div>
-                <h3 className="text-xl font-semibold tracking-tight text-forest-950">
+                <h3 className="text-lg font-semibold tracking-tight text-forest-950">
                   {room.name}
                 </h3>
                 <p className="mt-1 text-sm text-ink-muted">
@@ -115,7 +126,12 @@ export function EducationPanel() {
               </div>
 
               {room.students.length === 0 ? (
-                <p className="text-sm text-ink-muted">No students yet.</p>
+                <div className="portal-empty !py-6">
+                  <p className="portal-empty__title">No students yet</p>
+                  <p className="portal-empty__body">
+                    Share the invite code so students can join from Account.
+                  </p>
+                </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[640px] border-collapse text-left text-sm">

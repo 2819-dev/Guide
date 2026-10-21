@@ -85,9 +85,13 @@ export function TeacherMessages() {
       </div>
       {error && <p className="text-sm text-red-700">{error}</p>}
       {threads.length === 0 ? (
-        <p className="portal-panel text-sm text-ink-muted">
-          No student messages yet.
-        </p>
+        <div className="portal-empty">
+          <p className="portal-empty__title">No messages yet</p>
+          <p className="portal-empty__body">
+            When students who joined your classes write to you, threads appear
+            here.
+          </p>
+        </div>
       ) : (
         <div className="grid gap-4 lg:grid-cols-[14rem_1fr]">
           <ul className="divide-y divide-line rounded-[10px] border border-line bg-white">

@@ -32,7 +32,7 @@ function SignUpForm() {
 
   return (
     <AuthCard
-      eyebrow={null}
+      eyebrow={as === "educator" ? "Join as a" : as === "student" ? "Join as a" : null}
       title={copy.title}
       subtitle={copy.subtitle}
       footer={
@@ -42,7 +42,7 @@ function SignUpForm() {
             href={`/auth/sign-in?as=${as}`}
             className="font-semibold text-forest-800"
           >
-            Log In
+            Log in
           </Link>
         </>
       }
@@ -57,17 +57,19 @@ function SignUpForm() {
             name="name"
             required
             className="field mt-1.5"
-            placeholder="Your name"
+            placeholder="Full name"
+            autoComplete="name"
           />
         </label>
         <label className="block text-sm font-semibold text-forest-900">
-          Email
+          {as === "educator" ? "Work email" : "Email"}
           <input
             name="email"
             type="email"
             required
             className="field mt-1.5"
             placeholder="you@school.org"
+            autoComplete="email"
           />
         </label>
         <label className="block text-sm font-semibold text-forest-900">
@@ -79,11 +81,19 @@ function SignUpForm() {
             minLength={8}
             className="field mt-1.5"
             placeholder="At least 8 characters"
+            autoComplete="new-password"
           />
         </label>
 
+        {as === "educator" ? (
+          <p className="text-[0.8125rem] leading-snug text-ink-muted">
+            Next you will apply for your school. The portal unlocks after Guide
+            Official accepts the application.
+          </p>
+        ) : null}
+
         {state?.error && (
-          <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
             {state.error}
           </p>
         )}
@@ -91,9 +101,13 @@ function SignUpForm() {
         <button
           type="submit"
           disabled={pending}
-          className="btn-primary w-full !py-3"
+          className="btn-primary w-full"
         >
-          {pending ? "Creating…" : "Get started"}
+          {pending
+            ? "Creating…"
+            : as === "educator"
+              ? "Create account"
+              : "Get started"}
         </button>
       </form>
     </AuthCard>

@@ -19,9 +19,9 @@ export default async function EducationPanelPage() {
 
   return (
     <PortalShell
-      eyebrow="Teacher portal"
+      eyebrow="Teacher or School Administrator"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Add apps to a class, invite students, pause Suggestions, and message."
+      subtitle="Add apps to a class, invite students, manage Suggestions, and message."
       chips={[
         { href: "#apps", label: "Apps" },
         { href: "#classes", label: "Classes" },

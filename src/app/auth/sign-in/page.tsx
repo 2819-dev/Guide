@@ -26,6 +26,7 @@ function SignInForm() {
       </div>
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
         <AuthCard
+          eyebrow={as === "official" ? null : "Log in as a"}
           title={copy.title}
           subtitle={copy.subtitle}
           footer={
@@ -54,6 +55,7 @@ function SignInForm() {
                 required
                 autoComplete="email"
                 className="field mt-1.5"
+                placeholder={as === "educator" ? "you@school.org" : undefined}
               />
             </label>
             <label className="block text-sm font-semibold text-forest-900">
@@ -74,9 +76,9 @@ function SignInForm() {
             <button
               type="submit"
               disabled={pending}
-              className="btn-primary w-full !py-3"
+              className="btn-primary w-full"
             >
-              {pending ? "Signing in…" : "Log In"}
+              {pending ? "Signing in…" : "Log in"}
             </button>
           </form>
         </AuthCard>

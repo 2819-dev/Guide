@@ -61,9 +61,15 @@ export function TeacherSuggestionsAccess() {
 
   if (classrooms.length === 0) {
     return (
-      <p className="panel text-ink-muted">
-        Create a class and invite students to manage Suggestions access.
-      </p>
+      <section>
+        <h2 className="portal-section-title">Suggestions</h2>
+        <div className="portal-empty">
+          <p className="portal-empty__title">No classes yet</p>
+          <p className="portal-empty__body">
+            Create a class and invite students to manage Suggestions access.
+          </p>
+        </div>
+      </section>
     );
   }
 
@@ -71,8 +77,8 @@ export function TeacherSuggestionsAccess() {
     <div className="space-y-4">
       <div>
         <h2 className="portal-section-title">Suggestions</h2>
-        <p className="-mt-1 mb-1 text-sm text-ink-muted">
-          Pause for a whole class or for individual students.
+        <p className="-mt-2 text-sm text-ink-muted">
+          Pause Suggestions for a whole class or for individual students.
         </p>
       </div>
       {error && <p className="text-sm text-red-700">{error}</p>}

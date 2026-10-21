@@ -20,7 +20,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "educator",
     label: "Teacher or School Administrator",
-    description: "Classes, apps, and school tools in Guide",
+    description: "Apply for your school, then open classes and apps",
     href: "/auth/sign-in?as=educator",
   },
   {
@@ -66,9 +66,9 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Teacher or School Administrator",
         subtitle:
-          "Sign in to Guide. After your school is approved, invite a class and add apps.",
+          "Log in to apply for your school or open your portal after approval.",
         joinHref: "/auth/sign-up?as=educator",
-        joinLabel: "Create an account to apply",
+        joinLabel: "Create an account",
       };
     case "official":
       return {
@@ -105,9 +105,9 @@ export function signupAsCopy(as: LoginAs): {
       };
     case "educator":
       return {
-        title: "Join as Teacher or School Administrator",
+        title: "Teacher or School Administrator",
         subtitle:
-          "Create an account, then apply for your school. School tools unlock after approval.",
+          "Create your Guide account, then apply for your school. The portal unlocks after approval.",
         roleValue: "customer",
         showRoleChooser: false,
       };
