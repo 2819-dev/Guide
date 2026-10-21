@@ -5,7 +5,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Invitation to try Guide for your class · Guide",
   description:
-    "Private invitation for a Rebbe at Yeshivas Ohr Reuven to use Guide with his class.",
+    "Private invitation for a teacher to try Guide with their class.",
   robots: { index: false, follow: false },
 };
 
@@ -14,7 +14,8 @@ const TEACHER_APPLY_URL = `${GUIDE_URL}/education?as=teacher#apply`;
 const AMUD_URL = "https://amud-big-happy-smiley.vercel.app";
 
 /**
- * Safari-friendly invite letter — teacher/class (not whole-school founding).
+ * Safari-friendly invite letter — professional teacher/class invitation.
+ * Source copy: /cursor/stores/self/docs/ohr-reuven-invite-email.md
  */
 export default function OhrReuvenInvitePage() {
   return (
@@ -67,29 +68,19 @@ export default function OhrReuvenInvitePage() {
             <h1 className="mb-[22px] text-[28px] font-normal leading-[1.3] text-[#152A20] sm:text-[30px]">
               An invitation to try Guide with your class
             </h1>
+            <p className="mb-[18px]">Dear Teacher,</p>
+            <p className="mb-[18px]">I hope this message finds you well.</p>
             <p className="mb-[18px]">
-              Dear Rebbe,
-            </p>
-            <p className="mb-[18px]">
-              I am writing to invite you to try <strong className="font-semibold text-[#152A20]">Guide</strong> with
-              your class at{" "}
+              I am writing to introduce{" "}
+              <strong className="font-semibold text-[#152A20]">Guide</strong>, a
+              school platform that gives teachers and students one place to sign
+              in and open learning apps for class. I would like to invite you to
+              try it{" "}
               <strong className="font-semibold text-[#152A20]">
-                Yeshivas Ohr Reuven
+                with your class
               </strong>
-              —not as a whole-school rollout, but as a practical way for you and
-              your talmidim to work in one calm place.
-            </p>
-            <p className="mb-[18px]">
-              Guide is a school platform for students and teachers: one secure
-              login, learning apps (starting with Amud), messaging, and a
-              simple class view. You apply as a teacher for your class; once
-              approved, you invite students and add the apps you want.
-            </p>
-            <p className="mb-[18px]">
-              There is <strong className="font-semibold text-[#152A20]">no fee</strong> for this
-              trial, and no ask for a public endorsement. We would simply value
-              your honest feedback on what helps a real classroom and
-              after-school chazarah—and what still needs work.
+              , at no cost. This is an invitation for your classroom use—not a
+              requirement that your entire school adopt the platform.
             </p>
           </div>
 
@@ -102,19 +93,29 @@ export default function OhrReuvenInvitePage() {
                 Amud
               </p>
               <p className="mb-3.5 text-[16px] leading-[1.65] text-[#2a3f34]">
-                Amud is built for Mishnayos and Gemara. Talmidim can open a daf,
-                review, and <em>Test Yourself</em> with real
-                questions—including translation—so chazarah after school is
-                structured, not vague. You can see progress as they work.
+                Amud is the first app available on Guide. It supports structured
+                study and practice for Mishnayos and Gemara, including a{" "}
+                <em>Test Yourself</em> experience with varied questions
+                (including translation). Students can review after class; you can
+                follow their progress as they work.
               </p>
               <p className="font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-[15px] leading-[1.6] text-[#3d6b52]">
-                Amud is available today. You choose what to add for your class
-                from the Guide portal after approval.
+                Additional apps will be added over time. Teachers choose which
+                apps to make available for each class.
               </p>
             </div>
           </div>
 
           <div className="px-6 pb-2 pt-7 text-[17px] leading-[1.7] text-[#2a3f34] sm:px-11">
+            <p className="mb-[18px]">
+              If you are interested, you can join Guide{" "}
+              <strong className="font-semibold text-[#152A20]">
+                as a teacher for your class
+              </strong>{" "}
+              and we will help you get started. You may open the teacher apply
+              page below, or simply reply to this email—I would be glad to
+              schedule a brief walkthrough at a convenient time.
+            </p>
             <p className="mb-3.5 text-[#152A20]">
               <strong className="font-semibold">How to get started</strong>
             </p>
@@ -123,16 +124,15 @@ export default function OhrReuvenInvitePage() {
                 Create a Guide account as Teacher or School Administrator
               </li>
               <li>
-                Choose <strong>I’m a teacher — add my class</strong> (short form)
+                Choose{" "}
+                <strong className="font-semibold text-[#152A20]">
+                  I’m a teacher — add my class
+                </strong>{" "}
+                (short form)
               </li>
               <li>After approval, create your class and share the invite code</li>
               <li>Add Amud (or other apps) for your students</li>
             </ul>
-            <p className="mb-[18px]">
-              If this is of interest, the easiest next step is to open the
-              teacher apply page below—or reply to this email. We would gladly
-              schedule a short walkthrough at a time that works for you.
-            </p>
           </div>
 
           <div className="px-6 pb-7 pt-5 text-center sm:px-11">
@@ -152,7 +152,7 @@ export default function OhrReuvenInvitePage() {
           </div>
 
           <div className="px-6 pb-10 pt-2 text-[17px] leading-[1.7] text-[#2a3f34] sm:px-11">
-            <p className="mb-2">With sincere respect and appreciation,</p>
+            <p className="mb-2">With appreciation,</p>
             <p className="mb-1 text-[#152A20]">
               <strong className="font-semibold">The Guide team</strong>
             </p>
@@ -165,8 +165,8 @@ export default function OhrReuvenInvitePage() {
             <p className="font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-xs leading-[1.5] text-[#9bb0a3]">
               Guide — a school platform for learning apps
               <br />
-              This message is a private invitation for a teacher at Yeshivas Ohr
-              Reuven.
+              This message is a private invitation for a teacher to try Guide
+              with their class.
             </p>
           </div>
         </article>
