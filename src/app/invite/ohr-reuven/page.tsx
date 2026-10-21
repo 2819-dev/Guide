@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { guidePublicUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Invitation to try Guide for your class · Guide",
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const GUIDE_URL = "https://guide-big-happy-smiley.vercel.app";
+const GUIDE_URL = guidePublicUrl();
+const GUIDE_HOST = GUIDE_URL.replace(/^https?:\/\//, "");
 const TEACHER_APPLY_URL = `${GUIDE_URL}/education?as=teacher#apply`;
 const AMUD_URL = "https://amud-big-happy-smiley.vercel.app";
 
@@ -143,9 +145,9 @@ export default function OhrReuvenInvitePage() {
               Apply as a teacher
             </Link>
             <p className="mt-[18px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-sm leading-[1.55] text-[#5a7264]">
-              Teacher apply: guide-big-happy-smiley.vercel.app/education?as=teacher
+              Teacher apply: {GUIDE_HOST}/education?as=teacher
               <br />
-              Guide: guide-big-happy-smiley.vercel.app
+              Guide: {GUIDE_HOST}
               <br />
               Amud: amud-big-happy-smiley.vercel.app
             </p>
