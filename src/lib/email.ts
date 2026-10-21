@@ -1,4 +1,3 @@
-import { Resend } from "resend";
 import { guidePublicUrl } from "@/lib/site";
 
 const FROM =
@@ -12,21 +11,15 @@ export function resendConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY?.trim());
 }
 
-function client(): Resend | null {
-  const key = process.env.RESEND_API_KEY?.trim();
-  if (!key) return null;
-  return new Resend(key);
-}
-
-/** Low-level send — stubs when RESEND_API_KEY is missing so UI/API still work. */
+/** Low-level send via Resend HTTP API — stubs when RESEND_API_KEY is missing. */
 export async function sendEmail(opts: {
   to: string | string[];
   subject: string;
   html: string;
   text?: string;
 }): Promise<SendEmailResult> {
-  const resend = client();
-  if (!resend) {
+  const key = process.env.RESEND_API_KEY?.trim();
+  if (!key) {
     console.info(
       "[email] RESEND_API_KEY missing — stubbed send:",
       opts.subject,
@@ -37,17 +30,31 @@ export async function sendEmail(opts: {
   }
 
   try {
-    const { data, error } = await resend.emails.send({
-      from: FROM,
-      to: opts.to,
-      subject: opts.subject,
-      html: opts.html,
-      text: opts.text,
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: FROM,
+        to: opts.to,
+        subject: opts.subject,
+        html: opts.html,
+        text: opts.text,
+      }),
     });
-    if (error) {
-      return { ok: false, error: error.message || "Send failed" };
+    const data = (await res.json().catch(() => ({}))) as {
+      id?: string;
+      message?: string;
+    };
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: data.message || `Resend HTTP ${res.status}`,
+      };
     }
-    return { ok: true, id: data?.id };
+    return { ok: true, id: data.id };
   } catch (e) {
     return {
       ok: false,
