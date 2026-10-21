@@ -43,7 +43,7 @@ function GuideHomePage() {
               message, and stay in sync.
             </p>
 
-            <div className="mt-9 max-w-[40rem] space-y-5">
+            <div className="mt-9 max-w-[40rem]">
               <Link
                 href="/auth/sign-in?as=student"
                 className="btn-hero-bar"
@@ -53,23 +53,13 @@ function GuideHomePage() {
                   <ArrowIcon />
                 </span>
               </Link>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Link href="/education#apply" className="hero-link-card">
-                  <span className="hero-link-card__label">For schools</span>
-                  <span className="hero-link-card__arrow">
-                    <ArrowIcon />
-                  </span>
-                </Link>
-                <Link
-                  href="/auth/sign-in?as=educator"
-                  className="hero-link-card"
-                >
-                  <span className="hero-link-card__label">For teachers</span>
-                  <span className="hero-link-card__arrow">
-                    <ArrowIcon />
-                  </span>
-                </Link>
-              </div>
+              <p className="hero-secondary-links">
+                <Link href="/education#apply">For schools</Link>
+                <span aria-hidden className="hero-secondary-links__dot">
+                  ·
+                </span>
+                <Link href="/auth/sign-in?as=educator">For teachers</Link>
+              </p>
             </div>
           </div>
 
