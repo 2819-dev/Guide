@@ -33,7 +33,7 @@ export const metadata: Metadata = amud
         template: "%s · Guide",
       },
       description:
-        "Guide — Clever-like school platform for learning apps, portals, and classroom tools.",
+        "Guide — the identity platform for schools. Portals, learning apps, and classroom tools.",
     };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

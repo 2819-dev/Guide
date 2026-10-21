@@ -79,9 +79,8 @@ function GuideHomePage() {
               <div className="absolute bottom-8 right-6 h-48 w-48 rounded-full bg-sun/30 blur-2xl" />
             </div>
             <div className="absolute inset-0 flex items-end p-8">
-              <p className="max-w-[16rem] text-lg font-semibold leading-snug text-white">
-                Portals for students and teachers. Apps open from My apps —
-                not the header.
+              <p className="max-w-[15rem] text-lg font-semibold leading-snug text-white drop-shadow-sm">
+                Students and teachers. One place to open learning apps.
               </p>
             </div>
           </div>
@@ -105,8 +104,8 @@ function GuideHomePage() {
             Power classroom learning
           </h2>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-muted">
-            One secure place for teachers and students to access the apps they
-            depend on — launched from the portal, Clever-style.
+            One secure place for teachers and students to open the apps they
+            depend on — right from their portal.
           </p>
           <div className="capability-grid mt-14">
             <div>
@@ -125,8 +124,8 @@ function GuideHomePage() {
                 Portal app launcher
               </h3>
               <p className="mt-2 text-base leading-relaxed text-ink-muted">
-                Teachers add {FIRST_APP_NAME} to a class. Students tap the tile
-                on My apps — never a list of apps in the top bar.
+                Teachers add {FIRST_APP_NAME} to a class. Students open it from
+                My apps on their portal.
               </p>
             </div>
             <div>

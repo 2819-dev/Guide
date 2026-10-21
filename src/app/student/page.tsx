@@ -35,15 +35,11 @@ export default async function StudentHubPage() {
     authz.profile.id,
   );
 
-  const subtitle = schoolName
-    ? `${schoolName} · Apps launch here — not from the top bar.`
-    : "Apps launch here — not from the top bar.";
-
   return (
     <PortalShell
       eyebrow="Student portal"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle={subtitle}
+      subtitle={schoolName ?? "Your apps and tools are below."}
       chips={[
         { href: "#apps", label: "My apps" },
         { href: "#tools", label: "Tools" },
@@ -66,7 +62,7 @@ export default async function StudentHubPage() {
 
       <MyAppsGrid
         apps={apps}
-        emptyHint="Join a class from Account, then ask your teacher to add an app (like Amud)."
+        emptyHint="Join a class from Account, then ask your teacher to add an app."
       />
 
       <section id="tools">
@@ -99,7 +95,7 @@ export default async function StudentHubPage() {
       </section>
 
       <p className="text-sm text-ink-muted">
-        Scan credential or class invite ·{" "}
+        Class invite and badge login ·{" "}
         <Link href="/account" className="font-semibold text-forest-800">
           Account
         </Link>

@@ -139,16 +139,7 @@ export function StudentSignIn() {
         <GuideWordmark href="/" size="lg" tone="onDark" />
       </div>
 
-      <div className="login-split__panel relative">
-        <div className="absolute right-4 top-4 sm:right-6 sm:top-5">
-          <Link
-            href="/auth/sign-in?as=official"
-            className="inline-flex items-center gap-1.5 rounded-[10px] border border-forest-300 bg-surface px-3 py-1.5 text-xs font-semibold text-forest-800 no-underline"
-          >
-            Official
-          </Link>
-        </div>
-
+      <div className="login-split__panel">
         <div className="w-full max-w-[700px]">
           <h1 className="login-title">Log in with Guide</h1>
           <p className="mx-auto mt-2.5 max-w-md text-center text-[0.9375rem] leading-relaxed text-ink-muted">
@@ -217,6 +208,15 @@ export function StudentSignIn() {
                   <span className="inline-block align-middle">
                     <LoginMenu variant="nav" />
                   </span>
+                  <span aria-hidden className="mx-1.5 text-forest-300">
+                    ·
+                  </span>
+                  <Link
+                    href="/auth/sign-in?as=official"
+                    className="font-semibold text-forest-800"
+                  >
+                    Guide Official
+                  </Link>
                 </p>
               </div>
             ) : mode === "choose" ? (

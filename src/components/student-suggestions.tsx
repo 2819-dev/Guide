@@ -44,9 +44,9 @@ export function StudentSuggestionsPad() {
 
   if (blocked) {
     return (
-      <div className="rounded-2xl border border-dashed border-line bg-sky-soft/40 px-6 py-10 text-center">
-        <h2 className="display text-2xl text-forest-950">Suggestions paused</h2>
-        <p className="mx-auto mt-3 max-w-md text-ink-muted">
+      <div className="portal-empty">
+        <p className="portal-empty__title">Suggestions paused</p>
+        <p className="portal-empty__body">
           {reason ??
             "Your teacher has paused Suggestions for now. Ask them if you need access."}
         </p>
@@ -56,19 +56,19 @@ export function StudentSuggestionsPad() {
 
   if (items.length === 0) {
     return (
-      <p className="rounded-2xl border border-line px-5 py-8 text-ink-muted">
-        No suggestions yet. Check back after Guide Official posts something new.
-      </p>
+      <div className="portal-empty">
+        <p className="portal-empty__title">No suggestions yet</p>
+        <p className="portal-empty__body">
+          Check back after Guide posts something new.
+        </p>
+      </div>
     );
   }
 
   return (
-    <ul className="space-y-4">
+    <ul className="space-y-3">
       {items.map((s) => (
-        <li
-          key={s.id}
-          className="rounded-2xl border border-line bg-surface px-5 py-5 sm:px-6"
-        >
+        <li key={s.id} className="portal-panel">
           <h2 className="text-lg font-semibold text-forest-950">{s.title}</h2>
           <p className="mt-1 text-xs text-ink-muted">
             {new Date(s.createdAt).toLocaleDateString()}

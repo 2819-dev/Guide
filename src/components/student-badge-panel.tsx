@@ -97,8 +97,8 @@ export function StudentBadgePanel({
       ) : (
         <>
           <p className="text-sm text-ink-muted">
-            Set up a Clever-style scan credential so you can log in by camera or
-            typing a code. Separate from any Roles Guide Official assigns you.
+            Create a school scan code so you can log in by camera or typing a
+            code. This is separate from any Roles Guide Official assigns you.
           </p>
           {canActivate && (
             <button

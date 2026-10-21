@@ -56,7 +56,7 @@ export function TeacherAppsPanel() {
         <h2 className="portal-section-title">Apps</h2>
         <p className="-mt-2 text-sm text-ink-muted">
           Add apps from the Guide library to a class. Students see them under
-          My apps on their portal — not in the top bar.
+          My apps on their portal.
         </p>
       </div>
 

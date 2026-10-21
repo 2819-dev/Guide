@@ -162,7 +162,7 @@ export function StudentMessages() {
         )}
       </aside>
 
-      <section className="min-h-[20rem] rounded-2xl border border-line bg-surface px-5 py-5 sm:px-6">
+      <section className="portal-panel min-h-[20rem]">
         {error && <p className="mb-3 text-sm text-red-700">{error}</p>}
 
         {composing ? (

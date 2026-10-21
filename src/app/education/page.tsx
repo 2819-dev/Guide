@@ -45,7 +45,7 @@ export default async function EducationLandingPage() {
             Apply once. After approval, teachers invite a class, add apps from
             the Guide library, and follow progress from home or Chromebook.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-8 flex flex-col items-center gap-3">
             {canOpenPanel ? (
               <Link href="/education/panel" className="btn-primary">
                 Open teacher portal
@@ -55,9 +55,9 @@ export default async function EducationLandingPage() {
                 Apply for your school
               </a>
             )}
-            <Link href="/apps" className="btn-secondary">
-              App library
-            </Link>
+            <p className="hero-secondary-links !mt-1">
+              <Link href="/apps">App library</Link>
+            </p>
           </div>
         </div>
       </section>
@@ -68,7 +68,7 @@ export default async function EducationLandingPage() {
           </h2>
           <p className="mt-3 max-w-2xl text-base text-ink-muted">
             Students open apps on Guide. After your school is approved, teachers
-            add apps to classes and see progress without a noisy dashboard.
+            add apps to classes and follow progress from one place.
           </p>
           <ol className="mt-10 grid gap-0 overflow-hidden rounded-[10px] border border-line bg-surface shadow-[var(--shadow-soft)] lg:grid-cols-3">
             <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
@@ -119,14 +119,13 @@ export default async function EducationLandingPage() {
           )}
           {!session && (
             <p className="mt-4 text-sm text-ink-muted">
-              Tip:{" "}
               <Link
                 href="/auth/sign-in?as=educator"
-                className="font-semibold text-forest-700"
+                className="font-semibold text-forest-800"
               >
                 Log in as Teacher or School Administrator
               </Link>{" "}
-              before applying so approval can unlock the teacher portal
+              before applying so approval unlocks the teacher portal
               automatically.
             </p>
           )}

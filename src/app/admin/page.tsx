@@ -18,13 +18,13 @@ export default async function AdminPage() {
 
   return (
     <PortalShell
-      eyebrow="Official portal"
+      eyebrow="Guide Official"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Approve schools, manage roles, issue scan credentials, and publish Suggestions."
+      subtitle="Approve schools, manage Roles, issue badge logins, and publish Suggestions."
       chips={[
         { href: "#schools", label: "Schools" },
         { href: "#roles", label: "Roles" },
-        { href: "#credentials", label: "Credentials" },
+        { href: "#credentials", label: "Badge logins" },
         { href: "#suggestions", label: "Suggestions" },
         ...(isAdmin ? [{ href: "#support", label: "Get help" }] : []),
       ]}
@@ -38,7 +38,7 @@ export default async function AdminPage() {
         <AdminRoleBadgesPanel />
       </section>
       <section id="credentials">
-        <h2 className="portal-section-title">Scan credentials</h2>
+        <h2 className="portal-section-title">Badge logins</h2>
         <AdminBadgesPanel />
       </section>
       <section id="suggestions">
