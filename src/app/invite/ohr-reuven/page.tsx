@@ -8,7 +8,7 @@ export const runtime = "edge";
 export const metadata: Metadata = {
   title: "Invitation to try Guide for your class · Guide",
   description:
-    "Private invitation for a teacher to try Guide with their class.",
+    "Invitation for Yeshivas Ohr Reuven to try Guide with your class.",
   robots: { index: false, follow: false },
 };
 
@@ -19,8 +19,9 @@ const AMUD_URL = amudPublicUrl();
 const AMUD_HOST_PATH = AMUD_URL.replace(/^https?:\/\//, "");
 
 /**
- * Safari-friendly invite letter — professional teacher/class invitation.
- * Source copy: /cursor/stores/self/docs/ohr-reuven-invite-email.md
+ * Safari invite letter for Yeshivas Ohr Reuven.
+ * Canonical copy: /cursor/stores/self/docs/ohr-reuven-invite-canva.html
+ * Forest brand (not Canva blue/navy chrome). CTA → teacher apply, not this page.
  */
 export default function OhrReuvenInvitePage() {
   return (
@@ -67,85 +68,67 @@ export default function OhrReuvenInvitePage() {
           </div>
 
           <div className="px-6 pb-2 pt-10 text-[17px] leading-[1.7] text-[#2a3f34] sm:px-11">
-            <p className="mb-2.5 font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-[12px] uppercase tracking-[0.12em] text-[#3d6b52]">
-              Private invitation
-            </p>
-            <h1 className="mb-[22px] text-[28px] font-normal leading-[1.3] text-[#152A20] sm:text-[30px]">
-              An invitation to try Guide with your class
-            </h1>
-            <p className="mb-[18px]">Dear Teacher,</p>
-            <p className="mb-[18px]">I hope this message finds you well.</p>
+            <p className="mb-[18px] font-semibold text-[#152A20]">Hello,</p>
             <p className="mb-[18px]">
-              I am writing to introduce{" "}
-              <strong className="font-semibold text-[#152A20]">Guide</strong>, a
-              school platform that gives teachers and students one place to sign
-              in and open learning apps for class. I would like to invite you to
-              try it{" "}
-              <strong className="font-semibold text-[#152A20]">
-                with your class
-              </strong>
-              , at no cost. This is an invitation for your classroom use—not a
-              requirement that your entire school adopt the platform.
+              Guide is a school platform that gives teachers and students one
+              place to sign in and open the learning apps they use for class.
+              Built with Jewish schools in mind, it is designed to support the
+              way Torah subjects are taught and learned. We would be honored to
+              welcome Yeshivas Ohr Reuven as the first school to use Guide, and
+              we would like to invite you to try it with your class at no cost.
             </p>
-          </div>
-
-          <div className="px-6 py-3 sm:px-11">
-            <div className="border border-[#d5e0d9] bg-[#f3f8f5] px-6 py-[26px] sm:px-7">
-              <p className="mb-2 font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-[11px] uppercase tracking-[0.14em] text-[#3d6b52]">
-                Our first learning app
-              </p>
-              <p className="mb-3 text-[24px] leading-[1.3] text-[#152A20]">
+            <p className="mb-[18px]">
+              This invitation is for your classroom use. It is not a requirement
+              that the entire school adopts the platform.
+            </p>
+            <p className="mb-[18px]">
+              <a
+                href={AMUD_URL}
+                className="font-semibold text-[#1b4332] underline underline-offset-2"
+              >
                 Amud
-              </p>
-              <p className="mb-3.5 text-[16px] leading-[1.65] text-[#2a3f34]">
-                Amud is the first app available on Guide. It supports structured
-                study and practice for Mishnayos and Gemara, including a{" "}
-                <em>Test Yourself</em> experience with varied questions
-                (including translation). Students can review after class; you can
-                follow their progress as they work.
-              </p>
-              <p className="font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-[15px] leading-[1.6] text-[#3d6b52]">
-                Additional apps will be added over time. Teachers choose which
-                apps to make available for each class.
-              </p>
-            </div>
-          </div>
-
-          <div className="px-6 pb-2 pt-7 text-[17px] leading-[1.7] text-[#2a3f34] sm:px-11">
+              </a>
+              , the first app available on Guide, supports structured study and
+              practice for Mishnayos and Gemara. It includes a Test Yourself
+              experience with varied question types, including translation.
+              Students can review after class, and teachers can follow their
+              progress as they work. Additional apps will be added over time, and
+              teachers choose which apps to make available to each class.
+            </p>
             <p className="mb-[18px]">
-              If you are interested, you can join Guide{" "}
-              <strong className="font-semibold text-[#152A20]">
-                as a teacher for your class
-              </strong>{" "}
-              and we will help you get started. You may open the teacher apply
-              page below, or simply reply to this email—I would be glad to
-              schedule a brief walkthrough at a convenient time.
+              If you are interested, you can{" "}
+              <a
+                href={TEACHER_APPLY_URL}
+                className="font-semibold text-[#1b4332] underline underline-offset-2"
+              >
+                join Guide as a teacher for your class
+              </a>
+              , and our team will help you get started. You can use the links
+              below or reply to this email to schedule a brief walkthrough at a
+              time that works for you.
             </p>
-            <p className="mb-3.5 text-[#152A20]">
-              <strong className="font-semibold">How to get started</strong>
+            <p className="mb-[18px]">
+              Guide is available for free at{" "}
+              <a
+                href={GUIDE_URL}
+                className="font-semibold text-[#1b4332] underline underline-offset-2"
+              >
+                {GUIDE_HOST}
+              </a>
+              .
             </p>
-            <ul className="mb-[18px] list-disc space-y-2.5 pl-[22px]">
-              <li>
-                Create a Guide account as Teacher or School Administrator
-              </li>
-              <li>
-                Choose{" "}
-                <strong className="font-semibold text-[#152A20]">
-                  I’m a teacher — add my class
-                </strong>{" "}
-                (short form)
-              </li>
-              <li>After approval, create your class and share the invite code</li>
-              <li>Add Amud (or other apps) for your students</li>
-            </ul>
+            <p className="mb-[18px]">
+              Thank you for your time and consideration. We would be grateful for
+              the opportunity to work with you.
+            </p>
           </div>
 
-          <div className="px-6 pb-7 pt-5 text-center sm:px-11">
+          <div className="px-6 pb-7 pt-2 text-center sm:px-11">
             <Link
               href={TEACHER_APPLY_URL}
               className="inline-block bg-[#1b4332] px-[34px] py-[15px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-base font-semibold text-white no-underline"
             >
-              Apply as a teacher
+              Join as a teacher
             </Link>
             <p className="mt-[18px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-sm leading-[1.55] text-[#5a7264]">
               Teacher apply: {GUIDE_HOST}/education?as=teacher
@@ -157,22 +140,37 @@ export default function OhrReuvenInvitePage() {
           </div>
 
           <div className="px-6 pb-10 pt-2 text-[17px] leading-[1.7] text-[#2a3f34] sm:px-11">
-            <p className="mb-2">With appreciation,</p>
             <p className="mb-1 text-[#152A20]">
-              <strong className="font-semibold">The Guide team</strong>
+              <strong className="font-semibold">Hillel Frankel</strong>
             </p>
-            <p className="font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-sm text-[#5a7264]">
-              Big Happy Smiley
+            <p className="mb-0 font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-[15px] leading-[1.55] text-[#5a7264]">
+              Founder &amp; CEO
+              <br />
+              Guide Learning
             </p>
           </div>
 
-          <div className="bg-[#152A20] px-6 py-[22px] text-center sm:px-11">
-            <p className="font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-xs leading-[1.5] text-[#9bb0a3]">
-              Guide — a school platform for learning apps
-              <br />
-              This message is a private invitation for a teacher to try Guide
-              with their class.
-            </p>
+          <div className="bg-[#152A20] px-6 py-[22px] sm:px-11">
+            <div className="flex flex-col gap-3 font-[system-ui,-apple-system,'Segoe_UI',sans-serif] sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+              <p className="text-[18px] font-semibold tracking-tight text-white sm:text-[20px]">
+                Guide Learning
+              </p>
+              <p className="text-[13px] leading-[1.6] text-[#c5d4cb] sm:text-right">
+                <a
+                  href="mailto:hello@guidelearning.org"
+                  className="text-[#c5d4cb] underline underline-offset-2"
+                >
+                  hello@guidelearning.org
+                </a>
+                <br />
+                <a
+                  href={GUIDE_URL}
+                  className="text-[#c5d4cb] underline underline-offset-2"
+                >
+                  www.guidelearning.org
+                </a>
+              </p>
+            </div>
           </div>
         </article>
 
