@@ -11,7 +11,7 @@ export default async function TeacherPortalPage() {
   if (!authz) redirect("/auth/sign-in?as=educator");
 
   const allowed = await hasEducationAccess(authz.profile);
-  if (!allowed) redirect("/education#apply");
+  if (!allowed) redirect("/education");
 
   redirect("/education/panel");
 }

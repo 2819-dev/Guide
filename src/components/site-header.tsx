@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { GuideWordmark } from "@/components/guide-logo";
 import { LoginMenu } from "@/components/login-menu";
 import { SignOutButton } from "@/components/sign-out-button";
+import type { SchoolApplicationStatus } from "@/lib/education-access";
 import {
   messagesHrefFor,
   portalFor,
@@ -22,6 +23,7 @@ type Me = {
     badgeCode?: string | null;
   } | null;
   educationOk?: boolean;
+  schoolApplicationStatus?: SchoolApplicationStatus;
 };
 
 const navLink =
@@ -43,6 +45,11 @@ export function SiteHeader() {
 
   const profile = me?.profile;
   const loggedIn = Boolean(profile);
+  const appStatus = me?.schoolApplicationStatus ?? "none";
+  const awaitingSchool =
+    profile?.role === "rebbe" ||
+    appStatus === "pending" ||
+    appStatus === "rejected";
 
   let portalId: PortalId | null = null;
   let portalHref = "/student";
@@ -56,11 +63,12 @@ export function SiteHeader() {
     if (portal) {
       portalId = portal.id;
       portalHref = portal.href;
-    } else if (profile.role === "rebbe") {
-      portalHref = "/education#apply";
     } else if (profile.role === "admin" || profile.role === "moderator") {
       portalHref = "/official";
       portalId = "official";
+    } else if (awaitingSchool) {
+      // Teacher / School Administrator — locked until approved.
+      portalHref = "/education";
     }
   }
 

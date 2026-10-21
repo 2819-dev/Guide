@@ -42,12 +42,12 @@ export function SchoolApplicationForm({
   if (done) {
     return (
       <div className="portal-panel">
-        <h2 className="text-2xl font-semibold tracking-tight text-forest-900">
-          Application received
-        </h2>
-        <p className="mt-2 text-ink-muted">
-          Thanks — your school request is pending review. Once approved, you can
-          open the teacher portal and invite students.
+        <p className="portal-eyebrow">Teacher / School Administrator</p>
+        <h2 className="display-feature mt-2">Application received</h2>
+        <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-muted">
+          Thanks — your school request is pending review. The teacher portal
+          stays locked until Guide Official accepts or declines. You will not
+          see classes, apps, or messaging tools while pending.
         </p>
       </div>
     );

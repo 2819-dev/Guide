@@ -42,7 +42,8 @@ export function portalFor(opts: {
     return PORTALS.official;
   }
   if (as === "educator" || role === "rebbe") {
-    return educationOk === false ? null : PORTALS.teacher;
+    // Teacher / School Administrator portal stays locked until approved.
+    return educationOk === true ? PORTALS.teacher : null;
   }
   if (as === "student" || schoolId || badgeCode) {
     return PORTALS.student;

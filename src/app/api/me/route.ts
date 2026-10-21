@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
-import { hasEducationAccess } from "@/lib/education-access";
+import {
+  getApplicantEducationStatus,
+  hasEducationAccess,
+} from "@/lib/education-access";
 import { ensureProfile, requireProfile } from "@/lib/profile";
 import { isRole } from "@/lib/roles";
 import { profiles } from "@/lib/schema";
@@ -10,9 +13,15 @@ import { profiles } from "@/lib/schema";
 export async function GET() {
   const result = await ensureProfile();
   if (!result) {
-    return NextResponse.json({ user: null, profile: null, educationOk: false });
+    return NextResponse.json({
+      user: null,
+      profile: null,
+      educationOk: false,
+      schoolApplicationStatus: "none",
+    });
   }
   const educationOk = await hasEducationAccess(result.profile);
+  const appStatus = await getApplicantEducationStatus(result.profile.id);
   return NextResponse.json({
     user: {
       id: result.user.id,
@@ -27,6 +36,7 @@ export async function GET() {
       badgeCode: result.profile.badgeCode,
     },
     educationOk,
+    schoolApplicationStatus: appStatus.status,
   });
 }
 
@@ -40,8 +50,6 @@ export async function PATCH(request: Request) {
     const body = z
       .object({
         displayName: z.string().min(1).max(120).optional(),
-        /** Only allowed at signup upgrade path for customer→rebbe once */
-        becomeRebbe: z.boolean().optional(),
       })
       .parse(await request.json());
 
@@ -50,12 +58,6 @@ export async function PATCH(request: Request) {
       updatedAt: new Date(),
     };
     if (body.displayName) patch.displayName = body.displayName;
-    if (
-      body.becomeRebbe &&
-      authz.profile.role === "customer"
-    ) {
-      patch.role = "rebbe";
-    }
 
     const [updated] = await db
       .update(profiles)

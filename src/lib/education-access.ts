@@ -4,7 +4,16 @@ import type { Profile } from "@/lib/profile";
 import { schoolApplications } from "@/lib/schema";
 import type { Role } from "@/lib/roles";
 
-/** Admins always have school-tool access. Teachers need an approved school application. */
+export type SchoolApplicationStatus =
+  | "none"
+  | "pending"
+  | "approved"
+  | "rejected";
+
+/**
+ * Teacher / School Administrator tools unlock only after an approved school
+ * application. Guide Official (admin) stays unlocked. Students never use this.
+ */
 export async function hasEducationAccess(profile: Profile): Promise<boolean> {
   const role = profile.role as Role;
   if (role === "admin") return true;
@@ -22,20 +31,11 @@ export async function hasEducationAccess(profile: Profile): Promise<boolean> {
     )
     .limit(1);
 
-  if (approved) return true;
-
-  // Legacy rebbe accounts created before the school-approval gate
-  const [anyApp] = await db
-    .select({ id: schoolApplications.id })
-    .from(schoolApplications)
-    .where(eq(schoolApplications.applicantProfileId, profile.id))
-    .limit(1);
-
-  return !anyApp;
+  return Boolean(approved);
 }
 
 export async function getApplicantEducationStatus(profileId: string): Promise<{
-  status: "none" | "pending" | "approved" | "rejected";
+  status: SchoolApplicationStatus;
   schoolName?: string;
 }> {
   const db = getDb();

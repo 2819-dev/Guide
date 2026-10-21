@@ -13,7 +13,8 @@ export default async function EducationPanelPage() {
 
   const allowed = await hasEducationAccess(authz.profile);
   if (!allowed) {
-    redirect("/education#apply");
+    // Pending / declined / no application — wait or re-apply on /education.
+    redirect("/education");
   }
 
   return (

@@ -23,7 +23,9 @@ function destinationFor(
   if (as === "learner" || isAmudSite()) {
     return "/learn";
   }
-  if (as === "educator" && role !== "rebbe" && role !== "admin") {
+  if (as === "educator") {
+    if (role === "admin") return "/official";
+    if (educationOk) return "/teacher";
     return "/education";
   }
   const portal = portalFor({
@@ -34,7 +36,7 @@ function destinationFor(
     educationOk,
   });
   if (portal) return portal.href;
-  if (role === "rebbe") return "/education#apply";
+  if (role === "rebbe") return "/education";
   return "/apps";
 }
 

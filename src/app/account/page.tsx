@@ -35,7 +35,7 @@ export default async function AccountPage() {
   });
   const backHref = isAmudSite()
     ? "/learn"
-    : (portal?.href ?? (role === "rebbe" ? "/education#apply" : "/apps"));
+    : (portal?.href ?? (role === "rebbe" ? "/education" : "/apps"));
   const backLabel = isAmudSite() ? "Amud" : (portal?.label ?? "Guide");
 
   let schoolName: string | null = null;
