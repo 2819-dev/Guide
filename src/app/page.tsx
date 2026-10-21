@@ -26,88 +26,72 @@ function ArrowIcon() {
   );
 }
 
-/** Clever 1:1 marketing home — Guide forest brand. */
+/**
+ * Clever 1:1 cover — one composition:
+ * Guide brand + headline → big green student CTA → For schools / For developers under it.
+ * No banner. Guide forest only.
+ */
 function GuideHomePage() {
   const amudHref = amudPublicUrl() || appHomePath();
 
   return (
     <div>
       <section className="hero-band">
-        <div className="content-band hero-band__grid">
-          <div>
-            <p className="eyebrow">Guide</p>
-            <h1 className="display-hero max-w-[18ch]">
-              The{" "}
-              <span className="sun-underline">identity</span> platform for
-              schools
-            </h1>
-            <p className="mt-4 max-w-[30rem] text-lg font-medium leading-[1.6] text-ink">
-              One secure place for students and teachers to open learning apps,
-              message, and stay in sync.
-            </p>
+        <div className="content-band clever-cover">
+          <p className="eyebrow">Guide</p>
+          <h1 className="display-hero clever-cover__title">
+            The{" "}
+            <span className="sun-underline">identity</span> platform for schools
+          </h1>
+          <p className="clever-cover__lede">
+            One secure place for students and teachers to open learning apps,
+            message, and stay in sync.
+          </p>
 
-            <div className="mt-9 max-w-[40rem]">
-              <Link href="/auth/sign-in?as=student" className="btn-hero-bar">
-                <span>Log in as a student</span>
-                <span className="btn-hero-bar__arrow">
-                  <ArrowIcon />
-                </span>
-              </Link>
+          <div className="clever-cover__stack">
+            <Link href="/auth/sign-in?as=student" className="btn-hero-bar">
+              <span>Log in as a student</span>
+              <span className="btn-hero-bar__arrow">
+                <ArrowIcon />
+              </span>
+            </Link>
+
+            <div className="clever-cover__roles">
+              <div className="home-role-box">
+                <h2 className="home-role-box__title">For schools</h2>
+                <p className="home-role-box__body">
+                  Demo, book a meeting, or apply for your school. Teachers log
+                  in with a school invite — no separate teacher signup.
+                </p>
+                <p className="home-role-box__links">
+                  <Link href="/schools/demo">Demo</Link>
+                  <span aria-hidden>·</span>
+                  <Link href="/schools/meeting">Book a meeting</Link>
+                  <span aria-hidden>·</span>
+                  <Link href="/education#apply">Apply</Link>
+                  <span aria-hidden>·</span>
+                  <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
+                </p>
+              </div>
+
+              <div className="home-role-box">
+                <h2 className="home-role-box__title">For developers</h2>
+                <p className="home-role-box__body">
+                  Verified partners only. Apply with your app and website; Guide
+                  Official reviews before portal access.
+                </p>
+                <p className="home-role-box__links">
+                  <Link href="/developers/apply">Apply as a developer</Link>
+                  <span aria-hidden>·</span>
+                  <Link href="/auth/sign-in?as=developer">Partner log in</Link>
+                </p>
+              </div>
             </div>
-          </div>
-
-          <div
-            className="hero-visual-panel"
-            aria-hidden
-          />
-        </div>
-      </section>
-
-      <section className="section-pad !pt-10 !pb-6">
-        <div className="content-band home-role-grid">
-          <div className="home-role-box">
-            <p className="home-role-box__eyebrow">Schools</p>
-            <h2 className="home-role-box__title">For schools</h2>
-            <p className="home-role-box__body">
-              See how teachers manage classes and apps, book a walkthrough, or
-              apply for your school. Teachers log in with a school invite — no
-              separate teacher signup.
-            </p>
-            <div className="home-role-box__actions">
-              <Link href="/schools/demo" className="btn-primary">
-                Demo
-              </Link>
-              <Link href="/schools/meeting" className="btn-secondary">
-                Book a meeting
-              </Link>
-            </div>
-            <p className="home-role-box__links">
-              <Link href="/education#apply">Apply for your school</Link>
-              <span aria-hidden>·</span>
-              <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
-            </p>
-          </div>
-
-          <div className="home-role-box">
-            <p className="home-role-box__eyebrow">Partners</p>
-            <h2 className="home-role-box__title">For developers</h2>
-            <p className="home-role-box__body">
-              Verified partners only. Tell us about your app and website; Guide
-              Official reviews each application before portal access.
-            </p>
-            <div className="home-role-box__actions">
-              <Link href="/developers/apply" className="btn-primary">
-                Apply as a developer
-              </Link>
-            </div>
-            <p className="home-role-box__links">
-              <Link href="/auth/sign-in?as=developer">Partner log in</Link>
-            </p>
           </div>
         </div>
       </section>
 
-      <section id="what" className="section-pad !pt-8">
+      <section id="what" className="section-pad !pt-14 !pb-10">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="display-section">What is Guide?</h2>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">

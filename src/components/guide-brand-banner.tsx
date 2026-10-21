@@ -18,7 +18,7 @@ type Props = {
 };
 
 /**
- * Shared Guide banner — one asset across homepage, portals, Amud, auth, invite.
+ * Guide banner — invite pages and email HTML only (not product chrome).
  */
 export function GuideBrandBanner({
   variant = "strip",
