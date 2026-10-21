@@ -3,18 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Invitation for Yeshivas Ohr Reuven · Guide",
+  title: "Invitation to try Guide for your class · Guide",
   description:
-    "Private invitation for Yeshivas Ohr Reuven to be the first school on Guide.",
+    "Private invitation for a Rebbe at Yeshivas Ohr Reuven to use Guide with his class.",
   robots: { index: false, follow: false },
 };
 
 const GUIDE_URL = "https://guide-big-happy-smiley.vercel.app";
+const TEACHER_APPLY_URL = `${GUIDE_URL}/education?as=teacher#apply`;
 const AMUD_URL = "https://amud-big-happy-smiley.vercel.app";
 
 /**
- * Public Safari-friendly invite letter (matches Zoho HTML email).
- * Select All → Copy works cleanly — no Guide marketing chrome.
+ * Safari-friendly invite letter — teacher/class (not whole-school founding).
  */
 export default function OhrReuvenInvitePage() {
   return (
@@ -28,7 +28,7 @@ export default function OhrReuvenInvitePage() {
           tap the letter below → <strong>Select All</strong> →{" "}
           <strong>Copy</strong> → paste into Zoho Mail. Subject:{" "}
           <span className="font-medium text-[#152A20]">
-            An invitation for Yeshivas Ohr Reuven to be the first school on Guide
+            An invitation to try Guide with your class
           </span>
         </p>
       </div>
@@ -65,41 +65,31 @@ export default function OhrReuvenInvitePage() {
               Private invitation
             </p>
             <h1 className="mb-[22px] text-[28px] font-normal leading-[1.3] text-[#152A20] sm:text-[30px]">
-              An invitation for Yeshivas Ohr Reuven
+              An invitation to try Guide with your class
             </h1>
             <p className="mb-[18px]">
-              Dear Members of the Hanhalah and Rebbeim of{" "}
+              Dear Rebbe,
+            </p>
+            <p className="mb-[18px]">
+              I am writing to invite you to try <strong className="font-semibold text-[#152A20]">Guide</strong> with
+              your class at{" "}
               <strong className="font-semibold text-[#152A20]">
                 Yeshivas Ohr Reuven
               </strong>
-              ,
+              —not as a whole-school rollout, but as a practical way for you and
+              your talmidim to work in one calm place.
             </p>
             <p className="mb-[18px]">
-              I am writing to share something we have been building with care,
-              and to ask whether Ohr Reuven would consider being the very first
-              school to use it.
+              Guide is a school platform for students and teachers: one secure
+              login, learning apps (starting with Amud), messaging, and a
+              simple class view. You apply as a teacher for your class; once
+              approved, you invite students and add the apps you want.
             </p>
             <p className="mb-[18px]">
-              <strong className="font-semibold text-[#152A20]">Guide</strong> is
-              a school platform for students and teachers: one calm place to
-              sign in, open learning apps, message, and stay organized. The idea
-              is simple—less friction getting into the tools that matter for
-              learning, and a clearer picture for the people guiding that
-              learning.
-            </p>
-            <p className="mb-[18px]">
-              We would be honored if{" "}
-              <strong className="font-semibold text-[#152A20]">
-                Yeshivas Ohr Reuven
-              </strong>{" "}
-              were our founding school. As the first school on Guide, your
-              access would be{" "}
-              <strong className="font-semibold text-[#152A20]">
-                entirely free
-              </strong>
-              . There is no pilot fee and no commitment beyond trying it
-              honestly with us and telling us what works for a real yeshiva
-              classroom and after-school routine.
+              There is <strong className="font-semibold text-[#152A20]">no fee</strong> for this
+              trial, and no ask for a public endorsement. We would simply value
+              your honest feedback on what helps a real classroom and
+              after-school chazarah—and what still needs work.
             </p>
           </div>
 
@@ -115,62 +105,46 @@ export default function OhrReuvenInvitePage() {
                 Amud is built for Mishnayos and Gemara. Talmidim can open a daf,
                 review, and <em>Test Yourself</em> with real
                 questions—including translation—so chazarah after school is
-                structured, not vague. Rebbeim can see progress as students
-                work.
+                structured, not vague. You can see progress as they work.
               </p>
               <p className="font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-[15px] leading-[1.6] text-[#3d6b52]">
-                Amud is available today. Additional apps will follow; teachers
-                choose what to add for each class from the Guide portal.
+                Amud is available today. You choose what to add for your class
+                from the Guide portal after approval.
               </p>
             </div>
           </div>
 
           <div className="px-6 pb-2 pt-7 text-[17px] leading-[1.7] text-[#2a3f34] sm:px-11">
             <p className="mb-3.5 text-[#152A20]">
-              <strong className="font-semibold">
-                What we are offering Ohr Reuven
-              </strong>
-            </p>
-            <p className="mb-3.5">
-              As the first school on Guide, you would receive:
+              <strong className="font-semibold">How to get started</strong>
             </p>
             <ul className="mb-[18px] list-disc space-y-2.5 pl-[22px]">
-              <li>Full use of Guide for your students and Rebbeim at no cost</li>
               <li>
-                Immediate access to Amud for Mishnayos and Gemara practice
+                Create a Guide account as Teacher or School Administrator
               </li>
               <li>
-                A direct line to our team so your feedback shapes what we build
-                next
+                Choose <strong>I’m a teacher — add my class</strong> (short form)
               </li>
-              <li>
-                Straightforward school onboarding, with student login by
-                password or badge
-              </li>
-              <li>Room to grow as we add more apps to the library</li>
+              <li>After approval, create your class and share the invite code</li>
+              <li>Add Amud (or other apps) for your students</li>
             </ul>
             <p className="mb-[18px]">
-              We are not asking for a press announcement or a public
-              endorsement. We are asking for a thoughtful trial with people who
-              take limud seriously—and who can tell us, plainly, where Guide
-              helps and where it still falls short.
-            </p>
-            <p className="mb-[18px]">
-              If this is of interest, the easiest next step is simply to open
-              Guide, or to reply to this email. We would gladly schedule a short
-              walkthrough at a time that works for the Hanhalah—on Zoom or in
-              person if that is preferred.
+              If this is of interest, the easiest next step is to open the
+              teacher apply page below—or reply to this email. We would gladly
+              schedule a short walkthrough at a time that works for you.
             </p>
           </div>
 
           <div className="px-6 pb-7 pt-5 text-center sm:px-11">
             <Link
-              href={GUIDE_URL}
+              href={TEACHER_APPLY_URL}
               className="inline-block bg-[#1b4332] px-[34px] py-[15px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-base font-semibold text-white no-underline"
             >
-              Visit Guide
+              Apply as a teacher
             </Link>
             <p className="mt-[18px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-sm leading-[1.55] text-[#5a7264]">
+              Teacher apply: guide-big-happy-smiley.vercel.app/education?as=teacher
+              <br />
               Guide: guide-big-happy-smiley.vercel.app
               <br />
               Amud: amud-big-happy-smiley.vercel.app
@@ -191,14 +165,19 @@ export default function OhrReuvenInvitePage() {
             <p className="font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-xs leading-[1.5] text-[#9bb0a3]">
               Guide — a school platform for learning apps
               <br />
-              This message is a private invitation to Yeshivas Ohr Reuven.
+              This message is a private invitation for a teacher at Yeshivas Ohr
+              Reuven.
             </p>
           </div>
         </article>
 
         <p className="mx-auto mt-5 max-w-[640px] select-none text-center font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-xs text-[#5a7264]">
+          <a href={TEACHER_APPLY_URL} className="font-semibold text-[#1b4332]">
+            Teacher apply
+          </a>
+          {" · "}
           <a href={GUIDE_URL} className="font-semibold text-[#1b4332]">
-            {GUIDE_URL}
+            Guide
           </a>
           {" · "}
           <a href={AMUD_URL} className="font-semibold text-[#1b4332]">

@@ -6,7 +6,8 @@ import { ensureProfile, requireProfile } from "@/lib/profile";
 import { profiles, schoolApplications } from "@/lib/schema";
 import { syncSchoolFromApplication } from "@/lib/schools";
 
-const submitSchema = z.object({
+const schoolSubmitSchema = z.object({
+  kind: z.literal("school"),
   schoolName: z.string().trim().min(2).max(200),
   contactName: z.string().trim().min(2).max(120),
   contactEmail: z.string().trim().email().max(254),
@@ -14,6 +15,20 @@ const submitSchema = z.object({
   studentCountEstimate: z.string().trim().min(1).max(64),
   intendedUse: z.string().trim().min(10).max(4000),
 });
+
+const teacherSubmitSchema = z.object({
+  kind: z.literal("teacher"),
+  contactName: z.string().trim().min(2).max(120),
+  contactEmail: z.string().trim().email().max(254),
+  className: z.string().trim().min(2).max(160),
+  schoolName: z.string().trim().max(200).optional().default(""),
+  note: z.string().trim().max(2000).optional().default(""),
+});
+
+const submitSchema = z.discriminatedUnion("kind", [
+  schoolSubmitSchema,
+  teacherSubmitSchema,
+]);
 
 const reviewSchema = z.object({
   applicationId: z.string().uuid(),
@@ -57,7 +72,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             error:
-              "You already have a pending school application. We will email you when it is reviewed.",
+              "You already have a pending application. We will email you when it is reviewed.",
             application: { id: existing.id, status: existing.status },
           },
           { status: 409 },
@@ -65,10 +80,42 @@ export async function POST(request: Request) {
       }
     }
 
+    if (body.kind === "teacher") {
+      const schoolLabel = body.schoolName.trim() || "Teacher class";
+      const note = body.note.trim();
+      const [application] = await db
+        .insert(schoolApplications)
+        .values({
+          kind: "teacher",
+          schoolName: schoolLabel,
+          className: body.className.trim(),
+          contactName: body.contactName,
+          contactEmail: body.contactEmail.toLowerCase(),
+          contactRole: "Teacher",
+          studentCountEstimate: "class",
+          intendedUse: note
+            ? `Teacher class: ${body.className.trim()}. ${note}`
+            : `Teacher class application for “${body.className.trim()}”.`,
+          status: "pending",
+          applicantProfileId: session?.profile.id ?? null,
+        })
+        .returning({
+          id: schoolApplications.id,
+          status: schoolApplications.status,
+          kind: schoolApplications.kind,
+          schoolName: schoolApplications.schoolName,
+          className: schoolApplications.className,
+        });
+
+      return NextResponse.json({ application }, { status: 201 });
+    }
+
     const [application] = await db
       .insert(schoolApplications)
       .values({
+        kind: "school",
         schoolName: body.schoolName,
+        className: null,
         contactName: body.contactName,
         contactEmail: body.contactEmail.toLowerCase(),
         contactRole: body.contactRole,
@@ -80,6 +127,7 @@ export async function POST(request: Request) {
       .returning({
         id: schoolApplications.id,
         status: schoolApplications.status,
+        kind: schoolApplications.kind,
         schoolName: schoolApplications.schoolName,
       });
 
@@ -130,7 +178,16 @@ export async function PATCH(request: Request) {
       .returning();
 
     if (body.status === "approved") {
-      await syncSchoolFromApplication(updated.id);
+      // School/district apply creates a school row. Teacher-class apply only
+      // when a real school name was provided (not the placeholder).
+      const shouldSyncSchool =
+        updated.kind === "school" ||
+        (updated.kind === "teacher" &&
+          updated.schoolName.trim().length > 0 &&
+          updated.schoolName !== "Teacher class");
+      if (shouldSyncSchool) {
+        await syncSchoolFromApplication(updated.id);
+      }
       if (updated.applicantProfileId) {
         const [profile] = await db
           .select()

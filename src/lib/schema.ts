@@ -180,10 +180,13 @@ export const supportTickets = pgTable("support_tickets", {
     .notNull(),
 });
 
-/** Schools apply for Guide; approve before teacher portal access. */
+/** Teacher-class or school applications; approve before teacher portal access. */
 export const schoolApplications = pgTable("school_applications", {
   id: uuid("id").defaultRandom().primaryKey(),
+  /** `teacher` = class apply; `school` = school/district apply */
+  kind: varchar("kind", { length: 24 }).notNull().default("school"),
   schoolName: varchar("school_name", { length: 200 }).notNull(),
+  className: varchar("class_name", { length: 160 }),
   contactName: varchar("contact_name", { length: 120 }).notNull(),
   contactEmail: varchar("contact_email", { length: 254 }).notNull(),
   contactRole: varchar("contact_role", { length: 120 }).notNull(),

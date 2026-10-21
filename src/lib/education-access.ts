@@ -37,6 +37,8 @@ export async function hasEducationAccess(profile: Profile): Promise<boolean> {
 export async function getApplicantEducationStatus(profileId: string): Promise<{
   status: SchoolApplicationStatus;
   schoolName?: string;
+  className?: string | null;
+  kind?: "teacher" | "school";
 }> {
   const db = getDb();
   const rows = await db
@@ -48,15 +50,27 @@ export async function getApplicantEducationStatus(profileId: string): Promise<{
 
   const approved = rows.find((r) => r.status === "approved");
   if (approved) {
-    return { status: "approved", schoolName: approved.schoolName };
+    return {
+      status: "approved",
+      schoolName: approved.schoolName,
+      className: approved.className,
+      kind: (approved.kind as "teacher" | "school") ?? "school",
+    };
   }
   const pending = rows.find((r) => r.status === "pending");
   if (pending) {
-    return { status: "pending", schoolName: pending.schoolName };
+    return {
+      status: "pending",
+      schoolName: pending.schoolName,
+      className: pending.className,
+      kind: (pending.kind as "teacher" | "school") ?? "school",
+    };
   }
   const rejected = rows.find((r) => r.status === "rejected");
   return {
     status: "rejected",
     schoolName: rejected?.schoolName,
+    className: rejected?.className,
+    kind: (rejected?.kind as "teacher" | "school") ?? "school",
   };
 }

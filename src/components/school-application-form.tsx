@@ -68,6 +68,7 @@ export function SchoolApplicationForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          kind: "school",
           schoolName,
           contactName,
           contactEmail,

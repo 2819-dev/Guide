@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 
 type Application = {
   id: string;
+  kind?: "teacher" | "school" | string;
   schoolName: string;
+  className?: string | null;
   contactName: string;
   contactEmail: string;
   contactRole: string;
@@ -16,6 +18,32 @@ type Application = {
   reviewedAt: string | null;
 };
 
+function applicationTitle(a: Application) {
+  if (a.kind === "teacher") {
+    return a.className?.trim()
+      ? `Class: ${a.className.trim()}`
+      : "Teacher class application";
+  }
+  return a.schoolName;
+}
+
+function applicationMeta(a: Application) {
+  if (a.kind === "teacher") {
+    const school =
+      a.schoolName && a.schoolName !== "Teacher class"
+        ? a.schoolName
+        : null;
+    return [
+      a.contactName,
+      a.contactEmail,
+      school ? `School: ${school}` : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+  }
+  return `${a.contactName} · ${a.contactEmail} · ${a.contactRole} · ${a.studentCountEstimate} students`;
+}
+
 export function AdminSchoolsPanel() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +52,7 @@ export function AdminSchoolsPanel() {
   async function load() {
     const res = await fetch("/api/education/applications");
     if (!res.ok) {
-      setError("Could not load school applications");
+      setError("Could not load applications");
       return;
     }
     const data = await res.json();
@@ -62,17 +90,18 @@ export function AdminSchoolsPanel() {
   return (
     <div className="space-y-6">
       <p className="text-sm text-ink-muted">
-        Approve a school so teachers can use Guide. Contact details are shown
-        here for review.
+        Approve teacher/class or school applications so educators can use
+        Guide. Contact details are shown here for review.
       </p>
 
       {error && <p className="text-sm text-red-700">{error}</p>}
 
       {applications.length === 0 ? (
         <div className="portal-empty">
-          <p className="portal-empty__title">No school applications yet</p>
+          <p className="portal-empty__title">No applications yet</p>
           <p className="portal-empty__body">
-            New applications appear here when a school applies for Guide.
+            Teacher-class and school applications appear here when educators
+            apply for Guide.
           </p>
         </div>
       ) : (
@@ -84,14 +113,14 @@ export function AdminSchoolsPanel() {
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
-                        Pending
+                        Pending ·{" "}
+                        {a.kind === "teacher" ? "Teacher / class" : "School"}
                       </p>
                       <h3 className="display mt-1 text-xl font-semibold text-forest-950">
-                        {a.schoolName}
+                        {applicationTitle(a)}
                       </h3>
                       <p className="mt-1 text-sm text-ink-muted">
-                        {a.contactName} · {a.contactEmail} · {a.contactRole} ·{" "}
-                        {a.studentCountEstimate} students
+                        {applicationMeta(a)}
                       </p>
                       <p className="mt-1 text-xs text-ink-muted">
                         Submitted {new Date(a.createdAt).toLocaleString()}
@@ -132,10 +161,12 @@ export function AdminSchoolsPanel() {
                   <li key={a.id} className="portal-panel !py-3">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                       <p className="font-semibold text-forest-950">
-                        {a.schoolName}
+                        {applicationTitle(a)}
                       </p>
                       <p className="text-xs font-semibold uppercase text-forest-700">
                         {a.status}
+                        {" · "}
+                        {a.kind === "teacher" ? "Teacher" : "School"}
                       </p>
                     </div>
                     <p className="mt-1 text-sm text-ink-muted">
