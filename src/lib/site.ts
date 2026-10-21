@@ -24,12 +24,9 @@ export function amudPublicUrl(): string {
   return raw;
 }
 
-/** Guide school platform URL (canonical production: guidelearning.org). */
+/** Guide school platform URL (canonical: https://guidelearning.org on Cloudflare Pages). */
 export function guidePublicUrl(): string {
   const raw = process.env.NEXT_PUBLIC_GUIDE_URL?.replace(/\/$/, "") ?? "";
   return raw || "https://guidelearning.org";
 }
 
-/** vercel.app fallback still valid while DNS propagates. */
-export const GUIDE_VERCEL_FALLBACK_URL =
-  "https://guide-big-happy-smiley.vercel.app";
