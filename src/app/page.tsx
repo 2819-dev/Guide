@@ -52,8 +52,8 @@ function GuideHomePage() {
               schools
             </h1>
             <p className="hero-lede">
-              One secure place for students and teachers to open learning apps,
-              message, and stay in sync.
+              A unified school identity that grants quick access, keeps student
+              and school data safeguarded, and helps classrooms move faster.
             </p>
 
             <div className="hero-cta-stack">
@@ -83,7 +83,7 @@ function GuideHomePage() {
 
           <div className="hero-visual-panel" aria-hidden>
             <p className="hero-visual-panel__caption">
-              Students and teachers. One place to open learning apps.
+              Students and teachers — one place to open learning apps.
             </p>
           </div>
         </div>
@@ -94,10 +94,9 @@ function GuideHomePage() {
         <div className="content-band clever-intro__inner">
           <h2 className="display-section">What is Guide?</h2>
           <p className="clever-intro__body">
-            Guide is the identity platform for schools. Students log in once and
-            open the apps their teachers add. Teachers manage classes after a
-            school invite. Administrators apply for a school; Guide Official
-            approves.
+            Guide’s identity platform, designed for schools, lets administrators
+            secure school accounts, teachers manage classes after an invite, and
+            students open the apps they need from one portal.
           </p>
         </div>
       </section>
@@ -193,14 +192,14 @@ function GuideHomePage() {
       <section className="clever-feature clever-feature--alt">
         <div className="content-band clever-feature__grid clever-feature__grid--flip">
           <div className="clever-feature__copy">
-            <h2 className="display-feature">Built for school teams</h2>
+            <h2 className="display-feature">One place that works for schools</h2>
             <p className="clever-feature__body">
-              School and district administrators apply once, then invite
-              teachers by email. Verified developers partner with Guide after
-              Official review — not a public marketplace.
+              Connect school accounts, classes, and learning apps in one
+              centralized platform — so teachers invite, students open apps, and
+              administrators stay in control.
             </p>
-            <Link href="/schools/meeting" className="clever-feature__link">
-              Book a meeting
+            <Link href="/education#apply" className="clever-feature__link">
+              Apply for your school
               <span aria-hidden>→</span>
             </Link>
           </div>
@@ -214,6 +213,33 @@ function GuideHomePage() {
               <span className="feature-scene__row feature-scene__row--accent" />
             </div>
             <span className="clever-feature__mark">04</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="clever-feature">
+        <div className="content-band clever-feature__grid">
+          <div
+            className="clever-feature__visual clever-feature__visual--frame-e"
+            aria-hidden
+          >
+            <div className="feature-scene feature-scene--secure">
+              <span className="feature-scene__lock" />
+              <span className="feature-scene__secure-label">School-ready</span>
+            </div>
+            <span className="clever-feature__mark">05</span>
+          </div>
+          <div className="clever-feature__copy">
+            <h2 className="display-feature">Built for school teams</h2>
+            <p className="clever-feature__body">
+              School and district administrators apply once, then invite
+              teachers by email. Verified developers partner with Guide after
+              Official review — not a public marketplace.
+            </p>
+            <Link href="/schools/meeting" className="clever-feature__link">
+              Book a meeting
+              <span aria-hidden>→</span>
+            </Link>
           </div>
         </div>
       </section>

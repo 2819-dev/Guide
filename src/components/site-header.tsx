@@ -106,7 +106,13 @@ export function SiteHeader() {
               <SignOutButton />
             </>
           ) : (
-            <LoginMenu variant="primary" />
+            <>
+              {/* Clever-minimal logged-out: Education · Log In */}
+              <Link href="/education" className={`${navLink} hidden sm:inline`}>
+                Education
+              </Link>
+              <LoginMenu variant="primary" />
+            </>
           )}
         </nav>
       </div>

@@ -4,7 +4,7 @@ import { FIRST_APP_NAME } from "@/lib/apps";
 import { amudPublicUrl } from "@/lib/site";
 
 /**
- * Clever footer density — 5 columns + forest legal bar.
+ * Clever footer density — follow strip + 5 columns + forest legal bar.
  * Guide school language only (no Clever trademarks).
  */
 export function SiteFooter() {
@@ -12,13 +12,18 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-line bg-paper">
-      <div className="content-band py-14 sm:py-16">
+      <div className="content-band site-footer-upper">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <GuideWordmark href="/" size="md" />
           <p className="text-sm text-ink-muted">
             The identity platform for schools
           </p>
         </div>
+
+        <p className="site-footer-follow">
+          Contact ·{" "}
+          <a href="mailto:hello@guidelearning.org">hello@guidelearning.org</a>
+        </p>
 
         <div className="site-footer-cols">
           <div>
@@ -52,6 +57,14 @@ export function SiteFooter() {
                   Teacher log in
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/auth/sign-in?as=educator"
+                  className="site-footer-link"
+                >
+                  School administrator log in
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -76,6 +89,11 @@ export function SiteFooter() {
                   Account
                 </Link>
               </li>
+              <li>
+                <Link href="/apps" className="site-footer-link">
+                  My apps
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -96,6 +114,11 @@ export function SiteFooter() {
                 <a href={amudHref} className="site-footer-link">
                   {FIRST_APP_NAME}
                 </a>
+              </li>
+              <li>
+                <Link href="/education" className="site-footer-link">
+                  School identity
+                </Link>
               </li>
               <li>
                 <Link
@@ -124,6 +147,11 @@ export function SiteFooter() {
                   Partner log in
                 </Link>
               </li>
+              <li>
+                <Link href="/developer" className="site-footer-link">
+                  Developer portal
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -140,8 +168,13 @@ export function SiteFooter() {
                   href="mailto:hello@guidelearning.org"
                   className="site-footer-link"
                 >
-                  hello@guidelearning.org
+                  Contact
                 </a>
+              </li>
+              <li>
+                <Link href="/invite/ohr-reuven" className="site-footer-link">
+                  School invites
+                </Link>
               </li>
             </ul>
           </div>
@@ -152,8 +185,9 @@ export function SiteFooter() {
         <div className="content-band site-footer-legal__inner">
           <p>Copyright © 2026 Guide</p>
           <p className="flex flex-wrap gap-x-4 gap-y-1">
-            <span>School identity platform</span>
-            <a href="mailto:hello@guidelearning.org">Contact</a>
+            <a href="mailto:hello@guidelearning.org">Terms</a>
+            <a href="mailto:hello@guidelearning.org">Privacy</a>
+            <a href="mailto:hello@guidelearning.org">Accessibility</a>
           </p>
         </div>
       </div>
