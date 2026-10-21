@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { JoinClass } from "@/components/join-class";
 import { RoleBadgeChip } from "@/components/role-badge-chip";
 import { StudentBadgePanel } from "@/components/student-badge-panel";
@@ -62,7 +61,6 @@ export default async function AccountPage() {
 
   return (
     <div className="portal-page">
-      <GuideBrandBanner variant="strip" />
       <div className="content-band portal-page__inner max-w-3xl space-y-8">
       <p className="text-sm">
         <Link href={backHref} className="font-semibold text-forest-800">

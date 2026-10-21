@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { AmudHomePage } from "@/components/amud-home";
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { FIRST_APP_NAME, appHomePath } from "@/lib/apps";
 import { amudPublicUrl, isAmudSite } from "@/lib/site";
 
@@ -57,7 +56,10 @@ function GuideHomePage() {
             </div>
           </div>
 
-          <GuideBrandBanner variant="panel" priority />
+          <div
+            className="hero-visual-panel"
+            aria-hidden
+          />
         </div>
       </section>
 

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { FIRST_APP_NAME, publicStudyIndexPath, publicStudyPath } from "@/lib/apps";
 import { getFeaturedTractate } from "@/lib/tractates";
 
@@ -12,7 +11,6 @@ export function AmudHomePage() {
 
   return (
     <div>
-      <GuideBrandBanner variant="strip" priority />
       <section className="hero-band">
         <div className="content-band py-16 text-center sm:py-20">
           <p className="display-hero mx-auto">{FIRST_APP_NAME}</p>

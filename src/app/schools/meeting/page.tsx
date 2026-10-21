@@ -1,4 +1,3 @@
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { MeetingRequestForm } from "@/components/meeting-request-form";
 
 export const runtime = "edge";
@@ -11,7 +10,6 @@ export const metadata = {
 export default function BookMeetingPage() {
   return (
     <div className="portal-page">
-      <GuideBrandBanner variant="strip" priority />
       <div className="content-band portal-page__inner max-w-2xl">
         <MeetingRequestForm />
       </div>

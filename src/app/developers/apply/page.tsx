@@ -1,5 +1,4 @@
 import { DeveloperApplyForm } from "@/components/developer-apply-form";
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import Link from "next/link";
 
 export const runtime = "edge";
@@ -17,7 +16,6 @@ export const metadata = {
 export default function DeveloperApplyPage() {
   return (
     <div className="portal-page">
-      <GuideBrandBanner variant="strip" priority />
       <div className="content-band portal-page__inner max-w-2xl">
         <DeveloperApplyForm />
         <p className="mt-4 text-sm text-ink-muted">

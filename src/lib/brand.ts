@@ -1,9 +1,9 @@
 /**
- * Shared Guide brand art — blue grain banner with white “Guide” wordmark
- * and white diagonal cut (bottom-right).
+ * Guide banner art — **invite / email only**.
+ * Do not use on homepage, portals, auth, Amud, apps, or other product surfaces.
  *
  * Canonical store copy: /cursor/stores/self/media/brand/guide-banner.jpg
- * App static path (prefer this everywhere in the web app):
+ * App static path for invite HTML + transactional email:
  */
 export const GUIDE_BANNER_SRC = "/brand/guide-banner.jpg" as const;
 

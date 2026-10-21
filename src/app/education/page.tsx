@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { EducationApply } from "@/components/education-apply";
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import {
   getApplicantEducationStatus,
   hasEducationAccess,
@@ -41,7 +40,6 @@ export default async function EducationLandingPage() {
 
     return (
       <div className="portal-page">
-        <GuideBrandBanner variant="strip" />
         <div className="content-band portal-page__inner max-w-2xl">
           <header className="portal-hero !border-0 !pb-0">
             <p className="portal-eyebrow">School administrator</p>
@@ -82,7 +80,6 @@ export default async function EducationLandingPage() {
 
   return (
     <div className="portal-page">
-      <GuideBrandBanner variant="strip" />
       <section className="bg-paper">
         <div className="content-band py-12 text-center sm:py-14">
           <p className="eyebrow">For schools</p>

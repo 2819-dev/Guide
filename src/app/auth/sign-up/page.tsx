@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AuthCard } from "@/components/auth-card";
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { GuideWordmark } from "@/components/guide-logo";
 import { SchoolPickerField } from "@/components/school-picker-field";
 import { parseLoginAs, signupAsCopy } from "@/lib/login-roles";
@@ -149,7 +148,6 @@ function SignUpForm() {
 export default function SignUpPage() {
   return (
     <div className="auth-shell flex min-h-screen flex-col">
-      <GuideBrandBanner variant="strip" priority />
       <div className="flex items-center px-6 py-5 sm:px-8">
         <GuideWordmark href="/" size="lg" />
       </div>

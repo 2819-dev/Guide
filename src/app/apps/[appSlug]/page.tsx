@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 import { TractatePicker } from "@/components/tractate-picker";
 import { FIRST_APP_SLUG, getApp } from "@/lib/apps";
 
@@ -26,7 +25,6 @@ export default async function AppHomePage({ params }: Props) {
 
   return (
     <div>
-      <GuideBrandBanner variant="strip" />
       <section className="hero-band">
         <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
           <h1 className="display text-3xl text-forest-950 sm:text-4xl">

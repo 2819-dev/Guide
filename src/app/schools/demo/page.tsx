@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 
 export const runtime = "edge";
 
@@ -13,7 +12,6 @@ export const metadata = {
 export default function SchoolDemoPage() {
   return (
     <div className="portal-page">
-      <GuideBrandBanner variant="strip" priority />
 
       <div className="demo-narrow-gate content-band">
         <p className="eyebrow">For schools</p>

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { GuideBrandBanner } from "@/components/guide-brand-banner";
 
 export type PortalChip = {
   href: string;
@@ -20,8 +19,8 @@ type Props = {
 };
 
 /**
- * Shared portal chrome: Guide banner + top tabs for every role.
- * Apps stay in-page — never the site header.
+ * Shared portal chrome: top tabs for every role.
+ * Apps stay in-page — never the site header. Banner is invite-only.
  */
 export function PortalShell({
   eyebrow,
@@ -34,7 +33,6 @@ export function PortalShell({
 }: Props) {
   return (
     <div className="portal-page">
-      <GuideBrandBanner variant="strip" priority />
       <div className="content-band portal-page__inner">
         {backHref ? (
           <p className="mb-4">
