@@ -1081,6 +1081,7 @@ body {
   position: relative;
   z-index: 1;
   display: none;
+  width: 100%;
   min-height: 300px;
   margin-top: 0.35rem;
   border-radius: 12px;
@@ -1096,9 +1097,11 @@ body {
   .hero-visual-panel {
     display: block;
     /* Clever photo ~430×320 scale */
+    width: 100%;
     min-height: 340px;
     max-width: 28rem;
     margin-left: auto;
+    align-self: start;
   }
 }
 

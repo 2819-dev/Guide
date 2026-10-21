@@ -52,8 +52,8 @@ function GuideHomePage() {
               schools
             </h1>
             <p className="hero-lede">
-              A unified school identity that grants quick access, keeps student
-              and school data safeguarded, and helps classrooms move faster.
+              One secure place for students and teachers to open learning apps,
+              message, and stay in sync — without cluttering the top bar.
             </p>
 
             <div className="hero-cta-stack">
@@ -94,9 +94,10 @@ function GuideHomePage() {
         <div className="content-band clever-intro__inner">
           <h2 className="display-section">What is Guide?</h2>
           <p className="clever-intro__body">
-            Guide’s identity platform, designed for schools, lets administrators
-            secure school accounts, teachers manage classes after an invite, and
-            students open the apps they need from one portal.
+            Guide is the identity platform for schools. Students log in once and
+            open the apps their teachers add. Teachers manage classes after a
+            school invite. Administrators apply for a school; Guide Official
+            approves.
           </p>
         </div>
       </section>
