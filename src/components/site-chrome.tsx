@@ -10,10 +10,11 @@ import { isAmudSite } from "@/lib/site";
 /** Picks Guide school chrome vs public Amud chrome. Auth is full-bleed (Clever login). */
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "";
-  const bareAuth = pathname.startsWith("/auth/");
+  const bare =
+    pathname.startsWith("/auth/") || pathname.startsWith("/invite/");
 
   if (isAmudSite()) {
-    if (bareAuth) {
+    if (bare) {
       return <main className="flex-1">{children}</main>;
     }
     return (
@@ -25,7 +26,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (bareAuth) {
+  if (bare) {
     return <main className="flex-1">{children}</main>;
   }
 
