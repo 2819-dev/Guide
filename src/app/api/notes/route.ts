@@ -7,6 +7,8 @@ import { requireProfile } from "@/lib/profile";
 import { studyNotes } from "@/lib/schema";
 import { getFeaturedTractate, getTractate } from "@/lib/tractates";
 
+export const runtime = 'edge';
+
 const postSchema = z.object({
   dafId: z.string().min(2).max(8),
   tractateSlug: z.string().optional(),

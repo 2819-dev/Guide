@@ -5,6 +5,8 @@ import { getDb } from "@/lib/db";
 import { requireProfile } from "@/lib/profile";
 import { schools } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 /** Activate or refresh Clever-style badge login for the current student. */
 export async function POST() {
   const authz = await requireProfile();

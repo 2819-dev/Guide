@@ -14,6 +14,8 @@ import {
   roleBadges,
 } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 /** List Discord-style roles + people for assignment. */
 export async function GET() {
   const authz = await requireProfile(["admin", "moderator"]);

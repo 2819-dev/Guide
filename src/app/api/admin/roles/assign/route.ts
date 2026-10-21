@@ -5,6 +5,8 @@ import { getDb } from "@/lib/db";
 import { requireProfile } from "@/lib/profile";
 import { profiles, roleBadgeAssignments, roleBadges } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 const schema = z.object({
   roleBadgeId: z.string().uuid(),
   profileId: z.string().uuid(),

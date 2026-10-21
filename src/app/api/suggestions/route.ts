@@ -6,6 +6,8 @@ import { requireProfile } from "@/lib/profile";
 import { suggestions } from "@/lib/schema";
 import { isStudentSuggestionsBlocked } from "@/lib/suggestions-access";
 
+export const runtime = 'edge';
+
 const createSchema = z.object({
   title: z.string().trim().min(2).max(200),
   body: z.string().trim().min(4).max(8000),

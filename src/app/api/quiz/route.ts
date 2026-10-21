@@ -9,6 +9,8 @@ import { fetchDafText } from "@/lib/sefaria";
 import { progress, quizSessions, studyNotes } from "@/lib/schema";
 import { getFeaturedTractate, getTractate } from "@/lib/tractates";
 
+export const runtime = 'edge';
+
 const startSchema = z.object({
   dafId: z.string(),
   tractateSlug: z.string().optional(),

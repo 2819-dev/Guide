@@ -6,6 +6,8 @@ import { publicStudentCode } from "@/lib/roles";
 import { requireProfile } from "@/lib/profile";
 import { supportTickets } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 function ticketNumber() {
   const n = Date.now().toString(36).toUpperCase();
   return `G-${n.slice(-8)}`;

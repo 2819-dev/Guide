@@ -1,7 +1,7 @@
 import { TractatePicker } from "@/components/tractate-picker";
 import { FIRST_APP_NAME } from "@/lib/apps";
 
-export const instant = false;
+export const runtime = 'edge';
 
 export const metadata = {
   title: "Choose what to learn",

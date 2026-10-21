@@ -6,6 +6,8 @@ import { ensureProfile, requireProfile } from "@/lib/profile";
 import { profiles, schoolApplications } from "@/lib/schema";
 import { syncSchoolFromApplication } from "@/lib/schools";
 
+export const runtime = 'edge';
+
 const schoolSubmitSchema = z.object({
   kind: z.literal("school"),
   schoolName: z.string().trim().min(2).max(200),

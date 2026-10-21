@@ -12,6 +12,8 @@ import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 import { classrooms } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 /** Catalog + per-class installs for the signed-in teacher. */
 export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);

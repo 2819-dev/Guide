@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { requireProfile } from "@/lib/profile";
 
-export const instant = false;
+export const runtime = 'edge';
+
 export const metadata = { title: "Guide Official" };
 
 /** Clever-style Official portal alias → /admin. */

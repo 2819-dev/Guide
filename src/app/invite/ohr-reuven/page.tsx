@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { guidePublicUrl } from "@/lib/site";
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
   title: "Invitation to try Guide for your class · Guide",
   description:

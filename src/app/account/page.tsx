@@ -15,7 +15,8 @@ import { schools } from "@/lib/schema";
 import { hasEducationAccess } from "@/lib/education-access";
 import { isAmudSite } from "@/lib/site";
 
-export const instant = false;
+export const runtime = 'edge';
+
 export const metadata = { title: "Account" };
 
 export default async function AccountPage() {

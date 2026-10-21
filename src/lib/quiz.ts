@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { randomUUID } from "@/lib/edge-crypto";
 import type { QuizQuestionRecord } from "./schema";
 import type { QuizKind } from "./quiz-kinds";
 

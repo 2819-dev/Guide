@@ -11,6 +11,8 @@ import {
   suggestionBlocks,
 } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 const upsertSchema = z.object({
   classroomId: z.string().uuid(),
   studentId: z.string().uuid().nullable(),

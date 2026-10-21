@@ -3,7 +3,8 @@ import { PortalShell } from "@/components/portal-shell";
 import { StudentMessages } from "@/components/student-messages";
 import { requireProfile } from "@/lib/profile";
 
-export const instant = false;
+export const runtime = 'edge';
+
 export const metadata = { title: "Messages" };
 
 export default async function StudentMessagesPage() {

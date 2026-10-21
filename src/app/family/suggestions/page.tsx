@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-export const instant = false;
+export const runtime = 'edge';
 
 export default function FamilySuggestionsRemoved() {
   redirect("/student/suggestions");

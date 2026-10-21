@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { APP_CATALOG, appHomePath } from "@/lib/apps";
 
-export const instant = false;
+export const runtime = 'edge';
+
 export const metadata = {
   title: "Apps",
   description: "Guide app library — add apps to your class for students.",

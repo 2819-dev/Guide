@@ -5,6 +5,8 @@ import { FIRST_APP_NAME } from "@/lib/apps";
 import { isAmudSite } from "@/lib/site";
 import "./globals.css";
 
+export const runtime = 'edge';
+
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
@@ -36,7 +38,11 @@ export const metadata: Metadata = amud
         "Guide — the identity platform for schools. Portals, learning apps, and classroom tools.",
     };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-export const instant = false;
+export const runtime = 'edge';
 
 export default function SignUpLayout({
   children,

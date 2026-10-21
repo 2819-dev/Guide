@@ -5,7 +5,7 @@ import { FIRST_APP_SLUG, getApp, studyIndexPath, studyPath } from "@/lib/apps";
 import { parseDafId } from "@/lib/daf";
 import { getFeaturedTractate, getTractate } from "@/lib/tractates";
 
-export const instant = false;
+export const runtime = 'edge';
 
 type Props = {
   params: Promise<{ appSlug: string; tractate: string }>;

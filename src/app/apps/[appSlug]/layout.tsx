@@ -4,7 +4,7 @@ import { AppWordmark } from "@/components/app-wordmark";
 import { FIRST_APP_SLUG, getApp, studyIndexPath } from "@/lib/apps";
 import { isAmudSite } from "@/lib/site";
 
-export const instant = false;
+export const runtime = 'edge';
 
 type Props = {
   children: React.ReactNode;

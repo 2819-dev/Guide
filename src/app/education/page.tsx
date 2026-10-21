@@ -6,7 +6,7 @@ import {
 } from "@/lib/education-access";
 import { ensureProfile } from "@/lib/profile";
 
-export const instant = false;
+export const runtime = 'edge';
 
 export const metadata = {
   title: "Apply for Guide",

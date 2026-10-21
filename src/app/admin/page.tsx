@@ -7,7 +7,8 @@ import { AdminSupportPanel } from "@/components/admin-support-panel";
 import { PortalShell } from "@/components/portal-shell";
 import { requireProfile } from "@/lib/profile";
 
-export const instant = false;
+export const runtime = 'edge';
+
 export const metadata = { title: "Guide Official" };
 
 export default async function AdminPage() {

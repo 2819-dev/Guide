@@ -7,6 +7,8 @@ import { requireProfile } from "@/lib/profile";
 import { progress } from "@/lib/schema";
 import { getFeaturedTractate, getTractate } from "@/lib/tractates";
 
+export const runtime = 'edge';
+
 export async function GET(request: Request) {
   const authz = await requireProfile(["customer", "rebbe", "admin"]);
   if (!authz) {

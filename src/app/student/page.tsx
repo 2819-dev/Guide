@@ -11,7 +11,8 @@ import { listRolesForProfile } from "@/lib/role-badges";
 import { schools } from "@/lib/schema";
 import { isStudentSuggestionsBlocked } from "@/lib/suggestions-access";
 
-export const instant = false;
+export const runtime = 'edge';
+
 export const metadata = { title: "Student portal" };
 
 export default async function StudentHubPage() {

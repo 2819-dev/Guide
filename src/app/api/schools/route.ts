@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { listSchools } from "@/lib/schools";
 
+export const runtime = 'edge';
+
 /** Public list of approved schools for Clever-style student login. */
 export async function GET(request: Request) {
   try {

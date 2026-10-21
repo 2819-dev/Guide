@@ -10,6 +10,8 @@ import { ensureProfile, requireProfile } from "@/lib/profile";
 import { isRole } from "@/lib/roles";
 import { profiles } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 export async function GET() {
   const result = await ensureProfile();
   if (!result) {

@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 
-export const instant = false;
+export const runtime = 'edge';
+
 export const metadata = { title: "Teacher portal" };
 
 /** Clever-style teacher portal alias → Education panel. */

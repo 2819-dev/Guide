@@ -3,6 +3,8 @@ import { FIRST_APP_NAME, appHomePath, studyIndexPath, studyPath } from "@/lib/ap
 import { amudPublicUrl, isAmudSite } from "@/lib/site";
 import { getFeaturedTractate } from "@/lib/tractates";
 
+export const runtime = 'edge';
+
 export default function HomePage() {
   if (isAmudSite()) {
     return <AmudHomePage />;

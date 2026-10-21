@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from "crypto";
+import { randomBytes, sha256HexSync } from "@/lib/edge-crypto";
 
 const BADGE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
@@ -28,9 +28,9 @@ export function badgeAuthEmail(schoolSlug: string, badgeCode: string): string {
 
 /** Stable display id for printing (not a secret beyond the code itself). */
 export function badgeDisplayId(schoolSlug: string, badgeCode: string): string {
-  const digest = createHash("sha256")
-    .update(`${schoolSlug}:${normalizeBadgeCode(badgeCode)}`)
-    .digest("hex")
+  const digest = sha256HexSync(
+    `${schoolSlug}:${normalizeBadgeCode(badgeCode)}`,
+  )
     .slice(0, 6)
     .toUpperCase();
   return `${normalizeBadgeCode(badgeCode)}-${digest}`;

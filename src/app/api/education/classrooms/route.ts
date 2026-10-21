@@ -14,6 +14,8 @@ import {
   profiles,
 } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {

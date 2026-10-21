@@ -3,7 +3,7 @@ import { FIRST_APP_SLUG, studyPath } from "@/lib/apps";
 import { parseDafId } from "@/lib/daf";
 import { getFeaturedTractate } from "@/lib/tractates";
 
-export const instant = false;
+export const runtime = 'edge';
 
 type Props = {
   params: Promise<{ tractate: string }>;

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { TractatePicker } from "@/components/tractate-picker";
 import { FIRST_APP_SLUG, getApp } from "@/lib/apps";
 
-export const instant = false;
+export const runtime = 'edge';
 
 type Props = {
   params: Promise<{ appSlug: string }>;

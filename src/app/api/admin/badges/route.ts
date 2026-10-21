@@ -6,6 +6,8 @@ import { getDb } from "@/lib/db";
 import { requireProfile } from "@/lib/profile";
 import { profiles, schools } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 const createSchema = z.object({
   displayName: z.string().trim().min(2).max(120),
   schoolId: z.string().uuid(),

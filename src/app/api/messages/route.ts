@@ -11,6 +11,8 @@ import {
   profiles,
 } from "@/lib/schema";
 
+export const runtime = 'edge';
+
 const startSchema = z.object({
   teacherId: z.string().uuid(),
   body: z.string().trim().min(1).max(4000),

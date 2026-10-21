@@ -3,7 +3,8 @@ import { PortalShell } from "@/components/portal-shell";
 import { StudentSuggestionsPad } from "@/components/student-suggestions";
 import { requireProfile } from "@/lib/profile";
 
-export const instant = false;
+export const runtime = 'edge';
+
 export const metadata = { title: "Suggestions" };
 
 export default async function StudentSuggestionsPage() {

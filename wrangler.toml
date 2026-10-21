@@ -1,0 +1,8 @@
+# Cloudflare Pages project (NOT a Workers `wrangler deploy` app).
+# Git-connected Pages builds use: npx @cloudflare/next-on-pages@1
+# Output directory for Pages: .vercel/output/static
+
+name = "guide"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"

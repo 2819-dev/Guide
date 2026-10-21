@@ -4,7 +4,8 @@ import { PortalShell } from "@/components/portal-shell";
 import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 
-export const instant = false;
+export const runtime = 'edge';
+
 export const metadata = { title: "Teacher portal" };
 
 export default async function EducationPanelPage() {

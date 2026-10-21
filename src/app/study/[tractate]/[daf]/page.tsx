@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { studyPath } from "@/lib/apps";
 
-export const instant = false;
+export const runtime = 'edge';
 
 type Props = {
   params: Promise<{ tractate: string; daf: string }>;

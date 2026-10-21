@@ -6,7 +6,7 @@ import { adjacentDaf, resolveTractateAndDaf } from "@/lib/daf";
 import { ensureProfile } from "@/lib/profile";
 import { fetchDafText } from "@/lib/sefaria";
 
-export const instant = false;
+export const runtime = 'edge';
 
 type Props = {
   params: Promise<{ appSlug: string; tractate: string; daf: string }>;
