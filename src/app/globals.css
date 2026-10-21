@@ -481,6 +481,7 @@ body {
   letter-spacing: -0.02em;
   line-height: 1.2;
   color: #111;
+  white-space: nowrap;
 }
 
 .hero-link-card__arrow {
