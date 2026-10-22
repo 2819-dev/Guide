@@ -1,8 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { TractatePicker } from "@/components/tractate-picker";
-import { FIRST_APP_SLUG, getApp } from "@/lib/apps";
+import { FIRST_APP_SLUG, getApp, isExternalLaunchApp } from "@/lib/apps";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 type Props = {
   params: Promise<{ appSlug: string }>;
@@ -19,6 +19,12 @@ export default async function AppHomePage({ params }: Props) {
   const { appSlug } = await params;
   const app = getApp(appSlug);
   if (!app) notFound();
+
+  // External apps (Arcade): shim → launch bridge → subdomain product home.
+  // Do not render a Guide-hosted Arcade surface here.
+  if (isExternalLaunchApp(app)) {
+    redirect(`/api/apps/launch?slug=${encodeURIComponent(app.slug)}`);
+  }
 
   // First app = Mishnayos/Gemara learning surface
   if (appSlug !== FIRST_APP_SLUG) notFound();

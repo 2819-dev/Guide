@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { appHomePath, type GuideApp } from "@/lib/apps";
+import { appOpenHref, type GuideApp } from "@/lib/apps";
 
 type Classroom = { id: string; name: string };
 
@@ -89,8 +89,11 @@ export function TeacherAppsPanel() {
                   </div>
                 </div>
                 <a
-                  href={appHomePath(app.slug)}
+                  href={appOpenHref(app)}
                   className="btn-secondary !py-2 text-sm"
+                  {...(app.launchUrl
+                    ? { rel: "noopener noreferrer" }
+                    : {})}
                 >
                   Open app
                 </a>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { AppWordmark } from "@/components/app-wordmark";
-import { FIRST_APP_SLUG, getApp } from "@/lib/apps";
+import { FIRST_APP_SLUG, getApp, isExternalLaunchApp } from "@/lib/apps";
 import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 
 export const runtime = "edge";
@@ -15,6 +15,11 @@ export default async function AppShellLayout({ children, params }: Props) {
   const { appSlug } = await params;
   const app = getApp(appSlug);
   if (!app) notFound();
+
+  // External apps (Arcade): no Guide app chrome — launch bridge handles open.
+  if (isExternalLaunchApp(app)) {
+    redirect(`/api/apps/launch?slug=${encodeURIComponent(app.slug)}`);
+  }
 
   // On the dedicated Amud deploy, learning lives at /learn — not under /apps.
   if (isAmudSite() && appSlug === FIRST_APP_SLUG) {

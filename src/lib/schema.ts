@@ -396,6 +396,23 @@ export const classroomAppInstalls = pgTable(
   ],
 );
 
+/**
+ * One-time launch tokens for Guide → external app (Arcade) handoff.
+ * JWT jti is stored here so exchange can reject reuse.
+ */
+export const appLaunchTokens = pgTable("app_launch_tokens", {
+  jti: varchar("jti", { length: 80 }).primaryKey(),
+  profileId: uuid("profile_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  appSlug: varchar("app_slug", { length: 64 }).notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  redeemedAt: timestamp("redeemed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 /** School demo “Book a meeting” requests — Guide Official reviews. */
 export const meetingRequests = pgTable("meeting_requests", {
   id: uuid("id").defaultRandom().primaryKey(),

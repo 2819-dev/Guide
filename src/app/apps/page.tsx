@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { APP_CATALOG, appHomePath } from "@/lib/apps";
+import { APP_CATALOG, appOpenHref } from "@/lib/apps";
 
 export const runtime = 'edge';
 
@@ -24,7 +24,7 @@ export default function AppsLibraryPage() {
         <ul className="grid gap-4 sm:grid-cols-2">
           {APP_CATALOG.map((app) => (
             <li key={app.slug}>
-              <Link href={appHomePath(app.slug)} className="portal-tile">
+              <Link href={appOpenHref(app)} className="portal-tile">
                 <p className="text-2xl font-semibold tracking-tight text-forest-950">
                   {app.name}
                 </p>
