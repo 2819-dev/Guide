@@ -18,9 +18,15 @@ export async function POST(request: Request) {
       releaseDate: HOME_HERO_RELEASE_DATE,
     });
     if (!result.ok) {
+      const msg = result.error || "Could not send";
+      const clientIssue = /invalid|email|to field/i.test(msg);
       return NextResponse.json(
-        { error: result.error || "Could not send" },
-        { status: 502 },
+        {
+          error: clientIssue
+            ? "Enter a valid school or work email."
+            : msg,
+        },
+        { status: clientIssue ? 400 : 502 },
       );
     }
     return NextResponse.json({
