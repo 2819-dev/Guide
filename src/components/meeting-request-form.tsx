@@ -17,13 +17,13 @@ export function MeetingRequestForm() {
   if (done) {
     return (
       <div className="portal-panel">
-        <p className="portal-eyebrow">Book a meeting</p>
-        <h2 className="display-feature mt-1">Request received</h2>
-        <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
-          Thanks — Guide Official will review your request and follow up by
-          email. Meanwhile you can explore the demo or start a school
-          application.
-        </p>
+        <div className="portal-empty !border-0 !bg-transparent !p-0 !shadow-none">
+          <p className="portal-empty__title">Request received</p>
+          <p className="portal-empty__body">
+            Guide Official will review your request and follow up by email.
+            Meanwhile try the interactive demo or start a school application.
+          </p>
+        </div>
         <p className="mt-5 flex flex-wrap gap-3 text-sm font-semibold text-forest-800">
           <Link href="/schools/demo">View demo →</Link>
           <Link href="/education#apply">Apply for your school →</Link>
@@ -62,11 +62,11 @@ export function MeetingRequestForm() {
   return (
     <form onSubmit={(e) => void submit(e)} className="portal-panel space-y-5">
       <div>
-        <p className="portal-eyebrow">For schools</p>
-        <h2 className="display-feature mt-1">Book a meeting</h2>
+        <p className="portal-eyebrow">Meeting request</p>
+        <h2 className="display-feature mt-1">Tell us about your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Tell us a little about your school. Guide Official reviews every
-          request and will contact you to schedule a walkthrough.
+          Guide Official reviews every request and follows up to schedule a
+          walkthrough. Prefer to explore first? Open the demo anytime.
         </p>
       </div>
 
