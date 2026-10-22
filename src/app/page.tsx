@@ -46,11 +46,10 @@ function GuideHomePage() {
           <div className="hero-copy">
             <h1 className="display-hero max-w-[16ch]">
               The{" "}
-              <span className="sun-underline">identity</span> platform for
-              schools
+              <span className="sun-underline">access</span> platform for schools
             </h1>
             <p className="hero-lede">
-              One secure identity for your school — so students and teachers can
+              One secure sign-in for your school — so students and teachers can
               open learning apps, protect student data, and keep classrooms
               moving.
             </p>
@@ -88,7 +87,7 @@ function GuideHomePage() {
         <div className="content-band clever-intro__inner">
           <h2 className="display-section">What is Guide?</h2>
           <p className="clever-intro__body">
-            Guide is the identity platform for schools. Students sign in once to
+            Guide is the access platform for schools. Students sign in once to
             open their apps. Teachers manage classes after a school invite.
             Administrators apply; Guide Official reviews each school.
           </p>
@@ -126,7 +125,7 @@ function GuideHomePage() {
       <section className="clever-feature clever-feature--alt">
         <div className="content-band clever-feature__grid clever-feature__grid--flip">
           <div className="clever-feature__copy">
-            <h2 className="display-feature">Secure every school identity</h2>
+            <h2 className="display-feature">Secure every school sign-in</h2>
             <p className="clever-feature__body">
               Students select their school, then sign in with a badge or
               password. School tools unlock after your school is approved.

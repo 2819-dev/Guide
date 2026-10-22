@@ -617,16 +617,16 @@ body {
 .hero-band__grid {
   display: grid;
   align-items: center;
-  gap: 2.75rem;
-  /* Clever: generous top offset under 91px header */
-  padding: 4.25rem 0 5rem;
+  gap: 2.25rem;
+  /* Clever cover sits high under 91px header */
+  padding: 1.75rem 0 3.75rem;
 }
 
 @media (min-width: 1024px) {
   .hero-band__grid {
     grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
-    gap: 2.75rem;
-    padding: 5.25rem 0 6.75rem;
+    gap: 2.5rem;
+    padding: 2.25rem 0 5rem;
     align-items: center;
   }
 }
