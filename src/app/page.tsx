@@ -80,12 +80,6 @@ function GuideHomePage() {
           </div>
 
           <div className="hero-visual-panel" aria-hidden>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/brand/guide-banner.jpg"
-              alt=""
-              className="hero-visual-panel__img"
-            />
             <p className="hero-visual-panel__caption">
               Access for every classroom.
             </p>
