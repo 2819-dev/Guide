@@ -45,14 +45,13 @@ function GuideHomePage() {
         <div className="content-band hero-band__grid">
           {/* Primary band: copy + CTA share height with Official Release panel */}
           <div className="hero-primary">
-            <h1 className="display-hero max-w-[18ch]">
-              The{" "}
-              <span className="sun-underline">school</span> platform for apps
-              and classrooms
+            <h1 className="display-hero max-w-[14ch]">
+              Keep every student{" "}
+              <span className="sun-underline">engaged</span>
             </h1>
             <p className="hero-lede">
-              Bring learning apps and class work together. Students and teachers
-              open what they need from one calm school portal.
+              Clear classroom management for teachers, and learning apps that
+              keep students involved — so school feels inviting and purposeful.
             </p>
 
             <div className="hero-cta-stack">
@@ -89,9 +88,10 @@ function GuideHomePage() {
         <div className="content-band clever-intro__inner">
           <h2 className="display-section">What is Guide?</h2>
           <p className="clever-intro__body">
-            Guide is where schools put apps and classrooms in one place. Students
-            open their portal. Teachers manage classes after an invite.
-            Administrators apply; Guide Official reviews each school.
+            Guide helps schools keep students engaged and classrooms well
+            managed. Teachers organize classes and learning apps. Students find
+            a welcoming place for class work. Administrators apply; Guide
+            Official reviews each school.
           </p>
         </div>
       </section>
@@ -111,11 +111,11 @@ function GuideHomePage() {
             <span className="clever-feature__mark">01</span>
           </div>
           <div className="clever-feature__copy">
-            <h2 className="display-feature">Classes that stay organized</h2>
+            <h2 className="display-feature">Classroom management, made clear</h2>
             <p className="clever-feature__body">
-              Teachers create classes, add apps, and follow along from their
-              portal — without a crowded toolbar. Students open only what their
-              class needs.
+              Teachers create classes, assign apps, and follow progress from one
+              place — so the school day stays organized. Students see only what
+              their class needs.
             </p>
             <Link href="/education" className="clever-feature__link">
               Explore for schools
@@ -128,10 +128,10 @@ function GuideHomePage() {
       <section className="clever-feature clever-feature--alt">
         <div className="content-band clever-feature__grid clever-feature__grid--flip">
           <div className="clever-feature__copy">
-            <h2 className="display-feature">Sign in with your school</h2>
+            <h2 className="display-feature">School that feels inviting</h2>
             <p className="clever-feature__body">
-              Students pick their school, then sign in with a badge or password.
-              School tools unlock after Guide Official approves your school.
+              Students open a calm, welcoming place for class — their apps and
+              work together. Your school is ready after Guide Official approval.
             </p>
             <Link
               href="/auth/sign-in?as=student"
@@ -168,11 +168,12 @@ function GuideHomePage() {
             <span className="clever-feature__mark">03</span>
           </div>
           <div className="clever-feature__copy">
-            <h2 className="display-feature">Apps live in the student portal</h2>
+            <h2 className="display-feature">Apps that keep attention</h2>
             <p className="clever-feature__body">
-              Add learning apps to a class so they sit at the center of each
-              student portal. Messaging and Suggestions stay alongside —
-              including {FIRST_APP_NAME} when your school adds it.
+              Place learning apps at the center of each student’s class space so
+              the next lesson is clear and engaging. Messaging and Suggestions
+              stay alongside, including {FIRST_APP_NAME} when your school adds
+              it.
             </p>
             <a href={amudHref} className="clever-feature__link">
               Visit {FIRST_APP_NAME}
@@ -185,9 +186,10 @@ function GuideHomePage() {
       <section className="clever-feature clever-feature--alt">
         <div className="content-band clever-feature__grid clever-feature__grid--flip">
           <div className="clever-feature__copy">
-            <h2 className="display-feature">Built for school teams</h2>
+            <h2 className="display-feature">Teachers and administrators, together</h2>
             <p className="clever-feature__body">
-              Administrators apply once and invite teachers by email. Developers
+              Administrators apply once and invite teachers by email. The whole
+              school meets students in the same inviting space. Developers
               partner with Guide only after Official review.
             </p>
             <Link href="/schools/meeting" className="clever-feature__link">
@@ -212,7 +214,7 @@ function GuideHomePage() {
       <section className="cta-band">
         <div className="content-band cta-band__inner">
           <h2 className="display-section cta-band__title">
-            Apps and classrooms, ready for your school
+            Built for engaged students and well-run classrooms
           </h2>
           <Link href="/auth/sign-in?as=student" className="btn-light shrink-0">
             Log in as a student

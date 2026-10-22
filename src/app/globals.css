@@ -641,9 +641,6 @@ body {
 
   .hero-primary {
     grid-area: primary;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
 
   .hero-visual-panel {

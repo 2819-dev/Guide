@@ -16,7 +16,7 @@ export function SiteFooter() {
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <GuideWordmark href="/" size="md" />
           <p className="text-sm text-ink-muted">
-            Apps and classrooms for schools
+            Engaged students. Well-managed classrooms.
           </p>
         </div>
 
