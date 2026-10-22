@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light dark;
+
   /* Guide forest — Clever structure, not Clever blue */
   --forest-950: #0f1f18;
   --forest-900: #152a20;
@@ -20,11 +22,14 @@
   --ink-muted: #5a6b62;
   --line: #e3ebe6;
   --surface: #ffffff;
+  --on-primary: #ffffff;
   --background: var(--paper);
   --foreground: var(--ink);
   --font-display: var(--font-manrope);
   --font-body: var(--font-manrope);
   --font-hebrew: var(--font-frank-ruhl);
+  /* Wordmark: Gilda Display loaded as --font-gulfs-display */
+  --font-wordmark: var(--font-gulfs-display), "Gilda Display", Georgia, serif;
 
   /* Clever-measured tokens (structure only) */
   --clever-header-h: 91px;
@@ -37,6 +42,62 @@
   --shadow-card: 0 10px 20px rgba(15, 31, 24, 0.1);
   --shadow-soft: 0 1px 2px rgba(15, 31, 24, 0.04);
   --shadow-menu: 0 12px 32px rgba(15, 31, 24, 0.1);
+}
+
+/* System auto dark — forest-dark surfaces; brand fill greens stay deep */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --forest-100: #1a2820;
+    --forest-200: #24352c;
+    --forest-300: #3d5448;
+    --sun: #d4b45c;
+    --sky-soft: #15221c;
+    --paper: #0b1210;
+    --ink: #e6efe9;
+    --ink-muted: #9aafa3;
+    --line: #24332b;
+    --surface: #121a16;
+    --on-primary: #ffffff;
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --shadow-card: 0 10px 24px rgba(0, 0, 0, 0.4);
+    --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-menu: 0 14px 36px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Tailwind “near-black” text utilities → ink in dark */
+  .text-forest-950,
+  .text-forest-900 {
+    color: var(--ink);
+  }
+
+  .hover\:text-forest-700:hover {
+    color: var(--forest-400);
+  }
+
+  .btn-secondary {
+    color: var(--ink);
+    border-color: var(--forest-400);
+  }
+
+  .btn-hero-bar__arrow {
+    color: #1c3d2e;
+  }
+
+  .clever-feature__link,
+  .site-footer-follow a,
+  .site-footer-link:hover,
+  .hero-link-card__arrow {
+    color: var(--forest-400);
+  }
+
+  .hero-link-card__arrow {
+    border-color: var(--forest-400);
+  }
+
+  .site-footer-col-head {
+    color: var(--ink);
+  }
 }
 
 @theme inline {
@@ -71,6 +132,7 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light dark;
 }
 
 body {
@@ -82,6 +144,10 @@ body {
   line-height: 1.5;
   font-size: 1rem;
   letter-spacing: -0.01em;
+}
+
+.guide-wordmark {
+  font-family: var(--font-wordmark);
 }
 
 .site-shell {
@@ -111,7 +177,7 @@ body {
   line-height: 1.077;
   font-weight: 400;
   letter-spacing: -0.03em;
-  color: var(--forest-950);
+  color: var(--ink);
 }
 
 .display-section {
@@ -120,7 +186,7 @@ body {
   line-height: 1.2;
   font-weight: 500;
   letter-spacing: -0.028em;
-  color: var(--forest-950);
+  color: var(--ink);
 }
 
 .display-feature {
@@ -129,7 +195,7 @@ body {
   line-height: 1.13;
   font-weight: 500;
   letter-spacing: -0.022em;
-  color: var(--forest-950);
+  color: var(--ink);
 }
 
 .sun-underline {
@@ -177,7 +243,7 @@ body {
   border-radius: var(--clever-radius);
   padding: 0.75rem 1.45rem;
   min-height: 48px;
-  background: #fff;
+  background: var(--surface);
   color: var(--forest-900);
   font-weight: 600;
   font-size: 1rem;
@@ -197,8 +263,8 @@ body {
   border: 1.5px solid rgba(255, 255, 255, 0.35);
   border-radius: var(--clever-radius);
   padding: 0.8rem 1.5rem;
-  background: #fff;
-  color: var(--forest-900);
+  background: var(--on-primary);
+  color: #152a20;
   font-weight: 600;
   font-size: 1rem;
   text-decoration: none;
@@ -220,7 +286,7 @@ body {
   border: 0;
   border-radius: 10px;
   background: var(--forest-800);
-  color: #fff;
+  color: var(--on-primary);
   font-weight: 600;
   font-size: 1.125rem;
   letter-spacing: -0.015em;
@@ -238,7 +304,7 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--on-primary);
   color: var(--forest-800);
   flex-shrink: 0;
 }
@@ -290,7 +356,7 @@ body {
   padding: 0.2rem;
   border: 1px solid var(--line);
   border-radius: var(--clever-radius);
-  background: #fff;
+  background: var(--surface);
 }
 
 .portal-tab {
@@ -345,7 +411,7 @@ body {
 .demo-frame {
   border: 1px solid var(--line);
   border-radius: var(--clever-radius);
-  background: #fff;
+  background: var(--surface);
   overflow: hidden;
   box-shadow: var(--shadow-card);
 }
@@ -369,7 +435,7 @@ body {
   gap: 0.2rem;
   padding: 0.45rem 0.75rem;
   border-bottom: 1px solid var(--line);
-  background: #fff;
+  background: var(--surface);
 }
 
 .demo-frame__tab {
@@ -466,10 +532,10 @@ body {
   height: 130px;
   padding: 2.15rem 1.55rem;
   border-radius: 10px;
-  background: #fff;
+  background: var(--surface);
   box-shadow: var(--shadow-card);
   text-decoration: none;
-  color: var(--forest-950);
+  color: var(--ink);
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
@@ -483,7 +549,7 @@ body {
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.2;
-  color: #111;
+  color: var(--ink);
   white-space: nowrap;
 }
 
@@ -510,7 +576,7 @@ body {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: var(--clever-radius-sm);
-  background: #fff;
+  background: var(--surface);
   padding: 0.8rem 0.95rem;
   min-height: 48px;
   color: var(--ink);
@@ -543,7 +609,7 @@ body {
 }
 
 .hero-band {
-  background: #fff;
+  background: var(--paper);
   position: relative;
   overflow: hidden;
 }
@@ -589,12 +655,12 @@ body {
 
 .feature-rail {
   border-top: 1px solid var(--line);
-  background: #fff;
+  background: var(--paper);
 }
 
 /* Clever mid-page: centered “What is …” intro (~53px H2) */
 .clever-intro {
-  background: #fff;
+  background: var(--paper);
   padding: 7.5rem 0 6rem;
 }
 
@@ -614,7 +680,7 @@ body {
 
 /* Clever feature rows — ~400–480px rhythm between H2 blocks */
 .clever-feature {
-  background: #fff;
+  background: var(--paper);
   padding: 6.5rem 0;
 }
 
@@ -907,7 +973,7 @@ body {
   margin: 0 0 2.25rem;
   font-size: 0.875rem;
   font-weight: 650;
-  color: var(--forest-950);
+  color: var(--ink);
 }
 
 .site-footer-follow a {
@@ -955,7 +1021,7 @@ body {
   margin: 0 0 0.95rem;
   font-size: 0.9375rem;
   font-weight: 650;
-  color: var(--forest-950);
+  color: var(--ink);
 }
 
 .site-footer-legal {
@@ -991,7 +1057,7 @@ body {
 
 .site-header {
   height: var(--clever-header-h);
-  background: #fff;
+  background: var(--paper);
   border-bottom: 1px solid transparent;
 }
 
@@ -1166,7 +1232,7 @@ body {
   font-size: clamp(1.75rem, 3vw, 2.25rem);
   font-weight: 600;
   letter-spacing: -0.03em;
-  color: var(--forest-950);
+  color: var(--ink);
 }
 
 .login-tile {
@@ -1179,7 +1245,7 @@ body {
   justify-content: space-between;
   padding: 1.75rem 1.5rem;
   border-radius: var(--clever-radius);
-  background: #fff;
+  background: var(--surface);
   box-shadow: var(--shadow-card);
   border: 0;
   cursor: pointer;
@@ -1261,7 +1327,7 @@ body {
   align-items: center;
   border-radius: var(--clever-radius);
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--surface);
   padding: 0.45rem 0.85rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -1286,7 +1352,7 @@ body {
   font-size: 1.0625rem;
   font-weight: 650;
   letter-spacing: -0.015em;
-  color: var(--forest-950);
+  color: var(--ink);
 }
 
 /* Clever app launcher — square tiles, letter mark, short name */
@@ -1318,7 +1384,7 @@ body {
   padding: 1.25rem 0.75rem 1rem;
   border-radius: var(--clever-radius);
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--surface);
   text-decoration: none;
   box-shadow: var(--shadow-soft);
   transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
@@ -1347,7 +1413,7 @@ body {
   font-size: 0.9375rem;
   font-weight: 650;
   letter-spacing: -0.02em;
-  color: var(--forest-950);
+  color: var(--ink);
   text-align: center;
 }
 
@@ -1375,7 +1441,7 @@ body {
   display: block;
   border-radius: var(--clever-radius);
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--surface);
   padding: 1.2rem 1.3rem;
   min-height: 116px;
   text-decoration: none;
@@ -1403,7 +1469,7 @@ body {
 .portal-panel {
   border-radius: var(--clever-radius);
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--surface);
   padding: 1.25rem 1.4rem;
   box-shadow: var(--shadow-soft);
 }
@@ -1411,7 +1477,7 @@ body {
 .portal-empty {
   border-radius: var(--clever-radius);
   border: 1px dashed var(--line);
-  background: #fff;
+  background: var(--surface);
   padding: 2rem 1.5rem;
   text-align: center;
 }
@@ -1420,7 +1486,7 @@ body {
   margin: 0;
   font-size: 1rem;
   font-weight: 650;
-  color: var(--forest-950);
+  color: var(--ink);
 }
 
 .portal-empty__body {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Frank_Ruhl_Libre } from "next/font/google";
+import { Manrope, Frank_Ruhl_Libre, Gilda_Display } from "next/font/google";
 import { SiteChrome } from "@/components/site-chrome";
 import { FIRST_APP_NAME } from "@/lib/apps";
 import { isAmudSite } from "@/lib/site";
@@ -16,6 +16,17 @@ const frankRuhl = Frank_Ruhl_Libre({
   variable: "--font-frank-ruhl",
   subsets: ["latin", "hebrew"],
   weight: ["400", "500", "700"],
+});
+
+/**
+ * Gulfs Display (Studio Sun / MyFonts) is commercial — not on Google Fonts.
+ * Closest free webfont by name: Gilda Display. Used only for Guide wordmark.
+ */
+const gulfsDisplay = Gilda_Display({
+  variable: "--font-gulfs-display",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
 });
 
 const amud = isAmudSite();
@@ -46,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${frankRuhl.variable} h-full`}
+      className={`${manrope.variable} ${frankRuhl.variable} ${gulfsDisplay.variable} h-full`}
     >
       <body className="site-shell flex min-h-full flex-col antialiased">
         <SiteChrome>{children}</SiteChrome>

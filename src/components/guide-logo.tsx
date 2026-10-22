@@ -8,14 +8,15 @@ type WordmarkProps = {
 };
 
 const sizeMap = {
-  sm: "text-[1.0625rem]",
-  md: "text-[1.25rem]",
-  lg: "text-[1.625rem]",
+  sm: "text-[1.125rem]",
+  md: "text-[1.35rem]",
+  lg: "text-[1.75rem]",
 } as const;
 
 /**
- * Locked brand lockup: typographic “Guide” only.
- * No icon mark — weight, tracking, and forest color do the work.
+ * Guide wordmark — Gulfs Display request → Gilda Display webfont
+ * (Studio Sun “Gulfs Display” is commercial; Google Fonts “Gilda Display”
+ * is the closest free display face by name). Amud keeps AppWordmark.
  */
 export function GuideWordmark({
   href = "/",
@@ -23,14 +24,11 @@ export function GuideWordmark({
   tone = "default",
   size = "md",
 }: WordmarkProps) {
-  const textColor = tone === "onDark" ? "text-white" : "text-forest-900";
+  const textColor = tone === "onDark" ? "text-white" : "text-ink";
 
   const inner = (
     <span
-      className={`inline-block font-medium leading-none tracking-[-0.035em] ${sizeMap[size]} ${textColor} ${className}`}
-      style={{
-        fontFamily: "var(--font-manrope), var(--font-body), system-ui, sans-serif",
-      }}
+      className={`guide-wordmark inline-block font-normal leading-none tracking-[-0.02em] ${sizeMap[size]} ${textColor} ${className}`}
     >
       Guide
     </span>
