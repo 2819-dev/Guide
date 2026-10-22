@@ -1114,44 +1114,170 @@ body {
     linear-gradient(160deg, var(--forest-900) 0%, var(--forest-700) 48%, var(--forest-800) 100%);
 }
 
-/* Clever right-column visual — forest atmosphere (~8–12px radius) */
+/* Clever right-column visual — framed Official Release media */
 .hero-visual-panel {
   position: relative;
   z-index: 1;
-  display: none;
+  display: block;
   width: 100%;
-  min-height: 300px;
+  max-width: 22rem;
+  margin: 0.5rem auto 0;
+  aspect-ratio: 1 / 1;
   border-radius: 12px;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse 75% 55% at 72% 22%, rgba(201, 162, 74, 0.16), transparent 52%),
-    radial-gradient(ellipse 70% 60% at 18% 78%, rgba(90, 154, 118, 0.32), transparent 55%),
-    linear-gradient(152deg, var(--forest-900) 0%, var(--forest-700) 48%, var(--forest-800) 100%);
-  box-shadow: 0 10px 20px rgba(15, 31, 24, 0.1);
+  background: #1a6fd4;
+  box-shadow: 0 10px 20px rgba(15, 31, 24, 0.12);
 }
 
 @media (min-width: 1024px) {
   .hero-visual-panel {
-    display: block;
-    width: 100%;
-    min-height: 360px;
     max-width: 27.5rem;
     margin-left: auto;
+    margin-right: 0;
+    margin-top: 0;
   }
 }
 
-.hero-visual-panel__caption {
+.hero-visual-panel--release {
+  background: #1a6fd4;
+}
+
+.hero-visual-panel__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Transparent hotspot aligned to baked Notify Me in the art */
+.hero-notify-hotspot {
   position: absolute;
-  left: 1.35rem;
-  right: 1.35rem;
-  bottom: 1.35rem;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  width: 46%;
+  max-width: 11.5rem;
+  height: 11%;
+  min-height: 2.35rem;
+  border: 0;
+  padding: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.hero-notify-hotspot:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.hero-notify-card {
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  z-index: 3;
+  padding: 0.85rem 0.95rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 24px rgba(10, 40, 90, 0.22);
+  color: #152a20;
+}
+
+.hero-notify-card__done {
   margin: 0;
-  max-width: 16ch;
-  font-size: 1.05rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
+  line-height: 1.4;
+  color: #1c3d2e;
+}
+
+.hero-notify-form__label {
+  display: block;
+  margin: 0 0 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #5a6b62;
+}
+
+.hero-notify-form__row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: stretch;
+}
+
+.hero-notify-form__input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #d5e0d9;
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.9375rem;
+  background: #fff;
+  color: #152a20;
+}
+
+.hero-notify-form__input:focus {
+  outline: 2px solid #1c3d2e;
+  outline-offset: 1px;
+}
+
+.hero-notify-form__submit {
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  background: #1c3d2e;
   color: #fff;
+  cursor: pointer;
+}
+
+.hero-notify-form__submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.hero-notify-form__hint,
+.hero-notify-form__error {
+  margin: 0.45rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.hero-notify-form__hint {
+  color: #5a6b62;
+}
+
+.hero-notify-form__error {
+  color: #a33b2d;
+}
+
+@media (prefers-color-scheme: dark) {
+  .hero-notify-card {
+    background: rgba(18, 26, 22, 0.96);
+    color: var(--ink);
+  }
+
+  .hero-notify-card__done {
+    color: var(--forest-300);
+  }
+
+  .hero-notify-form__label,
+  .hero-notify-form__hint {
+    color: var(--ink-muted);
+  }
+
+  .hero-notify-form__input {
+    border-color: var(--line);
+    background: var(--surface);
+    color: var(--ink);
+  }
 }
 
 @media (min-width: 900px) {

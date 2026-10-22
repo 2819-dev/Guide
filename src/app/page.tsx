@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AmudHomePage } from "@/components/amud-home";
+import { HeroReleasePanel } from "@/components/hero-release-panel";
 import { FIRST_APP_NAME, appHomePath } from "@/lib/apps";
 import { amudPublicUrl, isAmudSite } from "@/lib/site";
 
@@ -79,11 +80,7 @@ function GuideHomePage() {
             </div>
           </div>
 
-          <div className="hero-visual-panel" aria-hidden>
-            <p className="hero-visual-panel__caption">
-              Access for every classroom.
-            </p>
-          </div>
+          <HeroReleasePanel />
         </div>
       </section>
 

@@ -13,3 +13,15 @@ export const GUIDE_BANNER_HEIGHT = 434;
 
 /** Invite letter keeps a local copy for paste/offline HTML parity */
 export const INVITE_BANNER_SRC = "/invite/ohr-reuven/banner.jpg" as const;
+
+/**
+ * Homepage Clever cover — Official Release hero visual (right panel).
+ * Canonical: /cursor/stores/self/media/clever-cover/homepage-hero-official-release.png
+ */
+export const HOME_HERO_RELEASE_SRC =
+  "/brand/homepage-hero-official-release.webp" as const;
+export const HOME_HERO_RELEASE_FALLBACK_SRC =
+  "/brand/homepage-hero-official-release.jpg" as const;
+export const HOME_HERO_RELEASE_WIDTH = 1400;
+export const HOME_HERO_RELEASE_HEIGHT = 1400;
+export const HOME_HERO_RELEASE_DATE = "11.10.2026" as const;

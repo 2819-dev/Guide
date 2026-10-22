@@ -119,6 +119,25 @@ export async function sendTeacherInviteEmail(opts: {
   });
 }
 
+/** Confirm Official Release notify signup. */
+export async function sendReleaseNotifyEmail(opts: {
+  to: string;
+  releaseDate: string;
+}): Promise<SendEmailResult> {
+  return sendEmail({
+    to: opts.to,
+    subject: `Guide Official Release · ${opts.releaseDate}`,
+    html: shell(`
+      <p style="margin:0 0 14px;font-weight:600">You’re on the list.</p>
+      <p style="margin:0 0 14px">We’ll email you when Guide’s Official Release goes live on
+      <strong>${escapeHtml(opts.releaseDate)}</strong>.</p>
+      <p style="margin:0 0 18px"><a href="${guidePublicUrl()}" style="display:inline-block;background:#1c3d2e;color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Visit Guide</a></p>
+      <p style="margin:0;color:#5a6b62;font-size:14px">If you did not request this, you can ignore this message.</p>
+    `),
+    text: `You’re on the list for Guide Official Release · ${opts.releaseDate}\n\n${guidePublicUrl()}`,
+  });
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
