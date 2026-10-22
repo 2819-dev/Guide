@@ -309,8 +309,8 @@ body {
   flex-shrink: 0;
 }
 
-/* Clever cover left column */
-.hero-copy {
+/* Clever cover: primary band (H1 → student CTA) */
+.hero-primary {
   position: relative;
   z-index: 1;
   max-width: 40.5rem;
@@ -325,19 +325,21 @@ body {
   color: var(--ink);
 }
 
-/* Primary bar, then twin cards — Clever CTA stack (~24px gap) */
+/* Primary student bar only — twin cards sit in the next grid row */
 .hero-cta-stack {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
   max-width: 41.25rem;
 }
 
 .hero-link-row {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.85rem;
+  max-width: 41.25rem;
 }
 
 @media (min-width: 640px) {
@@ -616,18 +618,40 @@ body {
 
 .hero-band__grid {
   display: grid;
-  align-items: center;
-  gap: 2.25rem;
+  gap: 1.5rem;
   /* Clever cover sits high under 91px header */
   padding: 1.75rem 0 3.75rem;
 }
 
 @media (min-width: 1024px) {
+  /*
+   * Primary + visual share one band (equal height, bottoms flush).
+   * Twin cards start on the next row = at the hero panel bottom.
+   */
   .hero-band__grid {
     grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
-    gap: 2.5rem;
+    grid-template-areas:
+      "primary visual"
+      "links .";
+    column-gap: 2.5rem;
+    row-gap: 1.35rem;
     padding: 2.25rem 0 5rem;
-    align-items: center;
+    align-items: stretch;
+  }
+
+  .hero-primary {
+    grid-area: primary;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-visual-panel {
+    grid-area: visual;
+  }
+
+  .hero-link-row {
+    grid-area: links;
   }
 }
 
@@ -1121,7 +1145,7 @@ body {
   display: block;
   width: 100%;
   max-width: 22rem;
-  margin: 0.5rem auto 0;
+  margin: 0.25rem auto 0;
   aspect-ratio: 1 / 1;
   border-radius: 12px;
   overflow: hidden;
@@ -1131,10 +1155,14 @@ body {
 
 @media (min-width: 1024px) {
   .hero-visual-panel {
-    max-width: 27.5rem;
-    margin-left: auto;
-    margin-right: 0;
-    margin-top: 0;
+    /* Stretch to primary band height so bottom meets twin-card row */
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    min-height: 17.5rem;
+    margin: 0;
+    aspect-ratio: auto;
+    align-self: stretch;
   }
 }
 

@@ -43,7 +43,8 @@ function GuideHomePage() {
     <div className="guide-home">
       <section className="hero-band">
         <div className="content-band hero-band__grid">
-          <div className="hero-copy">
+          {/* Primary band: copy + CTA share height with Official Release panel */}
+          <div className="hero-primary">
             <h1 className="display-hero max-w-[16ch]">
               The{" "}
               <span className="sun-underline">access</span> platform for schools
@@ -61,25 +62,26 @@ function GuideHomePage() {
                   <ArrowIcon />
                 </span>
               </Link>
-
-              <div className="hero-link-row">
-                <Link href="/education" className="hero-link-card">
-                  <span className="hero-link-card__label">For schools</span>
-                  <span className="hero-link-card__arrow" aria-hidden>
-                    <ArrowIcon size={15} />
-                  </span>
-                </Link>
-                <Link href="/developers/apply" className="hero-link-card">
-                  <span className="hero-link-card__label">For developers</span>
-                  <span className="hero-link-card__arrow" aria-hidden>
-                    <ArrowIcon size={15} />
-                  </span>
-                </Link>
-              </div>
             </div>
           </div>
 
           <HeroReleasePanel />
+
+          {/* Twin cards start at hero panel bottom */}
+          <div className="hero-link-row">
+            <Link href="/education" className="hero-link-card">
+              <span className="hero-link-card__label">For schools</span>
+              <span className="hero-link-card__arrow" aria-hidden>
+                <ArrowIcon size={15} />
+              </span>
+            </Link>
+            <Link href="/developers/apply" className="hero-link-card">
+              <span className="hero-link-card__label">For developers</span>
+              <span className="hero-link-card__arrow" aria-hidden>
+                <ArrowIcon size={15} />
+              </span>
+            </Link>
+          </div>
         </div>
       </section>
 
