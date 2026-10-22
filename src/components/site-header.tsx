@@ -1,0 +1,121 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { GuideWordmark } from "@/components/guide-logo";
+import { LoginMenu } from "@/components/login-menu";
+import { SignOutButton } from "@/components/sign-out-button";
+import type { SchoolApplicationStatus } from "@/lib/education-access";
+import {
+  messagesHrefFor,
+  portalFor,
+  suggestionsHrefFor,
+  type PortalId,
+} from "@/lib/portals";
+import type { Role } from "@/lib/roles";
+
+type Me = {
+  profile: {
+    id: string;
+    role: Role;
+    displayName: string;
+    schoolId?: string | null;
+    badgeCode?: string | null;
+  } | null;
+  educationOk?: boolean;
+  developerOk?: boolean;
+  schoolApplicationStatus?: SchoolApplicationStatus;
+};
+
+const navLink =
+  "px-2.5 py-2 text-[0.9375rem] font-medium text-forest-950 no-underline hover:text-forest-700";
+
+/**
+ * Clever 1:1 header structure — Guide wordmark + forest CTAs.
+ * Apps never appear in the top bar.
+ */
+export function SiteHeader() {
+  const [me, setMe] = useState<Me | null>(null);
+
+  useEffect(() => {
+    void fetch("/api/me")
+      .then((r) => r.json())
+      .then((data) => setMe(data))
+      .catch(() => setMe({ profile: null }));
+  }, []);
+
+  const profile = me?.profile;
+  const loggedIn = Boolean(profile);
+  const appStatus = me?.schoolApplicationStatus ?? "none";
+  const awaitingSchool =
+    profile?.role === "rebbe" ||
+    appStatus === "pending" ||
+    appStatus === "rejected";
+
+  let portalId: PortalId | null = null;
+  let portalHref = "/student";
+  if (profile) {
+    const portal = portalFor({
+      role: profile.role,
+      schoolId: profile.schoolId,
+      badgeCode: profile.badgeCode,
+      educationOk: me?.educationOk,
+      developerOk: me?.developerOk,
+    });
+    if (portal) {
+      portalId = portal.id;
+      portalHref = portal.href;
+    } else if (profile.role === "admin" || profile.role === "moderator") {
+      portalHref = "/official";
+      portalId = "official";
+    } else if (me?.developerOk) {
+      portalHref = "/developer";
+      portalId = "developer";
+    } else if (awaitingSchool) {
+      // Teacher / School Administrator — locked until approved.
+      portalHref = "/education";
+    }
+  }
+
+  return (
+    <header className="site-header sticky top-0 z-40">
+      <div className="site-header__inner">
+        <GuideWordmark size="lg" />
+        <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-5">
+          {loggedIn ? (
+            <>
+              <Link href={portalHref} className={`${navLink} font-semibold`}>
+                My portal
+              </Link>
+              {portalId ? (
+                <>
+                  <Link href={messagesHrefFor(portalId)} className={navLink}>
+                    Messaging
+                  </Link>
+                  <Link
+                    href={suggestionsHrefFor(portalId)}
+                    className={navLink}
+                  >
+                    Suggestions
+                  </Link>
+                </>
+              ) : null}
+              <Link href="/account" className={`hidden sm:inline ${navLink}`}>
+                {profile!.displayName}
+              </Link>
+              <SignOutButton />
+            </>
+          ) : (
+            <>
+              {/* Clever-minimal logged-out: Education · Log In */}
+              <Link href="/education" className={`${navLink} hidden sm:inline`}>
+                Education
+              </Link>
+              <LoginMenu variant="primary" />
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
+  );
+}
