@@ -15,7 +15,7 @@ export default async function StudentMessagesPage() {
     <PortalShell
       eyebrow="Student portal"
       title="Messages"
-      subtitle="Real conversations with the teachers of classes you joined."
+      subtitle="Write to teachers of classes you joined — keep class work moving."
       backHref="/student"
       backLabel="← Student portal"
     >

@@ -12,6 +12,7 @@ import {
   DEMO_ROLES,
   demoRoleLabel,
   type DemoClassroom,
+  type DemoMeeting,
   type DemoRole,
   type DemoSession,
 } from "@/lib/demo-fixtures";
@@ -19,6 +20,7 @@ import {
 type TeacherTab = "apps" | "classes" | "messages";
 type StudentTab = "apps" | "tools";
 type AdminTab = "overview" | "teachers" | "classes";
+type OfficialTab = "meetings" | "schools";
 
 function randomInviteCode(): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -712,6 +714,171 @@ function AdminPortal({
   );
 }
 
+function OfficialPortal({
+  session,
+  setSession,
+}: {
+  session: DemoSession;
+  setSession: (next: DemoSession) => void;
+}) {
+  const [tab, setTab] = useState<OfficialTab>("meetings");
+  const [notice, setNotice] = useState<string | null>(null);
+
+  function setMeetingStatus(
+    id: string,
+    status: DemoMeeting["status"],
+  ) {
+    setSession({
+      ...session,
+      meetings: session.meetings.map((m) =>
+        m.id === id ? { ...m, status } : m,
+      ),
+    });
+    setNotice(`Marked ${status} (demo only).`);
+  }
+
+  const pending = session.meetings.filter((m) => m.status === "pending").length;
+
+  return (
+    <>
+      <DemoTabs
+        tabs={[
+          { id: "meetings", label: "Meetings" },
+          { id: "schools", label: "Schools" },
+        ]}
+        active={tab}
+        onChange={(id) => setTab(id as OfficialTab)}
+      />
+      <div className="demo-frame__body demo-frame__body--single">
+        <div className="demo-frame__main">
+          <p className="portal-eyebrow">Guide Official</p>
+          <h2 className="display-feature mt-1 text-[1.65rem]">
+            Hi, {session.displayName.official}
+          </h2>
+          <p className="mt-1 text-sm text-ink-muted">
+            Book a meeting requests and school approvals — denser admin tabs.
+          </p>
+          {notice ? (
+            <p className="mt-3 rounded-[10px] border border-forest-200 bg-forest-100 px-3 py-2 text-sm text-forest-900">
+              {notice}
+            </p>
+          ) : null}
+
+          {tab === "meetings" ? (
+            <section className="mt-6 space-y-4">
+              <div>
+                <h3 className="portal-section-title">Meeting requests</h3>
+                <p className="-mt-2 text-sm text-ink-muted">
+                  From For schools · Book a meeting. Mark contacted, scheduled,
+                  or closed.
+                </p>
+              </div>
+              <div className="official-stat-row">
+                <div className="official-stat">
+                  <p className="official-stat__value">
+                    {session.meetings.length}
+                  </p>
+                  <p className="official-stat__label">Total</p>
+                </div>
+                <div className="official-stat">
+                  <p className="official-stat__value">{pending}</p>
+                  <p className="official-stat__label">Pending</p>
+                </div>
+              </div>
+              {session.meetings.map((m) => (
+                <article key={m.id} className="portal-panel space-y-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div>
+                      <h4 className="text-base font-semibold text-forest-950">
+                        {m.organization}
+                      </h4>
+                      <p className="mt-0.5 text-sm text-ink-muted">
+                        {m.contactName} · {m.contactEmail} · {m.contactRole}
+                      </p>
+                    </div>
+                    <span className={`status-chip status-chip--${m.status}`}>
+                      {m.status}
+                    </span>
+                  </div>
+                  {m.preferredTime ? (
+                    <p className="text-sm text-ink-muted">
+                      Preferred: {m.preferredTime}
+                    </p>
+                  ) : null}
+                  <p className="text-sm leading-relaxed text-forest-950">
+                    {m.message}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {(
+                      [
+                        ["contacted", "Mark contacted"],
+                        ["scheduled", "Scheduled"],
+                        ["closed", "Close"],
+                      ] as const
+                    ).map(([status, label]) => (
+                      <button
+                        key={status}
+                        type="button"
+                        disabled={m.status === status}
+                        className="btn-secondary !min-h-12 !px-3.5 !text-sm"
+                        onClick={() => setMeetingStatus(m.id, status)}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </section>
+          ) : (
+            <section className="mt-6 space-y-4">
+              <div>
+                <h3 className="portal-section-title">School applications</h3>
+                <p className="-mt-2 text-sm text-ink-muted">
+                  Approve a school so administrators can invite teachers. Demo
+                  preview only.
+                </p>
+              </div>
+              <div className="portal-panel space-y-2">
+                <p className="status-chip status-chip--pending">Pending · School</p>
+                <h4 className="text-lg font-semibold text-forest-950">
+                  {session.schoolName}
+                </h4>
+                <p className="text-sm text-ink-muted">
+                  Morgan Blake · m.blake@riverside.school · School administrator
+                </p>
+                <p className="text-sm leading-relaxed text-forest-950">
+                  Keep students engaged with class apps and teacher invites.
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <button
+                    type="button"
+                    className="btn-primary !min-h-12"
+                    onClick={() =>
+                      setNotice("Approved in demo — production writes Official only.")
+                    }
+                  >
+                    Approve
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary !min-h-12"
+                    onClick={() =>
+                      setNotice("Declined in demo — production writes Official only.")
+                    }
+                  >
+                    Decline
+                  </button>
+                </div>
+              </div>
+            </section>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
 /** Interactive school demo — sandboxed role walkthrough (no Neon writes). */
 export function SchoolDemo() {
   const [role, setRole] = useState<DemoRole | null>(null);
@@ -740,9 +907,9 @@ export function SchoolDemo() {
         <p className="eyebrow">For schools · Demo</p>
         <h1 className="display-feature mt-2">Try Guide as your school</h1>
         <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted">
-          An interactive walkthrough — act as a teacher, student, or school
-          administrator. Local fixture data only; nothing is written to
-          production.
+          An interactive walkthrough — teacher, student, school administrator,
+          or Guide Official (meeting queue). Local fixtures only; nothing is
+          written to production.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
           <Link href="/schools/meeting">Book a meeting →</Link>
@@ -765,7 +932,9 @@ export function SchoolDemo() {
       ) : (
         <DemoChrome
           role={role}
-          schoolName={session.schoolName}
+          schoolName={
+            role === "official" ? "Meeting queue" : session.schoolName
+          }
           onSwitchRole={resetRole}
         >
           {role === "student" ? (
@@ -783,6 +952,9 @@ export function SchoolDemo() {
           ) : null}
           {role === "admin" ? (
             <AdminPortal session={session} setSession={setSession} />
+          ) : null}
+          {role === "official" ? (
+            <OfficialPortal session={session} setSession={setSession} />
           ) : null}
         </DemoChrome>
       )}

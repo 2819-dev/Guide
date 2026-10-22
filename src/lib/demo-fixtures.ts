@@ -5,7 +5,7 @@
 
 import { APP_CATALOG, type GuideApp } from "@/lib/apps";
 
-export type DemoRole = "teacher" | "student" | "admin";
+export type DemoRole = "teacher" | "student" | "admin" | "official";
 
 export type DemoClassroom = {
   id: string;
@@ -30,6 +30,17 @@ export type DemoInvite = {
 
 export type DemoStudentApp = GuideApp & { installed: boolean };
 
+export type DemoMeeting = {
+  id: string;
+  organization: string;
+  contactName: string;
+  contactEmail: string;
+  contactRole: string;
+  message: string;
+  preferredTime: string | null;
+  status: "pending" | "contacted" | "scheduled" | "closed";
+};
+
 export type DemoSession = {
   schoolName: string;
   displayName: Record<DemoRole, string>;
@@ -39,6 +50,7 @@ export type DemoSession = {
   catalog: GuideApp[];
   studentAppSlugs: string[];
   messages: { id: string; from: string; preview: string; when: string }[];
+  meetings: DemoMeeting[];
 };
 
 export const DEMO_ROLES: {
@@ -65,6 +77,12 @@ export const DEMO_ROLES: {
     portalLabel: "School administrator",
     blurb: "Invite teachers, see school overview, keep classes organized.",
   },
+  {
+    id: "official",
+    tryAs: "Try as Guide Official",
+    portalLabel: "Guide Official",
+    blurb: "Meeting requests from Book a meeting — approve and follow up.",
+  },
 ];
 
 /** Fresh sandboxed session — no DB writes. */
@@ -75,7 +93,9 @@ export function createDemoSession(): DemoSession {
       teacher: "Jordan Lee",
       student: "Alex Rivera",
       admin: "Morgan Blake",
+      official: "Guide Official",
     },
+
     classrooms: [
       {
         id: "c1",
@@ -134,6 +154,30 @@ export function createDemoSession(): DemoSession {
         from: "Guide",
         preview: "Two new study prompts are ready in Suggestions.",
         when: "Mon",
+      },
+    ],
+    meetings: [
+      {
+        id: "mt1",
+        organization: "Riverside Academy",
+        contactName: "Morgan Blake",
+        contactEmail: "m.blake@riverside.school",
+        contactRole: "School administrator",
+        message:
+          "We want a walkthrough of classes, teacher invites, and My apps for our grade 7–9 team.",
+        preferredTime: "Tue or Thu afternoon",
+        status: "pending",
+      },
+      {
+        id: "mt2",
+        organization: "Cedar Grove District",
+        contactName: "Pat Ellis",
+        contactEmail: "p.ellis@cedargrove.edu",
+        contactRole: "District administrator",
+        message:
+          "Interested in how teachers add Amud and Arcade Education to classes.",
+        preferredTime: null,
+        status: "contacted",
       },
     ],
   };

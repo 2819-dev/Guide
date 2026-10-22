@@ -60,7 +60,8 @@ export function TeacherInvitesPanel() {
         <h2 className="portal-section-title">Invite teachers</h2>
         <p className="-mt-2 text-sm text-ink-muted">
           Type work emails (one per line or comma-separated). Guide sends a
-          setup link — teachers log in only; there is no public teacher signup.
+          professional setup link — Dear Teacher. Teachers log in only; there is
+          no public teacher signup.
         </p>
       </div>
 
