@@ -105,7 +105,15 @@ export function TeacherInvitesPanel() {
         </button>
       </div>
 
-      {invites.length > 0 ? (
+      {invites.length === 0 ? (
+        <div className="portal-empty">
+          <p className="portal-empty__title">No invites sent yet</p>
+          <p className="portal-empty__body">
+            Paste work emails above. Teachers set a password from the invite
+            link, then log in — there is no public teacher signup.
+          </p>
+        </div>
+      ) : (
         <div className="portal-panel overflow-x-auto">
           <table className="w-full min-w-[420px] border-collapse text-left text-sm">
             <thead>
@@ -121,7 +129,11 @@ export function TeacherInvitesPanel() {
                   <td className="py-2.5 pr-3 font-medium text-forest-950">
                     {inv.email}
                   </td>
-                  <td className="py-2.5 pr-3 capitalize">{inv.status}</td>
+                  <td className="py-2.5 pr-3">
+                    <span className={`status-chip status-chip--${inv.status}`}>
+                      {inv.status}
+                    </span>
+                  </td>
                   <td className="py-2.5 text-ink-muted">
                     {inv.sentAt
                       ? new Date(inv.sentAt).toLocaleDateString()
@@ -132,7 +144,7 @@ export function TeacherInvitesPanel() {
             </tbody>
           </table>
         </div>
-      ) : null}
+      )}
     </section>
   );
 }

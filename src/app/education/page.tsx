@@ -113,6 +113,10 @@ export default async function EducationLandingPage() {
                   ·
                 </span>
                 <Link href="/schools/meeting">Book a meeting</Link>
+                <span aria-hidden className="hero-secondary-links__dot">
+                  ·
+                </span>
+                <Link href="/apps">App library</Link>
               </p>
             </div>
           </div>

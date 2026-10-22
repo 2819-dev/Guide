@@ -15,6 +15,9 @@ export function MyAppsGrid({
     return (
       <section id="apps">
         <h2 className="portal-section-title">My apps</h2>
+        <p className="-mt-2 mb-4 text-sm text-ink-muted">
+          Learning apps your teacher added for class.
+        </p>
         <div className="portal-empty">
           <p className="portal-empty__title">No apps yet</p>
           <p className="portal-empty__body">{emptyHint}</p>
@@ -26,6 +29,9 @@ export function MyAppsGrid({
   return (
     <section id="apps">
       <h2 className="portal-section-title">My apps</h2>
+      <p className="-mt-2 mb-4 text-sm text-ink-muted">
+        Open what your class needs — apps stay in the center.
+      </p>
       <ul className="portal-apps-grid">
         {apps.map((app) => {
           const href = appOpenHref(app);
