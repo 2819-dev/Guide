@@ -8,18 +8,23 @@ export function AuthCard({
   subtitle,
   children,
   footer,
+  /** Guide school role switcher. Off for Amud learner auth. */
+  showRoleMenu = true,
 }: {
   eyebrow?: string | null;
   title: string;
   subtitle?: string | null;
   children: ReactNode;
   footer?: ReactNode;
+  showRoleMenu?: boolean;
 }) {
   return (
     <div className="w-full max-w-md">
-      <div className="mb-5 flex justify-end">
-        <LoginMenu variant="nav" />
-      </div>
+      {showRoleMenu ? (
+        <div className="mb-5 flex justify-end">
+          <LoginMenu variant="nav" />
+        </div>
+      ) : null}
       <div className="auth-card">
         {eyebrow ? <p className="portal-eyebrow">{eyebrow}</p> : null}
         <h1

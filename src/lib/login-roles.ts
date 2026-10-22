@@ -101,10 +101,11 @@ export function loginAsCopy(as: LoginAs): {
     case "learner":
     default:
       return {
-        title: "Log in",
-        subtitle: "Keep Test Yourself scores and notes on your Amud account.",
+        title: "Amud log in",
+        subtitle:
+          "Save Test Yourself scores and notes. No school login required — Amud is for everyone.",
         joinHref: "/auth/sign-up?as=learner",
-        joinLabel: "Create an account",
+        joinLabel: "Create an Amud account",
       };
   }
 }
@@ -152,7 +153,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Create an Amud account",
         subtitle:
-          "Save Test Yourself scores and notes. No school login required.",
+          "Keep Test Yourself scores and notes after you learn. No school login required — Amud is for everyone.",
         roleValue: "customer",
         showRoleChooser: false,
       };

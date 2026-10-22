@@ -5,10 +5,13 @@ export const runtime = "edge";
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
+import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
 import { StudentSignIn } from "@/components/student-sign-in";
+import { FIRST_APP_NAME } from "@/lib/apps";
 import { loginAsCopy, parseLoginAs } from "@/lib/login-roles";
+import { publicAmudHomePath } from "@/lib/site";
 import { signInWithEmail } from "./actions";
 
 function SignInForm() {
@@ -23,11 +26,20 @@ function SignInForm() {
 
   const isEducator = as === "educator";
   const isOfficial = as === "official";
+  const isLearner = as === "learner";
 
   return (
     <div className="auth-shell flex min-h-screen flex-col">
       <div className="flex items-center justify-between px-6 py-5 sm:px-8">
-        <GuideWordmark href="/" size="lg" />
+        {isLearner ? (
+          <AppWordmark
+            name={FIRST_APP_NAME}
+            href={publicAmudHomePath()}
+            size="lg"
+          />
+        ) : (
+          <GuideWordmark href="/" size="lg" />
+        )}
         {isEducator ? (
           <Link
             href="/schools/demo"
@@ -36,12 +48,21 @@ function SignInForm() {
             View demo
           </Link>
         ) : null}
+        {isLearner ? (
+          <Link
+            href={publicAmudHomePath()}
+            className="text-sm font-semibold text-forest-800 no-underline hover:underline"
+          >
+            ← {FIRST_APP_NAME}
+          </Link>
+        ) : null}
       </div>
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
         <AuthCard
-          eyebrow={isOfficial ? null : "Log in as a"}
+          eyebrow={isLearner || isOfficial ? null : "Log in as a"}
           title={copy.title}
           subtitle={copy.subtitle}
+          showRoleMenu={!isLearner}
           footer={
             copy.joinHref && copy.joinLabel ? (
               <>

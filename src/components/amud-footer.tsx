@@ -10,6 +10,7 @@ import {
 const link =
   "text-sm font-medium text-ink-muted no-underline hover:text-forest-900";
 
+/** Public Amud footer — quiet Learn + Log In; Guide for schools only as a text link. */
 export function AmudFooter() {
   const home = publicAmudHomePath();
   const learn = publicAmudLearnBase();
