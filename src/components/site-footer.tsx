@@ -16,7 +16,7 @@ export function SiteFooter() {
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <GuideWordmark href="/" size="md" />
           <p className="text-sm text-ink-muted">
-            The access platform for schools
+            Apps and classrooms for schools
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link href="/education" className="site-footer-link">
-                  School access
+                  School portals
                 </Link>
               </li>
               <li>

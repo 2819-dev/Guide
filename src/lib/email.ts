@@ -91,7 +91,7 @@ export async function sendWelcomeEmail(opts: {
     subject: "Welcome to Guide",
     html: shell(`
       <p style="margin:0 0 14px;font-weight:600">Dear ${escapeHtml(first)},</p>
-      <p style="margin:0 0 14px">Welcome to Guide — the access platform for schools.
+      <p style="margin:0 0 14px">Welcome to Guide — apps and classrooms for your school.
       Sign in anytime to open your portal, apps, and classroom tools.</p>
       <p style="margin:0 0 18px"><a href="${guidePublicUrl()}/auth/sign-in" style="display:inline-block;background:#1c3d2e;color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Log in to Guide</a></p>
       <p style="margin:0;color:#5a6b62;font-size:14px">If you did not expect this email, you can ignore it.</p>

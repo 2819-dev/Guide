@@ -45,7 +45,7 @@ export const metadata: Metadata = amud
         template: "%s · Guide",
       },
       description:
-        "Guide — the access platform for schools. Portals, learning apps, and classroom tools.",
+        "Guide — apps and classrooms for schools. Portals, learning apps, and class tools.",
     };
 
 export default function RootLayout({
