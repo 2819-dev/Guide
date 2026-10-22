@@ -16,12 +16,12 @@ export function SiteFooter() {
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <GuideWordmark href="/" size="md" />
           <p className="text-sm text-ink-muted">
-            Secure identity for schools
+            The identity platform for schools
           </p>
         </div>
 
         <p className="site-footer-follow">
-          Questions?{" "}
+          Contact ·{" "}
           <a href="mailto:hello@guidelearning.org">hello@guidelearning.org</a>
         </p>
 

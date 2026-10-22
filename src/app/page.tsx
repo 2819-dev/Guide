@@ -34,7 +34,6 @@ function ArrowIcon({ size = 16 }: { size?: number }) {
 
 /**
  * Guide marketing home — forest brand, Clever marketing structure.
- * Cover + mid feature rows + closing band (footer is SiteFooter).
  */
 function GuideHomePage() {
   const amudHref = amudPublicUrl() || appHomePath();
@@ -50,8 +49,9 @@ function GuideHomePage() {
               schools
             </h1>
             <p className="hero-lede">
-              Guide gives every school one secure identity — so students and
-              teachers can open learning apps, message, and stay aligned.
+              One secure identity for your school — so students and teachers can
+              open learning apps, protect student data, and keep classrooms
+              moving.
             </p>
 
             <div className="hero-cta-stack">
@@ -80,8 +80,14 @@ function GuideHomePage() {
           </div>
 
           <div className="hero-visual-panel" aria-hidden>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/guide-banner.jpg"
+              alt=""
+              className="hero-visual-panel__img"
+            />
             <p className="hero-visual-panel__caption">
-              Classroom access, managed in one place.
+              Access for every classroom.
             </p>
           </div>
         </div>
@@ -91,13 +97,14 @@ function GuideHomePage() {
         <div className="content-band clever-intro__inner">
           <h2 className="display-section">What is Guide?</h2>
           <p className="clever-intro__body">
-            Guide is an identity platform built for schools. Students sign in
-            once to reach their apps. Teachers manage classes after a school
-            invite. Administrators apply; Guide Official reviews and approves.
+            Guide is the identity platform for schools. Students sign in once to
+            open their apps. Teachers manage classes after a school invite.
+            Administrators apply; Guide Official reviews each school.
           </p>
         </div>
       </section>
 
+      {/* Four mid rows — Clever home density: image L/R alternating */}
       <section className="clever-feature">
         <div className="content-band clever-feature__grid">
           <div
@@ -105,18 +112,17 @@ function GuideHomePage() {
             aria-hidden
           >
             <div className="feature-scene feature-scene--classes">
-              <span className="feature-scene__chip">Classes</span>
-              <span className="feature-scene__chip">Apps</span>
-              <span className="feature-scene__chip">Progress</span>
+              <span className="feature-scene__pane" />
+              <span className="feature-scene__pane feature-scene__pane--mid" />
+              <span className="feature-scene__pane feature-scene__pane--tall" />
             </div>
             <span className="clever-feature__mark">01</span>
           </div>
           <div className="clever-feature__copy">
             <h2 className="display-feature">Power classroom learning</h2>
             <p className="clever-feature__body">
-              Give teachers one place to create classes, assign apps, and follow
-              progress. Students open everything from their portal — clearly,
-              and without a crowded top bar.
+              Teachers create classes, assign apps, and follow progress from one
+              portal. Students open what they need — without crowded navigation.
             </p>
             <Link href="/education" className="clever-feature__link">
               Explore for schools
@@ -129,11 +135,10 @@ function GuideHomePage() {
       <section className="clever-feature clever-feature--alt">
         <div className="content-band clever-feature__grid clever-feature__grid--flip">
           <div className="clever-feature__copy">
-            <h2 className="display-feature">Secure school identity</h2>
+            <h2 className="display-feature">Secure every school identity</h2>
             <p className="clever-feature__body">
-              Protect access across your school. Students choose their school,
-              then sign in with a badge or password. School tools unlock after
-              your school is approved.
+              Students select their school, then sign in with a badge or
+              password. School tools unlock after your school is approved.
             </p>
             <Link
               href="/auth/sign-in?as=student"
@@ -149,7 +154,6 @@ function GuideHomePage() {
           >
             <div className="feature-scene feature-scene--badge">
               <span className="feature-scene__badge-ring" />
-              <span className="feature-scene__badge-label">Badge</span>
             </div>
             <span className="clever-feature__mark">02</span>
           </div>
@@ -171,11 +175,11 @@ function GuideHomePage() {
             <span className="clever-feature__mark">03</span>
           </div>
           <div className="clever-feature__copy">
-            <h2 className="display-feature">Apps at the center of the portal</h2>
+            <h2 className="display-feature">Open apps from the portal</h2>
             <p className="clever-feature__body">
-              Teachers install learning apps on a class. Students find them in
-              the center of their portal. Messaging and Suggestions stay
-              alongside — including {FIRST_APP_NAME} when your school adds it.
+              Install learning apps on a class and place them at the center of
+              each student portal. Messaging and Suggestions remain alongside —
+              including {FIRST_APP_NAME} when your school adds it.
             </p>
             <a href={amudHref} className="clever-feature__link">
               Visit {FIRST_APP_NAME}
@@ -188,13 +192,13 @@ function GuideHomePage() {
       <section className="clever-feature clever-feature--alt">
         <div className="content-band clever-feature__grid clever-feature__grid--flip">
           <div className="clever-feature__copy">
-            <h2 className="display-feature">One platform for the whole school</h2>
+            <h2 className="display-feature">Support school and district teams</h2>
             <p className="clever-feature__body">
-              Bring accounts, classes, and apps together in one place — so
-              administrators stay in control and classrooms stay ready.
+              Administrators apply once and invite teachers by email. Developers
+              partner with Guide only after Official review.
             </p>
-            <Link href="/education#apply" className="clever-feature__link">
-              Apply for your school
+            <Link href="/schools/meeting" className="clever-feature__link">
+              Book a meeting
               <span aria-hidden>→</span>
             </Link>
           </div>
@@ -208,33 +212,6 @@ function GuideHomePage() {
               <span className="feature-scene__row feature-scene__row--accent" />
             </div>
             <span className="clever-feature__mark">04</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="clever-feature">
-        <div className="content-band clever-feature__grid">
-          <div
-            className="clever-feature__visual clever-feature__visual--frame-e"
-            aria-hidden
-          >
-            <div className="feature-scene feature-scene--secure">
-              <span className="feature-scene__lock" />
-              <span className="feature-scene__secure-label">Approved</span>
-            </div>
-            <span className="clever-feature__mark">05</span>
-          </div>
-          <div className="clever-feature__copy">
-            <h2 className="display-feature">Built for school leadership</h2>
-            <p className="clever-feature__body">
-              School and district administrators apply once, then invite
-              teachers by email. Verified developers partner with Guide after
-              Official review.
-            </p>
-            <Link href="/schools/meeting" className="clever-feature__link">
-              Book a meeting
-              <span aria-hidden>→</span>
-            </Link>
           </div>
         </div>
       </section>
