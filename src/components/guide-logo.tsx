@@ -14,9 +14,8 @@ const sizeMap = {
 } as const;
 
 /**
- * Guide wordmark — Gulfs Display request → Gilda Display webfont
- * (Studio Sun “Gulfs Display” is commercial; Google Fonts “Gilda Display”
- * is the closest free display face by name). Amud keeps AppWordmark.
+ * Guide wordmark — licensed Gulfs Display (wordmark only).
+ * Amud keeps AppWordmark.
  */
 export function GuideWordmark({
   href = "/",

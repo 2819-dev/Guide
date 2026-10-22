@@ -28,8 +28,8 @@
   --font-display: var(--font-manrope);
   --font-body: var(--font-manrope);
   --font-hebrew: var(--font-frank-ruhl);
-  /* Wordmark: Gilda Display loaded as --font-gulfs-display */
-  --font-wordmark: var(--font-gulfs-display), "Gilda Display", Georgia, serif;
+  /* Wordmark: licensed Gulfs Display (next/font/local) */
+  --font-wordmark: var(--font-gulfs-display), "Gulfs Display", Georgia, serif;
 
   /* Clever-measured tokens (structure only) */
   --clever-header-h: 91px;
