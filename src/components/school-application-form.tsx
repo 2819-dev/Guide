@@ -93,9 +93,9 @@ export function SchoolApplicationForm({
         <p className="portal-eyebrow">School application</p>
         <h2 className="display-feature mt-1">Apply for your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Tell us about your school or district. After approval, invite
-          teachers by email, create classes, add apps, and follow student
-          progress.
+          Tell us about your school or district. After approval you can invite
+          teachers, create classes, add apps, and keep classrooms inviting and
+          well managed.
         </p>
       </div>
 
@@ -179,7 +179,7 @@ export function SchoolApplicationForm({
           value={intendedUse}
           onChange={(e) => setIntendedUse(e.target.value)}
           className="field mt-1.5"
-          placeholder="Classes, homework apps, after-school programs…"
+          placeholder="Keep students engaged in class, add learning apps, manage homework…"
         />
       </label>
 

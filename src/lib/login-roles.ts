@@ -1,4 +1,4 @@
-/** Clever-style “Log in as a …” — Guide school roles only (no family). */
+/** Guide school “Log in as a …” — school roles only (no family). */
 
 export type LoginAs =
   | "student"
@@ -19,19 +19,19 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
     label: "Student",
-    description: "Find your school, then username or badge",
+    description: "Find your school, then badge or password",
     href: "/auth/sign-in?as=student",
   },
   {
     id: "educator",
     label: "Teacher or School Administrator",
-    description: "Log in with your school account",
+    description: "Teachers log in · schools apply first",
     href: "/auth/sign-in?as=educator",
   },
   {
     id: "official",
     label: "Guide Official",
-    description: "Guide Official account",
+    description: "Approve schools and meeting requests",
     href: "/auth/sign-in?as=official",
   },
 ];
@@ -69,7 +69,8 @@ export function loginAsCopy(as: LoginAs): {
     case "student":
       return {
         title: "Student",
-        subtitle: "Find your school, then log in with a username or badge.",
+        subtitle:
+          "Find your school, then open My apps — the learning and classroom tools your teachers added.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
@@ -77,7 +78,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Teacher or School Administrator",
         subtitle:
-          "Teachers log in with the account from your school invite. School administrators apply for a school, then log in.",
+          "Teachers log in with the setup invite from your school. Administrators apply for Guide, then manage classes and invites from the portal.",
         // Teachers = login only. School/district apply stays for admins.
         joinHref: "/education#apply",
         joinLabel: "Apply for your school",
@@ -85,7 +86,7 @@ export function loginAsCopy(as: LoginAs): {
     case "official":
       return {
         title: "Guide Official",
-        subtitle: "Sign in to continue.",
+        subtitle: "Review school applications, developers, and meeting requests.",
         joinHref: null,
         joinLabel: null,
       };
@@ -119,7 +120,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Join as a Student",
         subtitle:
-          "Choose your school and create an account. You’ll get a badge for quick login, then join class from Account.",
+          "Choose your school, create an account, then join your class from Account so My apps lights up.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -127,7 +128,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "School administrator",
         subtitle:
-          "Teachers are invited by their school — use Log in instead. School or district administrators can apply below.",
+          "Teachers are invited by email — use Log in instead. School or district administrators apply for Guide here.",
         roleValue: "customer",
         showRoleChooser: false,
       };

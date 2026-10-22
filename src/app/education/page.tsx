@@ -9,9 +9,9 @@ import { ensureProfile } from "@/lib/profile";
 export const runtime = "edge";
 
 export const metadata = {
-  title: "Apply for Guide",
+  title: "For schools · Guide",
   description:
-    "School and district administrators apply for Guide. Teachers are invited by email.",
+    "Keep students engaged and classrooms well managed. School administrators apply; teachers log in with a school invite.",
 };
 
 /** School/district apply + lock states. Teachers = login / invite only. */
@@ -81,42 +81,71 @@ export default async function EducationLandingPage() {
   return (
     <div className="portal-page">
       <section className="bg-paper">
-        <div className="content-band py-12 text-center sm:py-14">
-          <p className="eyebrow">For schools</p>
-          <h1 className="display-feature mx-auto mt-3 max-w-[20ch]">
-            Classes, apps, and home learning in one place
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-[1.65] text-ink-muted">
-            School and district administrators apply here. After approval,
-            invite teachers by email, add apps, and follow progress. Teachers
-            log in with their invite — no separate teacher signup.
-          </p>
-          <div className="mt-7 flex flex-col items-center gap-2">
-            {showPortalCta ? (
-              <Link href="/education/panel" className="btn-primary">
-                Open portal
-              </Link>
-            ) : (
-              <a href="#apply" className="btn-primary">
-                {isRejected ? "Re-apply" : "Apply for your school"}
-              </a>
-            )}
-            <p className="hero-secondary-links !mt-2">
-              <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
-              <span aria-hidden className="hero-secondary-links__dot">
-                ·
-              </span>
-              <Link href="/schools/demo">Demo</Link>
-              <span aria-hidden className="hero-secondary-links__dot">
-                ·
-              </span>
-              <Link href="/schools/meeting">Book a meeting</Link>
+        <div className="content-band py-12 sm:py-16">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="eyebrow">For schools</p>
+            <h1 className="display-feature mx-auto mt-3 max-w-[18ch]">
+              Keep students engaged and classrooms well managed
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-[1.65] text-ink-muted">
+              Guide gives schools a calm place for classes, apps, and invites —
+              so learning feels inviting and teachers stay organized.
+              Administrators apply here; teachers log in with a school invite
+              only.
             </p>
+            <div className="mt-8 flex flex-col items-center gap-2">
+              {showPortalCta ? (
+                <Link href="/education/panel" className="btn-primary">
+                  Open portal
+                </Link>
+              ) : (
+                <a href="#apply" className="btn-primary">
+                  {isRejected ? "Re-apply" : "Apply for your school"}
+                </a>
+              )}
+              <p className="hero-secondary-links !mt-2">
+                <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
+                <span aria-hidden className="hero-secondary-links__dot">
+                  ·
+                </span>
+                <Link href="/schools/demo">Demo</Link>
+                <span aria-hidden className="hero-secondary-links__dot">
+                  ·
+                </span>
+                <Link href="/schools/meeting">Book a meeting</Link>
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="content-band py-10 sm:py-12">
+      <section className="content-band py-10 sm:py-14">
+        <div className="schools-feature-grid">
+          <article className="schools-feature">
+            <h2 className="schools-feature__title">Classroom management</h2>
+            <p className="schools-feature__body">
+              Create classes, share invite codes, and follow progress without
+              juggling five different tools.
+            </p>
+          </article>
+          <article className="schools-feature">
+            <h2 className="schools-feature__title">Apps students actually open</h2>
+            <p className="schools-feature__body">
+              Teachers add apps to a class. Students see them under My apps —
+              Amud, Arcade Education, and more your school chooses.
+            </p>
+          </article>
+          <article className="schools-feature">
+            <h2 className="schools-feature__title">Invite teachers by email</h2>
+            <p className="schools-feature__body">
+              Type work emails from the portal. Guide sends setup links —
+              teachers log in only; there is no public teacher signup.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section className="content-band py-2 sm:py-4">
         <ol className="grid gap-0 overflow-hidden rounded-[10px] border border-line bg-surface shadow-[var(--shadow-soft)] lg:grid-cols-3">
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
             <p className="text-xs font-semibold text-forest-600">01</p>
@@ -124,7 +153,8 @@ export default async function EducationLandingPage() {
               Apply
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              School or district application. Tools stay locked until accepted.
+              School or district application. The portal stays locked until
+              accepted.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
@@ -133,13 +163,13 @@ export default async function EducationLandingPage() {
               Invite teachers
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Type teacher emails in your portal. Guide sends setup links.
+              Paste work emails. Guide sends professional setup links.
             </p>
           </li>
           <li className="p-6">
             <p className="text-xs font-semibold text-forest-600">03</p>
             <h2 className="mt-2 text-lg font-semibold text-forest-950">
-              Follow progress
+              Engage students
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
               Teachers create classes and add apps. Students open them from My
@@ -149,7 +179,7 @@ export default async function EducationLandingPage() {
         </ol>
       </section>
 
-      <section id="apply" className="content-band max-w-3xl pb-14">
+      <section id="apply" className="content-band max-w-3xl py-12 sm:py-14">
         {isRejected ? (
           <div className="portal-empty mb-5 !border-solid">
             <p className="portal-empty__title">Application declined</p>

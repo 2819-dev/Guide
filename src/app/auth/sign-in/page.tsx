@@ -1,6 +1,6 @@
 "use client";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
@@ -21,32 +21,63 @@ function SignInForm() {
     return <StudentSignIn />;
   }
 
+  const isEducator = as === "educator";
+  const isOfficial = as === "official";
+
   return (
     <div className="auth-shell flex min-h-screen flex-col">
-      <div className="flex items-center px-6 py-5 sm:px-8">
+      <div className="flex items-center justify-between px-6 py-5 sm:px-8">
         <GuideWordmark href="/" size="lg" />
+        {isEducator ? (
+          <Link
+            href="/schools/demo"
+            className="text-sm font-semibold text-forest-800 no-underline hover:underline"
+          >
+            View demo
+          </Link>
+        ) : null}
       </div>
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
         <AuthCard
-          eyebrow={as === "official" ? null : "Log in as a"}
+          eyebrow={isOfficial ? null : "Log in as a"}
           title={copy.title}
           subtitle={copy.subtitle}
           footer={
             copy.joinHref && copy.joinLabel ? (
               <>
-                New here?{" "}
-                <Link
-                  href={copy.joinHref}
-                  className="font-semibold text-forest-800"
-                >
-                  {copy.joinLabel}
-                </Link>
+                {isEducator ? (
+                  <>
+                    School or district administrator?{" "}
+                    <Link
+                      href={copy.joinHref}
+                      className="font-semibold text-forest-800"
+                    >
+                      {copy.joinLabel}
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    New here?{" "}
+                    <Link
+                      href={copy.joinHref}
+                      className="font-semibold text-forest-800"
+                    >
+                      {copy.joinLabel}
+                    </Link>
+                  </>
+                )}
               </>
             ) : (
-              <>Need a different role? Use Log In above.</>
+              <>Need a different role? Use Log In in the menu.</>
             )
           }
         >
+          {isEducator ? (
+            <p className="mb-5 rounded-[10px] border border-line bg-sky-soft px-3.5 py-3 text-sm leading-snug text-forest-900">
+              Teachers log in only — use the setup link from your school invite.
+              There is no public teacher signup.
+            </p>
+          ) : null}
           <form action={formAction} className="space-y-4">
             <input type="hidden" name="as" value={as} />
             <label className="block text-sm font-semibold text-forest-900">
@@ -57,7 +88,13 @@ function SignInForm() {
                 required
                 autoComplete="email"
                 className="field mt-1.5"
-                placeholder={as === "educator" ? "you@school.org" : undefined}
+                placeholder={
+                  isEducator
+                    ? "you@school.org"
+                    : isOfficial
+                      ? "official@guidelearning.org"
+                      : undefined
+                }
               />
             </label>
             <label className="block text-sm font-semibold text-forest-900">
@@ -83,6 +120,17 @@ function SignInForm() {
               {pending ? "Signing in…" : "Log in"}
             </button>
           </form>
+          {isEducator ? (
+            <p className="mt-4 text-center text-sm text-ink-muted">
+              <Link href="/schools/meeting" className="font-semibold text-forest-800">
+                Book a meeting
+              </Link>
+              {" · "}
+              <Link href="/account" className="font-semibold text-forest-800">
+                Get help
+              </Link>
+            </p>
+          ) : null}
         </AuthCard>
       </div>
     </div>

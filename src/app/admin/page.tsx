@@ -28,7 +28,7 @@ export default async function AdminPage() {
     <PortalShell
       eyebrow="Guide Official"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Approve schools and developers, follow meeting requests, manage Roles, badge logins, and Suggestions."
+      subtitle="Approve schools and developers, follow Book a meeting requests, and keep Roles, badge logins, and Suggestions in order."
       chips={[
         { href: "#meetings", label: "Meetings", active: true },
         { href: "#schools", label: "Schools" },

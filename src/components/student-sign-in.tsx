@@ -14,7 +14,7 @@ type DetectorLike = {
   detect: (source: HTMLVideoElement) => Promise<Array<{ rawValue?: string }>>;
 };
 
-/** Clever district login: split visual + Badge | Password tiles. */
+/** Full-bleed student login: forest split + Badge | Password. */
 export function StudentSignIn() {
   const copy = loginAsCopy("student");
   const [schools, setSchools] = useState<School[]>([]);
@@ -135,16 +135,24 @@ export function StudentSignIn() {
 
   return (
     <div className="login-split">
-      <div className="login-split__visual" aria-hidden />
+      <div className="login-split__visual">
+        <div className="login-split__brand">
+          <GuideWordmark href="/" tone="onDark" size="lg" />
+          <p className="login-split__lede">
+            Your school’s apps and class tools — ready when you are.
+          </p>
+        </div>
+      </div>
 
       <div className="login-split__panel">
         <div className="w-full max-w-[700px]">
+          <p className="login-eyebrow">Student</p>
           <h1 className="login-title">Log in with Guide</h1>
           <p className="mx-auto mt-2.5 max-w-md text-center text-[0.9375rem] leading-relaxed text-ink-muted">
             {!school
               ? copy.subtitle
               : mode === "choose"
-                ? `${school.name} · How do you want to log in?`
+                ? `${school.name} · Badge or password`
                 : mode === "badge"
                   ? "Scan your badge or enter the code from your teacher."
                   : "Use the username and password from your school."}
@@ -176,8 +184,9 @@ export function StudentSignIn() {
                   <div className="portal-empty !py-7">
                     <p className="portal-empty__title">No schools yet</p>
                     <p className="portal-empty__body">
-                      Ask your teacher to apply for Guide. Once approved, your
-                      school will show up here.
+                      Ask a school administrator to apply for Guide. Once
+                      approved, your school appears here for badge or password
+                      login.
                     </p>
                   </div>
                 )}
@@ -191,7 +200,7 @@ export function StudentSignIn() {
                           setMode("choose");
                           setQuery("");
                         }}
-                        className="flex min-h-[52px] w-full items-center justify-between gap-3 px-4 py-3.5 text-left text-base font-semibold text-forest-950 transition hover:bg-forest-100"
+                        className="flex min-h-12 w-full items-center justify-between gap-3 px-4 py-3 text-left text-base font-semibold text-forest-950 transition hover:bg-forest-100"
                       >
                         <span>{s.name}</span>
                         <span aria-hidden className="text-forest-600">
@@ -202,19 +211,19 @@ export function StudentSignIn() {
                   ))}
                 </ul>
                 <p className="text-center text-sm text-ink-muted">
-                  Not a student?{" "}
-                  <span className="inline-block align-middle">
-                    <LoginMenu variant="nav" />
-                  </span>
+                  Teacher or school admin?{" "}
+                  <Link
+                    href="/auth/sign-in?as=educator"
+                    className="font-semibold text-forest-800"
+                  >
+                    Log in
+                  </Link>
                   <span aria-hidden className="mx-1.5 text-forest-300">
                     ·
                   </span>
-                  <Link
-                    href="/auth/sign-in?as=official"
-                    className="font-semibold text-forest-800"
-                  >
-                    Guide Official
-                  </Link>
+                  <span className="inline-block align-middle">
+                    <LoginMenu variant="nav" />
+                  </span>
                 </p>
               </div>
             ) : mode === "choose" ? (

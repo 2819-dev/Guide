@@ -21,7 +21,7 @@ export default async function EducationPanelPage() {
     <PortalShell
       eyebrow="Teacher or School Administrator"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Tabs across the top. Add apps, invite teachers, manage classes, and message — Clever-like density."
+      subtitle="Add apps to classes, invite teachers, and keep students engaged — tabs across the top."
       chips={[
         { href: "#apps", label: "Apps", active: true },
         { href: "#teachers", label: "Teachers" },

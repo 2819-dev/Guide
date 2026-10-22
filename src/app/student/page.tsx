@@ -40,7 +40,11 @@ export default async function StudentHubPage() {
     <PortalShell
       eyebrow="Student portal"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle={schoolName ?? "Your apps and tools are below."}
+      subtitle={
+        schoolName
+          ? `${schoolName} · Open apps your teachers added for class.`
+          : "Open the apps your teachers added — they’re ready in the center."
+      }
       chips={[
         { href: "#apps", label: "My apps", active: true },
         { href: "#tools", label: "Tools" },

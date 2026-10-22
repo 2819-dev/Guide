@@ -38,7 +38,7 @@ function SignUpForm() {
       <AuthCard
         eyebrow="For schools"
         title="Teachers log in only"
-        subtitle="Teachers receive a setup invite from their school. School and district administrators apply for Guide — there is no separate teacher signup."
+        subtitle="Teachers get a setup invite from their school, then log in to manage classes and apps. School and district administrators apply for Guide — there is no public teacher signup."
         footer={
           <>
             Already invited?{" "}
@@ -52,10 +52,16 @@ function SignUpForm() {
         }
       >
         <div className="flex flex-col gap-3">
-          <Link href="/auth/sign-in?as=educator" className="btn-primary inline-flex justify-center">
+          <Link
+            href="/auth/sign-in?as=educator"
+            className="btn-primary inline-flex justify-center"
+          >
             Teacher log in
           </Link>
-          <Link href="/education#apply" className="btn-secondary inline-flex justify-center">
+          <Link
+            href="/education#apply"
+            className="btn-secondary inline-flex justify-center"
+          >
             Apply for your school
           </Link>
         </div>

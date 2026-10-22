@@ -6,7 +6,7 @@ type Props = {
   emptyHint?: string;
 };
 
-/** Clever Instant Login app launcher — square tiles in the portal only. */
+/** Student / developer app launcher — square tiles in the portal only. */
 export function MyAppsGrid({
   apps,
   emptyHint = "When your teacher adds an app to your class, it shows up here.",

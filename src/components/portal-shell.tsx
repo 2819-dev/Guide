@@ -63,9 +63,11 @@ export function PortalShell({
 
         <header className="portal-hero">
           <p className="portal-eyebrow">{eyebrow}</p>
-          <h1 className="display-feature mt-1">{title}</h1>
+          <h1 className="display-feature mt-1 text-[1.75rem] sm:text-[2rem]">
+            {title}
+          </h1>
           {subtitle ? (
-            <p className="mt-1.5 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
+            <p className="mt-1.5 max-w-xl text-[0.9375rem] leading-relaxed text-ink-muted">
               {subtitle}
             </p>
           ) : null}
@@ -85,7 +87,7 @@ type ToolTileProps = {
   muted?: boolean;
 };
 
-/** Compact Clever-style portal tool shortcut (messages, suggestions, etc.). */
+/** Compact portal tool shortcut (messages, suggestions, etc.). */
 export function PortalToolTile({
   href,
   title,

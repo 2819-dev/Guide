@@ -364,7 +364,7 @@ body {
 .portal-tab {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 48px;
   padding: 0.55rem 1rem;
   border-radius: 8px;
   border: 0;
@@ -1220,7 +1220,7 @@ body {
 }
 
 .auth-shell {
-  min-height: calc(100vh - var(--clever-header-h));
+  min-height: 100vh;
   background: var(--sky-soft);
 }
 
@@ -1228,7 +1228,21 @@ body {
   border-radius: var(--clever-radius-sm);
 }
 
-/* Clever student login split — full viewport (auth hides site chrome) */
+.auth-card {
+  border: 1px solid var(--line);
+  border-radius: var(--clever-radius);
+  background: var(--surface);
+  padding: 1.75rem 1.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+@media (min-width: 640px) {
+  .auth-card {
+    padding: 2rem;
+  }
+}
+
+/* Student login split — full viewport (auth hides site chrome) */
 .login-split {
   display: grid;
   min-height: 100vh;
@@ -1247,6 +1261,25 @@ body {
   background:
     radial-gradient(ellipse 80% 60% at 30% 20%, rgba(90, 154, 118, 0.35), transparent 55%),
     linear-gradient(160deg, var(--forest-900) 0%, var(--forest-700) 48%, var(--forest-800) 100%);
+}
+
+.login-split__brand {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.85rem;
+  padding: 2.5rem 2rem 3rem;
+}
+
+.login-split__lede {
+  margin: 0;
+  max-width: 18ch;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
 }
 
 /* Clever right-column visual — framed Official Release media */
@@ -1483,12 +1516,23 @@ body {
 }
 
 .login-split__panel {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 3rem 1.5rem 4.5rem;
   background: var(--sky-soft);
+}
+
+.login-eyebrow {
+  margin: 0 0 0.35rem;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--forest-700);
 }
 
 .login-title {
@@ -1672,6 +1716,7 @@ body {
   font-size: 1.35rem;
   font-weight: 700;
   letter-spacing: -0.03em;
+  box-shadow: none;
 }
 
 .portal-app-tile__name {
@@ -1741,24 +1786,60 @@ body {
 
 .portal-empty {
   border-radius: var(--clever-radius);
-  border: 1px dashed var(--line);
-  background: var(--surface);
-  padding: 2rem 1.5rem;
+  border: 1px dashed var(--forest-300);
+  background: rgba(240, 245, 242, 0.85);
+  padding: 2.25rem 1.5rem;
   text-align: center;
 }
 
 .portal-empty__title {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.0625rem;
   font-weight: 650;
+  letter-spacing: -0.015em;
   color: var(--ink);
 }
 
 .portal-empty__body {
-  margin: 0.5rem auto 0;
+  margin: 0.55rem auto 0;
   max-width: 26rem;
   font-size: 0.875rem;
-  line-height: 1.5;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+.schools-feature-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 800px) {
+  .schools-feature-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+}
+
+.schools-feature {
+  border: 1px solid var(--line);
+  border-radius: var(--clever-radius);
+  background: var(--surface);
+  padding: 1.35rem 1.25rem 1.45rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.schools-feature__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--forest-950);
+}
+
+.schools-feature__body {
+  margin: 0.55rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
   color: var(--ink-muted);
 }
 
