@@ -81,7 +81,7 @@ export const DEMO_ROLES: {
     id: "official",
     tryAs: "Try as Guide Official",
     portalLabel: "Guide Official",
-    blurb: "Meeting requests from Book a meeting — approve and follow up.",
+    blurb: "Meetings, school approvals, and partner apps — denser admin tabs.",
   },
 ];
 

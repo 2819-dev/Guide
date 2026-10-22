@@ -20,7 +20,7 @@ import {
 type TeacherTab = "apps" | "classes" | "messages";
 type StudentTab = "apps" | "tools";
 type AdminTab = "overview" | "teachers" | "classes";
-type OfficialTab = "meetings" | "schools";
+type OfficialTab = "meetings" | "schools" | "developers";
 
 function randomInviteCode(): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -745,6 +745,7 @@ function OfficialPortal({
         tabs={[
           { id: "meetings", label: "Meetings" },
           { id: "schools", label: "Schools" },
+          { id: "developers", label: "Developers" },
         ]}
         active={tab}
         onChange={(id) => setTab(id as OfficialTab)}
@@ -756,7 +757,7 @@ function OfficialPortal({
             Hi, {session.displayName.official}
           </h2>
           <p className="mt-1 text-sm text-ink-muted">
-            Book a meeting requests and school approvals — denser admin tabs.
+            Meetings, school approvals, and partner apps — denser admin tabs.
           </p>
           {notice ? (
             <p className="mt-3 rounded-[10px] border border-forest-200 bg-forest-100 px-3 py-2 text-sm text-forest-900">
@@ -830,7 +831,9 @@ function OfficialPortal({
                 </article>
               ))}
             </section>
-          ) : (
+          ) : null}
+
+          {tab === "schools" ? (
             <section className="mt-6 space-y-4">
               <div>
                 <h3 className="portal-section-title">School applications</h3>
@@ -872,7 +875,69 @@ function OfficialPortal({
                 </div>
               </div>
             </section>
-          )}
+          ) : null}
+
+          {tab === "developers" ? (
+            <section className="mt-6 space-y-4">
+              <div>
+                <h3 className="portal-section-title">Developers</h3>
+                <p className="-mt-2 text-sm text-ink-muted">
+                  Verified partners only — approve apps schools can add to class.
+                </p>
+              </div>
+              <div className="official-stat-row">
+                <div className="official-stat">
+                  <p className="official-stat__value">1</p>
+                  <p className="official-stat__label">Total</p>
+                </div>
+                <div className="official-stat">
+                  <p className="official-stat__value">1</p>
+                  <p className="official-stat__label">Pending</p>
+                </div>
+                <div className="official-stat">
+                  <p className="official-stat__value">0</p>
+                  <p className="official-stat__label">Approved</p>
+                </div>
+              </div>
+              <article className="portal-panel space-y-3">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div>
+                    <h4 className="text-base font-semibold text-forest-950">
+                      Classroom Pulse
+                    </h4>
+                    <p className="mt-0.5 text-sm text-ink-muted">
+                      Northwind Labs · Sam Rivera · sam@northwind.example
+                    </p>
+                  </div>
+                  <span className="status-chip status-chip--pending">pending</span>
+                </div>
+                <p className="text-sm leading-relaxed text-forest-950">
+                  Engagement check-ins teachers can add to a class from the Guide
+                  library.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className="btn-primary !min-h-12 !px-3.5 !text-sm"
+                    onClick={() =>
+                      setNotice("Partner approved in demo — no production write.")
+                    }
+                  >
+                    Approve
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary !min-h-12 !px-3.5 !text-sm"
+                    onClick={() =>
+                      setNotice("Partner declined in demo — no production write.")
+                    }
+                  >
+                    Decline
+                  </button>
+                </div>
+              </article>
+            </section>
+          ) : null}
         </div>
       </div>
     </>
@@ -908,8 +973,8 @@ export function SchoolDemo() {
         <h1 className="display-feature mt-2">Try Guide as your school</h1>
         <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted">
           An interactive walkthrough — teacher, student, school administrator,
-          or Guide Official (meeting queue). Local fixtures only; nothing is
-          written to production.
+          or Guide Official (meetings, schools, developers). Local fixtures
+          only; nothing is written to production.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
           <Link href="/schools/meeting">Book a meeting →</Link>

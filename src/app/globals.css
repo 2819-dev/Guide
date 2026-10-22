@@ -2063,10 +2063,20 @@ body {
   color: var(--forest-800);
 }
 
-.status-chip--closed {
+.status-chip--closed,
+.status-chip--rejected {
   border-color: var(--line);
   background: var(--surface);
   color: var(--ink-muted);
+}
+
+.status-chip--approved,
+.status-chip--sent,
+.status-chip--accepted,
+.status-chip--active {
+  border-color: var(--forest-300);
+  background: var(--forest-100);
+  color: var(--forest-800);
 }
 
 .content-band {

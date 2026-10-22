@@ -110,12 +110,12 @@ export async function sendTeacherInviteEmail(opts: {
     subject: `You're invited to Guide · ${opts.schoolName}`,
     html: shell(`
       <p style="margin:0 0 14px;font-weight:600">Dear Teacher,</p>
-      <p style="margin:0 0 14px"><strong>${escapeHtml(opts.schoolName)}</strong> has invited you to set up your Guide teacher account.
-      Guide is where your school signs in to open learning apps and classroom tools.</p>
+      <p style="margin:0 0 14px"><strong>${escapeHtml(opts.schoolName)}</strong> invited you to Guide — keep students engaged and classrooms well managed with classes, apps, and tools in one place.</p>
+      <p style="margin:0 0 14px">Create your password with the button below. Teachers log in only; there is no public teacher signup. After setup, open your portal to manage classes and add apps.</p>
       <p style="margin:0 0 18px"><a href="${escapeHtml(opts.inviteUrl)}" style="display:inline-block;background:#1c3d2e;color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Set up your account</a></p>
-      <p style="margin:0;color:#5a6b62;font-size:14px">This link expires in 14 days. Teachers log in with the account you create — there is no separate teacher signup on the public site.</p>
+      <p style="margin:0;color:#5a6b62;font-size:14px">This link expires in 14 days. Already set up? <a href="${guidePublicUrl()}/auth/sign-in?as=educator" style="color:#1c3d2e;font-weight:600">Teacher log in</a>.</p>
     `),
-    text: `Dear Teacher,\n\n${opts.schoolName} invited you to Guide.\nSet up: ${opts.inviteUrl}`,
+    text: `Dear Teacher,\n\n${opts.schoolName} invited you to Guide.\nSet up: ${opts.inviteUrl}\nTeacher log in: ${guidePublicUrl()}/auth/sign-in?as=educator`,
   });
 }
 
