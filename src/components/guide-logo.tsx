@@ -8,9 +8,9 @@ type WordmarkProps = {
 };
 
 const sizeMap = {
-  sm: "text-[1.125rem]",
-  md: "text-[1.35rem]",
-  lg: "text-[1.75rem]",
+  sm: "text-[1.125rem] lg:text-[1.25rem]",
+  md: "text-[1.35rem] lg:text-[1.6rem]",
+  lg: "text-[1.75rem] lg:text-[2.05rem]",
 } as const;
 
 /**

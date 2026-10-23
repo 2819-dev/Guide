@@ -151,16 +151,16 @@ export function StudentSignIn() {
         <AdminEntryButton />
       </div>
 
-      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
+      <div className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8 lg:max-w-2xl">
         <p className="login-eyebrow">Student</p>
         <h1 className="login-title">Log in with Guide</h1>
-        <p className="mx-auto mt-2.5 max-w-md text-center text-[0.9375rem] leading-relaxed text-ink-muted">
+        <p className="mx-auto mt-2.5 max-w-lg text-center text-[0.9375rem] leading-relaxed text-ink-muted lg:text-base">
           {subtitle}
         </p>
 
         <div className="mt-9 w-full">
           {!school ? (
-            <div className="mx-auto w-full max-w-md space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)] sm:p-7">
+            <div className="mx-auto w-full max-w-lg space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)] sm:p-7 lg:p-8">
               <label className="block text-sm font-semibold text-forest-900">
                 Find your school
                 <input
@@ -317,7 +317,7 @@ export function StudentSignIn() {
           ) : mode === "password" ? (
             <form
               action={passAction}
-              className="mx-auto max-w-md space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)]"
+              className="mx-auto max-w-lg space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)] lg:p-8"
             >
               <button
                 type="button"
@@ -369,7 +369,7 @@ export function StudentSignIn() {
           ) : (
             <form
               action={badgeAction}
-              className="mx-auto max-w-md space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)]"
+              className="mx-auto max-w-lg space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)] lg:p-8"
             >
               <button
                 type="button"

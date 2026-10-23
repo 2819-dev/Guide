@@ -13,13 +13,13 @@ export default function BookMeetingPage() {
   return (
     <div className="portal-page">
       <section className="schools-hero-band">
-        <div className="content-band py-12 sm:py-14">
-          <div className="mx-auto max-w-2xl text-center">
+        <div className="content-band py-12 sm:py-14 lg:py-20">
+          <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow">For schools</p>
-            <h1 className="display-feature mx-auto mt-3 max-w-[18ch]">
+            <h1 className="display-feature mx-auto mt-3 max-w-[20ch]">
               Book a meeting with Guide Official
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-[1.65] text-ink-muted">
+            <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">
               See how classes, teacher invites, and My apps work together — so
               your school can keep students engaged and classrooms well managed.
             </p>

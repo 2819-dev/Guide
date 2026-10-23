@@ -98,7 +98,7 @@ export function PortalShell({
       <header className="portal-topbar">
         <div className="portal-topbar__inner">
           <div className="portal-topbar__brand">
-            <GuideWordmark href={embed ? null : "/"} size="md" />
+            <GuideWordmark href={embed ? null : "/"} size="lg" />
             <span className="portal-topbar__role">{roleLabel}</span>
           </div>
 

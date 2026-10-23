@@ -15,11 +15,11 @@ export function AuthCard({
   footer?: ReactNode;
 }) {
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-lg lg:max-w-xl">
       <div className="auth-card">
         {eyebrow ? <p className="portal-eyebrow">{eyebrow}</p> : null}
         <h1
-          className={`text-[1.625rem] font-semibold tracking-tight text-forest-950 sm:text-[1.875rem] ${eyebrow ? "mt-1.5" : ""}`}
+          className={`text-[1.625rem] font-semibold tracking-tight text-forest-950 sm:text-[1.875rem] lg:text-[2.1rem] ${eyebrow ? "mt-1.5" : ""}`}
         >
           {title}
         </h1>

@@ -17,13 +17,13 @@ export default function DeveloperApplyPage() {
   return (
     <div className="portal-page">
       <section className="schools-hero-band">
-        <div className="content-band py-12 sm:py-16">
-          <div className="mx-auto max-w-2xl text-center">
+        <div className="content-band py-12 sm:py-16 lg:py-20">
+          <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow">For developers</p>
-            <h1 className="display-feature mx-auto mt-3 max-w-[18ch]">
+            <h1 className="display-feature mx-auto mt-3 max-w-[20ch]">
               Build apps schools can add to class
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-[1.65] text-ink-muted">
+            <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">
               Guide hosts verified partner apps — not a public marketplace.
               After Official approves you, teachers add your app to a class and
               students open it from My apps.

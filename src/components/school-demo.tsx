@@ -771,10 +771,10 @@ export function SchoolDemo() {
 
   return (
     <div className="demo-desktop-stage content-band portal-page__inner">
-      <header className="mb-8 max-w-2xl">
+      <header className="mb-8 max-w-3xl lg:mb-10">
         <p className="eyebrow">For schools · Demo</p>
         <h1 className="display-feature mt-2">Try Guide as your school</h1>
-        <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted">
+        <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted lg:text-lg">
           An interactive preview for teachers, students, and school
           administrators. Explore freely — nothing is saved to a live school.
           When you are ready, book a meeting or apply for your school.

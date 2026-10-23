@@ -34,10 +34,11 @@
   /* Wordmark: licensed Gulfs Display (next/font/local) */
   --font-wordmark: var(--font-gulfs-display), "Gulfs Display", Georgia, serif;
 
-  /* Clever-measured tokens (structure only) */
+  /* Clever-measured tokens (structure only) — desktop bump at 1024px+ */
   --clever-header-h: 91px;
-  --clever-content: 1110px;
-  --clever-inset: 30px;
+  --clever-content: 1180px;
+  --clever-inset: 32px;
+  --clever-control-h: 48px;
   --clever-radius: 10px;
   --clever-radius-sm: 8px;
   --radius: 10px;
@@ -218,7 +219,7 @@ body {
   border: 0;
   border-radius: var(--clever-radius);
   padding: 0.8rem 1.6rem;
-  min-height: 48px;
+  min-height: var(--clever-control-h);
   background: var(--forest-700);
   color: #fff;
   font-weight: 600;
@@ -245,7 +246,7 @@ body {
   border: 1.5px solid var(--forest-600);
   border-radius: var(--clever-radius);
   padding: 0.75rem 1.45rem;
-  min-height: 48px;
+  min-height: var(--clever-control-h);
   background: var(--surface);
   color: var(--forest-800);
   font-weight: 600;
@@ -579,7 +580,7 @@ body {
 .portal-tab {
   display: inline-flex;
   align-items: center;
-  min-height: 48px;
+  min-height: var(--clever-control-h);
   padding: 0.55rem 1rem;
   border-radius: 8px;
   border: 0;
@@ -953,7 +954,7 @@ body {
   border-radius: var(--clever-radius-sm);
   background: var(--surface);
   padding: 0.8rem 0.95rem;
-  min-height: 48px;
+  min-height: var(--clever-control-h);
   color: var(--ink);
   font: inherit;
   outline: none;
@@ -2189,7 +2190,7 @@ body {
 .msg-thread {
   display: block;
   width: 100%;
-  min-height: 48px;
+  min-height: var(--clever-control-h);
   padding: 0.75rem 0.9rem;
   border: 0;
   border-bottom: 1px solid var(--line);
@@ -2395,5 +2396,219 @@ body {
   .content-band {
     padding-left: 3.375rem;
     padding-right: 3.375rem;
+  }
+}
+
+/*
+ * Desktop Clever scale — fill the viewport like Clever.
+ * Mobile stays tighter. Do not touch Notify Me hotspot rules above.
+ */
+@media (min-width: 1024px) {
+  :root {
+    --clever-header-h: 100px;
+    --clever-content: 1360px;
+    --clever-inset: 44px;
+    --clever-control-h: 54px;
+  }
+
+  body {
+    font-size: 1.0625rem;
+  }
+
+  .display-hero {
+    font-size: clamp(3.35rem, 4.8vw, 4.85rem);
+    line-height: 1.06;
+  }
+
+  .display-section {
+    font-size: clamp(2.75rem, 3.9vw, 3.85rem);
+  }
+
+  .display-feature {
+    font-size: clamp(2.35rem, 3.1vw, 3.05rem);
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-light {
+    font-size: 1.0625rem;
+    padding-left: 1.85rem;
+    padding-right: 1.85rem;
+  }
+
+  .content-band {
+    padding-left: var(--clever-inset);
+    padding-right: var(--clever-inset);
+  }
+
+  .hero-band__grid {
+    padding: 2.75rem 0 5.75rem;
+    column-gap: 3.25rem;
+  }
+
+  .hero-lede {
+    font-size: 1.25rem;
+    max-width: 34rem;
+  }
+
+  .btn-hero-bar {
+    font-size: 1.25rem;
+    min-height: 58px;
+    padding: 1rem 1.35rem;
+  }
+
+  .hero-link-card {
+    min-height: 4.25rem;
+    padding: 1.15rem 1.25rem;
+  }
+
+  .hero-link-card__label {
+    font-size: 1.15rem;
+  }
+
+  .clever-intro {
+    padding: 9rem 0 7.5rem;
+  }
+
+  .clever-intro__inner {
+    max-width: 52rem;
+  }
+
+  .clever-intro__body {
+    max-width: 42rem;
+    font-size: 1.25rem;
+  }
+
+  .clever-feature {
+    padding: 9.5rem 0;
+  }
+
+  .clever-feature__copy {
+    max-width: 36rem;
+  }
+
+  .clever-feature__body {
+    font-size: 1.125rem;
+  }
+
+  .portal-topbar__tab {
+    font-size: 1rem;
+    padding: 0.55rem 1.05rem;
+  }
+
+  .portal-topbar__link {
+    font-size: 0.9375rem;
+  }
+
+  .portal-topbar__role {
+    font-size: 0.875rem;
+  }
+
+  .portal-dash__inner {
+    padding: 2.75rem var(--clever-inset) 3.5rem;
+    gap: 2.35rem;
+  }
+
+  .portal-dash__title {
+    font-size: clamp(1.85rem, 2.2vw, 2.45rem);
+  }
+
+  .portal-dash__subtitle {
+    max-width: 46rem;
+    font-size: 1.0625rem;
+  }
+
+  .portal-shell--embed {
+    min-height: min(820px, calc(100vh - 6rem));
+  }
+
+  .portal-apps-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+
+  .portal-app-tile {
+    min-height: 172px;
+    padding: 1.45rem 0.85rem 1.15rem;
+    gap: 0.75rem;
+  }
+
+  .portal-app-tile__mark {
+    width: 64px;
+    height: 64px;
+    font-size: 1.5rem;
+  }
+
+  .portal-app-tile__name {
+    font-size: 1.02rem;
+  }
+
+  .portal-tools-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+
+  .portal-tool-tile {
+    min-height: 132px;
+    padding: 1.45rem 1.5rem;
+  }
+
+  .portal-panel {
+    padding: 1.6rem 1.75rem;
+  }
+
+  .portal-empty {
+    padding: 3.25rem 2.25rem;
+  }
+
+  .portal-empty__title {
+    font-size: 1.2rem;
+  }
+
+  .portal-empty__body {
+    font-size: 0.975rem;
+  }
+
+  .auth-card {
+    padding: 2.45rem 2.4rem;
+  }
+
+  .auth-card h1 {
+    font-size: 2.1rem;
+  }
+
+  .schools-hero-band .content-band {
+    padding-top: 4.25rem;
+    padding-bottom: 4.75rem;
+  }
+
+  .schools-hero-band .display-feature {
+    max-width: 22ch;
+  }
+
+  .schools-feature {
+    padding: 1.6rem 1.45rem 1.7rem;
+  }
+
+  .schools-feature__title {
+    font-size: 1.25rem;
+  }
+
+  .demo-desktop-stage {
+    padding-top: 2.75rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .demo-role-card {
+    min-height: 9rem;
+    padding: 1.55rem 1.4rem;
+  }
+
+  .demo-role-card__cta {
+    font-size: 1.2rem;
+  }
+
+  .cta-band__inner {
+    padding: 7.5rem 0;
   }
 }

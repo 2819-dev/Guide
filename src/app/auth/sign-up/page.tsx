@@ -182,7 +182,7 @@ function SignUpShell() {
           </Link>
         ) : null}
       </div>
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
+      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8 lg:max-w-xl">
         <SignUpForm />
       </div>
     </div>
