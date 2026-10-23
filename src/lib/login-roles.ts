@@ -19,7 +19,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
     label: "Student",
-    description: "Choose your school, then badge or password · My apps",
+    description: "Type your school, then badge or password · My apps",
     href: "/auth/sign-in?as=student",
   },
   {
@@ -70,7 +70,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Student",
         subtitle:
-          "Choose your school, then sign in with a badge or password. My apps shows what your teachers added for class.",
+          "Type to find your school, then sign in with a badge or password. My apps shows what your teachers added for class.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };

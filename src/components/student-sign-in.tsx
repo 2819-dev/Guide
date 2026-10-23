@@ -69,13 +69,17 @@ export function StudentSignIn() {
 
   useEffect(() => () => stopScan(), [stopScan]);
 
-  const filtered = schools.filter((s) => {
-    const q = query.trim().toLowerCase();
-    if (!q) return true;
-    return (
-      s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q)
-    );
-  });
+  const queryTrimmed = query.trim();
+  const queryLower = queryTrimmed.toLowerCase();
+  /** Typeahead only — never list all schools when the field is empty. */
+  const filtered =
+    queryLower.length === 0
+      ? []
+      : schools.filter(
+          (s) =>
+            s.name.toLowerCase().includes(queryLower) ||
+            s.slug.toLowerCase().includes(queryLower),
+        );
 
   async function startScan(onCode: (code: string) => void) {
     setScanHint(null);
@@ -167,49 +171,65 @@ export function StudentSignIn() {
                     type="search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search by school name"
+                    placeholder="Start typing your school name"
                     className="field mt-1.5"
                     autoFocus
+                    autoComplete="organization"
+                    aria-autocomplete="list"
+                    aria-controls="student-school-results"
+                    aria-expanded={queryTrimmed.length > 0}
                   />
                 </label>
                 {loadingSchools && (
-                  <p className="text-sm text-ink-muted">Loading schools…</p>
+                  <p className="text-sm text-ink-muted">Getting ready…</p>
                 )}
                 {loadError && (
                   <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
                     {loadError}
                   </p>
                 )}
-                {!loadingSchools && schools.length === 0 && !loadError && (
-                  <div className="portal-empty !py-7">
-                    <p className="portal-empty__title">No schools yet</p>
-                    <p className="portal-empty__body">
-                      Ask a school administrator to apply for Guide. Once
-                      approved, your school appears here for badge or password
-                      login.
-                    </p>
-                  </div>
+                {!loadingSchools && !loadError && queryTrimmed.length === 0 && (
+                  <p className="text-sm text-ink-muted">
+                    Keep typing to find your school.
+                  </p>
                 )}
-                <ul className="max-h-64 divide-y divide-line overflow-y-auto rounded-[10px] border border-line">
-                  {filtered.map((s) => (
-                    <li key={s.id}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSchool(s);
-                          setMode("choose");
-                          setQuery("");
-                        }}
-                        className="flex min-h-12 w-full items-center justify-between gap-3 px-4 py-3 text-left text-base font-semibold text-forest-950 transition hover:bg-forest-100"
-                      >
-                        <span>{s.name}</span>
-                        <span aria-hidden className="text-forest-600">
-                          →
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                {!loadingSchools &&
+                  !loadError &&
+                  queryTrimmed.length > 0 &&
+                  filtered.length === 0 && (
+                    <p className="text-sm text-ink-muted">
+                      {schools.length === 0
+                        ? "No schools are available yet. Ask a school administrator to apply for Guide."
+                        : "No schools match that name. Check the spelling and try again."}
+                    </p>
+                  )}
+                {filtered.length > 0 && (
+                  <ul
+                    id="student-school-results"
+                    className="max-h-64 divide-y divide-line overflow-y-auto rounded-[10px] border border-line"
+                    role="listbox"
+                    aria-label="Matching schools"
+                  >
+                    {filtered.map((s) => (
+                      <li key={s.id} role="option">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSchool(s);
+                            setMode("choose");
+                            setQuery("");
+                          }}
+                          className="flex min-h-12 w-full items-center justify-between gap-3 px-4 py-3 text-left text-base font-semibold text-forest-950 transition hover:bg-forest-100"
+                        >
+                          <span>{s.name}</span>
+                          <span aria-hidden className="text-forest-600">
+                            →
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 <p className="text-center text-sm text-ink-muted">
                   Teacher or school admin?{" "}
                   <Link
