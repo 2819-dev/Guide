@@ -1,11 +1,14 @@
 /**
  * Local-only school demo fixtures.
  * Never seed these into Neon / production — sandboxed React state only.
+ *
+ * School-facing roles only: teacher · student · school administrator.
+ * Guide Official is internal — not a try-as demo role.
  */
 
 import { APP_CATALOG, type GuideApp } from "@/lib/apps";
 
-export type DemoRole = "teacher" | "student" | "admin" | "official";
+export type DemoRole = "teacher" | "student" | "admin";
 
 export type DemoClassroom = {
   id: string;
@@ -30,17 +33,6 @@ export type DemoInvite = {
 
 export type DemoStudentApp = GuideApp & { installed: boolean };
 
-export type DemoMeeting = {
-  id: string;
-  organization: string;
-  contactName: string;
-  contactEmail: string;
-  contactRole: string;
-  message: string;
-  preferredTime: string | null;
-  status: "pending" | "contacted" | "scheduled" | "closed";
-};
-
 export type DemoSession = {
   schoolName: string;
   displayName: Record<DemoRole, string>;
@@ -50,7 +42,6 @@ export type DemoSession = {
   catalog: GuideApp[];
   studentAppSlugs: string[];
   messages: { id: string; from: string; preview: string; when: string }[];
-  meetings: DemoMeeting[];
 };
 
 export const DEMO_ROLES: {
@@ -84,14 +75,6 @@ export const DEMO_ROLES: {
       "Invite teachers by email and keep the school overview organized.",
     hint: "Try: invite a teacher · review classes",
   },
-  {
-    id: "official",
-    tryAs: "Try as Guide Official",
-    portalLabel: "Guide Official",
-    blurb:
-      "Review Book a meeting requests, school applications, and partner apps.",
-    hint: "Try: meetings · schools · developers",
-  },
 ];
 
 /** Fresh sandboxed session — no DB writes. */
@@ -102,7 +85,6 @@ export function createDemoSession(): DemoSession {
       teacher: "Jordan Lee",
       student: "Alex Rivera",
       admin: "Morgan Blake",
-      official: "Guide Official",
     },
 
     classrooms: [
@@ -163,30 +145,6 @@ export function createDemoSession(): DemoSession {
         from: "Guide",
         preview: "Two new study prompts are ready in Suggestions.",
         when: "Mon",
-      },
-    ],
-    meetings: [
-      {
-        id: "mt1",
-        organization: "Riverside Academy",
-        contactName: "Morgan Blake",
-        contactEmail: "m.blake@riverside.school",
-        contactRole: "School administrator",
-        message:
-          "We want a walkthrough of classes, teacher invites, and My apps for our grade 7–9 team.",
-        preferredTime: "Tue or Thu afternoon",
-        status: "pending",
-      },
-      {
-        id: "mt2",
-        organization: "Cedar Grove District",
-        contactName: "Pat Ellis",
-        contactEmail: "p.ellis@cedargrove.edu",
-        contactRole: "District administrator",
-        message:
-          "Interested in how teachers add Amud and Arcade Education to classes.",
-        preferredTime: null,
-        status: "contacted",
       },
     ],
   };

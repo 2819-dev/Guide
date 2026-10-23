@@ -12,7 +12,6 @@ import {
   DEMO_ROLES,
   demoRoleLabel,
   type DemoClassroom,
-  type DemoMeeting,
   type DemoRole,
   type DemoSession,
 } from "@/lib/demo-fixtures";
@@ -20,7 +19,6 @@ import {
 type TeacherTab = "apps" | "classes" | "messages";
 type StudentTab = "apps" | "tools";
 type AdminTab = "overview" | "teachers" | "classes";
-type OfficialTab = "meetings" | "schools" | "developers";
 
 function randomInviteCode(): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -96,7 +94,7 @@ function DemoChrome({
   );
 }
 
-/** Always return a portal for a picked role — Official must never render empty. */
+/** School-facing demo portals only — Guide Official is not a try-as role. */
 function DemoRolePortal({
   role,
   session,
@@ -115,12 +113,10 @@ function DemoRolePortal({
       return <TeacherPortal session={session} setSession={setSession} />;
     case "admin":
       return <AdminPortal session={session} setSession={setSession} />;
-    case "official":
-      return <OfficialPortal session={session} setSession={setSession} />;
     default: {
       const _exhaustive: never = role;
       void _exhaustive;
-      return <OfficialPortal session={session} setSession={setSession} />;
+      return <TeacherPortal session={session} setSession={setSession} />;
     }
   }
 }
@@ -748,241 +744,6 @@ function AdminPortal({
   );
 }
 
-function OfficialPortal({
-  session,
-  setSession,
-}: {
-  session: DemoSession;
-  setSession: (next: DemoSession) => void;
-}) {
-  const [tab, setTab] = useState<OfficialTab>("meetings");
-  const [notice, setNotice] = useState<string | null>(null);
-
-  function setMeetingStatus(
-    id: string,
-    status: DemoMeeting["status"],
-  ) {
-    setSession({
-      ...session,
-      meetings: session.meetings.map((m) =>
-        m.id === id ? { ...m, status } : m,
-      ),
-    });
-    setNotice(`Marked ${status} (demo only).`);
-  }
-
-  const pending = session.meetings.filter((m) => m.status === "pending").length;
-
-  return (
-    <>
-      <DemoTabs
-        tabs={[
-          { id: "meetings", label: "Meetings" },
-          { id: "schools", label: "Schools" },
-          { id: "developers", label: "Developers" },
-        ]}
-        active={tab}
-        onChange={(id) => setTab(id as OfficialTab)}
-      />
-      <div className="demo-frame__body demo-frame__body--single">
-        <div className="demo-frame__main">
-          <p className="portal-eyebrow">Guide Official</p>
-          <h2 className="display-feature mt-1 text-[1.65rem]">
-            Hi, {session.displayName.official}
-          </h2>
-          <p className="mt-1 text-sm text-ink-muted">
-            Review meeting requests, approve schools, and verify partner apps —
-            local fixtures only.
-          </p>
-          {notice ? (
-            <p className="mt-3 rounded-[10px] border border-forest-200 bg-forest-100 px-3 py-2 text-sm text-forest-900">
-              {notice}
-            </p>
-          ) : null}
-
-          {tab === "meetings" ? (
-            <section className="mt-6 space-y-4">
-              <div>
-                <h3 className="portal-section-title">Meeting requests</h3>
-                <p className="-mt-2 text-sm text-ink-muted">
-                  From For schools · Book a meeting. Mark contacted, scheduled,
-                  or closed — then switch to Schools or Developers.
-                </p>
-              </div>
-              <div className="official-stat-row">
-                <div className="official-stat">
-                  <p className="official-stat__value">
-                    {session.meetings.length}
-                  </p>
-                  <p className="official-stat__label">Total</p>
-                </div>
-                <div className="official-stat">
-                  <p className="official-stat__value">{pending}</p>
-                  <p className="official-stat__label">Pending</p>
-                </div>
-              </div>
-              {session.meetings.map((m) => (
-                <article key={m.id} className="portal-panel space-y-3">
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div>
-                      <h4 className="text-base font-semibold text-forest-950">
-                        {m.organization}
-                      </h4>
-                      <p className="mt-0.5 text-sm text-ink-muted">
-                        {m.contactName} · {m.contactEmail} · {m.contactRole}
-                      </p>
-                    </div>
-                    <span className={`status-chip status-chip--${m.status}`}>
-                      {m.status}
-                    </span>
-                  </div>
-                  {m.preferredTime ? (
-                    <p className="text-sm text-ink-muted">
-                      Preferred: {m.preferredTime}
-                    </p>
-                  ) : null}
-                  <p className="text-sm leading-relaxed text-forest-950">
-                    {m.message}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {(
-                      [
-                        ["contacted", "Mark contacted"],
-                        ["scheduled", "Scheduled"],
-                        ["closed", "Close"],
-                      ] as const
-                    ).map(([status, label]) => (
-                      <button
-                        key={status}
-                        type="button"
-                        disabled={m.status === status}
-                        className="btn-secondary !min-h-12 !px-3.5 !text-sm"
-                        onClick={() => setMeetingStatus(m.id, status)}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </section>
-          ) : null}
-
-          {tab === "schools" ? (
-            <section className="mt-6 space-y-4">
-              <div>
-                <h3 className="portal-section-title">School applications</h3>
-                <p className="-mt-2 text-sm text-ink-muted">
-                  Approve a school so administrators can invite teachers and open
-                  the portal. Next: try Approve, then open Developers.
-                </p>
-              </div>
-              <div className="portal-panel space-y-2">
-                <p className="status-chip status-chip--pending">Pending · School</p>
-                <h4 className="text-lg font-semibold text-forest-950">
-                  {session.schoolName}
-                </h4>
-                <p className="text-sm text-ink-muted">
-                  Morgan Blake · m.blake@riverside.school · School administrator
-                </p>
-                <p className="text-sm leading-relaxed text-forest-950">
-                  Keep students engaged with class apps and teacher invites.
-                </p>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  <button
-                    type="button"
-                    className="btn-primary !min-h-12"
-                    onClick={() =>
-                      setNotice(
-                        "Approved in demo — school admins could invite teachers next. No production write.",
-                      )
-                    }
-                  >
-                    Approve
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-secondary !min-h-12"
-                    onClick={() =>
-                      setNotice(
-                        "Declined in demo — school stays locked until a new apply. No production write.",
-                      )
-                    }
-                  >
-                    Decline
-                  </button>
-                </div>
-              </div>
-            </section>
-          ) : null}
-
-          {tab === "developers" ? (
-            <section className="mt-6 space-y-4">
-              <div>
-                <h3 className="portal-section-title">Developers</h3>
-                <p className="-mt-2 text-sm text-ink-muted">
-                  Verified partners only — approve apps schools can add to class.
-                </p>
-              </div>
-              <div className="official-stat-row">
-                <div className="official-stat">
-                  <p className="official-stat__value">1</p>
-                  <p className="official-stat__label">Total</p>
-                </div>
-                <div className="official-stat">
-                  <p className="official-stat__value">1</p>
-                  <p className="official-stat__label">Pending</p>
-                </div>
-                <div className="official-stat">
-                  <p className="official-stat__value">0</p>
-                  <p className="official-stat__label">Approved</p>
-                </div>
-              </div>
-              <article className="portal-panel space-y-3">
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div>
-                    <h4 className="text-base font-semibold text-forest-950">
-                      Classroom Pulse
-                    </h4>
-                    <p className="mt-0.5 text-sm text-ink-muted">
-                      Northwind Labs · Sam Rivera · sam@northwind.example
-                    </p>
-                  </div>
-                  <span className="status-chip status-chip--pending">pending</span>
-                </div>
-                <p className="text-sm leading-relaxed text-forest-950">
-                  Engagement check-ins teachers can add to a class from the Guide
-                  library.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    className="btn-primary !min-h-12 !px-3.5 !text-sm"
-                    onClick={() =>
-                      setNotice("Partner approved in demo — no production write.")
-                    }
-                  >
-                    Approve
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-secondary !min-h-12 !px-3.5 !text-sm"
-                    onClick={() =>
-                      setNotice("Partner declined in demo — no production write.")
-                    }
-                  >
-                    Decline
-                  </button>
-                </div>
-              </article>
-            </section>
-          ) : null}
-        </div>
-      </div>
-    </>
-  );
-}
-
 /** Interactive school demo — sandboxed role walkthrough (no Neon writes). */
 export function SchoolDemo() {
   const [role, setRole] = useState<DemoRole | null>(null);
@@ -1011,9 +772,9 @@ export function SchoolDemo() {
         <p className="eyebrow">For schools · Demo</p>
         <h1 className="display-feature mt-2">Try Guide as your school</h1>
         <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted">
-          Interactive walkthrough for teachers, students, school administrators,
-          and Guide Official. Local fixtures only — nothing is written to
-          production.
+          Interactive walkthrough for teachers, students, and school
+          administrators. Local fixtures only — nothing is written to
+          production. Book a meeting reaches Guide Official for real.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
           <Link href="/schools/meeting">Book a meeting →</Link>

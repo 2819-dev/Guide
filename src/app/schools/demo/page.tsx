@@ -6,7 +6,7 @@ export const runtime = "edge";
 export const metadata = {
   title: "School demo · Guide",
   description:
-    "Interactive desktop and iPad demo — try Guide as a teacher, student, school administrator, or Guide Official.",
+    "Interactive desktop and iPad demo — try Guide as a teacher, student, or school administrator.",
 };
 
 /** Interactive school demo. Phones get a calm visit-on-desktop message. */
@@ -19,9 +19,8 @@ export default function SchoolDemoPage() {
           Open the demo on a larger screen
         </h1>
         <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-ink-muted">
-          This walkthrough lets you try teacher, student, school administrator,
-          and Guide Official portals. Use a desktop or iPad for the best
-          experience.
+          This walkthrough lets you try teacher, student, and school
+          administrator portals. Use a desktop or iPad for the best experience.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/schools/meeting" className="btn-primary">
