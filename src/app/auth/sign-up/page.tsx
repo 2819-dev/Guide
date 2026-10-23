@@ -59,7 +59,7 @@ function SignUpForm() {
             href="/auth/sign-in?as=educator"
             className="btn-primary inline-flex justify-center"
           >
-            Teacher log in
+            Admin
           </Link>
           <Link
             href="/education#apply"

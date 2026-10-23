@@ -57,7 +57,7 @@ export default async function EducationLandingPage() {
                 {isRejected ? "Update & re-apply" : "Apply for your school"}
               </a>
               <p className="hero-secondary-links !mt-2">
-                <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
+                <Link href="/auth/sign-in?as=educator">Admin</Link>
                 <span aria-hidden className="hero-secondary-links__dot">
                   ·
                 </span>
