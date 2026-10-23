@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GuideWordmark } from "@/components/guide-logo";
+import { LoginMenu } from "@/components/login-menu";
 import { SignOutButton } from "@/components/sign-out-button";
 import type { SchoolApplicationStatus } from "@/lib/education-access";
 import {
@@ -31,8 +32,8 @@ const navLink =
 
 /**
  * Clever 1:1 header — Guide wordmark + forest CTAs.
- * Logged-out: Education · Admin (teachers / school admins).
- * Students use homepage “Log in as a student” — no role dropdown.
+ * Logged-out: Education · Log In menu (Student / Admin / Official).
+ * Student login page itself uses a corner Admin control instead.
  */
 export function SiteHeader() {
   const [me, setMe] = useState<Me | null>(null);
@@ -110,12 +111,7 @@ export function SiteHeader() {
               <Link href="/education" className={`${navLink} hidden sm:inline`}>
                 Education
               </Link>
-              <Link
-                href="/auth/sign-in?as=educator"
-                className="inline-flex h-[50px] items-center rounded-[10px] bg-forest-700 px-7 text-base font-semibold text-white no-underline transition hover:bg-forest-600"
-              >
-                Admin
-              </Link>
+              <LoginMenu variant="primary" />
             </>
           )}
         </nav>

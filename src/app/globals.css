@@ -1539,7 +1539,7 @@ body {
   color: rgba(255, 255, 255, 0.88);
 }
 
-/* Hero right-column visual — soft Guide forest (no Clever blue) */
+/* Hero right-column — Official Release image (locked user artwork) */
 .hero-visual-panel {
   position: relative;
   z-index: 1;
@@ -1550,7 +1550,7 @@ body {
   aspect-ratio: 1 / 1;
   border-radius: 12px;
   overflow: hidden;
-  background: var(--forest-500);
+  background: var(--forest-600);
   box-shadow: var(--shadow-card);
 }
 
@@ -1566,126 +1566,16 @@ body {
   }
 }
 
-.hero-visual-panel--release,
-.hero-visual-panel--forest {
-  background:
-    radial-gradient(ellipse 70% 55% at 20% 15%, rgba(255, 255, 255, 0.35), transparent 50%),
-    radial-gradient(ellipse 55% 45% at 85% 25%, rgba(208, 173, 85, 0.22), transparent 45%),
-    linear-gradient(165deg, var(--forest-400) 0%, var(--forest-600) 48%, var(--forest-700) 100%);
+.hero-visual-panel--release {
+  background: var(--forest-600);
 }
 
-.hero-forest-scene {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.hero-forest-scene__orb {
-  position: absolute;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.hero-forest-scene__orb--a {
-  width: 42%;
-  aspect-ratio: 1;
-  top: 8%;
-  right: -6%;
-}
-
-.hero-forest-scene__orb--b {
-  width: 28%;
-  aspect-ratio: 1;
-  top: 28%;
-  left: 8%;
-  background: rgba(238, 248, 242, 0.22);
-}
-
-.hero-forest-scene__hill {
-  position: absolute;
-  left: -10%;
-  right: -10%;
-  border-radius: 50% 50% 0 0;
-  background: rgba(30, 63, 48, 0.18);
-}
-
-.hero-forest-scene__hill--back {
-  bottom: -18%;
-  height: 48%;
-  background: rgba(39, 82, 61, 0.22);
-}
-
-.hero-forest-scene__hill--front {
-  bottom: -28%;
-  height: 42%;
-  background: rgba(255, 255, 255, 0.16);
-}
-
-.hero-forest-copy {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  height: 100%;
-  padding: 1.35rem 1.35rem 5.25rem;
-  color: #fff;
-}
-
-.hero-forest-copy__eyebrow {
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.hero-forest-copy__title {
-  margin: 0.45rem 0 0;
-  font-size: clamp(1.55rem, 2.4vw, 1.85rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-}
-
-.hero-forest-copy__date {
+.hero-visual-panel__img {
   display: block;
-  margin-top: 0.2rem;
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: rgba(255, 255, 255, 0.92);
-}
-
-.hero-forest-copy__lede {
-  margin: 0.65rem 0 0;
-  max-width: 22ch;
-  font-size: 0.9375rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.hero-notify-pill {
-  position: absolute;
-  z-index: 3;
-  left: 1.35rem;
-  bottom: 1.35rem;
-  min-height: 44px;
-  padding: 0.55rem 1.15rem;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
-  color: var(--forest-800);
-  font-size: 0.9375rem;
-  font-weight: 650;
-  cursor: pointer;
-  box-shadow: var(--shadow-soft);
-  transition: background 120ms ease;
-}
-
-.hero-notify-pill:hover {
-  background: #fff;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Transparent hotspot aligned to baked Notify Me in the art */

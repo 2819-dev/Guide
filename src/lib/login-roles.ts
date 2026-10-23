@@ -14,24 +14,24 @@ export type LoginRoleOption = {
   href: string;
 };
 
-/** Legacy role list — header no longer uses a multi-role Log In dropdown. */
+/** Header Log In menu — Student · Admin · Official. */
 export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
     label: "Student",
-    description: "Type your school, then badge or password · My apps",
+    description: "Find your school, then badge or password",
     href: "/auth/sign-in?as=student",
   },
   {
     id: "educator",
     label: "Admin",
-    description: "Teachers use a school invite · administrators apply",
+    description: "Teachers and school administrators",
     href: "/auth/sign-in?as=educator",
   },
   {
     id: "official",
     label: "Guide Official",
-    description: "Meetings, school approvals, and partner apps",
+    description: "Meetings, approvals, and partner apps",
     href: "/auth/sign-in?as=official",
   },
 ];
@@ -70,7 +70,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Student",
         subtitle:
-          "Type to find your school, then sign in with a badge or password. My apps shows what your teachers added for class.",
+          "Type to find your school, then sign in with a badge or password.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
