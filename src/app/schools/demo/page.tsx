@@ -19,8 +19,8 @@ export default function SchoolDemoPage() {
           Open the demo on a larger screen
         </h1>
         <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-ink-muted">
-          This walkthrough lets you try teacher, student, and school
-          administrator portals. Use a desktop or iPad for the best experience.
+          Try Guide as a teacher, student, or school administrator. Open this
+          page on a desktop or iPad for the full interactive preview.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/schools/meeting" className="btn-primary">

@@ -20,8 +20,8 @@ export default function BookMeetingPage() {
               Book a meeting with Guide Official
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-[1.65] text-ink-muted">
-              Walk through classes, teacher invites, and My apps — so your
-              school can keep students engaged and classrooms well managed.
+              See how classes, teacher invites, and My apps work together — so
+              your school can keep students engaged and classrooms well managed.
             </p>
             <p className="hero-secondary-links mt-6 justify-center">
               <Link href="/schools/demo">Demo</Link>
