@@ -1580,20 +1580,20 @@ body {
 
 /*
  * Transparent hotspot flush on baked Notify Me.
- * Art is square; desktop panel is landscape + object-fit:cover (center),
- * which crops top/bottom — so desktop Y% is lower than mobile square.
+ * Measured on live cover-cropped panel: white pill ~64–70% (center ~66–67%).
+ * Square/mobile: slightly higher (~62%).
  */
 .hero-notify-hotspot {
   position: absolute;
   left: 50%;
-  top: 64%;
+  top: 62%;
   bottom: auto;
   transform: translate(-50%, -50%);
-  width: 40%;
-  max-width: 10.5rem;
-  height: 7.5%;
-  min-height: 2.25rem;
-  max-height: 2.75rem;
+  width: 38%;
+  max-width: 10.25rem;
+  height: 7%;
+  min-height: 2.2rem;
+  max-height: 2.6rem;
   border: 0;
   padding: 0;
   border-radius: 999px;
@@ -1604,7 +1604,7 @@ body {
 
 @media (min-width: 1024px) {
   .hero-notify-hotspot {
-    top: 68%;
+    top: 66%;
   }
 }
 
