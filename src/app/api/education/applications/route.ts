@@ -57,6 +57,84 @@ export async function GET() {
   return NextResponse.json({ applications: rows });
 }
 
+const AUTH_BASE = () =>
+  process.env.NEON_AUTH_BASE_URL?.trim() ||
+  "https://invalid.neonauth.local/auth";
+
+/**
+ * Create Neon Auth user via HTTP (Origin required by Neon Auth), then
+ * establish a Guide session cookie with the SDK sign-in helper.
+ */
+async function neonAuthSignUpThenSession(opts: {
+  email: string;
+  password: string;
+  name: string;
+  origin: string;
+}): Promise<{ authUserId: string; createdAccount: boolean }> {
+  const origin =
+    opts.origin ||
+    process.env.NEXT_PUBLIC_GUIDE_URL?.trim() ||
+    "https://guidelearning.org";
+
+  const signUpRes = await fetch(`${AUTH_BASE()}/sign-up/email`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Origin: origin,
+    },
+    body: JSON.stringify({
+      email: opts.email,
+      password: opts.password,
+      name: opts.name,
+    }),
+  });
+  const signUpData = (await signUpRes.json().catch(() => ({}))) as {
+    user?: { id?: string };
+    message?: string;
+    error?: string;
+    code?: string;
+  };
+
+  let authUserId = signUpData.user?.id;
+  let createdAccount = Boolean(authUserId);
+
+  if (!authUserId) {
+    // Account may already exist — sign in to resolve id + set cookies.
+    const { data: session, error: signInError } = await auth.signIn.email({
+      email: opts.email,
+      password: opts.password,
+    });
+    authUserId = session?.user?.id;
+    createdAccount = false;
+    if (!authUserId) {
+      const msg =
+        signUpData.message ||
+        signUpData.error ||
+        signInError?.message ||
+        "";
+      throw new AccountError(
+        msg && msg !== "<none>"
+          ? msg
+          : "Could not create account. If you already have Guide, log in and apply from your account.",
+        400,
+      );
+    }
+    return { authUserId, createdAccount };
+  }
+
+  // New account — establish session cookies for the browser.
+  const { error: signInError } = await auth.signIn.email({
+    email: opts.email,
+    password: opts.password,
+  });
+  if (signInError) {
+    // Account exists; client can still log in manually.
+    console.error("school apply sign-in after signup:", signInError.message);
+  }
+
+  return { authUserId, createdAccount };
+}
+
 /**
  * Ensure the school applicant has a Guide account + rebbe profile, then
  * return profile id. Creates Neon Auth account when password is provided.
@@ -66,6 +144,7 @@ async function ensureSchoolApplicantProfile(opts: {
   contactEmail: string;
   password?: string;
   existingProfileId?: string | null;
+  origin: string;
 }): Promise<{ profileId: string; createdAccount: boolean }> {
   const db = getDb();
   const email = opts.contactEmail.toLowerCase();
@@ -108,42 +187,20 @@ async function ensureSchoolApplicantProfile(opts: {
     );
   }
 
-  const { error } = await auth.signUp.email({
+  const { authUserId, createdAccount } = await neonAuthSignUpThenSession({
     email,
-    name: opts.contactName,
     password: opts.password,
+    name: opts.contactName,
+    origin: opts.origin,
   });
-
-  if (error) {
-    const signIn = await auth.signIn.email({
-      email,
-      password: opts.password,
-    });
-    if (signIn.error) {
-      throw new AccountError(
-        error.message ||
-          "Could not create account. If you already have Guide, log in and apply from your account.",
-        400,
-      );
-    }
-  }
-
-  const { data: session } = await auth.getSession();
-  if (!session?.user?.id) {
-    throw new AccountError(
-      "Account created but session missing — please log in and open your portal.",
-      500,
-    );
-  }
 
   const existing = await db
     .select()
     .from(profiles)
-    .where(eq(profiles.authUserId, session.user.id))
+    .where(eq(profiles.authUserId, authUserId))
     .limit(1);
 
   let profileId: string;
-  let createdAccount = !existing[0];
   if (existing[0]) {
     const [updated] = await db
       .update(profiles)
@@ -159,12 +216,11 @@ async function ensureSchoolApplicantProfile(opts: {
       .where(eq(profiles.id, existing[0].id))
       .returning();
     profileId = updated.id;
-    createdAccount = false;
   } else {
     const [created] = await db
       .insert(profiles)
       .values({
-        authUserId: session.user.id,
+        authUserId,
         displayName: opts.contactName,
         role: "rebbe",
         loginEmail: email,
@@ -248,11 +304,16 @@ export async function POST(request: Request) {
     }
 
     // School / district apply — create account immediately when needed.
+    const origin =
+      request.headers.get("origin") ||
+      process.env.NEXT_PUBLIC_GUIDE_URL?.trim() ||
+      "https://guidelearning.org";
     const { profileId, createdAccount } = await ensureSchoolApplicantProfile({
       contactName: body.contactName,
       contactEmail: body.contactEmail,
       password: body.password,
       existingProfileId: session?.profile.id ?? null,
+      origin,
     });
 
     const [application] = await db
