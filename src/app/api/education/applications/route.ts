@@ -76,18 +76,27 @@ async function neonAuthSignUpThenSession(opts: {
     process.env.NEXT_PUBLIC_GUIDE_URL?.trim() ||
     "https://guidelearning.org";
 
-  const signUpRes = await fetch(`${AUTH_BASE()}/sign-up/email`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Origin: origin,
-    },
-    body: JSON.stringify({
-      email: opts.email,
-      password: opts.password,
-      name: opts.name,
-    }),
-  });
+  let signUpRes: Response;
+  try {
+    signUpRes = await fetch(`${AUTH_BASE()}/sign-up/email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: origin,
+        Referer: origin,
+      },
+      body: JSON.stringify({
+        email: opts.email,
+        password: opts.password,
+        name: opts.name,
+      }),
+    });
+  } catch (e) {
+    throw new AccountError(
+      `Could not reach authentication service (${e instanceof Error ? e.message : "network"}).`,
+      502,
+    );
+  }
   const signUpData = (await signUpRes.json().catch(() => ({}))) as {
     user?: { id?: string };
     message?: string;
@@ -112,12 +121,11 @@ async function neonAuthSignUpThenSession(opts: {
         signUpData.error ||
         signInError?.message ||
         "";
-      throw new AccountError(
+      const detail =
         msg && msg !== "<none>"
           ? msg
-          : "Could not create account. If you already have Guide, log in and apply from your account.",
-        400,
-      );
+          : `Auth signup failed (${signUpRes.status}${signUpData.code ? ` ${signUpData.code}` : ""}). If you already have Guide, log in and apply from your account.`;
+      throw new AccountError(detail, 400);
     }
     return { authUserId, createdAccount };
   }
