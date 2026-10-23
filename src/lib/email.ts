@@ -68,15 +68,23 @@ export async function sendEmail(opts: {
   }
 }
 
+/** Soft mint-forest email chrome (inline hex — email clients ignore CSS vars). */
+const EMAIL_INK = "#243530";
+const EMAIL_MUTED = "#5f7268";
+const EMAIL_LINE = "#e4efe8";
+const EMAIL_SKY = "#f6fbf8";
+const EMAIL_PRIMARY = "#4a8f6c";
+const EMAIL_FOOTER = "#3d7a5c";
+
 function shell(inner: string): string {
   const banner = `${guidePublicUrl()}/brand/guide-banner.jpg`;
-  return `<!DOCTYPE html><html><body style="margin:0;background:#eef3f0;font-family:Georgia,serif;color:#152A20">
+  return `<!DOCTYPE html><html><body style="margin:0;background:${EMAIL_SKY};font-family:Georgia,serif;color:${EMAIL_INK}">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px 12px">
-<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #d5e0d9;border-radius:4px;overflow:hidden">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid ${EMAIL_LINE};border-radius:10px;overflow:hidden">
 <tr><td><img src="${banner}" alt="Guide" width="560" style="display:block;width:100%;height:auto;border:0" /></td></tr>
 <tr><td style="padding:28px 32px;font-size:16px;line-height:1.65">${inner}</td></tr>
-<tr><td style="background:#152A20;padding:18px 32px;font-family:system-ui,sans-serif;font-size:13px;color:#c5d4cb">
-Guide · <a href="${guidePublicUrl()}" style="color:#c5d4cb">${guidePublicUrl().replace(/^https?:\/\//, "")}</a>
+<tr><td style="background:${EMAIL_FOOTER};padding:18px 32px;font-family:system-ui,sans-serif;font-size:13px;color:#eef8f2">
+Guide · <a href="${guidePublicUrl()}" style="color:#eef8f2">${guidePublicUrl().replace(/^https?:\/\//, "")}</a>
 </td></tr>
 </table></td></tr></table></body></html>`;
 }
@@ -93,8 +101,8 @@ export async function sendWelcomeEmail(opts: {
       <p style="margin:0 0 14px;font-weight:600">Dear ${escapeHtml(first)},</p>
       <p style="margin:0 0 14px">Welcome to Guide — for engaged students and well-managed classrooms.
       Sign in anytime to open your apps and classroom tools.</p>
-      <p style="margin:0 0 18px"><a href="${guidePublicUrl()}/auth/sign-in" style="display:inline-block;background:#1c3d2e;color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Log in to Guide</a></p>
-      <p style="margin:0;color:#5a6b62;font-size:14px">If you did not expect this email, you can ignore it.</p>
+      <p style="margin:0 0 18px"><a href="${guidePublicUrl()}/auth/sign-in" style="display:inline-block;background:${EMAIL_PRIMARY};color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Log in to Guide</a></p>
+      <p style="margin:0;color:${EMAIL_MUTED};font-size:14px">If you did not expect this email, you can ignore it.</p>
     `),
     text: `Welcome to Guide\n\nLog in: ${guidePublicUrl()}/auth/sign-in`,
   });
@@ -112,8 +120,8 @@ export async function sendTeacherInviteEmail(opts: {
       <p style="margin:0 0 14px;font-weight:600">Dear Teacher,</p>
       <p style="margin:0 0 14px"><strong>${escapeHtml(opts.schoolName)}</strong> invited you to Guide — a calm place for classes, learning apps, and classroom tools.</p>
       <p style="margin:0 0 14px">Create your password with the button below. After setup, open your Teacher Portal to manage classes and add apps. Teachers log in with a school invite only.</p>
-      <p style="margin:0 0 18px"><a href="${escapeHtml(opts.inviteUrl)}" style="display:inline-block;background:#1c3d2e;color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Set up your account</a></p>
-      <p style="margin:0;color:#5a6b62;font-size:14px">This link expires in 14 days. Already set up? <a href="${guidePublicUrl()}/auth/sign-in?as=educator" style="color:#1c3d2e;font-weight:600">Teacher log in</a>.</p>
+      <p style="margin:0 0 18px"><a href="${escapeHtml(opts.inviteUrl)}" style="display:inline-block;background:${EMAIL_PRIMARY};color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Set up your account</a></p>
+      <p style="margin:0;color:${EMAIL_MUTED};font-size:14px">This link expires in 14 days. Already set up? <a href="${guidePublicUrl()}/auth/sign-in?as=educator" style="color:${EMAIL_PRIMARY};font-weight:600">Admin</a>.</p>
     `),
     text: `Dear Teacher,\n\n${opts.schoolName} invited you to Guide.\nSet up: ${opts.inviteUrl}\nTeacher log in: ${guidePublicUrl()}/auth/sign-in?as=educator`,
   });
@@ -131,8 +139,8 @@ export async function sendReleaseNotifyEmail(opts: {
       <p style="margin:0 0 14px;font-weight:600">You’re on the list.</p>
       <p style="margin:0 0 14px">We’ll email you when Guide’s Official Release goes live on
       <strong>${escapeHtml(opts.releaseDate)}</strong>.</p>
-      <p style="margin:0 0 18px"><a href="${guidePublicUrl()}" style="display:inline-block;background:#1c3d2e;color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Visit Guide</a></p>
-      <p style="margin:0;color:#5a6b62;font-size:14px">If you did not request this, you can ignore this message.</p>
+      <p style="margin:0 0 18px"><a href="${guidePublicUrl()}" style="display:inline-block;background:${EMAIL_PRIMARY};color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Visit Guide</a></p>
+      <p style="margin:0;color:${EMAIL_MUTED};font-size:14px">If you did not request this, you can ignore this message.</p>
     `),
     text: `You’re on the list for Guide Official Release · ${opts.releaseDate}\n\n${guidePublicUrl()}`,
   });

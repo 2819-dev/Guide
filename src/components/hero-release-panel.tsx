@@ -1,12 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { FormEvent, useId, useState } from "react";
-import { HOME_HERO_RELEASE_DATE, HOME_HERO_RELEASE_SRC } from "@/lib/brand";
+import { HOME_HERO_RELEASE_DATE } from "@/lib/brand";
 
 /**
- * Clever cover right panel — Official Release art + working Notify Me.
- * Image includes baked type; hotspot + form provide a real capture.
+ * Clever cover right panel — soft Guide forest visual + Notify Me.
+ * No Clever-blue coil art; mint-forest atmosphere only.
  */
 export function HeroReleasePanel() {
   const formId = useId();
@@ -46,36 +45,52 @@ export function HeroReleasePanel() {
   }
 
   return (
-    <div className="hero-visual-panel hero-visual-panel--release">
-      <Image
-        src={HOME_HERO_RELEASE_SRC}
-        alt={`Guide Official Release ${HOME_HERO_RELEASE_DATE}`}
-        fill
-        className="hero-visual-panel__img"
-        priority
-        sizes="(max-width: 1024px) 92vw, 27.5rem"
-      />
+    <div className="hero-visual-panel hero-visual-panel--release hero-visual-panel--forest">
+      <div className="hero-forest-scene" aria-hidden>
+        <span className="hero-forest-scene__orb hero-forest-scene__orb--a" />
+        <span className="hero-forest-scene__orb hero-forest-scene__orb--b" />
+        <span className="hero-forest-scene__hill hero-forest-scene__hill--back" />
+        <span className="hero-forest-scene__hill hero-forest-scene__hill--front" />
+      </div>
 
-      {/* Hotspot over baked Notify Me — opens email capture */}
+      <div className="hero-forest-copy">
+        <p className="hero-forest-copy__eyebrow">Coming soon</p>
+        <p className="hero-forest-copy__title">
+          Official Release
+          <span className="hero-forest-copy__date">{HOME_HERO_RELEASE_DATE}</span>
+        </p>
+        <p className="hero-forest-copy__lede">
+          A calmer school portal — apps, classes, and invites in one place.
+        </p>
+      </div>
+
       {!open && status !== "done" ? (
         <button
           type="button"
-          className="hero-notify-hotspot"
+          className="hero-notify-pill"
           onClick={() => setOpen(true)}
           aria-expanded={open}
           aria-controls={formId}
         >
-          <span className="sr-only">Notify Me about Official Release</span>
+          Notify Me
         </button>
       ) : null}
 
       {(open || status === "done") && (
-        <div className="hero-notify-card" id={formId} role="region" aria-label="Notify Me">
+        <div
+          className="hero-notify-card"
+          id={formId}
+          role="region"
+          aria-label="Notify Me"
+        >
           {status === "done" ? (
             <p className="hero-notify-card__done">{message}</p>
           ) : (
             <form className="hero-notify-form" onSubmit={onSubmit}>
-              <label className="hero-notify-form__label" htmlFor={`${formId}-email`}>
+              <label
+                className="hero-notify-form__label"
+                htmlFor={`${formId}-email`}
+              >
                 Email for release updates
               </label>
               <div className="hero-notify-form__row">
