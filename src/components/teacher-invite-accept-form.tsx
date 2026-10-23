@@ -23,8 +23,8 @@ export function TeacherInviteAcceptForm({ token, email, schoolName }: Props) {
           <p className="portal-eyebrow">Welcome to Guide</p>
           <h2 className="display-feature mt-1">Account ready</h2>
           <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-muted">
-            Your teacher account for <strong>{schoolName}</strong> is set up.
-            Log in to open classes, add apps, and keep students engaged.
+            Your teacher account for <strong>{schoolName}</strong> is ready.
+            Log in to manage classes, add apps, and keep students engaged.
           </p>
         </div>
         <Link href="/auth/sign-in?as=educator" className="btn-primary inline-flex">
@@ -60,15 +60,14 @@ export function TeacherInviteAcceptForm({ token, email, schoolName }: Props) {
         <p className="portal-eyebrow">Teacher invite</p>
         <h1 className="display-feature mt-1">Set up your Guide account</h1>
         <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-          Dear Teacher — <strong>{schoolName}</strong> invited you to Guide.
+          Dear Teacher, <strong>{schoolName}</strong> invited you to Guide.
           Create your password below, then log in to manage classes and apps.
-          Teachers log in only; there is no public teacher signup.
         </p>
       </div>
 
       <p className="rounded-[10px] border border-line bg-sky-soft px-3.5 py-3 text-sm leading-snug text-forest-900">
-        After setup you will use the same email to log in. School administrators
-        invite teachers — Guide does not offer a separate teacher apply path.
+        After setup, use this same email to log in. Teachers are invited by
+        their school — there is no public teacher signup.
       </p>
 
       <label className="block text-sm font-semibold text-forest-900">

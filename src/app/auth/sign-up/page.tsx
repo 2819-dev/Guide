@@ -134,8 +134,8 @@ function SignUpForm() {
 
         {as === "developer" ? (
           <p className="text-[0.8125rem] leading-snug text-ink-muted">
-            Next, submit a developer application. The portal unlocks after Guide
-            Official verifies you.
+            Next, submit a developer application. Your partner portal opens after
+            Guide Official verifies you.
           </p>
         ) : null}
 

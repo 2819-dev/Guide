@@ -21,7 +21,7 @@ export function MeetingRequestForm() {
           <p className="portal-empty__title">Request received</p>
           <p className="portal-empty__body">
             Guide Official will review your request and follow up by email.
-            Meanwhile try the interactive demo or start a school application.
+            Meanwhile, try the interactive demo or apply for your school.
           </p>
         </div>
         <p className="mt-5 flex flex-wrap gap-3 text-sm font-semibold text-forest-800">

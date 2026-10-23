@@ -56,24 +56,22 @@ export const DEMO_ROLES: {
     id: "teacher",
     tryAs: "Try as Teacher",
     portalLabel: "Teacher portal",
-    blurb:
-      "Manage classes and add learning apps so students stay engaged.",
-    hint: "Try: create a class · add an app · open messages",
+    blurb: "Manage classes and add apps so students stay engaged.",
+    hint: "Create a class · add an app · open messages",
   },
   {
     id: "student",
     tryAs: "Try as Student",
     portalLabel: "Student portal",
-    blurb: "Open My apps in the center — what your teacher added for class.",
-    hint: "Try: open an app tile · check messages",
+    blurb: "Open My apps — the learning tools your teacher added for class.",
+    hint: "Open an app · check messages",
   },
   {
     id: "admin",
     tryAs: "Try as School administrator",
     portalLabel: "School administrator",
-    blurb:
-      "Invite teachers by email and keep the school overview organized.",
-    hint: "Try: invite a teacher · review classes",
+    blurb: "Invite teachers by email and keep your school organized.",
+    hint: "Invite a teacher · review classes",
   },
 ];
 

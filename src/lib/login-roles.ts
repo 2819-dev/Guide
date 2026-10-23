@@ -19,19 +19,19 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
     label: "Student",
-    description: "School → badge or password · open My apps",
+    description: "Choose your school, then badge or password · My apps",
     href: "/auth/sign-in?as=student",
   },
   {
     id: "educator",
     label: "Teacher or School Administrator",
-    description: "Teachers log in with invite · schools apply",
+    description: "Teachers use a school invite · administrators apply",
     href: "/auth/sign-in?as=educator",
   },
   {
     id: "official",
     label: "Guide Official",
-    description: "Meetings, school approvals, partner apps",
+    description: "Meetings, school approvals, and partner apps",
     href: "/auth/sign-in?as=official",
   },
 ];
@@ -70,7 +70,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Student",
         subtitle:
-          "Find your school, then sign in with badge or password. My apps shows the learning tools your teachers added for class.",
+          "Choose your school, then sign in with a badge or password. My apps shows what your teachers added for class.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
@@ -87,7 +87,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Guide Official",
         subtitle:
-          "Review Book a meeting requests, approve schools, and verify partner apps that teachers can add to class.",
+          "Review meeting requests, approve schools, and verify partner apps teachers can add to class.",
         joinHref: null,
         joinLabel: null,
       };
@@ -95,7 +95,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Developer partner",
         subtitle:
-          "Verified partners only — not a public marketplace. Apply first; after Official approves, log in to manage apps schools can add to class.",
+          "Verified partners only — not a public marketplace. Apply first; after approval, log in to manage apps schools can add to class.",
         joinHref: "/developers/apply",
         joinLabel: "Apply as a developer",
       };
@@ -130,7 +130,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "School administrator",
         subtitle:
-          "Teachers are invited by email — use Log in instead. School or district administrators apply here to create an account and open their portal.",
+          "Teachers are invited by email — use Log in instead. School and district administrators apply to create an account and open their portal.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -145,7 +145,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Developer partner",
         subtitle:
-          "Create an account after you apply. The portal unlocks when Guide Official verifies your partner app.",
+          "Create an account after you apply. Your developer portal opens when Guide Official verifies your partner app.",
         roleValue: "customer",
         showRoleChooser: false,
       };

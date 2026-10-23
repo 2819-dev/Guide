@@ -38,8 +38,8 @@ function RolePicker({
     <div className="demo-role-picker" role="group" aria-label="Try a school role">
       <p className="demo-role-picker__label">Choose a role to explore</p>
       <p className="-mt-2 mb-4 text-sm leading-relaxed text-ink-muted">
-        Each role opens a sandboxed portal for Riverside Academy — nothing is
-        saved to a real school.
+        Each role opens a preview of Riverside Academy — a sample school for
+        exploring Guide, not a live account.
       </p>
       <div className="demo-role-picker__grid">
         {DEMO_ROLES.map((role) => (
@@ -80,7 +80,7 @@ function DemoChrome({
         <span className="flex-1 truncate">
           Guide · {demoRoleLabel(role)} · {schoolName}
         </span>
-        <span className="demo-frame__badge">Sandboxed demo</span>
+        <span className="demo-frame__badge">Preview</span>
         <button
           type="button"
           className="demo-frame__switch"
@@ -522,7 +522,7 @@ function TeacherPortal({
                   className="btn-secondary"
                   onClick={() =>
                     setNotice(
-                      "In the real portal you message students in your classes. Demo stays sandboxed.",
+                      "In the live portal you message students in your classes. This preview stays local.",
                     )
                   }
                 >
@@ -763,7 +763,7 @@ export function SchoolDemo() {
   function resetSession() {
     setSession(createDemoSession());
     setRole(null);
-    setToast("Demo session reset — choose a role to continue.");
+    setToast("Preview reset — choose a role to continue.");
   }
 
   return (
@@ -772,9 +772,9 @@ export function SchoolDemo() {
         <p className="eyebrow">For schools · Demo</p>
         <h1 className="display-feature mt-2">Try Guide as your school</h1>
         <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted">
-          Interactive walkthrough for teachers, students, and school
-          administrators. Local fixtures only — nothing is written to
-          production. Book a meeting reaches Guide Official for real.
+          An interactive preview for teachers, students, and school
+          administrators. Explore freely — nothing is saved to a live school.
+          When you are ready, book a meeting or apply for your school.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
           <Link href="/schools/meeting">Book a meeting →</Link>
@@ -786,9 +786,9 @@ export function SchoolDemo() {
       {role !== null ? (
         <div className="demo-sandbox-banner" role="status">
           <p className="demo-sandbox-banner__text">
-            <strong>Sandbox only.</strong> You are exploring the{" "}
-            {demoRoleLabel(role)} for {session.schoolName} — not a live school
-            account.
+            <strong>Preview only.</strong> You are exploring the{" "}
+            {demoRoleLabel(role)} view for {session.schoolName} — not a live
+            school account.
           </p>
           <button
             type="button"

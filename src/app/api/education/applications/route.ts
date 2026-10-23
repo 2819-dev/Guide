@@ -269,7 +269,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             error:
-              "You already have a pending application. Open your portal to check status.",
+              "You already have an application under review. Open your School Administrator Portal to check status.",
             application: { id: existing.id, status: existing.status },
             redirectTo: "/education/panel",
           },

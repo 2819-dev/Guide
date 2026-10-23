@@ -48,14 +48,13 @@ export default async function EducationLandingPage() {
               Keep students engaged and classrooms well managed
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-[1.65] text-ink-muted">
-              Guide gives schools a calm place for classes, apps, and invites —
-              so learning feels inviting and teachers stay organized.
-              Administrators apply here; teachers log in with a school invite
-              only.
+              One place for classes, learning apps, and teacher invites — so
+              school feels inviting and teachers stay organized. Administrators
+              apply here; teachers log in with a school invite.
             </p>
             <div className="mt-8 flex flex-col items-center gap-2">
               <a href="#apply" className="btn-primary">
-                {isRejected ? "Re-apply for your school" : "Apply for your school"}
+                {isRejected ? "Update & re-apply" : "Apply for your school"}
               </a>
               <p className="hero-secondary-links !mt-2">
                 <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
@@ -83,21 +82,21 @@ export default async function EducationLandingPage() {
             <h2 className="schools-feature__title">Classroom management</h2>
             <p className="schools-feature__body">
               Create classes, share invite codes, and follow progress without
-              juggling five different tools.
+              switching between tools.
             </p>
           </article>
           <article className="schools-feature">
-            <h2 className="schools-feature__title">Apps students actually open</h2>
+            <h2 className="schools-feature__title">Apps students open</h2>
             <p className="schools-feature__body">
-              Teachers add apps to a class. Students see them under My apps —
+              Teachers add apps to a class. Students find them under My apps —
               Amud, Arcade Education, and more your school chooses.
             </p>
           </article>
           <article className="schools-feature">
             <h2 className="schools-feature__title">Invite teachers by email</h2>
             <p className="schools-feature__body">
-              Type work emails from the portal. Guide sends setup links —
-              teachers log in only; there is no public teacher signup.
+              Enter work emails from your portal. Guide sends a clear setup
+              link — teachers log in only; there is no public teacher signup.
             </p>
           </article>
         </div>
@@ -108,11 +107,11 @@ export default async function EducationLandingPage() {
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
             <p className="text-xs font-semibold text-forest-600">01</p>
             <h2 className="mt-2 text-lg font-semibold text-forest-950">
-              Apply & create your account
+              Apply and create your account
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              School or district application creates your Guide account right
-              away. Open your {portalLabel} while we review.
+              Your school application creates a Guide account right away. Open
+              your {portalLabel} while we review.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
@@ -121,8 +120,8 @@ export default async function EducationLandingPage() {
               Invite teachers
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              After approval, paste work emails. Guide sends professional setup
-              links.
+              After approval, add work emails. Guide sends a professional setup
+              link to each teacher.
             </p>
           </li>
           <li className="p-6">
@@ -141,13 +140,13 @@ export default async function EducationLandingPage() {
       <section id="apply" className="content-band max-w-3xl py-12 sm:py-14">
         {isRejected ? (
           <div className="portal-empty mb-5 !border-solid">
-            <p className="portal-empty__title">Application not approved</p>
+            <p className="portal-empty__title">Not approved this time</p>
             <p className="portal-empty__body">
               {appStatus.schoolName
                 ? `${appStatus.schoolName} was not approved.`
                 : "Your previous application was not approved."}{" "}
-              Update the details and re-apply below. Your {portalLabel} stays
-              available with a limited view until an application is accepted.
+              Update the details below and re-apply. Your {portalLabel} remains
+              available until a new application is accepted.
             </p>
             <Link href="/education/panel" className="btn-primary mt-5 inline-flex">
               {portalLabel}
@@ -168,7 +167,7 @@ export default async function EducationLandingPage() {
             >
               Log in
             </Link>{" "}
-            then apply — or create your account as you submit below.
+            first, then apply — or create your account when you submit below.
           </p>
         )}
       </section>

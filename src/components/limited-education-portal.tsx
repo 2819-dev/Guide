@@ -23,16 +23,16 @@ export function LimitedEducationPortal({
   const schoolLabel = schoolName?.trim() || "Your school";
 
   const title = isRejected
-    ? "Application not approved"
+    ? "Not approved this time"
     : status === "pending"
-      ? "Under review"
+      ? "Application under review"
       : "Welcome";
 
   const body = isRejected
-    ? `${schoolLabel} was not approved this time. You can update your details and re-apply — full classroom tools open after approval.`
+    ? `${schoolLabel} was not approved. Update your details and re-apply when you are ready — full classroom tools open after approval.`
     : status === "pending"
-      ? `${schoolLabel} is being reviewed. You can sign in anytime. Invite teachers, classes, and apps will be ready here once your school is approved.`
-      : "Finish applying for your school to open classroom tools after approval.";
+      ? `${schoolLabel} is under review. You can sign in anytime. When your school is approved, invite teachers, create classes, and add apps from here.`
+      : "Apply for your school to create your account. Classroom tools open here after approval.";
 
   return (
     <PortalShell
@@ -40,15 +40,17 @@ export function LimitedEducationPortal({
       title={`Hi, ${displayName}`}
       subtitle={
         isRejected
-          ? "Your portal is ready with a limited view while you re-apply."
-          : "Your portal is ready. Full tools open when your school is approved."
+          ? "Your portal stays available while you update and re-apply."
+          : "Your portal is open. Full classroom tools arrive when your school is approved."
       }
     >
       <div className="portal-panel portal-limited">
         <div className="portal-limited__visual" aria-hidden>
           <LimitedPortalIllustration />
         </div>
-        <p className="portal-eyebrow mt-6">{isRejected ? "Status" : "Application status"}</p>
+        <p className="portal-eyebrow mt-6">
+          {isRejected ? "Status" : "Application status"}
+        </p>
         <h2 className="display-feature mt-1 text-[1.35rem] sm:text-[1.5rem]">
           {title}
         </h2>
@@ -58,12 +60,12 @@ export function LimitedEducationPortal({
         <div className="mt-6 flex flex-wrap items-center gap-3">
           {isRejected || status === "none" ? (
             <Link href="/education#apply" className="btn-primary">
-              {isRejected ? "Re-apply for your school" : "Apply for your school"}
+              {isRejected ? "Update & re-apply" : "Apply for your school"}
             </Link>
           ) : null}
           {kind === "school" && status === "pending" ? (
             <p className="text-sm text-ink-muted">
-              No further action needed while we review.
+              No action needed while we review.
             </p>
           ) : null}
         </div>
