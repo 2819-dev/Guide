@@ -19,19 +19,19 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
     label: "Student",
-    description: "Find your school, then badge or password",
+    description: "School → badge or password · open My apps",
     href: "/auth/sign-in?as=student",
   },
   {
     id: "educator",
     label: "Teacher or School Administrator",
-    description: "Teachers log in · schools apply first",
+    description: "Teachers log in with invite · schools apply",
     href: "/auth/sign-in?as=educator",
   },
   {
     id: "official",
     label: "Guide Official",
-    description: "Approve schools and meeting requests",
+    description: "Meetings, school approvals, partner apps",
     href: "/auth/sign-in?as=official",
   },
 ];
@@ -70,7 +70,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Student",
         subtitle:
-          "Find your school, then open My apps — the learning and classroom tools your teachers added.",
+          "Find your school, then sign in with badge or password. My apps shows the learning tools your teachers added for class.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
@@ -78,7 +78,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Teacher or School Administrator",
         subtitle:
-          "Teachers log in with the setup invite from your school. Administrators apply for Guide, then manage classes and invites from the portal.",
+          "Teachers log in with the setup link from a school invite — there is no public teacher signup. School administrators apply for Guide, then invite teachers and manage classes.",
         // Teachers = login only. School/district apply stays for admins.
         joinHref: "/education#apply",
         joinLabel: "Apply for your school",
@@ -86,15 +86,16 @@ export function loginAsCopy(as: LoginAs): {
     case "official":
       return {
         title: "Guide Official",
-        subtitle: "Review school applications, developers, and meeting requests.",
+        subtitle:
+          "Review Book a meeting requests, approve schools, and verify partner apps that teachers can add to class.",
         joinHref: null,
         joinLabel: null,
       };
     case "developer":
       return {
-        title: "Developer",
+        title: "Developer partner",
         subtitle:
-          "Verified partners only. Apply first; log in after Guide Official approves.",
+          "Verified partners only — not a public marketplace. Apply first; after Official approves, log in to manage apps schools can add to class.",
         joinHref: "/developers/apply",
         joinLabel: "Apply as a developer",
       };
