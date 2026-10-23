@@ -40,7 +40,7 @@ export default async function AccountPage() {
   });
   const backHref = isAmudSite()
     ? publicAmudLearnBase()
-    : (portal?.href ?? (role === "rebbe" ? "/education" : "/apps"));
+    : (portal?.href ?? (role === "rebbe" ? "/education/panel" : "/apps"));
   const backLabel = isAmudSite() ? "Amud" : (portal?.label ?? "Guide");
 
   let schoolName: string | null = null;

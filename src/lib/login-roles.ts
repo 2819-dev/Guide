@@ -130,7 +130,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "School administrator",
         subtitle:
-          "Teachers are invited by email — use Log in instead. School or district administrators apply for Guide to unlock the portal.",
+          "Teachers are invited by email — use Log in instead. School or district administrators apply here to create an account and open their portal.",
         roleValue: "customer",
         showRoleChooser: false,
       };

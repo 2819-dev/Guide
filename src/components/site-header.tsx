@@ -72,8 +72,9 @@ export function SiteHeader() {
       portalHref = "/developer";
       portalId = "developer";
     } else if (awaitingSchool) {
-      // Teacher / School Administrator — locked until approved.
-      portalHref = "/education";
+      // Teacher / School Administrator — limited portal until approved.
+      portalHref = "/education/panel";
+      portalId = "teacher";
     }
   }
 

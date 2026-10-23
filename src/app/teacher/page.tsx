@@ -1,18 +1,15 @@
 import { redirect } from "next/navigation";
-import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
-export const metadata = { title: "Teacher portal" };
+export const metadata = { title: "Teacher portal · Guide" };
 
-/** Clever-style teacher portal alias → Education panel. */
+/** Clever-style teacher / school-admin portal alias → Education panel. */
 export default async function TeacherPortalPage() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) redirect("/auth/sign-in?as=educator");
 
-  const allowed = await hasEducationAccess(authz.profile);
-  if (!allowed) redirect("/education");
-
+  // Full tools or limited pending/declined view — both live on the panel.
   redirect("/education/panel");
 }

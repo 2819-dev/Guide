@@ -27,7 +27,8 @@ function destinationFor(
   }
   if (as === "educator") {
     if (role === "admin") return "/official";
-    if (educationOk) return "/teacher";
+    // Approved = full tools; pending/declined = limited portal (same route).
+    if (role === "rebbe" || educationOk) return "/teacher";
     return "/education";
   }
   if (as === "developer") {
