@@ -122,7 +122,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Join as a Student",
         subtitle:
-          "Choose your school, create an account, then join your class from Account so My apps shows what teachers added.",
+          "Type to find your school, create an account, then join your class from Account so My apps shows what teachers added.",
         roleValue: "customer",
         showRoleChooser: false,
       };
