@@ -69,8 +69,7 @@ export function loginAsCopy(as: LoginAs): {
     case "student":
       return {
         title: "Student",
-        subtitle:
-          "Type to find your school, then sign in with a badge or password.",
+        subtitle: "Find your school, then continue with a badge or password.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
@@ -78,7 +77,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Admin",
         subtitle:
-          "Teachers use the setup link from a school invite. School administrators apply for Guide, then invite teachers and manage classes.",
+          "Teachers sign in with their school invite. Administrators apply for Guide, then invite teachers and manage classes.",
         // Teachers = login only. School/district apply stays for admins.
         joinHref: "/education#apply",
         joinLabel: "Apply for your school",

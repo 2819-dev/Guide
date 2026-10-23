@@ -186,7 +186,7 @@ export function StudentSignIn() {
               )}
               {!loadingSchools && !loadError && queryTrimmed.length === 0 && (
                 <p className="text-sm text-ink-muted">
-                  Keep typing to find your school.
+                  Type a few letters — matches appear as you go.
                 </p>
               )}
               {!loadingSchools &&

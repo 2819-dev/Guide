@@ -49,9 +49,8 @@ export default async function EducationLandingPage() {
               Keep students engaged and classrooms well managed
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">
-              One place for classes, learning apps, and teacher invites — so
-              school feels inviting and teachers stay organized. Administrators
-              apply here; teachers log in with a school invite.
+              Classes, apps, and teacher invites in one calm place.
+              Administrators apply here; teachers join with a school invite.
             </p>
             <div className="mt-8 flex flex-col items-center gap-2">
               <a href="#apply" className="btn-primary">
@@ -146,18 +145,20 @@ export default async function EducationLandingPage() {
 
       <section id="apply" className="content-band max-w-3xl py-12 sm:py-14">
         {isRejected ? (
-          <div className="portal-empty mb-5 !border-solid">
+          <div className="portal-empty mb-5">
             <p className="portal-empty__title">Not approved this time</p>
             <p className="portal-empty__body">
               {appStatus.schoolName
                 ? `${appStatus.schoolName} was not approved.`
                 : "Your previous application was not approved."}{" "}
-              Update the details below and re-apply. Your {portalLabel} remains
-              available until a new application is accepted.
+              Update the details below and re-apply when you are ready. Your{" "}
+              {portalLabel} stays open.
             </p>
-            <Link href="/education/panel" className="btn-primary mt-5 inline-flex">
-              {portalLabel}
-            </Link>
+            <div className="portal-empty__action">
+              <Link href="/education/panel" className="btn-primary">
+                {portalLabel}
+              </Link>
+            </div>
           </div>
         ) : null}
         <EducationApply

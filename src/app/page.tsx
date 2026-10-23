@@ -50,8 +50,8 @@ function GuideHomePage() {
               <span className="sun-underline">engaged</span>
             </h1>
             <p className="hero-lede">
-              Clear classroom management for teachers, and learning apps that
-              keep students involved — so school feels inviting and purposeful.
+              One calm place for classes, apps, and invites — so teachers stay
+              organized and students stay involved.
             </p>
 
             <div className="hero-cta-stack">

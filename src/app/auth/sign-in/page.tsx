@@ -112,9 +112,9 @@ function SignInForm() {
           }
         >
           {isEducator ? (
-            <p className="mb-5 rounded-[10px] border border-line bg-sky-soft px-3.5 py-3 text-sm leading-snug text-forest-900">
-              Teachers log in only — use the setup link from your school invite.
-              There is no public teacher signup.
+            <p className="auth-soft-note">
+              Teachers use the setup link from a school invite — there is no
+              public teacher signup.
             </p>
           ) : null}
           <form action={formAction} className="space-y-4">

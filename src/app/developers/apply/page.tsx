@@ -24,9 +24,9 @@ export default function DeveloperApplyPage() {
               Build apps schools can add to class
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">
-              Guide hosts verified partner apps — not a public marketplace.
-              After Official approves you, teachers add your app to a class and
-              students open it from My apps.
+              Build verified apps schools can trust. After Official approves
+              you, teachers add your app to class and students open it from My
+              apps.
             </p>
             <div className="mt-8 flex flex-col items-center gap-2">
               <a href="#apply" className="btn-primary">

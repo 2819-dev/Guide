@@ -31,10 +31,10 @@ export function LimitedEducationPortal({
       : "Welcome";
 
   const body = isRejected
-    ? `${schoolLabel} was not approved. Update your details and re-apply when you are ready — full classroom tools open after approval.`
+    ? `${schoolLabel} was not approved. Update a few details and re-apply when you are ready — classroom tools open after approval.`
     : status === "pending"
-      ? `${schoolLabel} is under review. You can sign in anytime. When your school is approved, invite teachers, create classes, and add apps from here.`
-      : "Apply for your school to create your account. Classroom tools open here after approval.";
+      ? `${schoolLabel} is under review. You can sign in anytime. When approved, invite teachers, create classes, and add apps right here.`
+      : "Apply for your school to open this portal. Classroom tools arrive after approval.";
 
   return (
     <PortalShell
@@ -42,8 +42,8 @@ export function LimitedEducationPortal({
       title={`Hi, ${displayName}`}
       subtitle={
         isRejected
-          ? "Your portal stays available while you update and re-apply."
-          : "Your portal is open. Full classroom tools arrive when your school is approved."
+          ? "Your portal stays open while you update and re-apply."
+          : "You are in. Full classroom tools arrive when your school is approved."
       }
       accountName={displayName}
     >
@@ -60,7 +60,7 @@ export function LimitedEducationPortal({
         <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
           {body}
         </p>
-        <div className="mt-6 flex flex-wrap items-center gap-3">
+        <div className="portal-empty__action !justify-start">
           {isRejected || status === "none" ? (
             <Link href="/education#apply" className="btn-primary">
               {isRejected ? "Update & re-apply" : "Apply for your school"}
@@ -68,7 +68,7 @@ export function LimitedEducationPortal({
           ) : null}
           {kind === "school" && status === "pending" ? (
             <p className="text-sm text-ink-muted">
-              No action needed while we review.
+              Nothing to do while we review — we will email you.
             </p>
           ) : null}
         </div>

@@ -39,8 +39,8 @@ function RolePicker({
     <div className="demo-role-picker" role="group" aria-label="Try a school role">
       <p className="demo-role-picker__label">Choose a role to explore</p>
       <p className="-mt-2 mb-4 text-sm leading-relaxed text-ink-muted">
-        Each role opens a preview of Riverside Academy — a sample school for
-        exploring Guide, not a live account.
+        Pick a role to tour Riverside Academy — a friendly sample school, not a
+        live account.
       </p>
       <div className="demo-role-picker__grid">
         {DEMO_ROLES.map((role) => (
@@ -232,9 +232,9 @@ function StudentPortal({
           <h2 className="portal-section-title">My apps</h2>
           {apps.length === 0 ? (
             <div className="portal-empty">
-              <p className="portal-empty__title">No apps yet</p>
+              <p className="portal-empty__title">Ready when your class is</p>
               <p className="portal-empty__body">
-                When a teacher adds an app to your class, it shows up here.
+                When a teacher adds an app, it appears here for class.
               </p>
             </div>
           ) : (
@@ -472,9 +472,10 @@ function TeacherPortal({
           </div>
           {session.classrooms.length === 0 ? (
             <div className="portal-empty">
-              <p className="portal-empty__title">Create a class first</p>
+              <p className="portal-empty__title">Start with a class</p>
               <p className="portal-empty__body">
-                Then add apps here so students see them under My apps.
+                Create a class, then add apps so students see them under My
+                apps.
               </p>
             </div>
           ) : (

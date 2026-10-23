@@ -18,11 +18,11 @@
   --forest-200: #d9efe3;
   --forest-100: #eef8f2;
   --moss: #6fad5e;
-  --sun: #d0ad55;
+  --sun: #c9a84e;
   --sky-soft: #f6fbf8;
   --paper: #ffffff;
   --ink: #243530;
-  --ink-muted: #5f7268;
+  --ink-muted: #657870;
   --line: #e4efe8;
   --surface: #ffffff;
   --on-primary: #ffffff;
@@ -43,9 +43,9 @@
   --clever-radius-sm: 8px;
   --radius: 10px;
   --radius-pill: 999px;
-  --shadow-card: 0 8px 24px rgba(36, 53, 48, 0.06);
-  --shadow-soft: 0 1px 2px rgba(36, 53, 48, 0.03);
-  --shadow-menu: 0 12px 28px rgba(36, 53, 48, 0.08);
+  --shadow-card: 0 10px 28px rgba(36, 53, 48, 0.055);
+  --shadow-soft: 0 1px 2px rgba(36, 53, 48, 0.028);
+  --shadow-menu: 0 14px 32px rgba(36, 53, 48, 0.08);
 }
 
 /* System auto dark — forest-dark surfaces; brand fill greens stay deep */
@@ -226,11 +226,14 @@ body {
   font-size: 1rem;
   letter-spacing: -0.01em;
   text-decoration: none;
-  transition: background 140ms ease;
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
 }
 
 .btn-primary:hover {
   background: var(--forest-600);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(74, 143, 108, 0.22);
 }
 
 .btn-primary:disabled {
@@ -791,7 +794,7 @@ body {
 
 @media (min-width: 1100px) {
   .demo-role-picker__grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -799,43 +802,48 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: 0.55rem;
   min-height: 8rem;
   padding: 1.35rem 1.25rem;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: var(--surface);
+  background:
+    radial-gradient(ellipse 90% 70% at 0% 0%, rgba(181, 223, 198, 0.18), transparent 55%),
+    var(--surface);
   box-shadow: var(--shadow-soft);
   text-align: left;
   cursor: pointer;
   transition:
-    border-color 0.15s ease,
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
 }
 
 .demo-role-card:hover {
   border-color: var(--forest-400);
-  background: #fff;
-  transform: translateY(-1px);
+  background:
+    radial-gradient(ellipse 90% 70% at 0% 0%, rgba(181, 223, 198, 0.32), transparent 55%),
+    var(--surface);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
 }
 
 .demo-role-card:focus-visible {
-  outline: 2px solid var(--forest-700);
+  outline: 2px solid var(--forest-600);
   outline-offset: 2px;
 }
 
 .demo-role-card__cta {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--forest-950);
+  color: var(--forest-900);
   letter-spacing: -0.01em;
 }
 
 .demo-role-card__blurb {
   font-size: 0.9rem;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--ink-muted);
 }
 
@@ -1507,6 +1515,20 @@ body {
   }
 }
 
+/* Calm educator / status notes — inviting, not alarming */
+.auth-soft-note {
+  margin: 0 0 1.25rem;
+  border-radius: var(--clever-radius);
+  border: 1px solid var(--forest-200);
+  background:
+    radial-gradient(ellipse 80% 80% at 10% 0%, rgba(181, 223, 198, 0.28), transparent 60%),
+    var(--sky-soft);
+  padding: 0.9rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--forest-900);
+}
+
 /* Student login split — full viewport (auth hides site chrome) */
 .login-split {
   display: grid;
@@ -2069,9 +2091,9 @@ body {
 
 .portal-empty {
   border-radius: var(--clever-radius);
-  border: 1px dashed var(--forest-300);
+  border: 1px solid var(--forest-200);
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(181, 223, 198, 0.22), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(181, 223, 198, 0.28), transparent 60%),
     var(--sky-soft);
   padding: 2.75rem 1.85rem;
   text-align: center;
@@ -2079,24 +2101,32 @@ body {
 
 .portal-empty__title {
   margin: 0;
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   font-weight: 650;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
 .portal-empty__body {
-  margin: 0.55rem auto 0;
+  margin: 0.6rem auto 0;
   max-width: 26rem;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   line-height: 1.55;
   color: var(--ink-muted);
 }
 
+.portal-empty__action {
+  margin-top: 1.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
 /* Limited Teacher / School Administrator portal (pending / declined) */
 .portal-limited {
-  max-width: 36rem;
-  padding: 1.75rem 1.5rem 1.85rem;
+  max-width: 38rem;
+  padding: 1.85rem 1.6rem 2rem;
 }
 
 .portal-limited__visual {
@@ -2630,5 +2660,38 @@ body {
 
   .cta-band__inner {
     padding: 7.5rem 0;
+  }
+}
+
+/* Subtle presence — inviting, not noisy */
+@keyframes guide-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-primary {
+    animation: guide-rise 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-visual-panel {
+    animation: guide-rise 620ms 80ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-link-row {
+    animation: guide-rise 560ms 140ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .auth-card,
+  .demo-role-picker,
+  .portal-empty,
+  .portal-limited {
+    animation: guide-rise 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 }
