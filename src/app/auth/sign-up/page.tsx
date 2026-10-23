@@ -5,6 +5,7 @@ export const runtime = "edge";
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
+import { AdminKeyIcon } from "@/components/admin-entry";
 import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
@@ -57,8 +58,9 @@ function SignUpForm() {
         <div className="flex flex-col gap-3">
           <Link
             href="/auth/sign-in?as=educator"
-            className="btn-primary inline-flex justify-center"
+            className="btn-primary inline-flex items-center justify-center gap-2"
           >
+            <AdminKeyIcon />
             Admin
           </Link>
           <Link
