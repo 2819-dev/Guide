@@ -2406,8 +2406,9 @@ body {
 @media (min-width: 1024px) {
   :root {
     --clever-header-h: 100px;
-    --clever-content: 1360px;
-    --clever-inset: 44px;
+    /* Near full-bleed on laptop/desktop; pads via inset */
+    --clever-content: 1520px;
+    --clever-inset: 40px;
     --clever-control-h: 54px;
   }
 
@@ -2609,8 +2610,13 @@ body {
   }
 
   .demo-desktop-stage {
+    max-width: min(1520px, 100%);
     padding-top: 2.75rem;
     padding-bottom: 3.5rem;
+  }
+
+  .demo-desktop-stage .portal-shell--embed {
+    max-width: none;
   }
 
   .demo-role-card {
