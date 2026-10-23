@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useCallback, useEffect, useRef, useState } from "react";
 import { AdminEntryButton } from "@/components/admin-entry";
 import { GuideWordmark } from "@/components/guide-logo";
