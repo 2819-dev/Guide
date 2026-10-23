@@ -1578,18 +1578,18 @@ body {
   object-position: center;
 }
 
-/* Transparent hotspot — flush on baked Notify Me (~64% of art) */
+/* Transparent hotspot — flush on baked Notify Me (~60% of art) */
 .hero-notify-hotspot {
   position: absolute;
   left: 50%;
-  top: 64%;
+  top: 60%;
   bottom: auto;
   transform: translate(-50%, -50%);
-  width: 42%;
-  max-width: 10.75rem;
-  height: 9%;
-  min-height: 2.4rem;
-  max-height: 3rem;
+  width: 40%;
+  max-width: 10.5rem;
+  height: 8%;
+  min-height: 2.35rem;
+  max-height: 2.85rem;
   border: 0;
   padding: 0;
   border-radius: 999px;
