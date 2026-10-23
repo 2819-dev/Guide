@@ -122,7 +122,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Join as a Student",
         subtitle:
-          "Choose your school, create an account, then join your class from Account so My apps lights up.",
+          "Choose your school, create an account, then join your class from Account so My apps shows what teachers added.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -130,14 +130,14 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "School administrator",
         subtitle:
-          "Teachers are invited by email — use Log in instead. School or district administrators apply for Guide here.",
+          "Teachers are invited by email — use Log in instead. School or district administrators apply for Guide to unlock the portal.",
         roleValue: "customer",
         showRoleChooser: false,
       };
     case "official":
       return {
         title: "Guide Official",
-        subtitle: "Please log in with your Guide Official account.",
+        subtitle: "Log in with your Guide Official account to review schools and meetings.",
         roleValue: "moderator",
         showRoleChooser: false,
       };
@@ -145,7 +145,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Developer partner",
         subtitle:
-          "Create an account only after you apply and Guide Official verifies you.",
+          "Create an account after you apply. The portal unlocks when Guide Official verifies your partner app.",
         roleValue: "customer",
         showRoleChooser: false,
       };
