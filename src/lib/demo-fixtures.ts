@@ -58,30 +58,39 @@ export const DEMO_ROLES: {
   tryAs: string;
   portalLabel: string;
   blurb: string;
+  /** Short “what you can try” line for the role picker. */
+  hint: string;
 }[] = [
   {
     id: "teacher",
     tryAs: "Try as Teacher",
     portalLabel: "Teacher portal",
-    blurb: "Classes, apps for a class, and day-to-day classroom tools.",
+    blurb:
+      "Manage classes and add learning apps so students stay engaged.",
+    hint: "Try: create a class · add an app · open messages",
   },
   {
     id: "student",
     tryAs: "Try as Student",
     portalLabel: "Student portal",
-    blurb: "My apps in the center — open what your teacher added.",
+    blurb: "Open My apps in the center — what your teacher added for class.",
+    hint: "Try: open an app tile · check messages",
   },
   {
     id: "admin",
     tryAs: "Try as School administrator",
     portalLabel: "School administrator",
-    blurb: "Invite teachers, see school overview, keep classes organized.",
+    blurb:
+      "Invite teachers by email and keep the school overview organized.",
+    hint: "Try: invite a teacher · review classes",
   },
   {
     id: "official",
     tryAs: "Try as Guide Official",
     portalLabel: "Guide Official",
-    blurb: "Meetings, school approvals, and partner apps — denser admin tabs.",
+    blurb:
+      "Review Book a meeting requests, school applications, and partner apps.",
+    hint: "Try: meetings · schools · developers",
   },
 ];
 

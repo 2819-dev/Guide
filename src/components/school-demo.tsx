@@ -39,6 +39,10 @@ function RolePicker({
   return (
     <div className="demo-role-picker" role="group" aria-label="Try a school role">
       <p className="demo-role-picker__label">Choose a role to explore</p>
+      <p className="-mt-2 mb-4 text-sm leading-relaxed text-ink-muted">
+        Each role opens a sandboxed portal for Riverside Academy — nothing is
+        saved to a real school.
+      </p>
       <div className="demo-role-picker__grid">
         {DEMO_ROLES.map((role) => (
           <button
@@ -49,6 +53,7 @@ function RolePicker({
           >
             <span className="demo-role-card__cta">{role.tryAs}</span>
             <span className="demo-role-card__blurb">{role.blurb}</span>
+            <span className="demo-role-card__hint">{role.hint}</span>
           </button>
         ))}
       </div>
@@ -89,6 +94,35 @@ function DemoChrome({
       {children}
     </div>
   );
+}
+
+/** Always return a portal for a picked role — Official must never render empty. */
+function DemoRolePortal({
+  role,
+  session,
+  setSession,
+  onOpenApp,
+}: {
+  role: DemoRole;
+  session: DemoSession;
+  setSession: (next: DemoSession) => void;
+  onOpenApp: (name: string) => void;
+}) {
+  switch (role) {
+    case "student":
+      return <StudentPortal session={session} onOpenApp={onOpenApp} />;
+    case "teacher":
+      return <TeacherPortal session={session} setSession={setSession} />;
+    case "admin":
+      return <AdminPortal session={session} setSession={setSession} />;
+    case "official":
+      return <OfficialPortal session={session} setSession={setSession} />;
+    default: {
+      const _exhaustive: never = role;
+      void _exhaustive;
+      return <OfficialPortal session={session} setSession={setSession} />;
+    }
+  }
 }
 
 function DemoTabs({
@@ -757,7 +791,8 @@ function OfficialPortal({
             Hi, {session.displayName.official}
           </h2>
           <p className="mt-1 text-sm text-ink-muted">
-            Meetings, school approvals, and partner apps — denser admin tabs.
+            Review meeting requests, approve schools, and verify partner apps —
+            local fixtures only.
           </p>
           {notice ? (
             <p className="mt-3 rounded-[10px] border border-forest-200 bg-forest-100 px-3 py-2 text-sm text-forest-900">
@@ -771,7 +806,7 @@ function OfficialPortal({
                 <h3 className="portal-section-title">Meeting requests</h3>
                 <p className="-mt-2 text-sm text-ink-muted">
                   From For schools · Book a meeting. Mark contacted, scheduled,
-                  or closed.
+                  or closed — then switch to Schools or Developers.
                 </p>
               </div>
               <div className="official-stat-row">
@@ -838,8 +873,8 @@ function OfficialPortal({
               <div>
                 <h3 className="portal-section-title">School applications</h3>
                 <p className="-mt-2 text-sm text-ink-muted">
-                  Approve a school so administrators can invite teachers. Demo
-                  preview only.
+                  Approve a school so administrators can invite teachers and open
+                  the portal. Next: try Approve, then open Developers.
                 </p>
               </div>
               <div className="portal-panel space-y-2">
@@ -858,7 +893,9 @@ function OfficialPortal({
                     type="button"
                     className="btn-primary !min-h-12"
                     onClick={() =>
-                      setNotice("Approved in demo — production writes Official only.")
+                      setNotice(
+                        "Approved in demo — school admins could invite teachers next. No production write.",
+                      )
                     }
                   >
                     Approve
@@ -867,7 +904,9 @@ function OfficialPortal({
                     type="button"
                     className="btn-secondary !min-h-12"
                     onClick={() =>
-                      setNotice("Declined in demo — production writes Official only.")
+                      setNotice(
+                        "Declined in demo — school stays locked until a new apply. No production write.",
+                      )
                     }
                   >
                     Decline
@@ -963,7 +1002,7 @@ export function SchoolDemo() {
   function resetSession() {
     setSession(createDemoSession());
     setRole(null);
-    setToast("Demo session reset.");
+    setToast("Demo session reset — choose a role to continue.");
   }
 
   return (
@@ -972,9 +1011,9 @@ export function SchoolDemo() {
         <p className="eyebrow">For schools · Demo</p>
         <h1 className="display-feature mt-2">Try Guide as your school</h1>
         <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted">
-          An interactive walkthrough — teacher, student, school administrator,
-          or Guide Official (meetings, schools, developers). Local fixtures
-          only; nothing is written to production.
+          Interactive walkthrough for teachers, students, school administrators,
+          and Guide Official. Local fixtures only — nothing is written to
+          production.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
           <Link href="/schools/meeting">Book a meeting →</Link>
@@ -982,6 +1021,23 @@ export function SchoolDemo() {
           <Link href="/auth/sign-in?as=educator">Teacher log in →</Link>
         </p>
       </header>
+
+      {role !== null ? (
+        <div className="demo-sandbox-banner" role="status">
+          <p className="demo-sandbox-banner__text">
+            <strong>Sandbox only.</strong> You are exploring the{" "}
+            {demoRoleLabel(role)} for {session.schoolName} — not a live school
+            account.
+          </p>
+          <button
+            type="button"
+            className="btn-secondary !min-h-12 !px-4 !text-sm"
+            onClick={resetRole}
+          >
+            Back to roles
+          </button>
+        </div>
+      ) : null}
 
       {toast ? (
         <p
@@ -997,30 +1053,19 @@ export function SchoolDemo() {
       ) : (
         <DemoChrome
           role={role}
-          schoolName={
-            role === "official" ? "Meeting queue" : session.schoolName
-          }
+          schoolName={session.schoolName}
           onSwitchRole={resetRole}
         >
-          {role === "student" ? (
-            <StudentPortal
-              session={session}
-              onOpenApp={(name) =>
-                setToast(
-                  `${name} would open in the real student portal. Staying in the demo.`,
-                )
-              }
-            />
-          ) : null}
-          {role === "teacher" ? (
-            <TeacherPortal session={session} setSession={setSession} />
-          ) : null}
-          {role === "admin" ? (
-            <AdminPortal session={session} setSession={setSession} />
-          ) : null}
-          {role === "official" ? (
-            <OfficialPortal session={session} setSession={setSession} />
-          ) : null}
+          <DemoRolePortal
+            role={role}
+            session={session}
+            setSession={setSession}
+            onOpenApp={(name) =>
+              setToast(
+                `${name} would open in the real student portal. Staying in the demo.`,
+              )
+            }
+          />
         </DemoChrome>
       )}
 
@@ -1032,7 +1077,11 @@ export function SchoolDemo() {
           Apply for your school
         </Link>
         {role !== null ? (
-          <button type="button" className="btn-secondary" onClick={resetSession}>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={resetSession}
+          >
             Reset demo
           </button>
         ) : null}
