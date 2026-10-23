@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
+import { AdminKeyIcon } from "@/components/admin-entry";
 import { LOGIN_AS_OPTIONS } from "@/lib/login-roles";
 
 type Props = {
@@ -108,7 +109,8 @@ export function LoginMenu({ variant = "primary", className = "" }: Props) {
                   onClick={() => setOpen(false)}
                   className="block min-h-[52px] px-4 py-3 no-underline transition hover:bg-forest-100"
                 >
-                  <span className="block text-[0.9375rem] font-semibold text-forest-950">
+                  <span className="flex items-center gap-1.5 text-[0.9375rem] font-semibold text-forest-950">
+                    {opt.id === "educator" ? <AdminKeyIcon /> : null}
                     {opt.label}
                   </span>
                   <span className="mt-0.5 block text-[0.8125rem] leading-snug text-ink-muted">

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useCallback, useEffect, useRef, useState } from "react";
+import { AdminEntryButton } from "@/components/admin-entry";
 import { GuideWordmark } from "@/components/guide-logo";
 import { loginAsCopy } from "@/lib/login-roles";
 import { signInStudentBadge, signInWithEmail } from "@/app/auth/sign-in/actions";
@@ -148,12 +149,7 @@ export function StudentSignIn() {
     <div className="auth-shell flex min-h-screen flex-col">
       <div className="flex items-center justify-between px-6 py-5 sm:px-8">
         <GuideWordmark href="/" size="lg" />
-        <Link
-          href="/auth/sign-in?as=educator"
-          className="inline-flex h-[50px] items-center rounded-[10px] bg-forest-700 px-6 text-base font-semibold text-white no-underline transition hover:bg-forest-600"
-        >
-          Admin
-        </Link>
+        <AdminEntryButton />
       </div>
 
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
