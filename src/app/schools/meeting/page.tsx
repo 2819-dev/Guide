@@ -12,7 +12,7 @@ export const metadata = {
 export default function BookMeetingPage() {
   return (
     <div className="portal-page">
-      <section className="bg-paper">
+      <section className="schools-hero-band">
         <div className="content-band py-12 sm:py-14">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow">For schools</p>

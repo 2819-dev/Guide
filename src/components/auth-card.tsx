@@ -9,7 +9,7 @@ export function AuthCard({
   footer,
 }: {
   eyebrow?: string | null;
-  title: string;
+  title: ReactNode;
   subtitle?: string | null;
   children: ReactNode;
   footer?: ReactNode;

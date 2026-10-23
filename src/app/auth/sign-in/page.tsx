@@ -5,6 +5,7 @@ export const runtime = "edge";
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
+import { AdminKeyIcon } from "@/components/admin-entry";
 import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
@@ -60,7 +61,16 @@ function SignInForm() {
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
         <AuthCard
           eyebrow={isEducator ? null : isLearner || isOfficial ? null : "Log in"}
-          title={copy.title}
+          title={
+            isEducator ? (
+              <span className="inline-flex items-center gap-2.5">
+                <AdminKeyIcon className="h-[1.05em] w-[1.05em] text-forest-700" />
+                {copy.title}
+              </span>
+            ) : (
+              copy.title
+            )
+          }
           subtitle={copy.subtitle}
           footer={
             copy.joinHref && copy.joinLabel ? (

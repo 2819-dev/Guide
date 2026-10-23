@@ -86,22 +86,22 @@ function LimitedPortalIllustration() {
       xmlns="http://www.w3.org/2000/svg"
       role="img"
     >
-      <rect width="320" height="160" rx="12" fill="rgba(240,245,242,0.95)" />
+      <rect width="320" height="160" rx="12" fill="rgba(246,251,248,0.98)" />
       <path
         d="M0 118c28-18 56-18 84 0s56 18 84 0 56-18 84 0 56 18 84 0v42H0v-42Z"
-        fill="rgba(28,61,46,0.08)"
+        fill="rgba(74,143,108,0.1)"
       />
-      <circle cx="248" cy="42" r="18" fill="rgba(28,61,46,0.12)" />
+      <circle cx="248" cy="42" r="18" fill="rgba(74,143,108,0.14)" />
       <path
         d="M72 118V62h48v56"
-        stroke="rgba(28,61,46,0.35)"
+        stroke="rgba(74,143,108,0.4)"
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
       <path
         d="M64 62h64l-32-28-32 28Z"
-        fill="rgba(28,61,46,0.22)"
-        stroke="rgba(28,61,46,0.4)"
+        fill="rgba(74,143,108,0.22)"
+        stroke="rgba(74,143,108,0.45)"
         strokeWidth="2"
         strokeLinejoin="round"
       />
@@ -111,20 +111,20 @@ function LimitedPortalIllustration() {
         width="16"
         height="16"
         rx="2"
-        fill="rgba(28,61,46,0.12)"
-        stroke="rgba(28,61,46,0.28)"
+        fill="rgba(74,143,108,0.12)"
+        stroke="rgba(74,143,108,0.3)"
         strokeWidth="1.5"
       />
       <path
         d="M168 118c0-22 14-36 32-36s32 14 32 36"
-        stroke="rgba(28,61,46,0.28)"
+        stroke="rgba(74,143,108,0.32)"
         strokeWidth="2.5"
         strokeLinecap="round"
       />
-      <circle cx="200" cy="68" r="10" fill="rgba(28,61,46,0.18)" />
+      <circle cx="200" cy="68" r="10" fill="rgba(74,143,108,0.2)" />
       <path
         d="M186 118h28"
-        stroke="rgba(28,61,46,0.28)"
+        stroke="rgba(74,143,108,0.32)"
         strokeWidth="2.5"
         strokeLinecap="round"
       />

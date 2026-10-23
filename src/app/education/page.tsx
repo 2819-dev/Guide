@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AdminKeyIcon } from "@/components/admin-entry";
 import { EducationApply } from "@/components/education-apply";
 import {
   getApplicantEducationStatus,
@@ -40,7 +41,7 @@ export default async function EducationLandingPage() {
 
   return (
     <div className="portal-page">
-      <section className="bg-paper">
+      <section className="schools-hero-band">
         <div className="content-band py-12 sm:py-16">
           <div className="mx-auto max-w-2xl text-center">
             <p className="eyebrow">For schools</p>
@@ -57,7 +58,13 @@ export default async function EducationLandingPage() {
                 {isRejected ? "Update & re-apply" : "Apply for your school"}
               </a>
               <p className="hero-secondary-links !mt-2">
-                <Link href="/auth/sign-in?as=educator">Admin</Link>
+                <Link
+                  href="/auth/sign-in?as=educator"
+                  className="inline-flex items-center gap-1.5"
+                >
+                  <AdminKeyIcon className="h-[0.95em] w-[0.95em]" />
+                  Admin
+                </Link>
                 <span aria-hidden className="hero-secondary-links__dot">
                   ·
                 </span>

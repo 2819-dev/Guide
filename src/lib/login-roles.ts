@@ -78,7 +78,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Admin",
         subtitle:
-          "Teachers log in with the setup link from a school invite — there is no public teacher signup. School administrators apply for Guide, then invite teachers and manage classes.",
+          "Teachers use the setup link from a school invite. School administrators apply for Guide, then invite teachers and manage classes.",
         // Teachers = login only. School/district apply stays for admins.
         joinHref: "/education#apply",
         joinLabel: "Apply for your school",
