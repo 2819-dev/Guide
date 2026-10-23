@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GuideWordmark } from "@/components/guide-logo";
-import { LoginMenu } from "@/components/login-menu";
 import { SignOutButton } from "@/components/sign-out-button";
 import type { SchoolApplicationStatus } from "@/lib/education-access";
 import {
@@ -31,8 +30,9 @@ const navLink =
   "px-2.5 py-2 text-[0.9375rem] font-medium text-forest-950 no-underline hover:text-forest-700";
 
 /**
- * Clever 1:1 header structure — Guide wordmark + forest CTAs.
- * Apps never appear in the top bar.
+ * Clever 1:1 header — Guide wordmark + forest CTAs.
+ * Logged-out: Education · Admin (teachers / school admins).
+ * Students use homepage “Log in as a student” — no role dropdown.
  */
 export function SiteHeader() {
   const [me, setMe] = useState<Me | null>(null);
@@ -72,7 +72,6 @@ export function SiteHeader() {
       portalHref = "/developer";
       portalId = "developer";
     } else if (awaitingSchool) {
-      // Teacher / School Administrator — limited portal until approved.
       portalHref = "/education/panel";
       portalId = "teacher";
     }
@@ -108,11 +107,15 @@ export function SiteHeader() {
             </>
           ) : (
             <>
-              {/* Clever-minimal logged-out: Education · Log In */}
               <Link href="/education" className={`${navLink} hidden sm:inline`}>
                 Education
               </Link>
-              <LoginMenu variant="primary" />
+              <Link
+                href="/auth/sign-in?as=educator"
+                className="inline-flex h-[50px] items-center rounded-[10px] bg-forest-700 px-7 text-base font-semibold text-white no-underline transition hover:bg-forest-600"
+              >
+                Admin
+              </Link>
             </>
           )}
         </nav>

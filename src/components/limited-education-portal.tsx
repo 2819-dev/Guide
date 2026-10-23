@@ -21,6 +21,8 @@ export function LimitedEducationPortal({
 }: Props) {
   const isRejected = status === "rejected";
   const schoolLabel = schoolName?.trim() || "Your school";
+  const shortRole =
+    portalLabel === "Teacher Portal" ? "Teacher" : "School administrator";
 
   const title = isRejected
     ? "Not approved this time"
@@ -36,13 +38,14 @@ export function LimitedEducationPortal({
 
   return (
     <PortalShell
-      eyebrow={portalLabel}
+      eyebrow={shortRole}
       title={`Hi, ${displayName}`}
       subtitle={
         isRejected
           ? "Your portal stays available while you update and re-apply."
           : "Your portal is open. Full classroom tools arrive when your school is approved."
       }
+      accountName={displayName}
     >
       <div className="portal-panel portal-limited">
         <div className="portal-limited__visual" aria-hidden>

@@ -14,7 +14,7 @@ export type LoginRoleOption = {
   href: string;
 };
 
-/** Guide school Log In menu — Student / Teacher / Official. */
+/** Legacy role list — header no longer uses a multi-role Log In dropdown. */
 export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
@@ -24,7 +24,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   },
   {
     id: "educator",
-    label: "Teacher or School Administrator",
+    label: "Admin",
     description: "Teachers use a school invite · administrators apply",
     href: "/auth/sign-in?as=educator",
   },
@@ -76,7 +76,7 @@ export function loginAsCopy(as: LoginAs): {
       };
     case "educator":
       return {
-        title: "Teacher or School Administrator",
+        title: "Admin",
         subtitle:
           "Teachers log in with the setup link from a school invite — there is no public teacher signup. School administrators apply for Guide, then invite teachers and manage classes.",
         // Teachers = login only. School/district apply stays for admins.

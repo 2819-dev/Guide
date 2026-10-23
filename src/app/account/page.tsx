@@ -1,18 +1,18 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { JoinClass } from "@/components/join-class";
+import { PortalShell } from "@/components/portal-shell";
 import { RoleBadgeChip } from "@/components/role-badge-chip";
 import { StudentBadgePanel } from "@/components/student-badge-panel";
 import { SupportForm } from "@/components/support-form";
 import { getDb } from "@/lib/db";
+import { hasEducationAccess } from "@/lib/education-access";
 import { portalFor } from "@/lib/portals";
-import { roleLabel } from "@/lib/roles";
 import { requireProfile } from "@/lib/profile";
 import { listRolesForProfile } from "@/lib/role-badges";
 import type { Role } from "@/lib/roles";
+import { roleLabel } from "@/lib/roles";
 import { schools } from "@/lib/schema";
-import { hasEducationAccess } from "@/lib/education-access";
 import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 
 export const runtime = "edge";
@@ -38,10 +38,10 @@ export default async function AccountPage() {
     badgeCode: authz.profile.badgeCode,
     educationOk,
   });
-  const backHref = isAmudSite()
+  const portalHref = isAmudSite()
     ? publicAmudLearnBase()
     : (portal?.href ?? (role === "rebbe" ? "/education/panel" : "/apps"));
-  const backLabel = isAmudSite() ? "Amud" : (portal?.label ?? "Guide");
+  const portalLabel = isAmudSite() ? "Amud" : (portal?.label ?? "Guide");
 
   let schoolName: string | null = null;
   if (authz.profile.schoolId) {
@@ -59,52 +59,58 @@ export default async function AccountPage() {
     (role === "customer" || role === "rebbe") &&
     Boolean(authz.profile.schoolId || authz.profile.badgeCode);
 
+  const shortRole = isOfficial
+    ? "Guide Official"
+    : role === "rebbe"
+      ? "Teacher"
+      : role === "customer"
+        ? "Student"
+        : roleLabel(role);
+
   return (
-    <div className="portal-page">
-      <div className="content-band portal-page__inner max-w-3xl space-y-8">
-      <p className="text-sm">
-        <Link href={backHref} className="font-semibold text-forest-800">
-          ← Back to {backLabel}
-        </Link>
-      </p>
-      <header className="portal-hero !mb-0">
-        <p className="portal-eyebrow">Account</p>
-        <h1 className="display-feature mt-1">
-          {authz.profile.displayName}
-        </h1>
-        <p className="mt-1.5 text-[0.95rem] text-ink-muted">
-          Signed in
-          {isOfficial ? "" : ` · ${roleLabel(role)}`}
-          {schoolName ? ` · ${schoolName}` : ""}
-        </p>
-        {roles.length > 0 && (
-          <ul className="mt-4 flex flex-wrap gap-2">
-            {roles.map((r) => (
-              <li key={r.id}>
-                <RoleBadgeChip
-                  name={r.name}
-                  color={r.color}
-                  iconUrl={r.iconUrl}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
-      </header>
+    <PortalShell
+      eyebrow={shortRole}
+      title={authz.profile.displayName}
+      subtitle={[
+        "Signed in",
+        isOfficial ? null : roleLabel(role),
+        schoolName,
+      ]
+        .filter(Boolean)
+        .join(" · ")}
+      chips={[
+        { href: portalHref, label: portalLabel },
+        { href: "/account", label: "Account", active: true },
+      ]}
+      accountName={authz.profile.displayName}
+      accountHref={null}
+    >
+      {roles.length > 0 ? (
+        <ul className="-mt-2 flex flex-wrap gap-2">
+          {roles.map((r) => (
+            <li key={r.id}>
+              <RoleBadgeChip
+                name={r.name}
+                color={r.color}
+                iconUrl={r.iconUrl}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : null}
 
       {(role === "customer" || role === "rebbe") && <JoinClass />}
 
-      {showScanCredential && (
+      {showScanCredential ? (
         <StudentBadgePanel
           schoolName={schoolName}
           badgeCode={authz.profile.badgeCode}
           badgeReady={Boolean(authz.profile.badgeAuthUserId)}
           canActivate={Boolean(authz.profile.schoolId)}
         />
-      )}
+      ) : null}
 
       <SupportForm />
-      </div>
-    </div>
+    </PortalShell>
   );
 }

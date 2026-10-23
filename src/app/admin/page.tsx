@@ -61,6 +61,7 @@ export default async function AdminPage() {
         { href: "#suggestions", label: "Suggestions" },
         ...(isAdmin ? [{ href: "#support", label: "Get help" }] : []),
       ]}
+      accountName={authz.profile.displayName}
     >
       <OfficialSection
         id="meetings"

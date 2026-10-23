@@ -59,10 +59,9 @@ function SignInForm() {
       </div>
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
         <AuthCard
-          eyebrow={isLearner || isOfficial ? null : "Log in as a"}
+          eyebrow={isEducator ? null : isLearner || isOfficial ? null : "Log in"}
           title={copy.title}
           subtitle={copy.subtitle}
-          showRoleMenu={!isLearner}
           footer={
             copy.joinHref && copy.joinLabel ? (
               <>
@@ -88,9 +87,18 @@ function SignInForm() {
                   </>
                 )}
               </>
-            ) : (
-              <>Need a different role? Use Log In in the menu.</>
-            )
+            ) : isOfficial ? (
+              <>
+                Students use{" "}
+                <Link
+                  href="/auth/sign-in?as=student"
+                  className="font-semibold text-forest-800"
+                >
+                  student log in
+                </Link>
+                .
+              </>
+            ) : null
           }
         >
           {isEducator ? (

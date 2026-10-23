@@ -72,8 +72,6 @@ function SignUpForm() {
     );
   }
 
-  const isLearner = as === "learner";
-
   return (
     <AuthCard
       eyebrow={
@@ -81,7 +79,6 @@ function SignUpForm() {
       }
       title={copy.title}
       subtitle={copy.subtitle}
-      showRoleMenu={!isLearner}
       footer={
         <>
           Already have an account?{" "}

@@ -1,30 +1,21 @@
 import type { ReactNode } from "react";
-import { LoginMenu } from "@/components/login-menu";
 
 /** Shared auth panel chrome — full-bleed pages own the wordmark above. */
 export function AuthCard({
-  eyebrow = "Log in as a",
+  eyebrow,
   title,
   subtitle,
   children,
   footer,
-  /** Guide school role switcher. Off for Amud learner auth. */
-  showRoleMenu = true,
 }: {
   eyebrow?: string | null;
   title: string;
   subtitle?: string | null;
   children: ReactNode;
   footer?: ReactNode;
-  showRoleMenu?: boolean;
 }) {
   return (
     <div className="w-full max-w-md">
-      {showRoleMenu ? (
-        <div className="mb-5 flex justify-end">
-          <LoginMenu variant="nav" />
-        </div>
-      ) : null}
       <div className="auth-card">
         {eyebrow ? <p className="portal-eyebrow">{eyebrow}</p> : null}
         <h1

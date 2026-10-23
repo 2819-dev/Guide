@@ -28,7 +28,7 @@ export default async function DeveloperPortalPage() {
 
   return (
     <PortalShell
-      eyebrow="Developer portal"
+      eyebrow="Developer"
       title={`Hi, ${authz.profile.displayName}`}
       subtitle="Your verified apps sit in the center. Manage listings and docs from the tabs above — so schools can keep students engaged."
       chips={[
@@ -36,6 +36,7 @@ export default async function DeveloperPortalPage() {
         { href: "#manage", label: "Manage apps" },
         { href: "#docs", label: "Docs" },
       ]}
+      accountName={authz.profile.displayName}
     >
       <section id="apps">
         <h2 className="portal-section-title">My apps</h2>
