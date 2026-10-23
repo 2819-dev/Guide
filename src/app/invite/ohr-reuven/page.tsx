@@ -24,7 +24,9 @@ const AMUD_HOST_PATH = AMUD_URL.replace(/^https?:\/\//, "");
 
 /**
  * Safari invite letter for Yeshivas Ohr Reuven.
- * Aligned with teacher-login-only + school/district apply + meeting.
+ * Banner invite-only. Aligned with teacher-login-only + school apply + meeting.
+ * This school-specific letter may name Amud (Jewish learning app); platform-wide
+ * Guide copy elsewhere stays school-generic.
  */
 export default function OhrReuvenInvitePage() {
   return (
@@ -57,17 +59,22 @@ export default function OhrReuvenInvitePage() {
           <div className="px-6 pb-2 pt-10 text-[17px] leading-[1.7] text-[#2a3f34] sm:px-11">
             <p className="mb-[18px] font-semibold text-[#152A20]">Dear Teacher,</p>
             <p className="mb-[18px]">
-              Guide is a school platform that gives teachers and students one
-              place to sign in and open the learning apps they use for class.
-              Built with Jewish schools in mind, it is designed to support the
-              way Torah subjects are taught and learned. We would be honored to
-              welcome Yeshivas Ohr Reuven as the first school to use Guide, and
-              we would like to invite you to try it at no cost.
+              Guide helps schools keep students engaged and classrooms well
+              managed — one place for classes, learning apps, and teacher
+              invites. We would be honored to welcome Yeshivas Ohr Reuven as an
+              early school on Guide, and we would like to invite you to try it at
+              no cost.
             </p>
             <p className="mb-[18px]">
-              Schools and districts apply on Guide. After approval, administrators
-              invite teachers by email. Teachers log in with that account — there
-              is no separate teacher-only signup.
+              School and district administrators{" "}
+              <a
+                href={SCHOOL_APPLY_URL}
+                className="font-semibold text-[#1b4332] underline underline-offset-2"
+              >
+                apply for Guide
+              </a>
+              . After approval, they invite teachers by email. Teachers log in
+              with that setup link — there is no separate teacher-only signup.
             </p>
             <p className="mb-[18px]">
               <a
@@ -79,8 +86,8 @@ export default function OhrReuvenInvitePage() {
               , the first app available on Guide, supports structured study and
               practice for Mishnayos and Gemara. It includes a Test Yourself
               experience with varied question types, including translation.
-              Students can review after class, and teachers can follow their
-              progress as they work.
+              Students can review after class, and teachers can follow progress
+              as they work. Teachers choose which apps to add to each class.
             </p>
             <p className="mb-[18px]">
               You can{" "}
@@ -88,7 +95,7 @@ export default function OhrReuvenInvitePage() {
                 href={DEMO_URL}
                 className="font-semibold text-[#1b4332] underline underline-offset-2"
               >
-                view the school demo
+                view the interactive school demo
               </a>{" "}
               on desktop or iPad,{" "}
               <a
@@ -132,10 +139,32 @@ export default function OhrReuvenInvitePage() {
           <div className="px-6 pb-7 pt-2 text-center sm:px-11">
             <Link
               href={SCHOOL_APPLY_URL}
-              className="inline-block bg-[#1b4332] px-[34px] py-[15px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-base font-semibold text-white no-underline"
+              className="inline-block min-h-12 bg-[#1b4332] px-[34px] py-[15px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-base font-semibold leading-none text-white no-underline"
             >
               Apply for your school
             </Link>
+            <p className="mt-3 font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-sm leading-[1.55] text-[#5a7264]">
+              <a
+                href={TEACHER_LOGIN_URL}
+                className="font-semibold text-[#1b4332] no-underline"
+              >
+                Teacher log in →
+              </a>
+              {" · "}
+              <a
+                href={DEMO_URL}
+                className="font-semibold text-[#1b4332] no-underline"
+              >
+                Demo →
+              </a>
+              {" · "}
+              <a
+                href={MEETING_URL}
+                className="font-semibold text-[#1b4332] no-underline"
+              >
+                Book a meeting →
+              </a>
+            </p>
             <p className="mt-[18px] font-[system-ui,-apple-system,'Segoe_UI',sans-serif] text-sm leading-[1.55] text-[#5a7264]">
               Apply: {GUIDE_HOST}/education
               <br />

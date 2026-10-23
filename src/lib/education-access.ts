@@ -11,8 +11,9 @@ export type SchoolApplicationStatus =
   | "rejected";
 
 /**
- * Teacher / School Administrator tools unlock only after an approved school
- * application. Guide Official (admin) stays unlocked. Students never use this.
+ * Full Teacher / School Administrator tools only after an approved school
+ * application. Pending/declined users still open a limited portal.
+ * Guide Official (admin) always has full access. Students never use this.
  */
 export async function hasEducationAccess(profile: Profile): Promise<boolean> {
   const role = profile.role as Role;

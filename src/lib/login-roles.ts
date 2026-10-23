@@ -1,4 +1,4 @@
-/** Clever-style “Log in as a …” — Guide school roles only (no family). */
+/** Guide school “Log in as a …” — school roles only (no family). */
 
 export type LoginAs =
   | "student"
@@ -14,24 +14,24 @@ export type LoginRoleOption = {
   href: string;
 };
 
-/** Guide school Log In menu — Student / Teacher / Official. */
+/** Header Log In menu — Student · Admin · Official. */
 export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
     label: "Student",
-    description: "Find your school, then username or badge",
+    description: "Find your school, then badge or password",
     href: "/auth/sign-in?as=student",
   },
   {
     id: "educator",
-    label: "Teacher or School Administrator",
-    description: "Log in with your school account",
+    label: "Admin",
+    description: "Teachers and school administrators",
     href: "/auth/sign-in?as=educator",
   },
   {
     id: "official",
     label: "Guide Official",
-    description: "Guide Official account",
+    description: "Meetings, approvals, and partner apps",
     href: "/auth/sign-in?as=official",
   },
 ];
@@ -69,15 +69,15 @@ export function loginAsCopy(as: LoginAs): {
     case "student":
       return {
         title: "Student",
-        subtitle: "Find your school, then log in with a username or badge.",
+        subtitle: "Find your school, then continue with a badge or password.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
     case "educator":
       return {
-        title: "Teacher or School Administrator",
+        title: "Admin",
         subtitle:
-          "Teachers log in with the account from your school invite. School administrators apply for a school, then log in.",
+          "Teachers sign in with their school invite. Administrators apply for Guide, then invite teachers and manage classes.",
         // Teachers = login only. School/district apply stays for admins.
         joinHref: "/education#apply",
         joinLabel: "Apply for your school",
@@ -85,25 +85,27 @@ export function loginAsCopy(as: LoginAs): {
     case "official":
       return {
         title: "Guide Official",
-        subtitle: "Sign in to continue.",
+        subtitle:
+          "Review meeting requests, approve schools, and verify partner apps teachers can add to class.",
         joinHref: null,
         joinLabel: null,
       };
     case "developer":
       return {
-        title: "Developer",
+        title: "Developer partner",
         subtitle:
-          "Verified partners only. Apply first; log in after Guide Official approves.",
+          "Verified partners only — not a public marketplace. Apply first; after approval, log in to manage apps schools can add to class.",
         joinHref: "/developers/apply",
         joinLabel: "Apply as a developer",
       };
     case "learner":
     default:
       return {
-        title: "Log in",
-        subtitle: "Keep Test Yourself scores and notes on your Amud account.",
+        title: "Amud log in",
+        subtitle:
+          "Save Test Yourself scores and notes. No school login required — Amud is for everyone.",
         joinHref: "/auth/sign-up?as=learner",
-        joinLabel: "Create an account",
+        joinLabel: "Create an Amud account",
       };
   }
 }
@@ -119,7 +121,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Join as a Student",
         subtitle:
-          "Choose your school and create an account. You’ll get a badge for quick login, then join class from Account.",
+          "Type to find your school, create an account, then join your class from Account so My apps shows what teachers added.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -127,14 +129,14 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "School administrator",
         subtitle:
-          "Teachers are invited by their school — use Log in instead. School or district administrators can apply below.",
+          "Teachers are invited by email — use Log in instead. School and district administrators apply to create an account and open their portal.",
         roleValue: "customer",
         showRoleChooser: false,
       };
     case "official":
       return {
         title: "Guide Official",
-        subtitle: "Please log in with your Guide Official account.",
+        subtitle: "Log in with your Guide Official account to review schools and meetings.",
         roleValue: "moderator",
         showRoleChooser: false,
       };
@@ -142,7 +144,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Developer partner",
         subtitle:
-          "Create an account only after you apply and Guide Official verifies you.",
+          "Create an account after you apply. Your developer portal opens when Guide Official verifies your partner app.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -151,7 +153,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Create an Amud account",
         subtitle:
-          "Save Test Yourself scores and notes. No school login required.",
+          "Keep Test Yourself scores and notes after you learn. No school login required — Amud is for everyone.",
         roleValue: "customer",
         showRoleChooser: false,
       };

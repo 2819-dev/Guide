@@ -25,18 +25,20 @@ export function DeveloperApplyForm({
   if (done) {
     return (
       <div className="portal-panel">
-        <p className="portal-eyebrow">Developers</p>
-        <h2 className="display-feature mt-1">Application received</h2>
-        <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
-          Guide Official will verify your application. When approved, log in to
-          open the developer portal and manage your apps.
-        </p>
+        <div className="portal-empty !border-0 !bg-transparent !p-0 !shadow-none">
+          <p className="portal-empty__title">Application received</p>
+          <p className="portal-empty__body">
+            Guide Official will verify your application. When approved, partner
+            log in unlocks the developer portal so you can manage apps schools
+            add to class.
+          </p>
+        </div>
         <p className="mt-5">
           <Link
             href="/auth/sign-in?as=developer"
-            className="font-semibold text-forest-800"
+            className="btn-primary inline-flex"
           >
-            Partner log in →
+            Partner log in
           </Link>
         </p>
       </div>

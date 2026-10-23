@@ -7,6 +7,7 @@ import { HOME_HERO_RELEASE_DATE, HOME_HERO_RELEASE_SRC } from "@/lib/brand";
 /**
  * Clever cover right panel — Official Release art + working Notify Me.
  * Image includes baked type; hotspot + form provide a real capture.
+ * Official Release hero image is locked — do not replace with a CSS-only panel.
  */
 export function HeroReleasePanel() {
   const formId = useId();
@@ -70,12 +71,20 @@ export function HeroReleasePanel() {
       ) : null}
 
       {(open || status === "done") && (
-        <div className="hero-notify-card" id={formId} role="region" aria-label="Notify Me">
+        <div
+          className="hero-notify-card"
+          id={formId}
+          role="region"
+          aria-label="Notify Me"
+        >
           {status === "done" ? (
             <p className="hero-notify-card__done">{message}</p>
           ) : (
             <form className="hero-notify-form" onSubmit={onSubmit}>
-              <label className="hero-notify-form__label" htmlFor={`${formId}-email`}>
+              <label
+                className="hero-notify-form__label"
+                htmlFor={`${formId}-email`}
+              >
                 Email for release updates
               </label>
               <div className="hero-notify-form__row">

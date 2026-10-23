@@ -89,19 +89,19 @@ export function AdminSchoolsPanel() {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-ink-muted">
-        Approve teacher/class or school applications so educators can use
-        Guide. Contact details are shown here for review.
-      </p>
-
-      {error && <p className="text-sm text-red-700">{error}</p>}
+      {error ? (
+        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          {error}
+        </p>
+      ) : null}
 
       {applications.length === 0 ? (
         <div className="portal-empty">
           <p className="portal-empty__title">No applications yet</p>
           <p className="portal-empty__body">
-            Teacher-class and school applications appear here when educators
-            apply for Guide.
+            School and district applications from For schools appear here.
+            Teachers are invited by email after approval — they do not apply
+            alone.
           </p>
         </div>
       ) : (
@@ -112,11 +112,11 @@ export function AdminSchoolsPanel() {
                 <li key={a.id} className="portal-panel space-y-3">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
+                      <p className="status-chip status-chip--pending !normal-case">
                         Pending ·{" "}
-                        {a.kind === "teacher" ? "Teacher / class" : "School"}
+                        {a.kind === "teacher" ? "Legacy class" : "School"}
                       </p>
-                      <h3 className="display mt-1 text-xl font-semibold text-forest-950">
+                      <h3 className="mt-2 text-xl font-semibold tracking-tight text-forest-950">
                         {applicationTitle(a)}
                       </h3>
                       <p className="mt-1 text-sm text-ink-muted">

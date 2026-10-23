@@ -50,8 +50,8 @@ function GuideHomePage() {
               <span className="sun-underline">engaged</span>
             </h1>
             <p className="hero-lede">
-              Clear classroom management for teachers, and learning apps that
-              keep students involved — so school feels inviting and purposeful.
+              One calm place for classes, apps, and invites — so teachers stay
+              organized and students stay involved.
             </p>
 
             <div className="hero-cta-stack">
@@ -89,9 +89,9 @@ function GuideHomePage() {
           <h2 className="display-section">What is Guide?</h2>
           <p className="clever-intro__body">
             Guide helps schools keep students engaged and classrooms well
-            managed. Teachers organize classes and learning apps. Students find
-            a welcoming place for class work. Administrators apply; Guide
-            Official reviews each school.
+            managed — one place for classes, learning apps, and teacher invites.
+            Students find a welcoming place for class work. Administrators
+            apply; Guide Official reviews each school.
           </p>
         </div>
       </section>
@@ -216,9 +216,17 @@ function GuideHomePage() {
           <h2 className="display-section cta-band__title">
             Built for engaged students and well-run classrooms
           </h2>
-          <Link href="/auth/sign-in?as=student" className="btn-light shrink-0">
-            Log in as a student
-          </Link>
+          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+            <Link href="/auth/sign-in?as=student" className="btn-light shrink-0">
+              Log in as a student
+            </Link>
+            <Link
+              href="/education"
+              className="text-center text-sm font-semibold text-white/90 underline-offset-4 hover:underline"
+            >
+              For schools →
+            </Link>
+          </div>
         </div>
       </section>
     </div>

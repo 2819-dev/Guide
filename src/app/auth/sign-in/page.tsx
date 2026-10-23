@@ -1,14 +1,18 @@
 "use client";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
+import { AdminKeyIcon } from "@/components/admin-entry";
+import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
 import { StudentSignIn } from "@/components/student-sign-in";
+import { FIRST_APP_NAME } from "@/lib/apps";
 import { loginAsCopy, parseLoginAs } from "@/lib/login-roles";
+import { publicAmudHomePath } from "@/lib/site";
 import { signInWithEmail } from "./actions";
 
 function SignInForm() {
@@ -21,32 +25,98 @@ function SignInForm() {
     return <StudentSignIn />;
   }
 
+  const isEducator = as === "educator";
+  const isOfficial = as === "official";
+  const isLearner = as === "learner";
+
   return (
     <div className="auth-shell flex min-h-screen flex-col">
-      <div className="flex items-center px-6 py-5 sm:px-8">
-        <GuideWordmark href="/" size="lg" />
+      <div className="flex items-center justify-between px-6 py-5 sm:px-8">
+        {isLearner ? (
+          <AppWordmark
+            name={FIRST_APP_NAME}
+            href={publicAmudHomePath()}
+            size="lg"
+          />
+        ) : (
+          <GuideWordmark href="/" size="lg" />
+        )}
+        {isEducator ? (
+          <Link
+            href="/schools/demo"
+            className="text-sm font-semibold text-forest-800 no-underline hover:underline"
+          >
+            View demo
+          </Link>
+        ) : null}
+        {isLearner ? (
+          <Link
+            href={publicAmudHomePath()}
+            className="text-sm font-semibold text-forest-800 no-underline hover:underline"
+          >
+            ← {FIRST_APP_NAME}
+          </Link>
+        ) : null}
       </div>
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
+      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8 lg:max-w-xl">
         <AuthCard
-          eyebrow={as === "official" ? null : "Log in as a"}
-          title={copy.title}
+          eyebrow={isEducator ? null : isLearner || isOfficial ? null : "Log in"}
+          title={
+            isEducator ? (
+              <span className="inline-flex items-center gap-2.5">
+                <AdminKeyIcon className="h-[1.05em] w-[1.05em] text-forest-700" />
+                {copy.title}
+              </span>
+            ) : (
+              copy.title
+            )
+          }
           subtitle={copy.subtitle}
           footer={
             copy.joinHref && copy.joinLabel ? (
               <>
-                New here?{" "}
+                {isEducator ? (
+                  <>
+                    School or district administrator?{" "}
+                    <Link
+                      href={copy.joinHref}
+                      className="font-semibold text-forest-800"
+                    >
+                      {copy.joinLabel}
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    New here?{" "}
+                    <Link
+                      href={copy.joinHref}
+                      className="font-semibold text-forest-800"
+                    >
+                      {copy.joinLabel}
+                    </Link>
+                  </>
+                )}
+              </>
+            ) : isOfficial ? (
+              <>
+                Students use{" "}
                 <Link
-                  href={copy.joinHref}
+                  href="/auth/sign-in?as=student"
                   className="font-semibold text-forest-800"
                 >
-                  {copy.joinLabel}
+                  student log in
                 </Link>
+                .
               </>
-            ) : (
-              <>Need a different role? Use Log In above.</>
-            )
+            ) : null
           }
         >
+          {isEducator ? (
+            <p className="auth-soft-note">
+              Teachers use the setup link from a school invite — there is no
+              public teacher signup.
+            </p>
+          ) : null}
           <form action={formAction} className="space-y-4">
             <input type="hidden" name="as" value={as} />
             <label className="block text-sm font-semibold text-forest-900">
@@ -57,7 +127,13 @@ function SignInForm() {
                 required
                 autoComplete="email"
                 className="field mt-1.5"
-                placeholder={as === "educator" ? "you@school.org" : undefined}
+                placeholder={
+                  isEducator
+                    ? "you@school.org"
+                    : isOfficial
+                      ? "official@guidelearning.org"
+                      : undefined
+                }
               />
             </label>
             <label className="block text-sm font-semibold text-forest-900">
@@ -83,6 +159,17 @@ function SignInForm() {
               {pending ? "Signing in…" : "Log in"}
             </button>
           </form>
+          {isEducator ? (
+            <p className="mt-4 text-center text-sm text-ink-muted">
+              <Link href="/schools/meeting" className="font-semibold text-forest-800">
+                Book a meeting
+              </Link>
+              {" · "}
+              <Link href="/account" className="font-semibold text-forest-800">
+                Get help
+              </Link>
+            </p>
+          ) : null}
         </AuthCard>
       </div>
     </div>

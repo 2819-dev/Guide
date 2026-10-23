@@ -1,12 +1,17 @@
 import { redirect } from "next/navigation";
 import { EducationPanel } from "@/components/education-panel";
+import { LimitedEducationPortal } from "@/components/limited-education-portal";
 import { PortalShell } from "@/components/portal-shell";
-import { hasEducationAccess } from "@/lib/education-access";
+import {
+  getApplicantEducationStatus,
+  hasEducationAccess,
+} from "@/lib/education-access";
+import { educatorPortalLabel } from "@/lib/educator-portal-label";
 import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
-export const metadata = { title: "Teacher portal" };
+export const metadata = { title: "School portal · Guide" };
 
 export default async function EducationPanelPage() {
   const authz = await requireProfile(["rebbe", "admin"]);
@@ -14,14 +19,37 @@ export default async function EducationPanelPage() {
 
   const allowed = await hasEducationAccess(authz.profile);
   if (!allowed) {
-    redirect("/education");
+    const appStatus = await getApplicantEducationStatus(authz.profile.id);
+    const status =
+      appStatus.status === "approved"
+        ? "pending"
+        : appStatus.status === "none"
+          ? "none"
+          : appStatus.status;
+    const portalLabel = educatorPortalLabel({
+      kind: appStatus.kind,
+    });
+    return (
+      <LimitedEducationPortal
+        displayName={authz.profile.displayName}
+        status={status}
+        schoolName={appStatus.schoolName}
+        portalLabel={portalLabel}
+        kind={appStatus.kind ?? "school"}
+      />
+    );
   }
+
+  const appStatus = await getApplicantEducationStatus(authz.profile.id);
+  const portalLabel = educatorPortalLabel({ kind: appStatus.kind });
+  const shortRole =
+    portalLabel === "Teacher Portal" ? "Teacher" : "School administrator";
 
   return (
     <PortalShell
-      eyebrow="Teacher or School Administrator"
+      eyebrow={shortRole}
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Tabs across the top. Add apps, invite teachers, manage classes, and message — Clever-like density."
+      subtitle="Invite teachers, manage classes, and add apps students will open."
       chips={[
         { href: "#apps", label: "Apps", active: true },
         { href: "#teachers", label: "Teachers" },
@@ -29,6 +57,11 @@ export default async function EducationPanelPage() {
         { href: "#suggestions-access", label: "Suggestions" },
         { href: "#messages", label: "Messages" },
       ]}
+      utilities={[
+        { href: "#messages", label: "Messaging" },
+        { href: "#suggestions-access", label: "Suggestions" },
+      ]}
+      accountName={authz.profile.displayName}
     >
       <EducationPanel />
     </PortalShell>

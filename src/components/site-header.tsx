@@ -31,8 +31,9 @@ const navLink =
   "px-2.5 py-2 text-[0.9375rem] font-medium text-forest-950 no-underline hover:text-forest-700";
 
 /**
- * Clever 1:1 header structure — Guide wordmark + forest CTAs.
- * Apps never appear in the top bar.
+ * Clever 1:1 header — Guide wordmark + forest CTAs.
+ * Logged-out: Education · Log In menu (Student / Admin / Official).
+ * Student login page itself uses a corner Admin control instead.
  */
 export function SiteHeader() {
   const [me, setMe] = useState<Me | null>(null);
@@ -72,8 +73,8 @@ export function SiteHeader() {
       portalHref = "/developer";
       portalId = "developer";
     } else if (awaitingSchool) {
-      // Teacher / School Administrator — locked until approved.
-      portalHref = "/education";
+      portalHref = "/education/panel";
+      portalId = "teacher";
     }
   }
 
@@ -107,7 +108,6 @@ export function SiteHeader() {
             </>
           ) : (
             <>
-              {/* Clever-minimal logged-out: Education · Log In */}
               <Link href="/education" className={`${navLink} hidden sm:inline`}>
                 Education
               </Link>

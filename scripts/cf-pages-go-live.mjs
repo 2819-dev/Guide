@@ -13,7 +13,7 @@ const ACCOUNT = process.env.CLOUDFLARE_ACCOUNT_ID;
 const TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 const ROOT = resolve(process.cwd());
 const OUT = resolve(ROOT, ".vercel/output/static");
-const PROD_BRANCH = "cursor/guidelearning-org-domain-f0c5";
+const PROD_BRANCH = "main";
 
 function die(msg) {
   console.error(`FAIL: ${msg}`);

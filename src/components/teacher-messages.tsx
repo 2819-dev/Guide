@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  MessagesBubble,
+  MessagesInbox,
+  MessagesThreadButton,
+} from "@/components/messages-inbox";
 
 type Thread = {
   id: string;
@@ -32,7 +37,9 @@ export function TeacherMessages() {
     if (!res.ok) return;
     const data = await res.json();
     setThreads(
-      (data.threads ?? []).filter((t: Thread & { isStudent?: boolean }) => !t.isStudent),
+      (data.threads ?? []).filter(
+        (t: Thread & { isStudent?: boolean }) => !t.isStudent,
+      ),
     );
   }
 
@@ -76,14 +83,18 @@ export function TeacherMessages() {
   }
 
   return (
-    <div className="space-y-4">
+    <section id="messages" className="space-y-4">
       <div>
         <h2 className="portal-section-title">Messages</h2>
         <p className="-mt-2 text-sm text-ink-muted">
-          Replies from students who joined your classes.
+          Stay close to students in your classes — reply when they write in.
         </p>
       </div>
-      {error && <p className="text-sm text-red-700">{error}</p>}
+      {error ? (
+        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          {error}
+        </p>
+      ) : null}
       {threads.length === 0 ? (
         <div className="portal-empty">
           <p className="portal-empty__title">No messages yet</p>
@@ -93,67 +104,68 @@ export function TeacherMessages() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-[14rem_1fr]">
-          <ul className="divide-y divide-line rounded-[10px] border border-line bg-white">
-            {threads.map((t) => (
-              <li key={t.id}>
-                <button
-                  type="button"
-                  onClick={() => void openThread(t.id)}
-                  className={`w-full px-3 py-3 text-left text-sm hover:bg-forest-100 ${
-                    activeId === t.id ? "bg-forest-100" : ""
-                  }`}
-                >
-                  <span className="font-semibold text-forest-950">
-                    {t.otherName}
-                  </span>
-                  <span className="mt-0.5 block truncate text-xs text-ink-muted">
-                    {t.subject}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-          <div className="rounded-xl border border-line px-4 py-4">
-            {!activeId ? (
-              <p className="text-sm text-ink-muted">Select a conversation.</p>
-            ) : (
-              <>
-                <p className="text-sm font-semibold text-forest-700">
-                  {otherName}
-                </p>
-                <p className="font-semibold text-forest-950">{subject}</p>
-                <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto text-sm">
-                  {msgs.map((m) => (
-                    <li key={m.id}>
-                      <span className="font-semibold">{m.senderName}</span>
-                      <span className="ml-2 text-xs text-ink-muted">
-                        {new Date(m.createdAt).toLocaleString()}
-                      </span>
-                      <p className="mt-0.5 whitespace-pre-wrap">{m.body}</p>
-                    </li>
-                  ))}
-                </ul>
+        <MessagesInbox
+          sidebar={
+            <ul className="msg-thread-list">
+              {threads.map((t) => (
+                <li key={t.id}>
+                  <MessagesThreadButton
+                    active={activeId === t.id}
+                    title={t.otherName}
+                    subtitle={t.subject}
+                    onClick={() => void openThread(t.id)}
+                  />
+                </li>
+              ))}
+            </ul>
+          }
+        >
+          {!activeId ? (
+            <div className="portal-empty !border-0 !bg-transparent">
+              <p className="portal-empty__title">Select a conversation</p>
+              <p className="portal-empty__body">
+                Choose a student thread to read and reply.
+              </p>
+            </div>
+          ) : (
+            <div className="msg-conversation">
+              <header className="msg-conversation__head">
+                <p className="portal-eyebrow">{otherName}</p>
+                <h3 className="mt-1 text-xl font-semibold tracking-tight text-forest-950">
+                  {subject || "Conversation"}
+                </h3>
+              </header>
+              <ul className="msg-conversation__list">
+                {msgs.map((m) => (
+                  <MessagesBubble
+                    key={m.id}
+                    name={m.senderName}
+                    when={new Date(m.createdAt).toLocaleString()}
+                    body={m.body}
+                  />
+                ))}
+              </ul>
+              <div className="msg-conversation__compose">
                 <textarea
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   rows={3}
-                  className="field mt-3"
+                  className="field"
                   placeholder="Reply…"
                 />
                 <button
                   type="button"
                   disabled={busy || draft.trim().length < 1}
                   onClick={() => void reply()}
-                  className="btn-primary mt-2"
+                  className="btn-primary"
                 >
                   {busy ? "Sending…" : "Reply"}
                 </button>
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
+          )}
+        </MessagesInbox>
       )}
-    </div>
+    </section>
   );
 }

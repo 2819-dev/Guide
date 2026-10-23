@@ -10,7 +10,7 @@ import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
-export const metadata = { title: "Developer portal" };
+export const metadata = { title: "Developer portal · Guide" };
 
 export default async function DeveloperPortalPage() {
   const authz = await requireProfile();
@@ -28,23 +28,27 @@ export default async function DeveloperPortalPage() {
 
   return (
     <PortalShell
-      eyebrow="Developer portal"
+      eyebrow="Developer"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Your verified apps are in the center. Use tabs to manage apps and docs."
+      subtitle="Your verified apps sit in the center. Manage listings and docs from the tabs above — so schools can keep students engaged."
       chips={[
         { href: "#apps", label: "My apps", active: true },
         { href: "#manage", label: "Manage apps" },
         { href: "#docs", label: "Docs" },
       ]}
+      accountName={authz.profile.displayName}
     >
       <section id="apps">
         <h2 className="portal-section-title">My apps</h2>
+        <p className="-mt-2 mb-4 text-sm text-ink-muted">
+          Apps teachers can add to a class after Official approval.
+        </p>
         {apps.length === 0 ? (
           <div className="portal-empty">
-            <p className="portal-empty__title">No apps yet</p>
+            <p className="portal-empty__title">No apps listed yet</p>
             <p className="portal-empty__body">
-              When Guide Official approves your application, your app appears
-              here.
+              When Guide Official finishes setup, your app appears here for
+              schools to add to class.
             </p>
           </div>
         ) : (
@@ -68,49 +72,74 @@ export default async function DeveloperPortalPage() {
 
       <section id="manage" className="mt-2">
         <h2 className="portal-section-title">Manage apps</h2>
-        <div className="portal-panel">
-          <p className="text-[0.95rem] leading-relaxed text-ink-muted">
-            Update listing details with Guide Official for now. School-facing
-            installs stay curated — this is not a public marketplace.
-          </p>
-          {apps.map((app) => (
-            <div
-              key={app.id}
-              className="mt-4 border-t border-line pt-4 first:mt-0 first:border-0 first:pt-0"
-            >
-              <p className="font-semibold text-forest-950">{app.name}</p>
-              <p className="mt-1 text-sm text-ink-muted">
-                Slug · {app.slug}
-                {app.websiteUrl ? (
-                  <>
-                    {" · "}
-                    <a
-                      href={app.websiteUrl}
-                      className="font-semibold text-forest-800"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Website
-                    </a>
-                  </>
-                ) : null}
-              </p>
-              {app.about ? (
-                <p className="mt-2 text-sm leading-relaxed text-forest-950">
-                  {app.about}
+        <p className="-mt-2 mb-4 text-sm text-ink-muted">
+          Listing details stay curated with Official — not a public marketplace.
+        </p>
+        {apps.length === 0 ? (
+          <div className="portal-empty">
+            <p className="portal-empty__title">Nothing to manage yet</p>
+            <p className="portal-empty__body">
+              After your first app is listed, update website and about copy here
+              with Guide Official.
+            </p>
+          </div>
+        ) : (
+          <div className="portal-panel space-y-0">
+            {apps.map((app) => (
+              <div
+                key={app.id}
+                className="border-t border-line py-4 first:border-0 first:pt-0 last:pb-0"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <p className="font-semibold text-forest-950">{app.name}</p>
+                  <span
+                    className={`status-chip status-chip--${
+                      app.status === "active" ? "approved" : "pending"
+                    }`}
+                  >
+                    {app.status}
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-ink-muted">
+                  Slug · {app.slug}
+                  {app.websiteUrl ? (
+                    <>
+                      {" · "}
+                      <a
+                        href={app.websiteUrl}
+                        className="font-semibold text-forest-800"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Website
+                      </a>
+                    </>
+                  ) : null}
                 </p>
-              ) : null}
-            </div>
-          ))}
-        </div>
+                {app.about ? (
+                  <p className="mt-2 text-sm leading-relaxed text-forest-950">
+                    {app.about}
+                  </p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section id="docs">
         <h2 className="portal-section-title">Docs</h2>
-        <div className="portal-panel space-y-2 text-[0.95rem] leading-relaxed text-ink-muted">
+        <p className="-mt-2 mb-4 text-sm text-ink-muted">
+          How partner apps reach classrooms on Guide.
+        </p>
+        <div className="portal-panel space-y-3 text-[0.95rem] leading-relaxed text-ink-muted">
           <p>
-            Guide hosts verified partner apps for schools. Students and teachers
-            open apps from their portals after a school installs them.
+            Guide hosts verified partner apps for schools. Teachers add an app
+            to a class; students open it from My apps — so learning stays
+            engaging and classrooms stay organized.
+          </p>
+          <p>
+            Installs stay school-curated. There is no public open marketplace.
           </p>
           <p>
             Questions for Official:{" "}
@@ -121,7 +150,7 @@ export default async function DeveloperPortalPage() {
               hello@guidelearning.org
             </a>
           </p>
-          <p>
+          <p className="pt-1">
             <Link href="/" className="font-semibold text-forest-800">
               ← Back to Guide
             </Link>

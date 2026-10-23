@@ -1,31 +1,25 @@
 import type { ReactNode } from "react";
-import { LoginMenu } from "@/components/login-menu";
 
-/** Shared auth panel chrome — role switcher only (site header already has wordmark). */
+/** Shared auth panel chrome — full-bleed pages own the wordmark above. */
 export function AuthCard({
-  eyebrow = "Log in as a",
+  eyebrow,
   title,
   subtitle,
   children,
   footer,
 }: {
   eyebrow?: string | null;
-  title: string;
+  title: ReactNode;
   subtitle?: string | null;
   children: ReactNode;
   footer?: ReactNode;
 }) {
   return (
-    <div className="w-full max-w-md">
-      <div className="mb-5 flex justify-end">
-        <LoginMenu variant="nav" />
-      </div>
-      <div className="rounded-[10px] border border-line bg-surface px-6 py-7 shadow-[var(--shadow-card)] sm:px-8 sm:py-8">
-        {eyebrow ? (
-          <p className="portal-eyebrow">{eyebrow}</p>
-        ) : null}
+    <div className="w-full max-w-lg lg:max-w-xl">
+      <div className="auth-card">
+        {eyebrow ? <p className="portal-eyebrow">{eyebrow}</p> : null}
         <h1
-          className={`text-[1.625rem] font-semibold tracking-tight text-forest-950 sm:text-[1.875rem] ${eyebrow ? "mt-1.5" : ""}`}
+          className={`text-[1.625rem] font-semibold tracking-tight text-forest-950 sm:text-[1.875rem] lg:text-[2.1rem] ${eyebrow ? "mt-1.5" : ""}`}
         >
           {title}
         </h1>

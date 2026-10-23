@@ -75,8 +75,8 @@ export function StudentBadgePanel({
           </p>
           <p className="text-sm text-ink-muted">
             {ready
-              ? "Use this scan code (or a printout) on Log in as a → Student → Badge."
-              : "Scan code saved — activate it to use at student Log In."}
+              ? "Use this scan code (or a printout) at student log in → Badge."
+              : "Scan code saved — activate it to use at student log in."}
           </p>
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={printBadge} className="btn-secondary">

@@ -1,12 +1,15 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
   defaultName?: string;
   defaultEmail?: string;
-  locked?: boolean;
-  lockedMessage?: string;
+  /** Already signed in — password optional (account exists). */
+  hasAccount?: boolean;
+  alreadyApplied?: boolean;
+  alreadyAppliedMessage?: string;
 };
 
 const ROLE_OPTIONS = [
@@ -19,42 +22,34 @@ const ROLE_OPTIONS = [
 export function SchoolApplicationForm({
   defaultName = "",
   defaultEmail = "",
-  locked = false,
-  lockedMessage,
+  hasAccount = false,
+  alreadyApplied = false,
+  alreadyAppliedMessage,
 }: Props) {
+  const router = useRouter();
   const [schoolName, setSchoolName] = useState("");
   const [contactName, setContactName] = useState(defaultName);
   const [contactEmail, setContactEmail] = useState(defaultEmail);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [contactRole, setContactRole] = useState("");
   const [studentCountEstimate, setStudentCountEstimate] = useState("");
   const [intendedUse, setIntendedUse] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
 
-  if (locked) {
+  if (alreadyApplied) {
     return (
       <div className="portal-panel">
         <p className="portal-eyebrow">School application</p>
-        <h2 className="display-feature mt-1">Already on file</h2>
-        <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-          {lockedMessage ??
-            "Your school application is already on file. We will be in touch when it is reviewed."}
-        </p>
-      </div>
-    );
-  }
-
-  if (done) {
-    return (
-      <div className="portal-panel text-center sm:text-left">
-        <p className="portal-eyebrow">Application status</p>
         <h2 className="display-feature mt-1">Application received</h2>
-        <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
-          Thanks — your school request is pending review. The portal stays
-          locked until Guide Official accepts or declines. After approval you
-          can invite teachers by email and manage classes.
+        <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
+          {alreadyAppliedMessage ??
+            "Your school application is already submitted. Open your School Administrator Portal anytime to check status."}
         </p>
+        <a href="/education/panel" className="btn-primary mt-5 inline-flex">
+          School Administrator Portal
+        </a>
       </div>
     );
   }
@@ -64,6 +59,14 @@ export function SchoolApplicationForm({
     setBusy(true);
     setError(null);
     try {
+      if (!hasAccount) {
+        if (password.length < 8) {
+          throw new Error("Use a password of at least 8 characters.");
+        }
+        if (password !== confirmPassword) {
+          throw new Error("Passwords do not match.");
+        }
+      }
       const res = await fetch("/api/education/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -75,14 +78,18 @@ export function SchoolApplicationForm({
           contactRole,
           studentCountEstimate,
           intendedUse,
+          ...(hasAccount ? {} : { password }),
         }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as {
+        error?: string;
+        redirectTo?: string;
+      };
       if (!res.ok) throw new Error(data.error ?? "Could not submit");
-      setDone(true);
+      router.push(data.redirectTo ?? "/education/panel");
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not submit");
-    } finally {
       setBusy(false);
     }
   }
@@ -93,9 +100,9 @@ export function SchoolApplicationForm({
         <p className="portal-eyebrow">School application</p>
         <h2 className="display-feature mt-1">Apply for your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Tell us about your school or district. After approval, invite
-          teachers by email, create classes, add apps, and follow student
-          progress.
+          {hasAccount
+            ? "Share a few details about your school or district. After you submit, open your School Administrator Portal — classroom tools open when your school is approved."
+            : "Create your Guide account when you apply. You will land in your School Administrator Portal right away; classroom tools open when your school is approved."}
         </p>
       </div>
 
@@ -133,9 +140,41 @@ export function SchoolApplicationForm({
             className="field mt-1.5"
             placeholder="you@school.org"
             autoComplete="email"
+            disabled={hasAccount && Boolean(defaultEmail)}
           />
         </label>
       </div>
+
+      {!hasAccount ? (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block text-sm font-semibold text-forest-900">
+            Password
+            <input
+              required
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="field mt-1.5"
+              placeholder="At least 8 characters"
+              autoComplete="new-password"
+              minLength={8}
+            />
+          </label>
+          <label className="block text-sm font-semibold text-forest-900">
+            Confirm password
+            <input
+              required
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="field mt-1.5"
+              placeholder="Re-enter password"
+              autoComplete="new-password"
+              minLength={8}
+            />
+          </label>
+        </div>
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block text-sm font-semibold text-forest-900">
@@ -179,7 +218,7 @@ export function SchoolApplicationForm({
           value={intendedUse}
           onChange={(e) => setIntendedUse(e.target.value)}
           className="field mt-1.5"
-          placeholder="Classes, homework apps, after-school programs…"
+          placeholder="Keep students engaged in class, add learning apps, manage homework…"
         />
       </label>
 
@@ -190,7 +229,13 @@ export function SchoolApplicationForm({
       )}
 
       <button type="submit" disabled={busy} className="btn-primary w-full sm:w-auto">
-        {busy ? "Submitting…" : "Submit application"}
+        {busy
+          ? hasAccount
+            ? "Submitting…"
+            : "Creating your account…"
+          : hasAccount
+            ? "Submit application"
+            : "Create account & apply"}
       </button>
     </form>
   );
