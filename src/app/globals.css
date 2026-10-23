@@ -2446,15 +2446,29 @@ body {
     column-gap: 3.25rem;
   }
 
+  .hero-primary {
+    max-width: 46rem;
+  }
+
   .hero-lede {
     font-size: 1.25rem;
-    max-width: 34rem;
+    max-width: 36rem;
   }
 
   .btn-hero-bar {
     font-size: 1.25rem;
-    min-height: 58px;
-    padding: 1rem 1.35rem;
+    min-height: 64px;
+    height: 64px;
+  }
+
+  .btn-hero-bar__arrow {
+    width: 44px;
+    height: 44px;
+  }
+
+  .hero-cta-stack {
+    max-width: 46rem;
+    margin-top: 2.35rem;
   }
 
   .hero-link-card {
