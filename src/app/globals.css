@@ -1578,24 +1578,34 @@ body {
   object-position: center;
 }
 
-/* Transparent hotspot — flush on baked Notify Me (~60% of art) */
+/*
+ * Transparent hotspot flush on baked Notify Me.
+ * Art is square; desktop panel is landscape + object-fit:cover (center),
+ * which crops top/bottom — so desktop Y% is lower than mobile square.
+ */
 .hero-notify-hotspot {
   position: absolute;
   left: 50%;
-  top: 60%;
+  top: 64%;
   bottom: auto;
   transform: translate(-50%, -50%);
   width: 40%;
   max-width: 10.5rem;
-  height: 8%;
-  min-height: 2.35rem;
-  max-height: 2.85rem;
+  height: 7.5%;
+  min-height: 2.25rem;
+  max-height: 2.75rem;
   border: 0;
   padding: 0;
   border-radius: 999px;
   background: transparent;
   cursor: pointer;
   z-index: 2;
+}
+
+@media (min-width: 1024px) {
+  .hero-notify-hotspot {
+    top: 68%;
+  }
 }
 
 .hero-notify-hotspot:focus-visible {
