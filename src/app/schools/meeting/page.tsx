@@ -16,7 +16,7 @@ export default function BookMeetingPage() {
         <div className="content-band py-12 sm:py-14 lg:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow">For schools</p>
-            <h1 className="display-feature mx-auto mt-3 max-w-[20ch]">
+            <h1 className="display-feature mx-auto mt-3 max-w-[18ch] lg:max-w-[13em]">
               Book a meeting with Guide Official
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">

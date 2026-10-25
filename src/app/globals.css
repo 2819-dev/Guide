@@ -176,37 +176,37 @@ body {
 }
 
 .display-hero {
-  /* Clever H1 ~65px / 70px lh, weight ~400 */
-  font-size: clamp(2.65rem, 5.2vw, 4.0625rem);
-  line-height: 1.077;
-  font-weight: 400;
-  letter-spacing: -0.03em;
+  /* Clever cover H1 — light weight, large measure */
+  font-size: clamp(2.75rem, 5.4vw, 4.25rem);
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.034em;
   color: var(--ink);
 }
 
 .display-section {
-  /* Clever intro / closing ~53px */
-  font-size: clamp(2.15rem, 3.6vw, 3.3125rem);
-  line-height: 1.2;
+  /* Clever intro / closing */
+  font-size: clamp(2.25rem, 3.8vw, 3.5rem);
+  line-height: 1.12;
   font-weight: 500;
-  letter-spacing: -0.028em;
+  letter-spacing: -0.03em;
   color: var(--ink);
 }
 
 .display-feature {
-  /* Clever feature H2 ~40px / 45px */
-  font-size: clamp(1.85rem, 2.9vw, 2.5rem);
-  line-height: 1.13;
+  /* Page / feature H1–H2 */
+  font-size: clamp(1.95rem, 3.1vw, 2.65rem);
+  line-height: 1.1;
   font-weight: 500;
-  letter-spacing: -0.022em;
+  letter-spacing: -0.026em;
   color: var(--ink);
 }
 
 .sun-underline {
   text-decoration: underline;
   text-decoration-color: var(--sun);
-  text-decoration-thickness: 4px;
-  text-underline-offset: 0.14em;
+  text-decoration-thickness: 0.085em;
+  text-underline-offset: 0.12em;
   text-decoration-skip-ink: none;
 }
 
@@ -324,12 +324,12 @@ body {
 }
 
 .hero-lede {
-  margin: 1rem 0 0;
+  margin: 1.15rem 0 0;
   max-width: 31.5rem;
   font-size: 1.125rem;
   font-weight: 500;
-  line-height: 1.67;
-  color: var(--ink);
+  line-height: 1.65;
+  color: var(--ink-muted);
 }
 
 /* Primary student bar only — twin cards sit in the next grid row */
@@ -1836,9 +1836,10 @@ body {
 .login-title {
   margin: 0;
   text-align: center;
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-size: clamp(1.85rem, 3.2vw, 2.45rem);
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.032em;
+  line-height: 1.12;
   color: var(--ink);
 }
 
@@ -2447,16 +2448,27 @@ body {
   }
 
   .display-hero {
-    font-size: clamp(3.35rem, 4.8vw, 4.85rem);
-    line-height: 1.06;
+    font-size: clamp(4rem, 5.5vw, 5.75rem);
+    line-height: 1.02;
+    font-weight: 500;
+    letter-spacing: -0.04em;
   }
 
   .display-section {
-    font-size: clamp(2.75rem, 3.9vw, 3.85rem);
+    font-size: clamp(3.1rem, 4.2vw, 4.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.036em;
   }
 
   .display-feature {
-    font-size: clamp(2.35rem, 3.1vw, 3.05rem);
+    font-size: clamp(2.65rem, 3.4vw, 3.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.032em;
+  }
+
+  .login-title {
+    font-size: clamp(2.25rem, 2.8vw, 2.75rem);
+    letter-spacing: -0.036em;
   }
 
   .btn-primary,
@@ -2478,12 +2490,25 @@ body {
   }
 
   .hero-primary {
-    max-width: 46rem;
+    max-width: 48rem;
+  }
+
+  .hero-primary .display-hero {
+    /* Room for a confident 2-line cover line */
+    max-width: 11.5em;
   }
 
   .hero-lede {
-    font-size: 1.25rem;
-    max-width: 36rem;
+    margin-top: 1.45rem;
+    font-size: 1.3125rem;
+    max-width: 34rem;
+    line-height: 1.55;
+    color: var(--ink-muted);
+  }
+
+  .sun-underline {
+    text-decoration-thickness: 0.09em;
+    text-underline-offset: 0.14em;
   }
 
   .btn-hero-bar {
@@ -2619,7 +2644,9 @@ body {
   }
 
   .auth-card h1 {
-    font-size: 2.1rem;
+    font-size: 2.35rem;
+    letter-spacing: -0.034em;
+    line-height: 1.1;
   }
 
   .schools-hero-band .content-band {
@@ -2628,7 +2655,13 @@ body {
   }
 
   .schools-hero-band .display-feature {
-    max-width: 22ch;
+    max-width: 16em;
+    letter-spacing: -0.034em;
+  }
+
+  .demo-desktop-stage .display-feature {
+    max-width: 14em;
+    letter-spacing: -0.034em;
   }
 
   .schools-feature {

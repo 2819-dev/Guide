@@ -45,7 +45,7 @@ function GuideHomePage() {
         <div className="content-band hero-band__grid">
           {/* Primary band: copy + CTA share height with Official Release panel */}
           <div className="hero-primary">
-            <h1 className="display-hero max-w-[14ch]">
+            <h1 className="display-hero max-w-[16ch] lg:max-w-none">
               Keep every student{" "}
               <span className="sun-underline">engaged</span>
             </h1>
