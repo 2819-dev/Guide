@@ -32,7 +32,7 @@ const navLink =
 
 /**
  * Clever 1:1 header — Guide wordmark + forest CTAs.
- * Logged-out: Education · Log In menu (Student / Admin / Official).
+ * Logged-out: For schools · Log In menu (Student / Admin / Official).
  * Student login page itself uses a corner Admin control instead.
  */
 export function SiteHeader() {
@@ -109,7 +109,7 @@ export function SiteHeader() {
           ) : (
             <>
               <Link href="/education" className={`${navLink} hidden sm:inline`}>
-                Education
+                For schools
               </Link>
               <LoginMenu variant="primary" />
             </>

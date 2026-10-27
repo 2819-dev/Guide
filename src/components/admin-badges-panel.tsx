@@ -73,8 +73,8 @@ export function AdminBadgesPanel() {
         <div className="portal-empty">
           <p className="portal-empty__title">Approve a school first</p>
           <p className="portal-empty__body">
-            Then issue student badge codes for scan or type-at-login. Separate
-            from Discord-style Roles above.
+            Then issue student badge codes for scan or typed login. Keep these
+            separate from community Roles above.
           </p>
         </div>
       ) : (

@@ -63,7 +63,7 @@ export function AdminSupportPanel() {
         <div className="portal-empty">
           <p className="portal-empty__title">No help requests yet</p>
           <p className="portal-empty__body">
-            Account Get help submissions appear here for Official follow-up.
+            Help requests from school users appear here for follow-up.
           </p>
         </div>
       ) : (

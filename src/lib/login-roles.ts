@@ -31,7 +31,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "official",
     label: "Guide Official",
-    description: "Meetings, approvals, and partner apps",
+    description: "School approvals and partner apps",
     href: "/auth/sign-in?as=official",
   },
 ];
@@ -94,7 +94,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Developer partner",
         subtitle:
-          "Verified partners only — not a public marketplace. Apply first; after approval, log in to manage apps schools can add to class.",
+          "Verified partners only. Apply first; after approval, log in to manage apps schools can add to class.",
         joinHref: "/developers/apply",
         joinLabel: "Apply as a developer",
       };

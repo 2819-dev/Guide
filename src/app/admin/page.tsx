@@ -90,7 +90,7 @@ export default async function AdminPage() {
       <OfficialSection
         id="roles"
         title="Roles"
-        lede="Discord-style role badges for school communities — keep distinct from student badge login."
+        lede="Community role badges for schools — keep these separate from student badge login."
       >
         <AdminRoleBadgesPanel />
       </OfficialSection>

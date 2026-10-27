@@ -73,7 +73,7 @@ export default async function DeveloperPortalPage() {
       <section id="manage" className="mt-2">
         <h2 className="portal-section-title">Manage apps</h2>
         <p className="-mt-2 mb-4 text-sm text-ink-muted">
-          Listing details stay curated with Official — not a public marketplace.
+          Listing details stay curated with Official after approval.
         </p>
         {apps.length === 0 ? (
           <div className="portal-empty">

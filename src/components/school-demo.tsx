@@ -39,8 +39,8 @@ function RolePicker({
     <div className="demo-role-picker" role="group" aria-label="Try a school role">
       <p className="demo-role-picker__label">Choose a role to explore</p>
       <p className="-mt-2 mb-4 text-sm leading-relaxed text-ink-muted">
-        Pick a role to tour Riverside Academy — a friendly sample school, not a
-        live account.
+        Pick a role to preview Riverside Academy — a sample school for exploring
+        Guide.
       </p>
       <div className="demo-role-picker__grid">
         {DEMO_ROLES.map((role) => (
@@ -767,7 +767,7 @@ export function SchoolDemo() {
   function resetSession() {
     setSession(createDemoSession());
     setRole(null);
-    setToast("Preview reset — choose a role to continue.");
+    setToast("Back to roles — pick one to continue.");
   }
 
   return (
@@ -779,8 +779,8 @@ export function SchoolDemo() {
         </h1>
         <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted lg:mt-4 lg:text-lg lg:max-w-2xl">
           An interactive preview for teachers, students, and school
-          administrators. Explore freely — nothing is saved to a live school.
-          When you are ready, book a meeting or apply for your school.
+          administrators. Explore freely — this is a preview, not your school
+          account. When you are ready, book a meeting or apply for your school.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
           <Link href="/schools/meeting">Book a meeting →</Link>
@@ -792,9 +792,8 @@ export function SchoolDemo() {
       {role !== null ? (
         <div className="demo-sandbox-banner" role="status">
           <p className="demo-sandbox-banner__text">
-            <strong>Preview only.</strong> You are exploring the{" "}
-            {demoRoleLabel(role)} view for {session.schoolName} — not a live
-            school account.
+            <strong>Preview only.</strong> Viewing the{" "}
+            {demoRoleLabel(role)} portal at {session.schoolName}.
           </p>
           <button
             type="button"
