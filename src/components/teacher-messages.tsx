@@ -97,9 +97,9 @@ export function TeacherMessages() {
       ) : null}
       {threads.length === 0 ? (
         <div className="portal-empty">
-          <p className="portal-empty__title">No messages yet</p>
+          <p className="portal-empty__title">Inbox is quiet</p>
           <p className="portal-empty__body">
-            When students who joined your classes write to you, threads appear
+            When students in your classes write to you, conversations appear
             here.
           </p>
         </div>

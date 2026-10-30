@@ -76,7 +76,7 @@ export default async function TeacherInvitePage({ params }: Props) {
             </h1>
             <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-muted">
               {used
-                ? "This setup link was already used. Log in with the account you created — teachers log in only."
+                ? "This setup link was already used. Log in with the account you created."
                 : "Ask your school administrator to send a new invite from the school portal."}
             </p>
             <p className="mt-5 flex flex-wrap gap-3">

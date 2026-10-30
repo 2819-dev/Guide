@@ -118,8 +118,8 @@ export async function sendTeacherInviteEmail(opts: {
     subject: `You're invited to Guide · ${opts.schoolName}`,
     html: shell(`
       <p style="margin:0 0 14px;font-weight:600">Dear Teacher,</p>
-      <p style="margin:0 0 14px"><strong>${escapeHtml(opts.schoolName)}</strong> invited you to Guide — a calm place for classes, learning apps, and classroom tools.</p>
-      <p style="margin:0 0 14px">Create your password with the button below. After setup, open your Teacher Portal to manage classes and add apps. Teachers log in with a school invite only.</p>
+      <p style="margin:0 0 14px"><strong>${escapeHtml(opts.schoolName)}</strong> invited you to Guide — one calm place for classes, learning apps, and classroom tools.</p>
+      <p style="margin:0 0 14px">Create your password with the button below. After setup, open your Teacher Portal to manage classes and add apps.</p>
       <p style="margin:0 0 18px"><a href="${escapeHtml(opts.inviteUrl)}" style="display:inline-block;background:${EMAIL_PRIMARY};color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Set up your account</a></p>
       <p style="margin:0;color:${EMAIL_MUTED};font-size:14px">This link expires in 14 days. Already set up? <a href="${guidePublicUrl()}/auth/sign-in?as=educator" style="color:${EMAIL_PRIMARY};font-weight:600">Admin</a>.</p>
     `),
