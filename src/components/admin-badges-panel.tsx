@@ -68,20 +68,20 @@ export function AdminBadgesPanel() {
   }
 
   return (
-    <div className="space-y-6">
-      <p className="text-sm text-ink-muted">
-        Issue a <span className="font-medium">login badge code</span> so a
-        student can scan or type at Log In. Not the same as Discord-style Roles
-        above.
-      </p>
-
+    <div className="space-y-4">
       {schools.length === 0 ? (
-        <p className="portal-panel text-sm text-ink-muted">
-          Approve a school first — then you can issue scan credentials for its
-          students.
-        </p>
+        <div className="portal-empty">
+          <p className="portal-empty__title">Approve a school first</p>
+          <p className="portal-empty__body">
+            Then issue student badge codes for scan or typed login. Keep these
+            separate from community Roles above.
+          </p>
+        </div>
       ) : (
         <div className="portal-panel space-y-3">
+          <h3 className="text-sm font-semibold text-forest-800">
+            Issue a badge login
+          </h3>
           <label className="block text-sm font-semibold text-forest-900">
             Student name
             <input
@@ -138,30 +138,34 @@ export function AdminBadgesPanel() {
             onClick={() => void create()}
             className="btn-primary"
           >
-            {busy ? "Creating…" : "Create scan credential"}
+            {busy ? "Creating…" : "Create badge login"}
           </button>
-          {createdCode && (
-            <p className="rounded-xl border border-line bg-sky-soft/50 px-3 py-2 text-sm text-forest-900">
-              Scan code ready:{" "}
+          {createdCode ? (
+            <p className="rounded-[10px] border border-forest-200 bg-forest-100 px-3 py-2 text-sm text-forest-900">
+              Badge code ready:{" "}
               <span className="font-mono text-lg font-semibold tracking-wider">
                 {createdCode}
               </span>
             </p>
-          )}
-          {error && <p className="text-sm text-red-700">{error}</p>}
+          ) : null}
+          {error ? (
+            <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+              {error}
+            </p>
+          ) : null}
         </div>
       )}
 
-      {badges.length > 0 && (
+      {badges.length > 0 ? (
         <div className="space-y-2">
           <h3 className="text-sm font-semibold text-forest-800">
-            Recent scan credentials
+            Recent badge logins
           </h3>
-          <ul className="divide-y divide-line rounded-xl border border-line">
+          <ul className="divide-y divide-line overflow-hidden rounded-[10px] border border-line bg-surface">
             {badges.slice(0, 12).map((b) => (
               <li
                 key={b.id}
-                className="flex flex-wrap items-baseline justify-between gap-2 px-4 py-3 text-sm"
+                className="flex min-h-12 flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm"
               >
                 <span className="font-semibold text-forest-950">
                   {b.displayName}
@@ -173,7 +177,7 @@ export function AdminBadgesPanel() {
             ))}
           </ul>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

@@ -5,10 +5,14 @@ export const runtime = "edge";
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
+import { AdminKeyIcon } from "@/components/admin-entry";
+import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
 import { SchoolPickerField } from "@/components/school-picker-field";
+import { FIRST_APP_NAME } from "@/lib/apps";
 import { parseLoginAs, signupAsCopy } from "@/lib/login-roles";
+import { publicAmudHomePath } from "@/lib/site";
 import { signUpWithEmail } from "./actions";
 
 function SignUpForm() {
@@ -38,7 +42,7 @@ function SignUpForm() {
       <AuthCard
         eyebrow="For schools"
         title="Teachers log in only"
-        subtitle="Teachers receive a setup invite from their school. School and district administrators apply for Guide — there is no separate teacher signup."
+        subtitle="Teachers get a setup invite from their school, then log in to manage classes and apps. School and district administrators apply for Guide — there is no public teacher signup."
         footer={
           <>
             Already invited?{" "}
@@ -52,10 +56,17 @@ function SignUpForm() {
         }
       >
         <div className="flex flex-col gap-3">
-          <Link href="/auth/sign-in?as=educator" className="btn-primary inline-flex justify-center">
-            Teacher log in
+          <Link
+            href="/auth/sign-in?as=educator"
+            className="btn-primary inline-flex items-center justify-center gap-2"
+          >
+            <AdminKeyIcon />
+            Admin
           </Link>
-          <Link href="/education#apply" className="btn-secondary inline-flex justify-center">
+          <Link
+            href="/education#apply"
+            className="btn-secondary inline-flex justify-center"
+          >
             Apply for your school
           </Link>
         </div>
@@ -122,8 +133,8 @@ function SignUpForm() {
 
         {as === "developer" ? (
           <p className="text-[0.8125rem] leading-snug text-ink-muted">
-            Next, submit a developer application. The portal unlocks after Guide
-            Official verifies you.
+            Next, submit a developer application. Your partner portal opens after
+            Guide Official verifies you.
           </p>
         ) : null}
 
@@ -145,23 +156,49 @@ function SignUpForm() {
   );
 }
 
-export default function SignUpPage() {
+function SignUpShell() {
+  const params = useSearchParams();
+  const as = parseLoginAs(params.get("as") ?? params.get("role"));
+  const isLearner = as === "learner";
+
   return (
     <div className="auth-shell flex min-h-screen flex-col">
-      <div className="flex items-center px-6 py-5 sm:px-8">
-        <GuideWordmark href="/" size="lg" />
+      <div className="flex items-center justify-between px-6 py-5 sm:px-8">
+        {isLearner ? (
+          <AppWordmark
+            name={FIRST_APP_NAME}
+            href={publicAmudHomePath()}
+            size="lg"
+          />
+        ) : (
+          <GuideWordmark href="/" size="lg" />
+        )}
+        {isLearner ? (
+          <Link
+            href={publicAmudHomePath()}
+            className="text-sm font-semibold text-forest-800 no-underline hover:underline"
+          >
+            ← {FIRST_APP_NAME}
+          </Link>
+        ) : null}
       </div>
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
-        <Suspense
-          fallback={
-            <div className="w-full max-w-md rounded-[10px] border border-line bg-surface px-6 py-8">
-              <p className="text-ink-muted">Loading…</p>
-            </div>
-          }
-        >
-          <SignUpForm />
-        </Suspense>
+      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8 lg:max-w-xl">
+        <SignUpForm />
       </div>
     </div>
+  );
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="auth-shell flex min-h-screen items-center justify-center">
+          <p className="text-ink-muted">Loading…</p>
+        </div>
+      }
+    >
+      <SignUpShell />
+    </Suspense>
   );
 }

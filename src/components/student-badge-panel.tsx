@@ -63,7 +63,7 @@ export function StudentBadgePanel({
   return (
     <div className="panel space-y-3">
       <h2 className="display text-2xl font-semibold text-forest-900">
-        School scan credential
+        School badge login
       </h2>
       {schoolName && (
         <p className="text-sm text-ink-muted">School: {schoolName}</p>
@@ -75,8 +75,8 @@ export function StudentBadgePanel({
           </p>
           <p className="text-sm text-ink-muted">
             {ready
-              ? "Use this scan code (or a printout) on Log in as a → Student → Badge."
-              : "Scan code saved — activate it to use at student Log In."}
+              ? "Use this scan code (or a printout) at student log in → Badge."
+              : "Scan code saved — activate it to use at student log in."}
           </p>
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={printBadge} className="btn-secondary">
@@ -89,7 +89,7 @@ export function StudentBadgePanel({
                 onClick={() => void activate()}
                 className="btn-primary"
               >
-                {busy ? "Setting up…" : "Activate scan login"}
+                {busy ? "Setting up…" : "Activate badge login"}
               </button>
             )}
           </div>
@@ -97,8 +97,8 @@ export function StudentBadgePanel({
       ) : (
         <>
           <p className="text-sm text-ink-muted">
-            Create a school scan code so you can log in by camera or typing a
-            code. This is separate from any Roles Guide Official assigns you.
+            Create a school badge so you can log in with a camera scan or by
+            typing a code.
           </p>
           {canActivate && (
             <button
@@ -107,7 +107,7 @@ export function StudentBadgePanel({
               onClick={() => void activate()}
               className="btn-primary"
             >
-              {busy ? "Setting up…" : "Create scan credential"}
+              {busy ? "Setting up…" : "Create badge login"}
             </button>
           )}
         </>

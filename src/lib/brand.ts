@@ -16,6 +16,7 @@ export const INVITE_BANNER_SRC = "/invite/ohr-reuven/banner.jpg" as const;
 
 /**
  * Homepage Clever cover — Official Release hero visual (right panel).
+ * Locked user artwork — do not replace with a CSS-only panel.
  * Canonical: /cursor/stores/self/media/clever-cover/homepage-hero-official-release.png
  */
 export const HOME_HERO_RELEASE_SRC =

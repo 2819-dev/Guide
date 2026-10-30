@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import type { ReactNode } from "react";
 import { AdminBadgesPanel } from "@/components/admin-badges-panel";
 import { AdminDevelopersPanel } from "@/components/admin-developers-panel";
 import { AdminMeetingsPanel } from "@/components/admin-meetings-panel";
@@ -12,6 +13,28 @@ import { requireProfile } from "@/lib/profile";
 export const runtime = "edge";
 
 export const metadata = { title: "Guide Official" };
+
+function OfficialSection({
+  id,
+  title,
+  lede,
+  children,
+}: {
+  id: string;
+  title: string;
+  lede: string;
+  children: ReactNode;
+}) {
+  return (
+    <section id={id} className="official-section">
+      <div className="official-section__head">
+        <h2 className="portal-section-title !mb-1">{title}</h2>
+        <p className="text-sm leading-relaxed text-ink-muted">{lede}</p>
+      </div>
+      {children}
+    </section>
+  );
+}
 
 export default async function AdminPage() {
   let authz = null;
@@ -28,7 +51,7 @@ export default async function AdminPage() {
     <PortalShell
       eyebrow="Guide Official"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Approve schools and developers, follow meeting requests, manage Roles, badge logins, and Suggestions."
+      subtitle="Approve schools and developers, follow Book a meeting requests, and keep Roles, badge logins, and Suggestions in order."
       chips={[
         { href: "#meetings", label: "Meetings", active: true },
         { href: "#schools", label: "Schools" },
@@ -38,36 +61,64 @@ export default async function AdminPage() {
         { href: "#suggestions", label: "Suggestions" },
         ...(isAdmin ? [{ href: "#support", label: "Get help" }] : []),
       ]}
+      accountName={authz.profile.displayName}
     >
-      <section id="meetings">
-        <h2 className="portal-section-title">Meeting requests</h2>
+      <OfficialSection
+        id="meetings"
+        title="Meeting requests"
+        lede="Book a meeting from For schools lands here — mark contacted, scheduled, or closed."
+      >
         <AdminMeetingsPanel />
-      </section>
-      <section id="schools">
-        <h2 className="portal-section-title">Schools</h2>
+      </OfficialSection>
+
+      <OfficialSection
+        id="schools"
+        title="School applications"
+        lede="Approve a school so administrators can invite teachers, create classes, and add apps."
+      >
         <AdminSchoolsPanel />
-      </section>
-      <section id="developers">
-        <h2 className="portal-section-title">Developers</h2>
+      </OfficialSection>
+
+      <OfficialSection
+        id="developers"
+        title="Developers"
+        lede="Verified partners only — approve apps schools can add to class."
+      >
         <AdminDevelopersPanel />
-      </section>
-      <section id="roles">
-        <h2 className="portal-section-title">Roles</h2>
+      </OfficialSection>
+
+      <OfficialSection
+        id="roles"
+        title="Roles"
+        lede="Community role badges for schools — keep these separate from student badge login."
+      >
         <AdminRoleBadgesPanel />
-      </section>
-      <section id="credentials">
-        <h2 className="portal-section-title">Badge logins</h2>
+      </OfficialSection>
+
+      <OfficialSection
+        id="credentials"
+        title="Badge logins"
+        lede="Issue and manage student badge codes for school login."
+      >
         <AdminBadgesPanel />
-      </section>
-      <section id="suggestions">
-        <h2 className="portal-section-title">Suggestions</h2>
+      </OfficialSection>
+
+      <OfficialSection
+        id="suggestions"
+        title="Suggestions"
+        lede="Review student suggestions and study prompts from across Guide."
+      >
         <AdminSuggestionsPanel />
-      </section>
+      </OfficialSection>
+
       {isAdmin ? (
-        <section id="support">
-          <h2 className="portal-section-title">Get help queue</h2>
+        <OfficialSection
+          id="support"
+          title="Get help queue"
+          lede="Account help requests from school users."
+        >
           <AdminSupportPanel />
-        </section>
+        </OfficialSection>
       ) : null}
     </PortalShell>
   );

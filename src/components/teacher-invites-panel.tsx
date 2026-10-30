@@ -59,17 +59,16 @@ export function TeacherInvitesPanel() {
       <div>
         <h2 className="portal-section-title">Invite teachers</h2>
         <p className="-mt-2 text-sm text-ink-muted">
-          Type work emails (one per line or comma-separated). Guide sends a
-          setup link — teachers log in only; there is no public teacher signup.
+          Enter work emails (one per line or comma-separated). Each teacher
+          gets a setup link — teachers log in with that invite only.
         </p>
       </div>
 
       <div className="portal-panel space-y-3">
         {!emailConfigured ? (
-          <p className="rounded-[10px] border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">
-            Email sending needs <code className="font-mono">RESEND_API_KEY</code>{" "}
-            (and a verified from domain) on Cloudflare Pages. Invites are still
-            saved; links work when the secret is present.
+          <p className="auth-soft-note !mb-0">
+            Invites are saved here. Email delivery reconnects shortly — teachers
+            can still use a setup link once mail is sending.
           </p>
         ) : null}
 
@@ -104,7 +103,15 @@ export function TeacherInvitesPanel() {
         </button>
       </div>
 
-      {invites.length > 0 ? (
+      {invites.length === 0 ? (
+        <div className="portal-empty">
+          <p className="portal-empty__title">Ready to invite your team</p>
+          <p className="portal-empty__body">
+            Paste work emails above. Teachers create a password from the setup
+            link, then open their Teacher Portal.
+          </p>
+        </div>
+      ) : (
         <div className="portal-panel overflow-x-auto">
           <table className="w-full min-w-[420px] border-collapse text-left text-sm">
             <thead>
@@ -120,7 +127,17 @@ export function TeacherInvitesPanel() {
                   <td className="py-2.5 pr-3 font-medium text-forest-950">
                     {inv.email}
                   </td>
-                  <td className="py-2.5 pr-3 capitalize">{inv.status}</td>
+                  <td className="py-2.5 pr-3">
+                    <span className={`status-chip status-chip--${inv.status}`}>
+                      {inv.status === "sent"
+                        ? "Sent"
+                        : inv.status === "accepted"
+                          ? "Joined"
+                          : inv.status === "queued"
+                            ? "Queued"
+                            : inv.status}
+                    </span>
+                  </td>
                   <td className="py-2.5 text-ink-muted">
                     {inv.sentAt
                       ? new Date(inv.sentAt).toLocaleDateString()
@@ -131,7 +148,7 @@ export function TeacherInvitesPanel() {
             </tbody>
           </table>
         </div>
-      ) : null}
+      )}
     </section>
   );
 }
