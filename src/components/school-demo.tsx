@@ -680,7 +680,8 @@ function AdminPortal({
           <div>
             <h2 className="portal-section-title">Invite teachers</h2>
             <p className="-mt-2 text-sm text-ink-muted">
-              Type work emails. Guide sends a setup link — teachers log in only.
+              Enter work emails (one per line). Each teacher gets a setup link
+              for their Teacher Portal.
             </p>
           </div>
           <div className="portal-panel space-y-3">
@@ -701,7 +702,7 @@ function AdminPortal({
               onClick={sendInvites}
               className="btn-primary"
             >
-              Send invites (preview)
+              Send invites
             </button>
           </div>
           <div className="rounded-[10px] border border-line">
