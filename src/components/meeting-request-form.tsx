@@ -20,7 +20,7 @@ export function MeetingRequestForm() {
         <div className="portal-empty !border-0 !bg-transparent !p-0 !shadow-none">
           <p className="portal-empty__title">Request received</p>
           <p className="portal-empty__body">
-            Guide Official will review your request and follow up by email.
+            The Guide team will review your request and follow up by email.
             Meanwhile, try the interactive demo or apply for your school.
           </p>
         </div>
@@ -65,7 +65,7 @@ export function MeetingRequestForm() {
         <p className="portal-eyebrow">Meeting request</p>
         <h2 className="display-feature mt-1">Tell us about your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Guide Official reviews every request and follows up to schedule a
+          Share a few details and the Guide team will follow up to schedule a
           walkthrough. Prefer to explore first? Open the demo anytime.
         </p>
       </div>

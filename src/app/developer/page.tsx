@@ -139,7 +139,8 @@ export default async function DeveloperPortalPage() {
             engaging and classrooms stay organized.
           </p>
           <p>
-            Installs stay school-curated. There is no public open marketplace.
+            Teachers choose which apps to add. Schools keep a curated library
+            for their classrooms.
           </p>
           <p>
             Questions for Official:{" "}

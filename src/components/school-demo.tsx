@@ -39,8 +39,7 @@ function RolePicker({
     <div className="demo-role-picker" role="group" aria-label="Try a school role">
       <p className="demo-role-picker__label">Choose a role to explore</p>
       <p className="-mt-2 mb-4 text-sm leading-relaxed text-ink-muted">
-        Pick a role to preview Riverside Academy — a sample school for exploring
-        Guide.
+        Choose a role to explore Riverside Academy, a sample school on Guide.
       </p>
       <div className="demo-role-picker__grid">
         {DEMO_ROLES.map((role) => (
@@ -258,8 +257,8 @@ function StudentPortal({
             </ul>
           )}
           <p className="mt-4 text-sm text-ink-muted">
-            Apps open in the real product after school approval — here they stay
-            inside the preview.
+            In your school account, apps open from My apps. Here they stay in
+            the preview.
           </p>
         </section>
       ) : (
@@ -526,7 +525,7 @@ function TeacherPortal({
         <section className="space-y-4">
           <h2 className="portal-section-title">Messages</h2>
           <p className="-mt-2 text-sm text-ink-muted">
-            Reach students in your classes — high-level preview in this demo.
+            Reach students in your classes. This demo shows a sample inbox.
           </p>
           <div className="portal-panel space-y-3">
             {session.messages.map((m) => (
@@ -545,7 +544,7 @@ function TeacherPortal({
               className="btn-secondary"
               onClick={() =>
                 setNotice(
-                  "In the live portal you message students in your classes. This preview stays local.",
+                  "In your school account you message students in your classes. This preview stays on this page.",
                 )
               }
             >
@@ -600,7 +599,7 @@ function AdminPortal({
     });
     setEmailText("");
     setNotice(
-      `Queued ${emails.length} teacher invite${emails.length === 1 ? "" : "s"} for this preview — no email is sent.`,
+      `Added ${emails.length} teacher invite${emails.length === 1 ? "" : "s"} to this preview. Emails are not sent from the demo.`,
     );
     setTab("teachers");
   }
@@ -779,9 +778,9 @@ export function SchoolDemo() {
           Try Guide as your school
         </h1>
         <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted lg:mt-4 lg:text-lg lg:max-w-2xl">
-          An interactive preview for teachers, students, and school
-          administrators. Explore freely — this is a preview, not your school
-          account. When you are ready, book a meeting or apply for your school.
+          Explore Guide as a teacher, student, or school administrator. This is
+          a sample school preview — your real school account opens after you
+          apply. When you are ready, book a meeting or apply for your school.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
           <Link href="/schools/meeting">Book a meeting →</Link>
@@ -793,7 +792,7 @@ export function SchoolDemo() {
       {role !== null ? (
         <div className="demo-sandbox-banner" role="status">
           <p className="demo-sandbox-banner__text">
-            <strong>Preview only.</strong> Viewing the{" "}
+            <strong>Sample school preview.</strong> Viewing the{" "}
             {demoRoleLabel(role)} portal at {session.schoolName}.
           </p>
           <button
@@ -825,7 +824,7 @@ export function SchoolDemo() {
           onSwitchRole={resetRole}
           onOpenApp={(name) =>
             setToast(
-              `${name} would open in the real student portal. Staying in the preview.`,
+              `${name} opens from My apps in your school account. This preview stays on this page.`,
             )
           }
         />

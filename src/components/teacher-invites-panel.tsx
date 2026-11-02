@@ -60,7 +60,7 @@ export function TeacherInvitesPanel() {
         <h2 className="portal-section-title">Invite teachers</h2>
         <p className="-mt-2 text-sm text-ink-muted">
           Enter work emails (one per line or comma-separated). Each teacher
-          gets a setup link — teachers log in with that invite only.
+          receives a setup link to join your school.
         </p>
       </div>
 
@@ -107,8 +107,8 @@ export function TeacherInvitesPanel() {
         <div className="portal-empty">
           <p className="portal-empty__title">Ready to invite your team</p>
           <p className="portal-empty__body">
-            Paste work emails above. Teachers create a password from the setup
-            link, then open their Teacher Portal.
+            Paste work emails above. Each teacher creates a password from the
+            setup link, then opens their Teacher Portal.
           </p>
         </div>
       ) : (

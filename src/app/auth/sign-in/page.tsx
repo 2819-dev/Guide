@@ -113,8 +113,8 @@ function SignInForm() {
         >
           {isEducator ? (
             <p className="auth-soft-note">
-              Teachers use the setup link from a school invite — there is no
-              public teacher signup.
+              Teachers sign in with the setup link from their school invite.
+              School administrators apply for Guide first.
             </p>
           ) : null}
           <form action={formAction} className="space-y-4">

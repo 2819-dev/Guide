@@ -19,7 +19,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
     label: "Student",
-    description: "Find your school, then badge or password",
+    description: "Find your school, then sign in",
     href: "/auth/sign-in?as=student",
   },
   {
@@ -31,7 +31,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "official",
     label: "Guide Official",
-    description: "School approvals and partner apps",
+    description: "Guide team",
     href: "/auth/sign-in?as=official",
   },
 ];
@@ -69,7 +69,7 @@ export function loginAsCopy(as: LoginAs): {
     case "student":
       return {
         title: "Student",
-        subtitle: "Find your school, then continue with a badge or password.",
+        subtitle: "Find your school, then sign in with a badge or password.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
@@ -77,7 +77,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Admin",
         subtitle:
-          "Teachers sign in with their school invite. Administrators apply for Guide, then invite teachers and manage classes.",
+          "Teachers sign in with a school invite. School administrators apply for Guide, then invite teachers.",
         // Teachers = login only. School/district apply stays for admins.
         joinHref: "/education#apply",
         joinLabel: "Apply for your school",
@@ -85,8 +85,7 @@ export function loginAsCopy(as: LoginAs): {
     case "official":
       return {
         title: "Guide Official",
-        subtitle:
-          "Review meeting requests, approve schools, and verify partner apps teachers can add to class.",
+        subtitle: "Sign in with your Guide Official account.",
         joinHref: null,
         joinLabel: null,
       };
@@ -94,7 +93,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Developer partner",
         subtitle:
-          "Verified partners only. Apply first; after approval, log in to manage apps schools can add to class.",
+          "Apply as a partner, then sign in to manage apps schools can add to class.",
         joinHref: "/developers/apply",
         joinLabel: "Apply as a developer",
       };
@@ -121,7 +120,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Join as a Student",
         subtitle:
-          "Type to find your school, create an account, then join your class from Account so My apps shows what teachers added.",
+          "Find your school, create an account, then join your class from Account.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -129,14 +128,14 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "School administrator",
         subtitle:
-          "Teachers are invited by email — use Log in instead. School and district administrators apply to create an account and open their portal.",
+          "School and district administrators apply here. Teachers use Log in with a school invite.",
         roleValue: "customer",
         showRoleChooser: false,
       };
     case "official":
       return {
         title: "Guide Official",
-        subtitle: "Log in with your Guide Official account to review schools and meetings.",
+        subtitle: "Sign in with your Guide Official account.",
         roleValue: "moderator",
         showRoleChooser: false,
       };
@@ -144,7 +143,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Developer partner",
         subtitle:
-          "Create an account after you apply. Your developer portal opens when Guide Official verifies your partner app.",
+          "Create an account after you apply. Your partner portal opens when your application is approved.",
         roleValue: "customer",
         showRoleChooser: false,
       };

@@ -101,8 +101,8 @@ export default async function EducationLandingPage() {
           <article className="schools-feature">
             <h2 className="schools-feature__title">Invite teachers by email</h2>
             <p className="schools-feature__body">
-              Enter work emails from your portal. Guide sends a clear setup
-              link — teachers log in only; there is no public teacher signup.
+              Enter work emails from your portal. Guide sends each teacher a
+              clear setup link so they can join your school.
             </p>
           </article>
         </div>
@@ -116,8 +116,8 @@ export default async function EducationLandingPage() {
               Apply and create your account
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Your school application creates a Guide account right away. Open
-              your {portalLabel} while we review.
+              Submitting creates your Guide account. Open your {portalLabel}
+              while we review your school.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
@@ -126,8 +126,8 @@ export default async function EducationLandingPage() {
               Invite teachers
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              After approval, add work emails. Guide sends a professional setup
-              link to each teacher.
+              After approval, add work emails. Each teacher receives a setup
+              link to join your school.
             </p>
           </li>
           <li className="p-6">
@@ -174,8 +174,8 @@ export default async function EducationLandingPage() {
               className="font-semibold text-forest-800"
             >
               Log in
-            </Link>{" "}
-            first, then apply — or create your account when you submit below.
+            </Link>
+            , then apply — or create your account when you submit below.
           </p>
         )}
       </section>

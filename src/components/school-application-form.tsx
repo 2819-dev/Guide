@@ -101,8 +101,8 @@ export function SchoolApplicationForm({
         <h2 className="display-feature mt-1">Apply for your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
           {hasAccount
-            ? "Share a few details about your school or district. After you submit, open your School Administrator Portal — classroom tools open when your school is approved."
-            : "Create your Guide account when you apply. You will land in your School Administrator Portal right away; classroom tools open when your school is approved."}
+            ? "Share a few details about your school or district. After you submit, open your School Administrator Portal. Classroom tools open when your school is approved."
+            : "Applying creates your Guide account and opens your School Administrator Portal. Classroom tools open when your school is approved."}
         </p>
       </div>
 

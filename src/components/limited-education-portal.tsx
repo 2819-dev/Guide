@@ -31,10 +31,10 @@ export function LimitedEducationPortal({
       : "Welcome";
 
   const body = isRejected
-    ? `${schoolLabel} was not approved. Update a few details and re-apply when you are ready — classroom tools open after approval.`
+    ? `${schoolLabel} was not approved. Update a few details and re-apply when you are ready. Classroom tools open after approval.`
     : status === "pending"
-      ? `${schoolLabel} is under review. You can sign in anytime. When approved, invite teachers, create classes, and add apps right here.`
-      : "Apply for your school to open this portal. Classroom tools arrive after approval.";
+      ? `${schoolLabel} is under review. When approved, you can invite teachers, create classes, and add apps from this portal.`
+      : "Apply for your school to open this portal. Classroom tools open after approval.";
 
   return (
     <PortalShell
@@ -43,7 +43,7 @@ export function LimitedEducationPortal({
       subtitle={
         isRejected
           ? "Your portal stays open while you update and re-apply."
-          : "You are in. Full classroom tools arrive when your school is approved."
+          : "You can sign in anytime. Full classroom tools open when your school is approved."
       }
       accountName={displayName}
     >

@@ -73,8 +73,8 @@ export default function OhrReuvenInvitePage() {
               >
                 apply for Guide
               </a>
-              . After approval, they invite teachers by email. Teachers log in
-              with that setup link — there is no separate teacher-only signup.
+              . After approval, they invite teachers by email. Teachers join
+              with that setup link, then sign in to manage classes and apps.
             </p>
             <p className="mb-[18px]">
               <a

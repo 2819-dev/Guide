@@ -23,7 +23,7 @@ export function TeacherInviteAcceptForm({ token, email, schoolName }: Props) {
           <p className="portal-eyebrow">Welcome to Guide</p>
           <h2 className="display-feature mt-1">Account ready</h2>
           <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-muted">
-            Your account for <strong>{schoolName}</strong> is ready. Log in to
+            Your account for <strong>{schoolName}</strong> is ready. Sign in to
             create classes, add apps, and keep students engaged.
           </p>
         </div>
@@ -61,14 +61,13 @@ export function TeacherInviteAcceptForm({ token, email, schoolName }: Props) {
         <h1 className="display-feature mt-1">Set up your Guide account</h1>
         <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
           Dear Teacher, <strong>{schoolName}</strong> invited you to Guide.
-          Create your password below, then open classes and apps for your
-          students.
+          Create your password below, then open your Teacher Portal to manage
+          classes and apps.
         </p>
       </div>
 
       <p className="auth-soft-note">
-        After setup, log in with this same email. Teachers join with a school
-        invite only.
+        After setup, sign in with this same email to open your Teacher Portal.
       </p>
 
       <label className="block text-sm font-semibold text-forest-900">

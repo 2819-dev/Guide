@@ -28,9 +28,8 @@ export function DeveloperApplyForm({
         <div className="portal-empty !border-0 !bg-transparent !p-0 !shadow-none">
           <p className="portal-empty__title">Application received</p>
           <p className="portal-empty__body">
-            Guide Official will verify your application. When approved, partner
-            log in unlocks the developer portal so you can manage apps schools
-            add to class.
+            Guide will review your application. When approved, partner log in
+            opens your portal so you can manage apps schools add to class.
           </p>
         </div>
         <p className="mt-5">
@@ -78,8 +77,8 @@ export function DeveloperApplyForm({
         <p className="portal-eyebrow">For developers</p>
         <h2 className="display-feature mt-1">Apply as a developer</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Verified partners only. Share your organization, website, and app
-          details — Guide Official reviews each application.
+          Share your organization, website, and app details. Guide reviews each
+          partner application before listing.
         </p>
       </div>
 

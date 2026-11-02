@@ -6,7 +6,7 @@ export const runtime = "edge";
 export const metadata = {
   title: "For developers · Guide",
   description:
-    "Build apps schools can add to class. Verified partners apply; Guide Official reviews each one.",
+    "Build apps schools can add to class. Partners apply; Guide reviews each listing.",
 };
 
 /**
@@ -24,9 +24,8 @@ export default function DeveloperApplyPage() {
               Build apps schools can add to class
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">
-              Build verified apps schools can trust. After Official approves
-              you, teachers add your app to class and students open it from My
-              apps.
+              Partner with Guide to reach classrooms. After approval, teachers
+              add your app to class and students open it from My apps.
             </p>
             <div className="mt-8 flex flex-col items-center gap-2">
               <a href="#apply" className="btn-primary">
@@ -53,8 +52,8 @@ export default function DeveloperApplyPage() {
           <article className="schools-feature">
             <h2 className="schools-feature__title">Verified partners only</h2>
             <p className="schools-feature__body">
-              Guide Official reviews every application. Schools trust the
-              library because listings stay curated.
+              Every partner is reviewed before listing. Schools trust a
+              library that stays carefully curated.
             </p>
           </article>
           <article className="schools-feature">
@@ -67,8 +66,8 @@ export default function DeveloperApplyPage() {
           <article className="schools-feature">
             <h2 className="schools-feature__title">Manage after approval</h2>
             <p className="schools-feature__body">
-              The developer portal keeps your apps in the center — listing
-              details, docs, and contact for Official.
+              After approval, manage listing details and documentation from
+              your partner portal.
             </p>
           </article>
         </div>
@@ -82,7 +81,7 @@ export default function DeveloperApplyPage() {
               Apply
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Share your organization, website, and app. Official reviews each
+              Share your organization, website, and app. Guide reviews each
               partner.
             </p>
           </li>
@@ -92,7 +91,7 @@ export default function DeveloperApplyPage() {
               Get approved
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              When approved, partner log in unlocks the developer portal.
+              When approved, partner log in opens your developer portal.
             </p>
           </li>
           <li className="p-6">

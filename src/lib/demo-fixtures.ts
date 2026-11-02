@@ -56,7 +56,7 @@ export const DEMO_ROLES: {
     id: "teacher",
     tryAs: "Try as Teacher",
     portalLabel: "Teacher portal",
-    blurb: "Manage classes and add apps so students stay engaged.",
+    blurb: "Create classes, add learning apps, and follow student progress.",
     hint: "Create a class · add an app · open messages",
   },
   {
@@ -70,7 +70,7 @@ export const DEMO_ROLES: {
     id: "admin",
     tryAs: "Try as School administrator",
     portalLabel: "School administrator",
-    blurb: "Invite teachers by email and keep your school organized.",
+    blurb: "Invite teachers by email and keep the school organized.",
     hint: "Invite a teacher · review classes",
   },
 ];
