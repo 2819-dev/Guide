@@ -11,7 +11,7 @@ import { listRolesForProfile } from "@/lib/role-badges";
 import { schools } from "@/lib/schema";
 import { isStudentSuggestionsBlocked } from "@/lib/suggestions-access";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export const metadata = { title: "Student portal" };
 
@@ -38,13 +38,22 @@ export default async function StudentHubPage() {
 
   return (
     <PortalShell
-      eyebrow="Student portal"
+      eyebrow="Student"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle={schoolName ?? "Your apps and tools are below."}
+      subtitle={
+        schoolName
+          ? `${schoolName} · Open apps your teachers added for class.`
+          : "Open the apps your teachers added for class."
+      }
       chips={[
-        { href: "#apps", label: "My apps", active: true },
-        { href: "#tools", label: "Tools" },
+        { href: "/student#apps", label: "My apps", active: true },
+        { href: "/student#tools", label: "Tools" },
       ]}
+      utilities={[
+        { href: "/student/messages", label: "Messaging" },
+        { href: "/student/suggestions", label: "Suggestions" },
+      ]}
+      accountName={authz.profile.displayName}
     >
       {roles.length > 0 ? (
         <ul className="-mt-2 flex flex-wrap gap-2">
@@ -61,10 +70,13 @@ export default async function StudentHubPage() {
         </ul>
       ) : null}
 
-      <MyAppsGrid
-        apps={apps}
-        emptyHint="Join a class from Account, then ask your teacher to add an app."
-      />
+      <section id="apps">
+        <h2 className="portal-section-title">My apps</h2>
+        <MyAppsGrid
+          apps={apps}
+          emptyHint="Join a class from Account, then ask your teacher to add an app."
+        />
+      </section>
 
       <section id="tools">
         <h2 className="portal-section-title">Tools</h2>

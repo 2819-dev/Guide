@@ -53,13 +53,11 @@ export function AdminSuggestionsPanel() {
   }
 
   return (
-    <div className="space-y-6">
-      <p className="text-sm text-ink-muted">
-        Posts appear in the student Suggestions pad (unless a teacher has paused
-        access).
-      </p>
-
+    <div className="space-y-4">
       <div className="portal-panel space-y-3">
+        <h3 className="text-sm font-semibold text-forest-800">
+          Publish a suggestion
+        </h3>
         <label className="block text-sm font-semibold text-forest-900">
           Title
           <input
@@ -87,19 +85,39 @@ export function AdminSuggestionsPanel() {
         >
           {busy ? "Publishing…" : "Publish suggestion"}
         </button>
-        {error && <p className="text-sm text-red-700">{error}</p>}
+        {error ? (
+          <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+            {error}
+          </p>
+        ) : null}
       </div>
 
       {items.length === 0 ? (
-        <p className="text-sm text-ink-muted">No suggestions yet.</p>
+        <div className="portal-empty">
+          <p className="portal-empty__title">No suggestions yet</p>
+          <p className="portal-empty__body">
+            Published posts appear in the student Suggestions pad (unless a
+            teacher has paused access).
+          </p>
+        </div>
       ) : (
         <ul className="space-y-3">
           {items.map((s) => (
-            <li key={s.id} className="rounded-xl border border-line px-4 py-3">
-              <p className="font-semibold text-forest-950">{s.title}</p>
+            <li key={s.id} className="portal-panel !py-3.5">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <p className="font-semibold text-forest-950">{s.title}</p>
+                <span
+                  className={
+                    s.published
+                      ? "status-chip status-chip--scheduled"
+                      : "status-chip status-chip--closed"
+                  }
+                >
+                  {s.published ? "Published" : "Draft"}
+                </span>
+              </div>
               <p className="mt-1 line-clamp-2 text-sm text-ink-muted">{s.body}</p>
               <p className="mt-2 text-xs text-ink-muted">
-                {s.published ? "Published" : "Draft"} ·{" "}
                 {new Date(s.createdAt).toLocaleString()}
               </p>
             </li>

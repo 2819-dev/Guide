@@ -59,14 +59,33 @@ export function AdminDevelopersPanel() {
       <div className="portal-empty">
         <p className="portal-empty__title">No developer applications</p>
         <p className="portal-empty__body">
-          Partner applications from For developers appear here.
+          Verified partner applications from For developers appear here for
+          Official review.
         </p>
       </div>
     );
   }
 
+  const pending = applications.filter((a) => a.status === "pending").length;
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      <div className="official-stat-row" aria-label="Developer queue summary">
+        <div className="official-stat">
+          <p className="official-stat__value">{applications.length}</p>
+          <p className="official-stat__label">Total</p>
+        </div>
+        <div className="official-stat">
+          <p className="official-stat__value">{pending}</p>
+          <p className="official-stat__label">Pending</p>
+        </div>
+        <div className="official-stat">
+          <p className="official-stat__value">
+            {applications.filter((a) => a.status === "approved").length}
+          </p>
+          <p className="official-stat__label">Approved</p>
+        </div>
+      </div>
       {error ? (
         <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
           {error}
@@ -76,7 +95,7 @@ export function AdminDevelopersPanel() {
         <article key={a.id} className="portal-panel space-y-3">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
-              <h3 className="text-base font-semibold text-forest-950">
+              <h3 className="text-base font-semibold tracking-tight text-forest-950">
                 {a.appName}
               </h3>
               <p className="mt-0.5 text-sm text-ink-muted">
@@ -93,7 +112,7 @@ export function AdminDevelopersPanel() {
                 </a>
               </p>
             </div>
-            <span className="rounded-[8px] border border-line bg-sky-soft px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-forest-800">
+            <span className={`status-chip status-chip--${a.status}`}>
               {a.status}
             </span>
           </div>
@@ -104,7 +123,7 @@ export function AdminDevelopersPanel() {
                 type="button"
                 disabled={busyId === a.id}
                 onClick={() => void review(a.id, "approved")}
-                className="btn-primary !min-h-[40px] !px-3 !text-sm"
+                className="btn-primary !min-h-12 !px-3.5 !text-sm"
               >
                 Approve
               </button>
@@ -112,7 +131,7 @@ export function AdminDevelopersPanel() {
                 type="button"
                 disabled={busyId === a.id}
                 onClick={() => void review(a.id, "rejected")}
-                className="btn-secondary !min-h-[40px] !px-3 !text-sm"
+                className="btn-secondary !min-h-12 !px-3.5 !text-sm"
               >
                 Decline
               </button>

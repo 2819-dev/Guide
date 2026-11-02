@@ -45,13 +45,13 @@ function GuideHomePage() {
         <div className="content-band hero-band__grid">
           {/* Primary band: copy + CTA share height with Official Release panel */}
           <div className="hero-primary">
-            <h1 className="display-hero max-w-[14ch]">
+            <h1 className="display-hero max-w-[16ch] lg:max-w-none">
               Keep every student{" "}
               <span className="sun-underline">engaged</span>
             </h1>
             <p className="hero-lede">
-              Clear classroom management for teachers, and learning apps that
-              keep students involved — so school feels inviting and purposeful.
+              Classes, learning apps, and teacher invites in one place — so
+              classrooms stay organized and students stay involved.
             </p>
 
             <div className="hero-cta-stack">
@@ -89,9 +89,8 @@ function GuideHomePage() {
           <h2 className="display-section">What is Guide?</h2>
           <p className="clever-intro__body">
             Guide helps schools keep students engaged and classrooms well
-            managed. Teachers organize classes and learning apps. Students find
-            a welcoming place for class work. Administrators apply; Guide
-            Official reviews each school.
+            managed. Teachers organize classes and apps; students open what
+            they need for class; administrators apply for their school.
           </p>
         </div>
       </section>
@@ -113,12 +112,11 @@ function GuideHomePage() {
           <div className="clever-feature__copy">
             <h2 className="display-feature">Classroom management, made clear</h2>
             <p className="clever-feature__body">
-              Teachers create classes, assign apps, and follow progress from one
-              place — so the school day stays organized. Students see only what
-              their class needs.
+              Teachers create classes, add learning apps, and follow progress
+              from one place. Students see only what their class needs.
             </p>
             <Link href="/education" className="clever-feature__link">
-              Explore for schools
+              For schools
               <span aria-hidden>→</span>
             </Link>
           </div>
@@ -130,8 +128,8 @@ function GuideHomePage() {
           <div className="clever-feature__copy">
             <h2 className="display-feature">School that feels inviting</h2>
             <p className="clever-feature__body">
-              Students open a calm, welcoming place for class — their apps and
-              work together. Your school is ready after Guide Official approval.
+              Students open a calm place for class — apps and work together in
+              one view, so the next lesson is easy to find.
             </p>
             <Link
               href="/auth/sign-in?as=student"
@@ -170,10 +168,9 @@ function GuideHomePage() {
           <div className="clever-feature__copy">
             <h2 className="display-feature">Apps that keep attention</h2>
             <p className="clever-feature__body">
-              Place learning apps at the center of each student’s class space so
-              the next lesson is clear and engaging. Messaging and Suggestions
-              stay alongside, including {FIRST_APP_NAME} when your school adds
-              it.
+              Learning apps sit at the center of each student’s class space.
+              Messaging and Suggestions stay nearby, including {FIRST_APP_NAME}
+              when your school adds it.
             </p>
             <a href={amudHref} className="clever-feature__link">
               Visit {FIRST_APP_NAME}
@@ -188,9 +185,8 @@ function GuideHomePage() {
           <div className="clever-feature__copy">
             <h2 className="display-feature">Teachers and administrators, together</h2>
             <p className="clever-feature__body">
-              Administrators apply once and invite teachers by email. The whole
-              school meets students in the same inviting space. Developers
-              partner with Guide only after Official review.
+              Administrators apply for the school and invite teachers by email.
+              Everyone meets students in the same calm space for class.
             </p>
             <Link href="/schools/meeting" className="clever-feature__link">
               Book a meeting
@@ -214,11 +210,19 @@ function GuideHomePage() {
       <section className="cta-band">
         <div className="content-band cta-band__inner">
           <h2 className="display-section cta-band__title">
-            Built for engaged students and well-run classrooms
+            Engaged students and well-run classrooms
           </h2>
-          <Link href="/auth/sign-in?as=student" className="btn-light shrink-0">
-            Log in as a student
-          </Link>
+          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+            <Link href="/auth/sign-in?as=student" className="btn-light shrink-0">
+              Log in as a student
+            </Link>
+            <Link
+              href="/education"
+              className="text-center text-sm font-semibold text-white/90 underline-offset-4 hover:underline"
+            >
+              For schools →
+            </Link>
+          </div>
         </div>
       </section>
     </div>

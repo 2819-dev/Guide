@@ -6,17 +6,20 @@ type Props = {
   emptyHint?: string;
 };
 
-/** Clever Instant Login app launcher — square tiles in the portal only. */
+/** Student / developer app launcher — square tiles in the portal only. */
 export function MyAppsGrid({
   apps,
-  emptyHint = "When your teacher adds an app to your class, it shows up here.",
+  emptyHint = "Ask your teacher to add an app to your class — it will show up here.",
 }: Props) {
   if (apps.length === 0) {
     return (
       <section id="apps">
         <h2 className="portal-section-title">My apps</h2>
+        <p className="-mt-2 mb-4 text-sm text-ink-muted">
+          Apps your teacher adds for class open here.
+        </p>
         <div className="portal-empty">
-          <p className="portal-empty__title">No apps yet</p>
+          <p className="portal-empty__title">Ready when your class is</p>
           <p className="portal-empty__body">{emptyHint}</p>
         </div>
       </section>
@@ -26,6 +29,9 @@ export function MyAppsGrid({
   return (
     <section id="apps">
       <h2 className="portal-section-title">My apps</h2>
+      <p className="-mt-2 mb-4 text-sm text-ink-muted">
+        Tap an app to open it for class.
+      </p>
       <ul className="portal-apps-grid">
         {apps.map((app) => {
           const href = appOpenHref(app);

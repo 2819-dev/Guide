@@ -7,7 +7,7 @@ type Props = {
   defaultEmail?: string;
 };
 
-/** Lighter teacher / class apply — unlocks teacher portal after Official review. */
+/** Legacy teacher / class apply — prefer school invite for teachers. */
 export function TeacherApplicationForm({
   defaultName = "",
   defaultEmail = "",
@@ -27,8 +27,8 @@ export function TeacherApplicationForm({
         <p className="portal-eyebrow">Teacher application</p>
         <h2 className="display-feature mt-1">Application received</h2>
         <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
-          Thanks — your class request is pending review. The teacher portal
-          stays locked until Guide Official accepts or declines.
+          Thanks — your class request is under review. Open your Teacher Portal
+          anytime; full classroom tools open when your school is approved.
         </p>
       </div>
     );

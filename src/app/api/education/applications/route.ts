@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
+import { auth } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
+import { sendWelcomeEmail } from "@/lib/email";
 import { ensureProfile, requireProfile } from "@/lib/profile";
 import { profiles, schoolApplications } from "@/lib/schema";
 import { syncSchoolFromApplication } from "@/lib/schools";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 const schoolSubmitSchema = z.object({
   kind: z.literal("school"),
@@ -16,6 +18,8 @@ const schoolSubmitSchema = z.object({
   contactRole: z.string().trim().min(2).max(120),
   studentCountEstimate: z.string().trim().min(1).max(64),
   intendedUse: z.string().trim().min(10).max(4000),
+  /** Required when the applicant is not already signed in. */
+  password: z.string().min(8).max(200).optional(),
 });
 
 const teacherSubmitSchema = z.object({
@@ -53,6 +57,197 @@ export async function GET() {
   return NextResponse.json({ applications: rows });
 }
 
+const AUTH_BASE = () =>
+  process.env.NEON_AUTH_BASE_URL?.trim() ||
+  "https://invalid.neonauth.local/auth";
+
+/**
+ * Create Neon Auth user via HTTP (Origin required by Neon Auth), then
+ * establish a Guide session cookie with the SDK sign-in helper.
+ */
+async function neonAuthSignUpThenSession(opts: {
+  email: string;
+  password: string;
+  name: string;
+  origin: string;
+}): Promise<{ authUserId: string; createdAccount: boolean }> {
+  const origin =
+    opts.origin ||
+    process.env.NEXT_PUBLIC_GUIDE_URL?.trim() ||
+    "https://guidelearning.org";
+
+  let signUpRes: Response;
+  try {
+    signUpRes = await fetch(`${AUTH_BASE()}/sign-up/email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Origin: origin,
+        Referer: origin,
+      },
+      body: JSON.stringify({
+        email: opts.email,
+        password: opts.password,
+        name: opts.name,
+      }),
+    });
+  } catch (e) {
+    throw new AccountError(
+      `Could not reach authentication service (${e instanceof Error ? e.message : "network"}).`,
+      502,
+    );
+  }
+  const signUpData = (await signUpRes.json().catch(() => ({}))) as {
+    user?: { id?: string };
+    message?: string;
+    error?: string;
+    code?: string;
+  };
+
+  let authUserId = signUpData.user?.id;
+  let createdAccount = Boolean(authUserId);
+
+  if (!authUserId) {
+    // Account may already exist — sign in to resolve id + set cookies.
+    const { data: session, error: signInError } = await auth.signIn.email({
+      email: opts.email,
+      password: opts.password,
+    });
+    authUserId = session?.user?.id;
+    createdAccount = false;
+    if (!authUserId) {
+      const msg =
+        signUpData.message ||
+        signUpData.error ||
+        signInError?.message ||
+        "";
+      const detail =
+        msg && msg !== "<none>"
+          ? msg
+          : `Auth signup failed (${signUpRes.status}${signUpData.code ? ` ${signUpData.code}` : ""}). If you already have Guide, log in and apply from your account.`;
+      throw new AccountError(detail, 400);
+    }
+    return { authUserId, createdAccount };
+  }
+
+  // New account — establish session cookies for the browser.
+  const { error: signInError } = await auth.signIn.email({
+    email: opts.email,
+    password: opts.password,
+  });
+  if (signInError) {
+    // Account exists; client can still log in manually.
+    console.error("school apply sign-in after signup:", signInError.message);
+  }
+
+  return { authUserId, createdAccount };
+}
+
+/**
+ * Ensure the school applicant has a Guide account + rebbe profile, then
+ * return profile id. Creates Neon Auth account when password is provided.
+ */
+async function ensureSchoolApplicantProfile(opts: {
+  contactName: string;
+  contactEmail: string;
+  password?: string;
+  existingProfileId?: string | null;
+  origin: string;
+}): Promise<{ profileId: string; createdAccount: boolean }> {
+  const db = getDb();
+  const email = opts.contactEmail.toLowerCase();
+
+  if (opts.existingProfileId) {
+    const [profile] = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.id, opts.existingProfileId))
+      .limit(1);
+    if (profile) {
+      if (profile.role === "customer") {
+        await db
+          .update(profiles)
+          .set({
+            role: "rebbe",
+            displayName: opts.contactName || profile.displayName,
+            loginEmail: email,
+            updatedAt: new Date(),
+          })
+          .where(eq(profiles.id, profile.id));
+      } else if (opts.contactName && profile.displayName !== opts.contactName) {
+        await db
+          .update(profiles)
+          .set({
+            displayName: opts.contactName,
+            loginEmail: profile.loginEmail ?? email,
+            updatedAt: new Date(),
+          })
+          .where(eq(profiles.id, profile.id));
+      }
+      return { profileId: profile.id, createdAccount: false };
+    }
+  }
+
+  if (!opts.password || opts.password.length < 8) {
+    throw new AccountError(
+      "Create a password of at least 8 characters to finish applying.",
+      400,
+    );
+  }
+
+  const { authUserId, createdAccount } = await neonAuthSignUpThenSession({
+    email,
+    password: opts.password,
+    name: opts.contactName,
+    origin: opts.origin,
+  });
+
+  const existing = await db
+    .select()
+    .from(profiles)
+    .where(eq(profiles.authUserId, authUserId))
+    .limit(1);
+
+  let profileId: string;
+  if (existing[0]) {
+    const [updated] = await db
+      .update(profiles)
+      .set({
+        role:
+          existing[0].role === "admin" || existing[0].role === "moderator"
+            ? existing[0].role
+            : "rebbe",
+        displayName: opts.contactName || existing[0].displayName,
+        loginEmail: email,
+        updatedAt: new Date(),
+      })
+      .where(eq(profiles.id, existing[0].id))
+      .returning();
+    profileId = updated.id;
+  } else {
+    const [created] = await db
+      .insert(profiles)
+      .values({
+        authUserId,
+        displayName: opts.contactName,
+        role: "rebbe",
+        loginEmail: email,
+      })
+      .returning();
+    profileId = created.id;
+  }
+
+  return { profileId, createdAccount };
+}
+
+class AccountError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const body = submitSchema.parse(await request.json());
@@ -74,8 +269,9 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             error:
-              "You already have a pending application. We will email you when it is reviewed.",
+              "You already have an application under review. Open your School Administrator Portal to check status.",
             application: { id: existing.id, status: existing.status },
+            redirectTo: "/education/panel",
           },
           { status: 409 },
         );
@@ -109,8 +305,24 @@ export async function POST(request: Request) {
           className: schoolApplications.className,
         });
 
-      return NextResponse.json({ application }, { status: 201 });
+      return NextResponse.json(
+        { application, redirectTo: "/education/panel" },
+        { status: 201 },
+      );
     }
+
+    // School / district apply — create account immediately when needed.
+    const origin =
+      request.headers.get("origin") ||
+      process.env.NEXT_PUBLIC_GUIDE_URL?.trim() ||
+      "https://guidelearning.org";
+    const { profileId, createdAccount } = await ensureSchoolApplicantProfile({
+      contactName: body.contactName,
+      contactEmail: body.contactEmail,
+      password: body.password,
+      existingProfileId: session?.profile.id ?? null,
+      origin,
+    });
 
     const [application] = await db
       .insert(schoolApplications)
@@ -124,7 +336,7 @@ export async function POST(request: Request) {
         studentCountEstimate: body.studentCountEstimate,
         intendedUse: body.intendedUse,
         status: "pending",
-        applicantProfileId: session?.profile.id ?? null,
+        applicantProfileId: profileId,
       })
       .returning({
         id: schoolApplications.id,
@@ -133,9 +345,25 @@ export async function POST(request: Request) {
         schoolName: schoolApplications.schoolName,
       });
 
-    return NextResponse.json({ application }, { status: 201 });
+    if (createdAccount) {
+      void sendWelcomeEmail({
+        to: body.contactEmail,
+        name: body.contactName,
+      });
+    }
+
+    return NextResponse.json(
+      { application, redirectTo: "/education/panel", createdAccount },
+      { status: 201 },
+    );
   } catch (error) {
     console.error(error);
+    if (error instanceof AccountError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
+    }
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Please complete all required fields." },

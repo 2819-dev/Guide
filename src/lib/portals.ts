@@ -43,7 +43,7 @@ export function portalFor(opts: {
   educationOk?: boolean;
   developerOk?: boolean;
 }): (typeof PORTALS)[PortalId] | null {
-  const { as, role, schoolId, badgeCode, educationOk, developerOk } = opts;
+  const { as, role, schoolId, badgeCode, developerOk } = opts;
 
   if (as === "official" || role === "admin" || role === "moderator") {
     return PORTALS.official;
@@ -52,8 +52,8 @@ export function portalFor(opts: {
     return PORTALS.developer;
   }
   if (as === "educator" || role === "rebbe") {
-    // Teacher / School Administrator portal stays locked until approved.
-    return educationOk === true ? PORTALS.teacher : null;
+    // Always route to teacher portal; panel itself is limited until approved.
+    return PORTALS.teacher;
   }
   if (as === "student" || schoolId || badgeCode) {
     return PORTALS.student;

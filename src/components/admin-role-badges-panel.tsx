@@ -120,15 +120,13 @@ export function AdminRoleBadgesPanel() {
   }
 
   return (
-    <div className="space-y-8">
-      <p className="text-sm text-ink-muted">
-        Discord-style roles with a name, color, and optional icon. Separate from
-        school <span className="font-medium">scan credentials</span> used at
-        student Log In.
-      </p>
-
+    <div className="space-y-4">
       <div className="portal-panel space-y-4">
         <h3 className="text-sm font-semibold text-forest-800">Create a role</h3>
+        <p className="-mt-2 text-sm text-ink-muted">
+          Name, color, and optional icon — separate from student badge login
+          codes.
+        </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm font-semibold text-forest-900">
             Name
@@ -193,10 +191,13 @@ export function AdminRoleBadgesPanel() {
           Assign to a person
         </h3>
         {roles.length === 0 || people.length === 0 ? (
-          <p className="text-sm text-ink-muted">
-            Create a role and wait for people to have accounts, then assign
-            here.
-          </p>
+          <div className="portal-empty !py-6">
+            <p className="portal-empty__title">Nothing to assign yet</p>
+            <p className="portal-empty__body">
+              Create a role and wait for people to have accounts, then assign
+              here.
+            </p>
+          </div>
         ) : (
           <>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -252,9 +253,20 @@ export function AdminRoleBadgesPanel() {
         )}
       </div>
 
-      {error && <p className="text-sm text-red-700">{error}</p>}
+      {error ? (
+        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          {error}
+        </p>
+      ) : null}
 
-      {roles.length > 0 && (
+      {roles.length === 0 ? (
+        <div className="portal-empty">
+          <p className="portal-empty__title">No roles yet</p>
+          <p className="portal-empty__body">
+            Create a role above to start assigning badges in school communities.
+          </p>
+        </div>
+      ) : (
         <div className="space-y-3">
           <h3 className="text-sm font-semibold text-forest-800">All roles</h3>
           <ul className="flex flex-wrap gap-2">
@@ -271,16 +283,16 @@ export function AdminRoleBadgesPanel() {
         </div>
       )}
 
-      {assignments.length > 0 && (
+      {assignments.length > 0 ? (
         <div className="space-y-2">
           <h3 className="text-sm font-semibold text-forest-800">
             Recent assignments
           </h3>
-          <ul className="divide-y divide-line rounded-xl border border-line">
+          <ul className="divide-y divide-line overflow-hidden rounded-[10px] border border-line bg-surface">
             {assignments.slice(0, 15).map((a) => (
               <li
                 key={a.id}
-                className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
+                className="flex min-h-12 flex-wrap items-center justify-between gap-3 px-4 py-3"
               >
                 <span className="font-semibold text-forest-950">
                   {a.profileName}
@@ -295,7 +307,7 @@ export function AdminRoleBadgesPanel() {
             ))}
           </ul>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

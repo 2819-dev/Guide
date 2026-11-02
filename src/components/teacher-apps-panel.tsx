@@ -62,9 +62,10 @@ export function TeacherAppsPanel() {
 
       {classrooms.length === 0 ? (
         <div className="portal-empty">
-          <p className="portal-empty__title">Create a class first</p>
+          <p className="portal-empty__title">Start with a class</p>
           <p className="portal-empty__body">
-            Then add apps here so students see them under My apps.
+            Create a class, then add apps here so students open them from My
+            apps.
           </p>
         </div>
       ) : (
