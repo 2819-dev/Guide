@@ -59,17 +59,16 @@ export function TeacherInvitesPanel() {
       <div>
         <h2 className="portal-section-title">Invite teachers</h2>
         <p className="-mt-2 text-sm text-ink-muted">
-          Type work emails (one per line or comma-separated). Guide sends a
-          setup link — teachers log in only; there is no public teacher signup.
+          Type work emails (one per line or comma-separated). Guide sends each
+          teacher a setup link.
         </p>
       </div>
 
       <div className="portal-panel space-y-3">
         {!emailConfigured ? (
           <p className="rounded-[10px] border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">
-            Email sending needs <code className="font-mono">RESEND_API_KEY</code>{" "}
-            (and a verified from domain) on Cloudflare Pages. Invites are still
-            saved; links work when the secret is present.
+            Email invites aren’t sending yet. Guide still saves each invite —
+            contact Guide Official if you need a setup link now.
           </p>
         ) : null}
 

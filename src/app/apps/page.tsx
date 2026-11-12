@@ -16,8 +16,7 @@ export default function AppsLibraryPage() {
           <p className="portal-eyebrow">For schools</p>
           <h1 className="display-feature mt-1">App library</h1>
           <p className="mt-1.5 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-            Teachers add an app to a class. Students open it from My apps on
-            their portal.
+            Teachers add an app to a class. Students open it from My apps.
           </p>
         </header>
 

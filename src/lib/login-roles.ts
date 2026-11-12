@@ -19,7 +19,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
     label: "Student",
-    description: "Find your school, then username or badge",
+    description: "Find your school, then enter your password",
     href: "/auth/sign-in?as=student",
   },
   {
@@ -69,7 +69,7 @@ export function loginAsCopy(as: LoginAs): {
     case "student":
       return {
         title: "Student",
-        subtitle: "Find your school, then log in with a username or badge.",
+        subtitle: "Find your school, then log in with your password.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
@@ -77,7 +77,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Teacher or School Administrator",
         subtitle:
-          "Teachers log in with the account from your school invite. School administrators apply for a school, then log in.",
+          "Teachers use the account from their school invite. School administrators apply, then log in.",
         // Teachers = login only. School/district apply stays for admins.
         joinHref: "/education#apply",
         joinLabel: "Apply for your school",
@@ -92,8 +92,7 @@ export function loginAsCopy(as: LoginAs): {
     case "developer":
       return {
         title: "Developer",
-        subtitle:
-          "Verified partners only. Apply first; log in after Guide Official approves.",
+        subtitle: "Apply first, then log in after Guide Official approves.",
         joinHref: "/developers/apply",
         joinLabel: "Apply as a developer",
       };
@@ -119,7 +118,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Join as a Student",
         subtitle:
-          "Choose your school and create an account. You’ll get a badge for quick login, then join class from Account.",
+          "Choose your school and create an account. Then join class from Account.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -127,7 +126,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "School administrator",
         subtitle:
-          "Teachers are invited by their school — use Log in instead. School or district administrators can apply below.",
+          "Teachers are invited by their school — use Log in instead. Administrators can apply for Guide.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -142,7 +141,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Developer partner",
         subtitle:
-          "Create an account only after you apply and Guide Official verifies you.",
+          "Create an account after you apply and Guide Official verifies you.",
         roleValue: "customer",
         showRoleChooser: false,
       };

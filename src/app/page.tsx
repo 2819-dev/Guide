@@ -50,8 +50,8 @@ function GuideHomePage() {
               <span className="sun-underline">engaged</span>
             </h1>
             <p className="hero-lede">
-              Clear classroom management for teachers, and learning apps that
-              keep students involved — so school feels inviting and purposeful.
+              Clear classroom management and learning apps that keep students
+              involved — so school feels inviting and purposeful.
             </p>
 
             <div className="hero-cta-stack">
@@ -89,14 +89,12 @@ function GuideHomePage() {
           <h2 className="display-section">What is Guide?</h2>
           <p className="clever-intro__body">
             Guide helps schools keep students engaged and classrooms well
-            managed. Teachers organize classes and learning apps. Students find
-            a welcoming place for class work. Administrators apply; Guide
-            Official reviews each school.
+            managed — classes, learning apps, and a calm place for class work.
           </p>
         </div>
       </section>
 
-      {/* Four mid rows — Clever home density: image L/R alternating */}
+      {/* Four mid rows — image L/R alternating */}
       <section className="clever-feature">
         <div className="content-band clever-feature__grid">
           <div
@@ -114,8 +112,7 @@ function GuideHomePage() {
             <h2 className="display-feature">Classroom management, made clear</h2>
             <p className="clever-feature__body">
               Teachers create classes, assign apps, and follow progress from one
-              place — so the school day stays organized. Students see only what
-              their class needs.
+              place. Students see only what their class needs.
             </p>
             <Link href="/education" className="clever-feature__link">
               Explore for schools
@@ -130,8 +127,8 @@ function GuideHomePage() {
           <div className="clever-feature__copy">
             <h2 className="display-feature">School that feels inviting</h2>
             <p className="clever-feature__body">
-              Students open a calm, welcoming place for class — their apps and
-              work together. Your school is ready after Guide Official approval.
+              Students open a calm place for class — their apps and work
+              together in one welcoming space.
             </p>
             <Link
               href="/auth/sign-in?as=student"
@@ -170,10 +167,8 @@ function GuideHomePage() {
           <div className="clever-feature__copy">
             <h2 className="display-feature">Apps that keep attention</h2>
             <p className="clever-feature__body">
-              Place learning apps at the center of each student’s class space so
-              the next lesson is clear and engaging. Messaging and Suggestions
-              stay alongside, including {FIRST_APP_NAME} when your school adds
-              it.
+              Learning apps sit at the center of each student’s class space, so
+              the next lesson is clear and engaging.
             </p>
             <a href={amudHref} className="clever-feature__link">
               Visit {FIRST_APP_NAME}
@@ -189,8 +184,7 @@ function GuideHomePage() {
             <h2 className="display-feature">Teachers and administrators, together</h2>
             <p className="clever-feature__body">
               Administrators apply once and invite teachers by email. The whole
-              school meets students in the same inviting space. Developers
-              partner with Guide only after Official review.
+              school meets students in the same inviting space.
             </p>
             <Link href="/schools/meeting" className="clever-feature__link">
               Book a meeting
@@ -214,7 +208,7 @@ function GuideHomePage() {
       <section className="cta-band">
         <div className="content-band cta-band__inner">
           <h2 className="display-section cta-band__title">
-            Built for engaged students and well-run classrooms
+            Engaged students. Well-run classrooms.
           </h2>
           <Link href="/auth/sign-in?as=student" className="btn-light shrink-0">
             Log in as a student

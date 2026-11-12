@@ -63,7 +63,7 @@ export default async function StudentHubPage() {
 
       <MyAppsGrid
         apps={apps}
-        emptyHint="Join a class from Account, then ask your teacher to add an app."
+        emptyHint="When your teacher adds an app to your class, it shows up here."
       />
 
       <section id="tools">
@@ -96,7 +96,7 @@ export default async function StudentHubPage() {
       </section>
 
       <p className="text-sm text-ink-muted">
-        Class invite and badge login ·{" "}
+        Class invite ·{" "}
         <Link href="/account" className="font-semibold text-forest-800">
           Account
         </Link>

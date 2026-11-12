@@ -48,27 +48,28 @@ export default async function EducationLandingPage() {
             </h1>
             <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
               {isPending
-                ? `${pendingLabel} The portal stays locked until Guide Official accepts or declines.`
-                : `${approvedLabel} Open your portal to invite teachers, create classes, and add apps.`}
+                ? `${pendingLabel} You can use a limited School Administrator Portal while you wait.`
+                : `${approvedLabel} Invite teachers, create classes, and add apps.`}
             </p>
           </header>
 
           <div className="portal-panel mt-6">
             {isPending ? (
               <div className="portal-empty !border-0 !bg-transparent !p-0 !shadow-none">
-                <p className="portal-empty__title">Waiting for review</p>
+                <p className="portal-empty__title">School Administrator Portal</p>
                 <p className="portal-empty__body">
-                  You will use this same Guide account after approval. No
-                  further action is needed while pending.
+                  This is your limited portal while Guide Official reviews your
+                  application. Full tools open after approval — no further
+                  action is needed while you wait.
                 </p>
               </div>
             ) : (
               <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-[0.95rem] leading-relaxed text-ink-muted">
-                  Your school portal is unlocked.
+                  Your school portal is ready.
                 </p>
                 <Link href="/education/panel" className="btn-primary shrink-0">
-                  Open portal
+                  School Administrator Portal
                 </Link>
               </div>
             )}
@@ -88,13 +89,12 @@ export default async function EducationLandingPage() {
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-[1.65] text-ink-muted">
             School and district administrators apply here. After approval,
-            invite teachers by email, add apps, and follow progress. Teachers
-            log in with their invite — no separate teacher signup.
+            invite teachers, add apps, and follow progress.
           </p>
           <div className="mt-7 flex flex-col items-center gap-2">
             {showPortalCta ? (
               <Link href="/education/panel" className="btn-primary">
-                Open portal
+                School Administrator Portal
               </Link>
             ) : (
               <a href="#apply" className="btn-primary">
@@ -124,7 +124,8 @@ export default async function EducationLandingPage() {
               Apply
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              School or district application. Tools stay locked until accepted.
+              Submit a school or district application. Full tools open after
+              acceptance.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
@@ -133,7 +134,7 @@ export default async function EducationLandingPage() {
               Invite teachers
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Type teacher emails in your portal. Guide sends setup links.
+              Add teacher emails in your portal. Guide sends setup links.
             </p>
           </li>
           <li className="p-6">
@@ -157,8 +158,8 @@ export default async function EducationLandingPage() {
               {appStatus.schoolName
                 ? `${appStatus.schoolName} was not approved.`
                 : "Your previous application was not approved."}{" "}
-              Update the details and re-apply below. The portal stays locked
-              until an application is accepted.
+              Update the details and re-apply below. Full tools open after
+              acceptance.
             </p>
           </div>
         ) : null}
@@ -175,7 +176,7 @@ export default async function EducationLandingPage() {
             >
               Log in
             </Link>{" "}
-            before applying so approval unlocks your portal automatically.
+            before applying so approval opens your portal automatically.
           </p>
         )}
       </section>

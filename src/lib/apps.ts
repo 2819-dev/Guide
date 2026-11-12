@@ -35,14 +35,14 @@ export const APP_CATALOG: GuideApp[] = [
     name: FIRST_APP_NAME,
     tagline: "Mishnayos and Gemara · Test Yourself",
     description:
-      "Open a daf, read Hebrew and English, keep notes, and Test Yourself with questions from the page. Available to everyone on the Amud site; schools can also add it in Guide.",
+      "Read Mishnayos and Gemara, keep notes, and Test Yourself. Schools can add Amud to a class.",
   },
   {
     slug: ARCADE_APP_SLUG,
     name: ARCADE_APP_NAME,
     tagline: "Classroom games for every school",
     description:
-      "A school game center teachers add to a class. Students open Arcade from My apps and play classroom games on the Arcade Education site.",
+      "A school game center teachers add to a class. Students open it from My apps.",
     launchUrl: arcadePublicUrl(),
   },
 ];

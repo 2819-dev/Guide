@@ -19,8 +19,7 @@ export default function SchoolDemoPage() {
           View the demo on desktop or iPad
         </h1>
         <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-ink-muted">
-          This walkthrough shows teacher management on a larger screen. Open
-          Guide on a desktop or iPad to explore the demo.
+          Open Guide on a desktop or iPad to explore this school preview.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/schools/meeting" className="btn-primary">
@@ -36,16 +35,15 @@ export default function SchoolDemoPage() {
         <header className="mb-8 max-w-2xl">
           <p className="eyebrow">For schools · Demo</p>
           <h1 className="display-feature mt-2">
-            What your school gets in Guide
+            A preview of Guide for schools
           </h1>
           <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted">
-            A teacher-management walkthrough — classes, apps, invites, and
-            progress — the way administrators and teachers use Guide day to day.
+            Classes, apps, invites, and progress — the way teachers and
+            administrators use Guide day to day.
           </p>
           <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
             <Link href="/schools/meeting">Book a meeting →</Link>
             <Link href="/education#apply">Apply for your school →</Link>
-            <Link href="/auth/sign-in?as=educator">Teacher log in →</Link>
           </p>
         </header>
 
@@ -81,7 +79,7 @@ export default function SchoolDemoPage() {
                 </li>
               </ul>
               <p className="mt-5 text-xs leading-relaxed text-ink-muted">
-                Sample data for demonstration only.
+                Sample school preview.
               </p>
             </aside>
             <div className="demo-frame__main">
@@ -141,8 +139,7 @@ export default function SchoolDemoPage() {
                     Invite teachers
                   </p>
                   <p className="mt-1 text-sm leading-snug text-ink-muted">
-                    Type work emails. Guide sends setup links — teachers log in
-                    only.
+                    Type work emails. Guide sends each teacher a setup link.
                   </p>
                 </div>
                 <div className="rounded-[10px] border border-line bg-sky-soft p-4">

@@ -70,8 +70,7 @@ export function AdminBadgesPanel() {
   return (
     <div className="space-y-6">
       <p className="text-sm text-ink-muted">
-        Issue a <span className="font-medium">login badge code</span> so a
-        student can scan or type at Log In. Not the same as Discord-style Roles
+        Issue a school scan credential for a student. Separate from Roles
         above.
       </p>
 

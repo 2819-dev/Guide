@@ -22,8 +22,7 @@ export function EducationApply({
         <h2 className="display-feature mt-1">Apply for your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
           School and district administrators apply here. After approval, invite
-          teachers by email from your portal. Teachers log in only — there is no
-          separate teacher signup.
+          teachers by email from your portal.
         </p>
       </div>
       <SchoolApplicationForm

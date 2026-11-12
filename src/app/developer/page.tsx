@@ -30,7 +30,7 @@ export default async function DeveloperPortalPage() {
     <PortalShell
       eyebrow="Developer portal"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Your verified apps are in the center. Use tabs to manage apps and docs."
+      subtitle="Your verified apps appear here. Use the tabs to manage listings and docs."
       chips={[
         { href: "#apps", label: "My apps", active: true },
         { href: "#manage", label: "Manage apps" },
@@ -70,8 +70,8 @@ export default async function DeveloperPortalPage() {
         <h2 className="portal-section-title">Manage apps</h2>
         <div className="portal-panel">
           <p className="text-[0.95rem] leading-relaxed text-ink-muted">
-            Update listing details with Guide Official for now. School-facing
-            installs stay curated — this is not a public marketplace.
+            Update listing details with Guide Official. Schools install apps for
+            their classes.
           </p>
           {apps.map((app) => (
             <div

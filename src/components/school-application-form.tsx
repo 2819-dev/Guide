@@ -51,9 +51,9 @@ export function SchoolApplicationForm({
         <p className="portal-eyebrow">Application status</p>
         <h2 className="display-feature mt-1">Application received</h2>
         <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
-          Thanks — your school request is pending review. The portal stays
-          locked until Guide Official accepts or declines. After approval you
-          can invite teachers by email and manage classes.
+          Thanks — your school request is under review. You can use a limited
+          School Administrator Portal while you wait. After approval, invite
+          teachers and manage classes.
         </p>
       </div>
     );
@@ -94,8 +94,7 @@ export function SchoolApplicationForm({
         <h2 className="display-feature mt-1">Apply for your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
           Tell us about your school or district. After approval, invite
-          teachers by email, create classes, add apps, and follow student
-          progress.
+          teachers, create classes, and add apps.
         </p>
       </div>
 
