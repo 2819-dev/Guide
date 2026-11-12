@@ -9,7 +9,7 @@ export default function TestQuizPlayPreviewPage() {
       <div className="flex items-center justify-between gap-3 text-sm">
         <span className="text-[var(--tq-muted)]">Cell parts review</span>
         <div className="flex items-center gap-2">
-          <span className="tq-streak">🔥 3</span>
+          <span className="tq-streak">Streak 3</span>
           <span className="font-bold tabular-nums">2450 pts</span>
         </div>
       </div>
@@ -37,7 +37,7 @@ export default function TestQuizPlayPreviewPage() {
         </div>
         <div className="tq-feedback tq-feedback-correct mt-6">
           <p className="text-2xl font-extrabold">Correct! +980</p>
-          <p className="tq-streak mt-3">🔥 3 streak!</p>
+          <p className="tq-streak mt-3">Streak 3</p>
         </div>
       </div>
     </div>

@@ -117,7 +117,7 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
         <span className="truncate text-[var(--tq-muted)]">{game.quizTitle}</span>
         <div className="flex items-center gap-2">
           {(me?.streak ?? 0) >= 2 ? (
-            <span className="tq-streak">🔥 {me?.streak}</span>
+            <span className="tq-streak">Streak {me?.streak}</span>
           ) : null}
           <span className="font-bold tabular-nums text-[var(--tq-ink)]">
             {me?.score ?? 0} pts
@@ -359,7 +359,7 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
                 {feedback?.text ?? "Answer locked in"}
               </p>
               {(feedback?.streak ?? 0) >= 2 ? (
-                <p className="tq-streak mt-3">🔥 {feedback?.streak} streak!</p>
+                <p className="tq-streak mt-3">Streak {feedback?.streak}</p>
               ) : null}
               {myAnswer && !feedback ? (
                 <p className="mt-1 text-sm text-[var(--tq-muted)]">
@@ -388,7 +388,7 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
             </p>
             {(feedback?.streak ?? me?.streak ?? 0) >= 2 ? (
               <p className="tq-streak mt-3">
-                🔥 {feedback?.streak ?? me?.streak} streak
+                Streak {feedback?.streak ?? me?.streak}
               </p>
             ) : null}
           </div>
@@ -415,7 +415,7 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
                   <span>
                     {i + 1}.{" "}
                     {playerLabel(p, game.settings.allowNicknames)}
-                    {(p.streak ?? 0) >= 2 ? ` 🔥${p.streak}` : ""}
+                    {(p.streak ?? 0) >= 2 ? ` · streak ${p.streak}` : ""}
                   </span>
                   <span className="tabular-nums">{p.score}</span>
                 </li>

@@ -406,7 +406,7 @@ export function TestQuizHostPanel({ gameId }: Props) {
                   </span>
                   {playerLabel(p, game.settings.allowNicknames)}
                   {(p.streak ?? 0) >= 2 ? (
-                    <span className="tq-streak">🔥 {p.streak}</span>
+                    <span className="tq-streak">Streak {p.streak}</span>
                   ) : null}
                 </span>
                 <span className="tabular-nums text-[var(--tq-accent)]">

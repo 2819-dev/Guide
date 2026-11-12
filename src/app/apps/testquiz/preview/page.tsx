@@ -8,7 +8,7 @@ export const metadata = { title: "TestQuiz preview" };
 export default function TestQuizPreviewPage() {
   return (
     <div className="tq-rise mx-auto max-w-5xl px-5 py-8 sm:px-8">
-      <p className="tq-badge">Medium blue brand</p>
+      <p className="tq-badge">Light · medium blue</p>
       <h1 className="tq-brand mt-3">TestQuiz</h1>
       <p className="mt-2 max-w-xl text-[var(--tq-muted)]">
         Design previews for create, host, play, and Discover. Live games still

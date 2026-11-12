@@ -1,44 +1,57 @@
-/* TestQuiz — medium-blue primary brand (not Guide forest). Kahoot-class play colors. */
+/* TestQuiz — light mode only, medium-blue primary. Professional school polish. */
 .tq {
-  --tq-bg: #0a1628;
-  --tq-panel: #12233a;
-  --tq-ink: #f2f7fc;
-  --tq-muted: #8fa6c2;
+  --tq-bg: #f5f8fc;
+  --tq-panel: #ffffff;
+  --tq-ink: #0f172a;
+  --tq-muted: #5b6b7c;
+  --tq-line: #d7e0ea;
   --tq-a: #e21b3c;
   --tq-b: #1368ce;
   --tq-c: #d89e00;
   --tq-d: #26890c;
-  --tq-accent: #3b82f6;
-  --tq-accent-deep: #2563eb;
-  --tq-accent-soft: #60a5fa;
-  --tq-warn: #ff6b4a;
-  --tq-gold: #f0c14b;
-  --tq-blue: #3b82f6;
-  --tq-blue-mid: #2563eb;
-  font-family: var(--font-manrope), var(--font-body), system-ui, sans-serif;
+  --tq-accent: #2563eb;
+  --tq-accent-deep: #1d4ed8;
+  --tq-accent-soft: #3b82f6;
+  --tq-accent-wash: #eff4ff;
+  --tq-warn: #c2410c;
+  --tq-gold: #b45309;
+  --tq-blue: #2563eb;
+  /* var() must include fallback or a missing --font-manrope invalidates the whole stack */
+  font-family: var(--font-manrope, "Helvetica Neue"), Helvetica, Arial, ui-sans-serif,
+    system-ui, sans-serif;
+  color-scheme: light;
+}
+
+.tq h1,
+.tq h2,
+.tq h3,
+.tq .tq-brand,
+.tq .tq-choice,
+.tq .tq-btn,
+.tq .tq-input,
+.tq .tq-select,
+.tq .tq-textarea {
+  font-family: inherit;
 }
 
 .tq-shell {
   min-height: calc(100vh - 4rem);
   background:
-    radial-gradient(1100px 520px at 10% -10%, rgba(59, 130, 246, 0.38) 0%, transparent 55%),
-    radial-gradient(900px 420px at 95% 0%, rgba(37, 99, 235, 0.28) 0%, transparent 50%),
-    radial-gradient(700px 380px at 50% 110%, rgba(14, 60, 120, 0.45) 0%, transparent 45%),
-    linear-gradient(165deg, #07101c 0%, #0c1a2e 45%, #0a1628 100%);
+    linear-gradient(180deg, #eef4fb 0%, var(--tq-bg) 42%, #f8fafc 100%);
   color: var(--tq-ink);
 }
 
 .tq-band {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--tq-line);
 }
 
 .tq-brand {
-  font-size: clamp(1.85rem, 4.2vw, 3rem);
+  font-size: clamp(1.75rem, 3.8vw, 2.75rem);
   font-weight: 800;
-  letter-spacing: -0.045em;
-  line-height: 1.05;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  color: var(--tq-ink);
 }
 
 .tq-btn {
@@ -47,21 +60,16 @@
   justify-content: center;
   gap: 0.4rem;
   min-height: 48px;
-  padding: 0 1.25rem;
-  border-radius: 12px;
+  padding: 0 1.2rem;
+  border-radius: 10px;
   border: none;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .tq-btn:hover:not(:disabled) {
-  filter: brightness(1.07);
-  transform: translateY(-1px);
-}
-
-.tq-btn:active:not(:disabled) {
-  transform: translateY(0);
+  filter: brightness(0.98);
 }
 
 .tq-btn:disabled {
@@ -70,19 +78,31 @@
 }
 
 .tq-btn-primary {
-  background: linear-gradient(180deg, var(--tq-accent-soft) 0%, var(--tq-accent-deep) 100%);
-  color: #041226;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.28);
+  background: var(--tq-accent);
+  color: #fff;
+}
+
+.tq-btn-primary:hover:not(:disabled) {
+  background: var(--tq-accent-deep);
+  filter: none;
 }
 
 .tq-btn-ghost {
-  background: rgba(255, 255, 255, 0.08);
+  background: #fff;
   color: var(--tq-ink);
+  border: 1px solid var(--tq-line);
+}
+
+.tq-btn-ghost:hover:not(:disabled) {
+  border-color: #b8c7d8;
+  background: var(--tq-accent-wash);
+  filter: none;
 }
 
 .tq-btn-danger {
-  background: var(--tq-warn);
-  color: #1a0a06;
+  background: #fff7ed;
+  color: var(--tq-warn);
+  border: 1px solid #fed7aa;
 }
 
 .tq-input,
@@ -90,9 +110,9 @@
 .tq-textarea {
   width: 100%;
   min-height: 48px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(255, 255, 255, 0.14);
-  background: rgba(0, 0, 0, 0.28);
+  border-radius: 10px;
+  border: 1.5px solid var(--tq-line);
+  background: #fff;
   color: var(--tq-ink);
   padding: 0.65rem 0.9rem;
   font: inherit;
@@ -101,9 +121,9 @@
 .tq-input:focus,
 .tq-select:focus,
 .tq-textarea:focus {
-  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline: 2px solid rgba(37, 99, 235, 0.28);
   outline-offset: 1px;
-  border-color: rgba(96, 165, 250, 0.55);
+  border-color: var(--tq-accent-soft);
 }
 
 .tq-textarea {
@@ -112,112 +132,109 @@
 }
 
 .tq-pin {
-  font-size: clamp(2.75rem, 9vw, 5rem);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
   font-weight: 800;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 40px rgba(59, 130, 246, 0.35);
+  color: var(--tq-accent-deep);
 }
 
 .tq-choice {
-  min-height: 80px;
-  border-radius: 16px;
+  min-height: 76px;
+  border-radius: 12px;
   border: none;
   color: white;
   font-weight: 700;
-  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  font-size: clamp(1rem, 2.2vw, 1.15rem);
   cursor: pointer;
-  padding: 1.1rem 1.15rem;
+  padding: 1rem 1.1rem;
   text-align: left;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  transition: transform 0.12s ease, outline 0.12s ease;
 }
 
 .tq-choice:hover:not(:disabled) {
-  transform: scale(1.02);
+  transform: translateY(-1px);
 }
 
 .tq-choice:disabled {
   cursor: default;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .tq-choice-a {
-  background: linear-gradient(145deg, #f03a55, var(--tq-a));
+  background: var(--tq-a);
 }
 .tq-choice-b {
-  background: linear-gradient(145deg, #2a7de0, var(--tq-b));
+  background: var(--tq-b);
 }
 .tq-choice-c {
-  background: linear-gradient(145deg, #f0b420, var(--tq-c));
+  background: var(--tq-c);
   color: #1a1400;
 }
 .tq-choice-d {
-  background: linear-gradient(145deg, #36a51a, var(--tq-d));
+  background: var(--tq-d);
 }
 
 .tq-choice-correct {
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.95), 0 12px 32px rgba(0, 0, 0, 0.3);
-  filter: brightness(1.08);
+  outline: 3px solid var(--tq-ink);
+  outline-offset: 2px;
 }
 
 .tq-choice-miss {
-  filter: grayscale(0.35) brightness(0.7);
+  opacity: 0.55;
 }
 
 .tq-tile {
   display: block;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.15rem 1.3rem;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--tq-line);
+  padding: 1.1rem 1.2rem;
   text-decoration: none;
   color: inherit;
-  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .tq-tile:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  border-color: rgba(96, 165, 250, 0.4);
+  border-color: #b6c8de;
+  background: var(--tq-accent-wash);
 }
 
 .tq-panel {
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.28);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+  border-radius: 16px;
+  border: 1px solid var(--tq-line);
+  background: var(--tq-panel);
 }
 
 .tq-watermark {
   position: fixed;
   right: 1rem;
   bottom: 1rem;
-  opacity: 0.35;
+  opacity: 0.4;
   font-weight: 800;
   letter-spacing: 0.04em;
   pointer-events: none;
   font-size: 0.85rem;
   z-index: 5;
+  color: var(--tq-muted);
 }
 
 .tq-timer-track {
-  height: 10px;
+  height: 8px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: #e2e8f0;
   overflow: hidden;
 }
 
 .tq-timer-fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--tq-accent-soft), var(--tq-gold));
-  transform-origin: left center;
+  background: var(--tq-accent);
   transition: width 0.2s linear;
 }
 
 .tq-timer-fill.is-urgent {
-  background: linear-gradient(90deg, var(--tq-warn), #ffb347);
+  background: var(--tq-warn);
 }
 
 .tq-bar-row {
@@ -228,97 +245,98 @@
 }
 
 .tq-bar-track {
-  height: 14px;
+  height: 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #e8eef5;
   overflow: hidden;
 }
 
 .tq-bar-fill {
   height: 100%;
   border-radius: inherit;
-  transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width 0.45s ease;
 }
 
 .tq-podium-slot {
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--tq-line);
   text-align: center;
-  padding: 1.5rem 1.25rem;
+  padding: 1.4rem 1.2rem;
 }
 
 .tq-podium-slot.is-first {
-  background: linear-gradient(180deg, rgba(240, 193, 75, 0.28), rgba(255, 255, 255, 0.05));
-  border-color: rgba(240, 193, 75, 0.45);
-  box-shadow: 0 16px 40px rgba(240, 193, 75, 0.15);
+  border-color: #93c5fd;
+  background: var(--tq-accent-wash);
 }
 
 .tq-streak {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  border-radius: 999px;
-  background: rgba(240, 193, 75, 0.18);
-  border: 1px solid rgba(240, 193, 75, 0.35);
+  gap: 0.3rem;
+  border-radius: 8px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
   color: var(--tq-gold);
-  font-weight: 800;
-  font-size: 0.85rem;
-  padding: 0.3rem 0.7rem;
+  font-weight: 750;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
 }
 
 .tq-badge {
   display: inline-flex;
   align-items: center;
-  border-radius: 999px;
-  background: rgba(59, 130, 246, 0.18);
-  border: 1px solid rgba(96, 165, 250, 0.35);
-  color: var(--tq-accent-soft);
+  border-radius: 8px;
+  background: var(--tq-accent-wash);
+  border: 1px solid #bfdbfe;
+  color: var(--tq-accent-deep);
   font-weight: 700;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.65rem;
+  font-size: 0.72rem;
+  padding: 0.22rem 0.55rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .tq-feedback {
-  border-radius: 20px;
-  padding: 1.5rem 1.25rem;
+  border-radius: 14px;
+  padding: 1.35rem 1.2rem;
   text-align: center;
-  animation: tq-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: tq-rise 0.35s ease both;
 }
 
 .tq-feedback-correct {
-  background: rgba(59, 130, 246, 0.2);
-  border: 1px solid rgba(96, 165, 250, 0.45);
+  background: var(--tq-accent-wash);
+  border: 1px solid #bfdbfe;
 }
 
 .tq-feedback-wrong {
-  background: rgba(255, 107, 74, 0.16);
-  border: 1px solid rgba(255, 107, 74, 0.35);
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
 }
 
 .tq-feedback-neutral {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #f8fafc;
+  border: 1px solid var(--tq-line);
 }
 
 .tq-lobby-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 0.45rem 0.85rem;
+  background: #fff;
+  border: 1px solid var(--tq-line);
+  padding: 0.4rem 0.8rem;
   font-weight: 650;
-  animation: tq-pop 0.4s ease both;
+  animation: tq-rise 0.3s ease both;
 }
 
 .tq-avatar-dot {
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 999px;
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--tq-line);
   flex-shrink: 0;
 }
 
@@ -336,48 +354,48 @@
 }
 
 .tq-preview-frame {
-  border-radius: 20px;
-  border: 1px dashed rgba(96, 165, 250, 0.45);
-  background: rgba(0, 0, 0, 0.35);
-  padding: 1.25rem;
+  border-radius: 14px;
+  border: 1px dashed #93c5fd;
+  background: var(--tq-accent-wash);
+  padding: 1.2rem;
 }
 
 .tq-cloud {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.45rem;
   justify-content: center;
   align-items: center;
-  min-height: 8rem;
+  min-height: 7rem;
 }
 
 .tq-cloud-word {
   border-radius: 999px;
-  background: rgba(59, 130, 246, 0.2);
-  border: 1px solid rgba(96, 165, 250, 0.35);
-  padding: 0.35rem 0.85rem;
+  background: var(--tq-accent-wash);
+  border: 1px solid #bfdbfe;
+  color: var(--tq-accent-deep);
+  padding: 0.3rem 0.75rem;
   font-weight: 700;
-  animation: tq-pop 0.4s ease both;
 }
 
 @keyframes tq-pulse {
   0%,
   100% {
-    transform: scale(1);
+    opacity: 1;
   }
   50% {
-    transform: scale(1.04);
+    opacity: 0.72;
   }
 }
 
 .tq-pulse {
-  animation: tq-pulse 1.4s ease-in-out infinite;
+  animation: tq-pulse 1.6s ease-in-out infinite;
 }
 
 @keyframes tq-rise {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -386,41 +404,13 @@
 }
 
 .tq-rise {
-  animation: tq-rise 0.45s ease both;
+  animation: tq-rise 0.35s ease both;
 }
 
 @keyframes tq-countdown {
-  0% {
-    transform: scale(0.45);
-    opacity: 0;
-    filter: blur(4px);
-  }
-  55% {
-    transform: scale(1.08);
-    opacity: 1;
-    filter: blur(0);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.tq-countdown-num {
-  animation: tq-countdown 0.65s cubic-bezier(0.22, 1, 0.36, 1);
-  font-size: clamp(5rem, 22vw, 9rem);
-  font-weight: 800;
-  line-height: 1;
-  background: linear-gradient(180deg, #fff 20%, var(--tq-accent-soft));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@keyframes tq-pop {
   from {
-    opacity: 0;
-    transform: scale(0.88);
+    opacity: 0.35;
+    transform: scale(0.92);
   }
   to {
     opacity: 1;
@@ -428,46 +418,31 @@
   }
 }
 
-.tq-pop {
-  animation: tq-pop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+.tq-countdown-num {
+  animation: tq-countdown 0.45s ease;
+  font-size: clamp(4.5rem, 18vw, 7.5rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--tq-accent-deep);
 }
 
-@keyframes tq-shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-6px);
-  }
-  75% {
-    transform: translateX(6px);
-  }
+.tq-pop {
+  animation: tq-rise 0.35s ease both;
 }
 
 .tq-shake {
-  animation: tq-shake 0.35s ease;
-}
-
-@keyframes tq-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-  }
+  animation: tq-rise 0.35s ease;
 }
 
 .tq-glow {
-  animation: tq-glow 1.6s ease-out infinite;
+  /* no glow in light professional UI */
 }
 
 @media (max-width: 640px) {
   .tq-choice {
-    min-height: 68px;
+    min-height: 64px;
   }
   .tq-pin {
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
   }
 }
