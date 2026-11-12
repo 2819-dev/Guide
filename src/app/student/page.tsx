@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { MyAppsGrid } from "@/components/my-apps-grid";
@@ -56,7 +55,7 @@ export default async function StudentHubPage() {
       accountName={authz.profile.displayName}
     >
       {roles.length > 0 ? (
-        <ul className="-mt-2 flex flex-wrap gap-2">
+        <ul className="portal-role-row">
           {roles.map((r) => (
             <li key={r.id}>
               <RoleBadgeChip
@@ -70,7 +69,7 @@ export default async function StudentHubPage() {
         </ul>
       ) : null}
 
-      <section id="apps">
+      <section id="apps" className="portal-primary">
         <h2 className="portal-section-title">My apps</h2>
         <MyAppsGrid
           apps={apps}
@@ -106,13 +105,6 @@ export default async function StudentHubPage() {
           )}
         </div>
       </section>
-
-      <p className="text-sm text-ink-muted">
-        Class invite and badge login ·{" "}
-        <Link href="/account" className="font-semibold text-forest-800">
-          Account
-        </Link>
-      </p>
     </PortalShell>
   );
 }

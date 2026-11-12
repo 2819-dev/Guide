@@ -372,7 +372,7 @@ function TeacherPortal({
     <DemoEmbedShell
       role="teacher"
       title={`Hi, ${session.displayName.teacher}`}
-      subtitle="Invite teachers, manage classes, and add apps students will open."
+      subtitle="Classes, apps, and messages — what students open next."
       accountName={session.displayName.teacher}
       onSwitchRole={onSwitchRole}
       chips={[
@@ -391,14 +391,6 @@ function TeacherPortal({
         {
           id: "messages",
           label: "Messages",
-          active: tab === "messages",
-          onClick: () => setTab("messages"),
-        },
-      ]}
-      utilities={[
-        {
-          id: "messaging",
-          label: "Messaging",
           active: tab === "messages",
           onClick: () => setTab("messages"),
         },
