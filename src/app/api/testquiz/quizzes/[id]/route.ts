@@ -5,6 +5,7 @@ import { requireProfile } from "@/lib/profile";
 import {
   deleteQuiz,
   getQuiz,
+  setQuizPublic,
   updateQuiz,
 } from "@/lib/testquiz/store";
 
@@ -29,7 +30,6 @@ export async function GET(_req: Request, ctx: Ctx) {
   if (!quiz) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
-  // Owners always; others only if somehow shared later — v1 owner-only
   if (quiz.ownerProfileId !== authz.profile.id && authz.profile.role !== "admin") {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -49,17 +49,44 @@ export async function PATCH(request: Request, ctx: Ctx) {
         description: z.string().max(2000).optional(),
         classroomId: z.string().uuid().nullable().optional(),
         questions: z.array(z.unknown()).optional(),
+        category: z.string().max(64).optional(),
+        tags: z.array(z.string().max(40)).max(12).optional(),
+        isPublic: z.boolean().optional(),
       })
       .parse(await request.json());
 
-    const quiz = await updateQuiz({
-      quizId: id,
-      ownerProfileId: authz.profile.id,
-      title: body.title,
-      description: body.description,
-      classroomId: body.classroomId,
-      questions: body.questions as never,
-    });
+    let quiz =
+      body.title !== undefined ||
+      body.description !== undefined ||
+      body.classroomId !== undefined ||
+      body.questions !== undefined ||
+      body.category !== undefined ||
+      body.tags !== undefined
+        ? await updateQuiz({
+            quizId: id,
+            ownerProfileId: authz.profile.id,
+            title: body.title,
+            description: body.description,
+            classroomId: body.classroomId,
+            questions: body.questions as never,
+            category: body.category,
+            tags: body.tags,
+          })
+        : await getQuiz(id);
+
+    if (!quiz || quiz.ownerProfileId !== authz.profile.id) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    if (body.isPublic !== undefined) {
+      quiz = await setQuizPublic({
+        quizId: id,
+        ownerProfileId: authz.profile.id,
+        isPublic: body.isPublic,
+        category: body.category,
+      });
+    }
+
     return NextResponse.json({ quiz });
   } catch (error) {
     console.error(error);

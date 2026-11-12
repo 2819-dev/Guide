@@ -97,8 +97,28 @@ export type TestQuizDocument = {
   ownerProfileId: string;
   classroomId: string | null;
   questions: TestQuizQuestion[];
+  isPublic: boolean;
+  publishedAt: string | null;
+  category: string;
+  tags: string[];
+  copyCount: number;
+  sourceQuizId: string | null;
   createdAt: string;
   updatedAt: string;
+};
+
+/** Public Discover listing card (teacher browse). */
+export type TestQuizDiscoverCard = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  tags: string[];
+  questionCount: number;
+  copyCount: number;
+  publishedAt: string | null;
+  ownerDisplayName: string;
+  types: string[];
 };
 
 export type GamePhase =

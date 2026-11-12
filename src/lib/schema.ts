@@ -528,6 +528,13 @@ export const testquizQuizzes = pgTable("testquiz_quizzes", {
   title: varchar("title", { length: 200 }).notNull(),
   description: text("description").notNull().default(""),
   questions: jsonb("questions").notNull().default([]),
+  /** Teacher Discover: publicly listed for other teachers to copy. */
+  isPublic: boolean("is_public").notNull().default(false),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  category: varchar("category", { length: 64 }).notNull().default("general"),
+  tags: jsonb("tags").notNull().default([]),
+  copyCount: integer("copy_count").notNull().default(0),
+  sourceQuizId: uuid("source_quiz_id"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

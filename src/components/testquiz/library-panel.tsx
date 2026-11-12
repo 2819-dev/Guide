@@ -83,6 +83,24 @@ export function TestQuizLibraryPanel() {
     }
   }
 
+  async function deleteQuiz(quizId: string) {
+    if (!window.confirm("Delete this quiz from your library?")) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/testquiz/quizzes/${quizId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Could not delete");
+      await load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not delete");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <div className="tq-rise mx-auto max-w-5xl px-5 py-8 sm:px-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -94,6 +112,12 @@ export function TestQuizLibraryPanel() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <Link
+            href="/apps/testquiz/discover"
+            className="tq-btn tq-btn-ghost no-underline"
+          >
+            Discover
+          </Link>
           <Link
             href="/apps/testquiz/reports"
             className="tq-btn tq-btn-ghost no-underline"
@@ -173,10 +197,14 @@ export function TestQuizLibraryPanel() {
           ) : (
             quizzes.map((q) => (
               <article key={q.id} className="tq-tile">
-                <h2 className="text-lg font-bold">{q.title}</h2>
+                <div className="flex flex-wrap items-center gap-2">
+                  {q.isPublic ? <span className="tq-badge">Discover</span> : null}
+                  <h2 className="text-lg font-bold">{q.title}</h2>
+                </div>
                 <p className="mt-1 text-sm text-[var(--tq-muted)]">
                   {q.questions.length} question
                   {q.questions.length === 1 ? "" : "s"}
+                  {q.copyCount > 0 ? ` · ${q.copyCount} Discover copies` : ""}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Link
@@ -192,6 +220,14 @@ export function TestQuizLibraryPanel() {
                     onClick={() => void hostQuiz(q.id)}
                   >
                     Host
+                  </button>
+                  <button
+                    type="button"
+                    className="tq-btn tq-btn-danger text-sm"
+                    disabled={busy}
+                    onClick={() => void deleteQuiz(q.id)}
+                  >
+                    Delete
                   </button>
                 </div>
               </article>

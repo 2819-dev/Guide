@@ -13,6 +13,7 @@ import {
   type TestQuizQuestionType,
 } from "@/lib/testquiz/types";
 import { newBlankQuestion } from "@/lib/testquiz/blank-question";
+import { TESTQUIZ_DISCOVER_CATEGORIES } from "@/lib/testquiz/discover";
 
 const CHOICE_CLASS = ["tq-choice-a", "tq-choice-b", "tq-choice-c", "tq-choice-d"];
 
@@ -45,7 +46,10 @@ export function TestQuizEditorPanel({ quizId }: Props) {
     })();
   }, [quizId]);
 
-  async function save(next: TestQuizDocument) {
+  async function save(
+    next: TestQuizDocument,
+    extra?: { isPublic?: boolean },
+  ) {
     setSaving(true);
     setError(null);
     try {
@@ -56,6 +60,9 @@ export function TestQuizEditorPanel({ quizId }: Props) {
           title: next.title,
           description: next.description,
           questions: next.questions,
+          category: next.category,
+          tags: next.tags,
+          ...(extra?.isPublic !== undefined ? { isPublic: extra.isPublic } : {}),
         }),
       });
       const data = await res.json();
@@ -200,6 +207,38 @@ export function TestQuizEditorPanel({ quizId }: Props) {
         onChange={(e) => setQuiz({ ...quiz, description: e.target.value })}
         placeholder="Optional description for your library"
       />
+
+      <div className="tq-panel mt-4 flex flex-wrap items-end gap-3 p-4">
+        <label className="min-w-[10rem] flex-1 text-sm">
+          <span className="mb-1 block text-[var(--tq-muted)]">Discover category</span>
+          <select
+            className="tq-select"
+            value={quiz.category || "general"}
+            onChange={(e) => setQuiz({ ...quiz, category: e.target.value })}
+          >
+            {TESTQUIZ_DISCOVER_CATEGORIES.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="flex flex-wrap items-center gap-2">
+          {quiz.isPublic ? (
+            <span className="tq-badge">Published on Discover</span>
+          ) : (
+            <span className="text-sm text-[var(--tq-muted)]">Private to you</span>
+          )}
+          <button
+            type="button"
+            className="tq-btn tq-btn-ghost text-sm"
+            disabled={saving || quiz.questions.length === 0}
+            onClick={() => void save(quiz, { isPublic: !quiz.isPublic })}
+          >
+            {quiz.isPublic ? "Unpublish" : "Publish to Discover"}
+          </button>
+        </div>
+      </div>
 
       {error ? (
         <p className="mt-3 rounded-xl bg-[rgba(255,107,74,0.15)] px-4 py-3 text-sm">

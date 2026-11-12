@@ -310,6 +310,32 @@ export function TestQuizHostPanel({ gameId }: Props) {
                 );
               })}
             </div>
+          ) : question.type === "word_cloud" ||
+            question.type === "brainstorm" ||
+            question.type === "open_ended" ||
+            question.type === "type_answer" ? (
+            <div className="tq-cloud mt-8">
+              {game.answers
+                .filter((a) => a.questionId === question.id && a.payload.text)
+                .map((a, i) => (
+                  <span
+                    key={`${a.playerId}-${i}`}
+                    className="tq-cloud-word"
+                    style={{
+                      fontSize: `${Math.min(1.6, 0.9 + (a.payload.text?.length ?? 0) * 0.02)}rem`,
+                      animationDelay: `${i * 40}ms`,
+                    }}
+                  >
+                    {a.payload.text}
+                  </span>
+                ))}
+              {game.answers.filter((a) => a.questionId === question.id).length ===
+              0 ? (
+                <p className="text-[var(--tq-muted)]">
+                  Waiting for typed responses…
+                </p>
+              ) : null}
+            </div>
           ) : (
             <p className="mt-8 rounded-2xl bg-white/5 px-5 py-8 text-center text-[var(--tq-muted)]">
               Students are answering on their devices…

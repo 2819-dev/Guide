@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, ilike, isNull, or, sql } from "drizzle-orm";
 import { randomUUID } from "@/lib/edge-crypto";
 import { getDb } from "@/lib/db";
 import { audioSrc } from "@/lib/testquiz/audio";
@@ -6,6 +6,7 @@ import {
   consumeLiveGame,
   getEntitlement,
 } from "@/lib/testquiz/entitlements";
+import { isDiscoverCategory } from "@/lib/testquiz/discover";
 import { generateGamePin, isValidPin, normalizePin } from "@/lib/testquiz/pin";
 import { awardPoints, gradeAnswer } from "@/lib/testquiz/scoring";
 import {
@@ -17,10 +18,11 @@ import {
   type LiveGameState,
   type LiveAnswerRecord,
   type PlayerPublic,
+  type TestQuizDiscoverCard,
   type TestQuizDocument,
   type TestQuizQuestion,
 } from "@/lib/testquiz/types";
-import { testquizGames, testquizQuizzes } from "@/lib/schema";
+import { profiles, testquizGames, testquizQuizzes } from "@/lib/schema";
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -35,8 +37,32 @@ function asQuestions(raw: unknown): TestQuizQuestion[] {
   return raw as TestQuizQuestion[];
 }
 
+function asTags(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.filter((t): t is string => typeof t === "string").slice(0, 12);
+}
+
 function asState(raw: unknown): LiveGameState {
   return raw as LiveGameState;
+}
+
+function mapQuizRow(r: typeof testquizQuizzes.$inferSelect): TestQuizDocument {
+  return {
+    id: r.id,
+    title: r.title,
+    description: r.description,
+    ownerProfileId: r.ownerProfileId,
+    classroomId: r.classroomId,
+    questions: asQuestions(r.questions),
+    isPublic: !!r.isPublic,
+    publishedAt: r.publishedAt?.toISOString() ?? null,
+    category: r.category || "general",
+    tags: asTags(r.tags),
+    copyCount: r.copyCount ?? 0,
+    sourceQuizId: r.sourceQuizId ?? null,
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
+  };
 }
 
 function validateQuestions(
@@ -67,16 +93,7 @@ export async function listQuizzesForOwner(
     .where(eq(testquizQuizzes.ownerProfileId, ownerProfileId))
     .orderBy(desc(testquizQuizzes.updatedAt));
 
-  return rows.map((r) => ({
-    id: r.id,
-    title: r.title,
-    description: r.description,
-    ownerProfileId: r.ownerProfileId,
-    classroomId: r.classroomId,
-    questions: asQuestions(r.questions),
-    createdAt: r.createdAt.toISOString(),
-    updatedAt: r.updatedAt.toISOString(),
-  }));
+  return rows.map(mapQuizRow);
 }
 
 export async function getQuiz(
@@ -89,16 +106,7 @@ export async function getQuiz(
     .where(eq(testquizQuizzes.id, quizId))
     .limit(1);
   if (!r) return null;
-  return {
-    id: r.id,
-    title: r.title,
-    description: r.description,
-    ownerProfileId: r.ownerProfileId,
-    classroomId: r.classroomId,
-    questions: asQuestions(r.questions),
-    createdAt: r.createdAt.toISOString(),
-    updatedAt: r.updatedAt.toISOString(),
-  };
+  return mapQuizRow(r);
 }
 
 export async function createQuiz(opts: {
@@ -133,16 +141,7 @@ export async function createQuiz(opts: {
     })
     .returning();
 
-  return {
-    id: r!.id,
-    title: r!.title,
-    description: r!.description,
-    ownerProfileId: r!.ownerProfileId,
-    classroomId: r!.classroomId,
-    questions: asQuestions(r!.questions),
-    createdAt: r!.createdAt.toISOString(),
-    updatedAt: r!.updatedAt.toISOString(),
-  };
+  return mapQuizRow(r!);
 }
 
 export async function updateQuiz(opts: {
@@ -152,6 +151,8 @@ export async function updateQuiz(opts: {
   description?: string;
   classroomId?: string | null;
   questions?: TestQuizQuestion[];
+  category?: string;
+  tags?: string[];
 }): Promise<TestQuizDocument> {
   const existing = await getQuiz(opts.quizId);
   if (!existing || existing.ownerProfileId !== opts.ownerProfileId) {
@@ -170,6 +171,11 @@ export async function updateQuiz(opts: {
   );
   if (err) throw new Error(err);
 
+  const category =
+    opts.category && isDiscoverCategory(opts.category)
+      ? opts.category
+      : existing.category;
+
   const db = getDb();
   const [r] = await db
     .update(testquizQuizzes)
@@ -179,21 +185,148 @@ export async function updateQuiz(opts: {
       classroomId:
         opts.classroomId !== undefined ? opts.classroomId : existing.classroomId,
       questions,
+      category,
+      tags: opts.tags !== undefined ? opts.tags.slice(0, 12) : existing.tags,
       updatedAt: new Date(),
     })
     .where(eq(testquizQuizzes.id, opts.quizId))
     .returning();
 
-  return {
-    id: r!.id,
-    title: r!.title,
-    description: r!.description,
-    ownerProfileId: r!.ownerProfileId,
-    classroomId: r!.classroomId,
-    questions: asQuestions(r!.questions),
-    createdAt: r!.createdAt.toISOString(),
-    updatedAt: r!.updatedAt.toISOString(),
-  };
+  return mapQuizRow(r!);
+}
+
+export async function setQuizPublic(opts: {
+  quizId: string;
+  ownerProfileId: string;
+  isPublic: boolean;
+  category?: string;
+}): Promise<TestQuizDocument> {
+  const existing = await getQuiz(opts.quizId);
+  if (!existing || existing.ownerProfileId !== opts.ownerProfileId) {
+    throw new Error("Quiz not found");
+  }
+  if (opts.isPublic && existing.questions.length === 0) {
+    throw new Error("Add at least one question before publishing to Discover.");
+  }
+  const category =
+    opts.category && isDiscoverCategory(opts.category)
+      ? opts.category
+      : existing.category;
+  const db = getDb();
+  const [r] = await db
+    .update(testquizQuizzes)
+    .set({
+      isPublic: opts.isPublic,
+      publishedAt: opts.isPublic ? new Date() : null,
+      category,
+      updatedAt: new Date(),
+    })
+    .where(eq(testquizQuizzes.id, opts.quizId))
+    .returning();
+  return mapQuizRow(r!);
+}
+
+export async function listDiscoverQuizzes(opts: {
+  q?: string;
+  category?: string;
+  limit?: number;
+}): Promise<TestQuizDiscoverCard[]> {
+  const db = getDb();
+  const limit = Math.min(Math.max(opts.limit ?? 48, 1), 100);
+  const filters = [eq(testquizQuizzes.isPublic, true)];
+  if (opts.category && isDiscoverCategory(opts.category)) {
+    filters.push(eq(testquizQuizzes.category, opts.category));
+  }
+  if (opts.q?.trim()) {
+    const term = `%${opts.q.trim().slice(0, 80)}%`;
+    filters.push(
+      or(
+        ilike(testquizQuizzes.title, term),
+        ilike(testquizQuizzes.description, term),
+      )!,
+    );
+  }
+
+  const rows = await db
+    .select({
+      quiz: testquizQuizzes,
+      ownerName: profiles.displayName,
+    })
+    .from(testquizQuizzes)
+    .innerJoin(profiles, eq(profiles.id, testquizQuizzes.ownerProfileId))
+    .where(and(...filters))
+    .orderBy(desc(testquizQuizzes.publishedAt), desc(testquizQuizzes.copyCount))
+    .limit(limit);
+
+  return rows.map(({ quiz, ownerName }) => {
+    const questions = asQuestions(quiz.questions);
+    return {
+      id: quiz.id,
+      title: quiz.title,
+      description: quiz.description,
+      category: quiz.category || "general",
+      tags: asTags(quiz.tags),
+      questionCount: questions.length,
+      copyCount: quiz.copyCount ?? 0,
+      publishedAt: quiz.publishedAt?.toISOString() ?? null,
+      ownerDisplayName: ownerName,
+      types: [...new Set(questions.map((q) => q.type))],
+    };
+  });
+}
+
+export async function getDiscoverQuiz(
+  quizId: string,
+): Promise<(TestQuizDocument & { ownerDisplayName: string }) | null> {
+  const db = getDb();
+  const [row] = await db
+    .select({
+      quiz: testquizQuizzes,
+      ownerName: profiles.displayName,
+    })
+    .from(testquizQuizzes)
+    .innerJoin(profiles, eq(profiles.id, testquizQuizzes.ownerProfileId))
+    .where(and(eq(testquizQuizzes.id, quizId), eq(testquizQuizzes.isPublic, true)))
+    .limit(1);
+  if (!row) return null;
+  return { ...mapQuizRow(row.quiz), ownerDisplayName: row.ownerName };
+}
+
+/** Copy a public Discover quiz into the teacher's private library. */
+export async function copyDiscoverQuiz(opts: {
+  sourceQuizId: string;
+  ownerProfileId: string;
+}): Promise<TestQuizDocument> {
+  const source = await getDiscoverQuiz(opts.sourceQuizId);
+  if (!source) throw new Error("Discover quiz not found");
+
+  const copy = await createQuiz({
+    ownerProfileId: opts.ownerProfileId,
+    title: source.title,
+    description: source.description,
+    questions: structuredClone(source.questions),
+  });
+
+  const db = getDb();
+  await db
+    .update(testquizQuizzes)
+    .set({
+      sourceQuizId: source.id,
+      category: source.category,
+      tags: source.tags,
+      updatedAt: new Date(),
+    })
+    .where(eq(testquizQuizzes.id, copy.id));
+
+  await db
+    .update(testquizQuizzes)
+    .set({
+      copyCount: sql`${testquizQuizzes.copyCount} + 1`,
+    })
+    .where(eq(testquizQuizzes.id, source.id));
+
+  const updated = await getQuiz(copy.id);
+  return updated!;
 }
 
 export async function deleteQuiz(
@@ -576,6 +709,19 @@ export async function tickGame(gameId: string): Promise<LiveGameState | null> {
       if (elapsed >= q.timeLimitSec * 1000) {
         setPhase(state, "lock");
         return saveGameState(state);
+      }
+      // Auto-lock when every active player has answered
+      const active = state.players.filter((p) => !p.kicked);
+      if (active.length > 0) {
+        const answered = new Set(
+          state.answers
+            .filter((a) => a.questionId === q.id)
+            .map((a) => a.playerId),
+        );
+        if (active.every((p) => answered.has(p.id))) {
+          setPhase(state, "lock");
+          return saveGameState(state);
+        }
       }
     }
   }

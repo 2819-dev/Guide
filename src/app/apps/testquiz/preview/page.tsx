@@ -4,17 +4,15 @@ export const runtime = "edge";
 
 export const metadata = { title: "TestQuiz preview" };
 
-/** Static UI preview for design screenshots (no live game / no guests). */
+/** Static UI preview hub for design screenshots. */
 export default function TestQuizPreviewPage() {
   return (
     <div className="tq-rise mx-auto max-w-5xl px-5 py-8 sm:px-8">
-      <p className="text-sm text-[var(--tq-muted)]">
-        Design preview · not a live game
-      </p>
-      <h1 className="tq-brand mt-2">TestQuiz</h1>
+      <p className="tq-badge">Medium blue brand</p>
+      <h1 className="tq-brand mt-3">TestQuiz</h1>
       <p className="mt-2 max-w-xl text-[var(--tq-muted)]">
-        Teachers host from the library. Students open TestQuiz from My apps and
-        enter a PIN — Guide login required.
+        Design previews for create, host, play, and Discover. Live games still
+        require Guide login + PIN.
       </p>
 
       <div className="mt-8 flex flex-wrap gap-2">
@@ -22,19 +20,25 @@ export default function TestQuizPreviewPage() {
           href="/apps/testquiz/preview/create"
           className="tq-btn tq-btn-primary no-underline"
         >
-          Create preview
+          Create
         </Link>
         <Link
           href="/apps/testquiz/preview/host"
           className="tq-btn tq-btn-ghost no-underline"
         >
-          Host preview
+          Host
         </Link>
         <Link
           href="/apps/testquiz/preview/play"
           className="tq-btn tq-btn-ghost no-underline"
         >
-          Play preview
+          Play
+        </Link>
+        <Link
+          href="/apps/testquiz/preview/discover"
+          className="tq-btn tq-btn-ghost no-underline"
+        >
+          Discover
         </Link>
       </div>
 
@@ -50,16 +54,6 @@ export default function TestQuizPreviewPage() {
           <div className="tq-choice tq-choice-d">Golgi</div>
         </div>
       </section>
-
-      <p className="mt-8 text-sm text-[var(--tq-muted)]">
-        <Link href="/apps/testquiz/join" className="text-[var(--tq-accent)]">
-          Open join
-        </Link>
-        {" · "}
-        <Link href="/apps" className="text-[var(--tq-accent)]">
-          Guide apps
-        </Link>
-      </p>
     </div>
   );
 }

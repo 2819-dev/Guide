@@ -2,14 +2,22 @@ import Link from "next/link";
 import { AppWordmark } from "@/components/app-wordmark";
 import "@/components/testquiz/testquiz.css";
 import { TESTQUIZ_APP_NAME, TESTQUIZ_APP_SLUG, appHomePath } from "@/lib/apps";
+import { hasEducationAccess } from "@/lib/education-access";
+import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
-export default function TestQuizLayout({
+export default async function TestQuizLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const authz = await requireProfile();
+  const showTeacherNav =
+    !!authz &&
+    (authz.profile.role === "rebbe" || authz.profile.role === "admin") &&
+    (await hasEducationAccess(authz.profile));
+
   return (
     <div className="tq tq-shell">
       <div className="tq-band">
@@ -32,12 +40,28 @@ export default function TestQuizLayout({
             >
               Join
             </Link>
-            <Link
-              href="/apps/testquiz/library"
-              className="rounded-lg px-2.5 py-2 font-semibold text-[var(--tq-ink)] no-underline hover:bg-white/8"
-            >
-              Library
-            </Link>
+            {showTeacherNav ? (
+              <>
+                <Link
+                  href="/apps/testquiz/library"
+                  className="rounded-lg px-2.5 py-2 font-semibold text-[var(--tq-ink)] no-underline hover:bg-white/8"
+                >
+                  Library
+                </Link>
+                <Link
+                  href="/apps/testquiz/discover"
+                  className="rounded-lg px-2.5 py-2 font-semibold text-[var(--tq-ink)] no-underline hover:bg-white/8"
+                >
+                  Discover
+                </Link>
+                <Link
+                  href="/apps/testquiz/reports"
+                  className="hidden rounded-lg px-2.5 py-2 font-medium text-[var(--tq-muted)] no-underline hover:bg-white/8 sm:inline"
+                >
+                  Reports
+                </Link>
+              </>
+            ) : null}
             <Link
               href="/apps"
               className="rounded-lg px-2.5 py-2 font-medium text-[var(--tq-muted)] no-underline hover:bg-white/8"
