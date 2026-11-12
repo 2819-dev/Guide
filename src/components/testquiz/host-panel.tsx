@@ -172,6 +172,9 @@ export function TestQuizHostPanel({ gameId }: Props) {
                 onChange={(v) => void act({ musicEnabled: v }, "settings")}
               />
             </div>
+            <p className="mt-6 text-xs text-[var(--tq-muted)]">
+              {game.questions.length} questions in this quiz
+            </p>
           </div>
           <div className="tq-panel p-6">
             <h2 className="text-lg font-bold">
@@ -240,10 +243,25 @@ export function TestQuizHostPanel({ gameId }: Props) {
         game.phase === "reveal") &&
       question ? (
         <div className="mt-8">
+          <div className="tq-progress mb-4" aria-hidden>
+            {game.questions.map((q, i) => (
+              <span
+                key={q.id}
+                className={`tq-progress-dot ${
+                  i < game.questionIndex
+                    ? "is-done"
+                    : i === game.questionIndex
+                      ? "is-current"
+                      : ""
+                }`}
+              />
+            ))}
+          </div>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-[var(--tq-muted)]">
-              Q{game.questionIndex + 1} · {TESTQUIZ_TYPE_LABEL[question.type]} ·{" "}
-              {answered}/{activePlayers.length} answered
+              Q{game.questionIndex + 1} of {game.questions.length} ·{" "}
+              {TESTQUIZ_TYPE_LABEL[question.type]} · {answered}/
+              {activePlayers.length} answered
             </p>
             {game.phase === "question" ? (
               <div className="w-full max-w-xs sm:w-48">
@@ -267,7 +285,7 @@ export function TestQuizHostPanel({ gameId }: Props) {
           ) : null}
 
           {(question.choices ?? []).length > 0 ? (
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <div className="tq-choices mt-8">
               {(question.choices ?? []).map((c, i) => {
                 const count = answerCounts.get(c.id) ?? 0;
                 const pct =
@@ -292,7 +310,7 @@ export function TestQuizHostPanel({ gameId }: Props) {
                     </div>
                     {showBars ? (
                       <div className="tq-bar-row px-1">
-                        <span className="text-xs font-bold opacity-70">
+                        <span className="text-xs font-bold text-[var(--tq-muted)]">
                           {String.fromCharCode(65 + i)}
                         </span>
                         <div className="tq-bar-track">
@@ -483,8 +501,8 @@ function Toggle({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <label className="flex items-center justify-between gap-2 rounded-xl bg-white/5 px-3 py-3 text-sm">
-      <span>{label}</span>
+    <label className="tq-soft flex items-center justify-between gap-2 px-3 py-3 text-sm">
+      <span className="font-semibold">{label}</span>
       <input
         type="checkbox"
         checked={checked}

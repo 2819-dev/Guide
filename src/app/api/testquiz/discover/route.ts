@@ -22,6 +22,8 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q") ?? undefined;
   const category = url.searchParams.get("category") ?? undefined;
-  const quizzes = await listDiscoverQuizzes({ q, category });
+  const sortRaw = url.searchParams.get("sort");
+  const sort = sortRaw === "popular" ? "popular" : "recent";
+  const quizzes = await listDiscoverQuizzes({ q, category, sort });
   return NextResponse.json({ quizzes });
 }

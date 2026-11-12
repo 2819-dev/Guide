@@ -1,22 +1,21 @@
-/* TestQuiz — light mode only, medium-blue primary. Professional school polish. */
+/* TestQuiz — light-only, medium-blue primary. Professional Kahoot-class school UI. */
 .tq {
-  --tq-bg: #f5f8fc;
+  --tq-bg: #f4f7fb;
   --tq-panel: #ffffff;
   --tq-ink: #0f172a;
-  --tq-muted: #5b6b7c;
-  --tq-line: #d7e0ea;
-  --tq-a: #e21b3c;
-  --tq-b: #1368ce;
-  --tq-c: #d89e00;
-  --tq-d: #26890c;
+  --tq-muted: #64748b;
+  --tq-line: #dbe3ee;
+  --tq-a: #e11d48;
+  --tq-b: #2563eb;
+  --tq-c: #ca8a04;
+  --tq-d: #16a34a;
   --tq-accent: #2563eb;
   --tq-accent-deep: #1d4ed8;
   --tq-accent-soft: #3b82f6;
-  --tq-accent-wash: #eff4ff;
+  --tq-accent-wash: #eff6ff;
   --tq-warn: #c2410c;
   --tq-gold: #b45309;
   --tq-blue: #2563eb;
-  /* var() must include fallback or a missing --font-manrope invalidates the whole stack */
   font-family: var(--font-manrope, "Helvetica Neue"), Helvetica, Arial, ui-sans-serif,
     system-ui, sans-serif;
   color-scheme: light;
@@ -36,40 +35,44 @@
 
 .tq-shell {
   min-height: calc(100vh - 4rem);
-  background:
-    linear-gradient(180deg, #eef4fb 0%, var(--tq-bg) 42%, #f8fafc 100%);
+  background: var(--tq-bg);
   color: var(--tq-ink);
 }
 
 .tq-band {
-  background: rgba(255, 255, 255, 0.92);
+  background: #fff;
   border-bottom: 1px solid var(--tq-line);
 }
 
 .tq-brand {
-  font-size: clamp(1.75rem, 3.8vw, 2.75rem);
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
   font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.08;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
   color: var(--tq-ink);
+}
+
+.tq-kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tq-muted);
 }
 
 .tq-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  min-height: 48px;
-  padding: 0 1.2rem;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0 1.1rem;
   border-radius: 10px;
   border: none;
   font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-
-.tq-btn:hover:not(:disabled) {
-  filter: brightness(0.98);
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
 
 .tq-btn:disabled {
@@ -84,7 +87,6 @@
 
 .tq-btn-primary:hover:not(:disabled) {
   background: var(--tq-accent-deep);
-  filter: none;
 }
 
 .tq-btn-ghost {
@@ -94,62 +96,67 @@
 }
 
 .tq-btn-ghost:hover:not(:disabled) {
-  border-color: #b8c7d8;
   background: var(--tq-accent-wash);
-  filter: none;
+  border-color: #bfdbfe;
 }
 
 .tq-btn-danger {
-  background: #fff7ed;
+  background: #fff;
   color: var(--tq-warn);
-  border: 1px solid #fed7aa;
+  border: 1px solid #fdba74;
+}
+
+.tq-btn-danger:hover:not(:disabled) {
+  background: #fff7ed;
 }
 
 .tq-input,
 .tq-select,
 .tq-textarea {
   width: 100%;
-  min-height: 48px;
+  min-height: 44px;
   border-radius: 10px;
-  border: 1.5px solid var(--tq-line);
+  border: 1px solid var(--tq-line);
   background: #fff;
   color: var(--tq-ink);
-  padding: 0.65rem 0.9rem;
+  padding: 0.55rem 0.85rem;
   font: inherit;
 }
 
 .tq-input:focus,
 .tq-select:focus,
 .tq-textarea:focus {
-  outline: 2px solid rgba(37, 99, 235, 0.28);
-  outline-offset: 1px;
+  outline: 2px solid rgba(37, 99, 235, 0.25);
+  outline-offset: 0;
   border-color: var(--tq-accent-soft);
 }
 
 .tq-textarea {
-  min-height: 96px;
+  min-height: 88px;
   resize: vertical;
 }
 
 .tq-pin {
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-size: clamp(2.75rem, 8vw, 4.25rem);
   font-weight: 800;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   font-variant-numeric: tabular-nums;
   color: var(--tq-accent-deep);
+  line-height: 1.05;
 }
 
 .tq-choice {
-  min-height: 76px;
+  min-height: 72px;
+  width: 100%;
   border-radius: 12px;
   border: none;
-  color: white;
+  color: #fff;
   font-weight: 700;
-  font-size: clamp(1rem, 2.2vw, 1.15rem);
+  font-size: clamp(0.98rem, 2vw, 1.12rem);
   cursor: pointer;
-  padding: 1rem 1.1rem;
+  padding: 0.95rem 1rem;
   text-align: left;
-  transition: transform 0.12s ease, outline 0.12s ease;
+  transition: transform 0.1s ease, outline 0.1s ease;
 }
 
 .tq-choice:hover:not(:disabled) {
@@ -158,7 +165,6 @@
 
 .tq-choice:disabled {
   cursor: default;
-  opacity: 0.9;
 }
 
 .tq-choice-a {
@@ -169,7 +175,7 @@
 }
 .tq-choice-c {
   background: var(--tq-c);
-  color: #1a1400;
+  color: #1c1917;
 }
 .tq-choice-d {
   background: var(--tq-d);
@@ -181,40 +187,58 @@
 }
 
 .tq-choice-miss {
-  opacity: 0.55;
+  opacity: 0.5;
+}
+
+.tq-choices {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .tq-choices {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .tq-tile {
   display: block;
-  border-radius: 14px;
+  border-radius: 12px;
   background: #fff;
   border: 1px solid var(--tq-line);
-  padding: 1.1rem 1.2rem;
+  padding: 1rem 1.1rem;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.12s ease, background 0.12s ease;
 }
 
 .tq-tile:hover {
-  border-color: #b6c8de;
+  border-color: #93c5fd;
   background: var(--tq-accent-wash);
 }
 
 .tq-panel {
-  border-radius: 16px;
+  border-radius: 14px;
   border: 1px solid var(--tq-line);
   background: var(--tq-panel);
+}
+
+.tq-soft {
+  background: #f8fafc;
+  border: 1px solid var(--tq-line);
+  border-radius: 12px;
 }
 
 .tq-watermark {
   position: fixed;
   right: 1rem;
   bottom: 1rem;
-  opacity: 0.4;
+  opacity: 0.35;
   font-weight: 800;
   letter-spacing: 0.04em;
   pointer-events: none;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   z-index: 5;
   color: var(--tq-muted);
 }
@@ -239,13 +263,13 @@
 
 .tq-bar-row {
   display: grid;
-  grid-template-columns: 1.4rem 1fr auto;
-  gap: 0.65rem;
+  grid-template-columns: 1.25rem 1fr auto;
+  gap: 0.55rem;
   align-items: center;
 }
 
 .tq-bar-track {
-  height: 12px;
+  height: 10px;
   border-radius: 999px;
   background: #e8eef5;
   overflow: hidden;
@@ -254,7 +278,7 @@
 .tq-bar-fill {
   height: 100%;
   border-radius: inherit;
-  transition: width 0.45s ease;
+  transition: width 0.4s ease;
 }
 
 .tq-podium-slot {
@@ -262,7 +286,7 @@
   background: #fff;
   border: 1px solid var(--tq-line);
   text-align: center;
-  padding: 1.4rem 1.2rem;
+  padding: 1.25rem 1rem;
 }
 
 .tq-podium-slot.is-first {
@@ -273,14 +297,13 @@
 .tq-streak {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
   border-radius: 8px;
   background: #fff7ed;
   border: 1px solid #fed7aa;
   color: var(--tq-gold);
   font-weight: 750;
-  font-size: 0.8rem;
-  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+  padding: 0.22rem 0.55rem;
 }
 
 .tq-badge {
@@ -291,17 +314,17 @@
   border: 1px solid #bfdbfe;
   color: var(--tq-accent-deep);
   font-weight: 700;
-  font-size: 0.72rem;
-  padding: 0.22rem 0.55rem;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .tq-feedback {
   border-radius: 14px;
-  padding: 1.35rem 1.2rem;
+  padding: 1.2rem 1.1rem;
   text-align: center;
-  animation: tq-rise 0.35s ease both;
+  animation: tq-rise 0.3s ease both;
 }
 
 .tq-feedback-correct {
@@ -322,18 +345,18 @@
 .tq-lobby-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
   border-radius: 999px;
   background: #fff;
   border: 1px solid var(--tq-line);
-  padding: 0.4rem 0.8rem;
+  padding: 0.35rem 0.7rem;
   font-weight: 650;
-  animation: tq-rise 0.3s ease both;
+  font-size: 0.9rem;
 }
 
 .tq-avatar-dot {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.15rem;
+  height: 1.15rem;
   border-radius: 999px;
   border: 2px solid #fff;
   box-shadow: 0 0 0 1px var(--tq-line);
@@ -344,29 +367,23 @@
   cursor: grab;
   color: var(--tq-muted);
   user-select: none;
-  padding: 0.25rem 0.4rem;
-  font-size: 1rem;
+  padding: 0.2rem 0.35rem;
   letter-spacing: -0.08em;
-}
-
-.tq-drag-handle:active {
-  cursor: grabbing;
 }
 
 .tq-preview-frame {
   border-radius: 14px;
   border: 1px dashed #93c5fd;
   background: var(--tq-accent-wash);
-  padding: 1.2rem;
+  padding: 1.1rem;
 }
 
 .tq-cloud {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: 0.4rem;
   justify-content: center;
-  align-items: center;
-  min-height: 7rem;
+  min-height: 6.5rem;
 }
 
 .tq-cloud-word {
@@ -374,8 +391,45 @@
   background: var(--tq-accent-wash);
   border: 1px solid #bfdbfe;
   color: var(--tq-accent-deep);
-  padding: 0.3rem 0.75rem;
+  padding: 0.28rem 0.7rem;
   font-weight: 700;
+}
+
+.tq-progress {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.tq-progress-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+.tq-progress-dot.is-done {
+  background: var(--tq-accent);
+}
+
+.tq-progress-dot.is-current {
+  background: var(--tq-accent-deep);
+  outline: 2px solid #bfdbfe;
+  outline-offset: 1px;
+}
+
+.tq-stat {
+  border-radius: 12px;
+  border: 1px solid var(--tq-line);
+  background: #fff;
+  padding: 0.85rem 1rem;
+}
+
+.tq-stat strong {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--tq-accent-deep);
 }
 
 @keyframes tq-pulse {
@@ -384,18 +438,18 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.72;
+    opacity: 0.7;
   }
 }
 
 .tq-pulse {
-  animation: tq-pulse 1.6s ease-in-out infinite;
+  animation: tq-pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes tq-rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -404,13 +458,13 @@
 }
 
 .tq-rise {
-  animation: tq-rise 0.35s ease both;
+  animation: tq-rise 0.3s ease both;
 }
 
 @keyframes tq-countdown {
   from {
-    opacity: 0.35;
-    transform: scale(0.92);
+    opacity: 0.4;
+    transform: scale(0.94);
   }
   to {
     opacity: 1;
@@ -419,30 +473,29 @@
 }
 
 .tq-countdown-num {
-  animation: tq-countdown 0.45s ease;
-  font-size: clamp(4.5rem, 18vw, 7.5rem);
+  animation: tq-countdown 0.4s ease;
+  font-size: clamp(4rem, 16vw, 6.5rem);
   font-weight: 800;
   line-height: 1;
   color: var(--tq-accent-deep);
 }
 
 .tq-pop {
-  animation: tq-rise 0.35s ease both;
+  animation: tq-rise 0.3s ease both;
 }
 
 .tq-shake {
-  animation: tq-rise 0.35s ease;
+  animation: tq-rise 0.3s ease;
 }
 
 .tq-glow {
-  /* no glow in light professional UI */
 }
 
 @media (max-width: 640px) {
   .tq-choice {
-    min-height: 64px;
+    min-height: 60px;
   }
   .tq-pin {
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
   }
 }

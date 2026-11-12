@@ -2,13 +2,13 @@ export const runtime = "edge";
 
 export const metadata = { title: "TestQuiz create preview" };
 
-/** Static advanced editor mock for screenshots. */
+/** Static editor mock for refine screenshots. */
 export default function TestQuizCreatePreviewPage() {
   return (
     <div className="tq-rise mx-auto max-w-6xl px-5 py-6 sm:px-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-[var(--tq-muted)]">← Library</p>
-        <div className="flex gap-2">
+        <p className="text-sm font-semibold text-[var(--tq-muted)]">← Library</p>
+        <div className="flex flex-wrap gap-2">
           <span className="tq-btn tq-btn-ghost">Preview as player</span>
           <span className="tq-btn tq-btn-ghost">Save</span>
           <span className="tq-btn tq-btn-primary">Host live</span>
@@ -25,11 +25,25 @@ export default function TestQuizCreatePreviewPage() {
         Classic science quiz with mixed question types.
       </p>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
+      <div className="tq-panel mt-4 flex flex-wrap items-center gap-3 p-4">
+        <span className="tq-badge">Science</span>
+        <span className="text-sm text-[var(--tq-muted)]">Private to you</span>
+        <span className="tq-btn tq-btn-ghost text-sm">Publish to Discover</span>
+        <div className="ml-auto flex gap-3">
+          <div className="tq-stat">
+            <strong>4</strong>
+            <span className="text-xs text-[var(--tq-muted)]">Questions</span>
+          </div>
+          <div className="tq-stat">
+            <strong>~3m</strong>
+            <span className="text-xs text-[var(--tq-muted)]">Est. play</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-[270px_1fr]">
         <aside className="space-y-2">
-          <p className="px-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--tq-muted)]">
-            Questions · drag to reorder
-          </p>
+          <p className="tq-kicker px-1">Questions · drag to reorder</p>
           {[
             ["1. Quiz · 20s", "Which organelle is the powerhouse?"],
             ["2. Quiz · 20s", "Where is genetic material stored?"],
@@ -51,13 +65,14 @@ export default function TestQuizCreatePreviewPage() {
               </div>
             </div>
           ))}
+          <div className="tq-soft px-3 py-3 text-sm text-[var(--tq-muted)]">
+            Add question · Quiz, T/F, poll, type answer, puzzle…
+          </div>
         </aside>
 
         <section className="tq-panel space-y-4 p-5 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="rounded-full bg-[rgba(62,207,142,0.15)] px-3 py-1 text-sm font-semibold text-[var(--tq-accent)]">
-              Quiz
-            </span>
+            <span className="tq-badge">Quiz</span>
             <div className="flex gap-2">
               <span className="tq-btn tq-btn-ghost text-sm">Duplicate</span>
               <span className="tq-btn tq-btn-danger text-sm">Delete</span>
@@ -75,7 +90,9 @@ export default function TestQuizCreatePreviewPage() {
               <p className="mb-1 text-sm text-[var(--tq-muted)]">Points</p>
               <div className="tq-input flex items-center">1000</div>
             </div>
-            <div className="flex items-end pb-3 text-sm">Multi-select off</div>
+            <div className="flex items-end pb-3 text-sm text-[var(--tq-muted)]">
+              Multi-select off
+            </div>
           </div>
           <div className="space-y-2">
             {[
@@ -90,9 +107,11 @@ export default function TestQuizCreatePreviewPage() {
                 >
                   {letter}
                 </span>
-                <div className="tq-input flex flex-1 items-center">{text as string}</div>
-                <span className="flex items-center text-sm whitespace-nowrap">
-                  {correct ? "✓ Correct" : ""}
+                <div className="tq-input flex flex-1 items-center">
+                  {text as string}
+                </div>
+                <span className="flex min-w-[4.5rem] items-center text-sm font-semibold text-[var(--tq-accent-deep)]">
+                  {correct ? "Correct" : ""}
                 </span>
               </div>
             ))}

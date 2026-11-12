@@ -178,7 +178,7 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
           {(question.type === "quiz" ||
             question.type === "true_false" ||
             question.type === "poll") && (
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="tq-choices mt-6">
               {(question.choices ?? []).map((c, i) => {
                 const on = selected.includes(c.id);
                 return (
@@ -186,7 +186,7 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
                     key={c.id}
                     type="button"
                     disabled={!!myAnswer || busy}
-                    className={`tq-choice ${CHOICE_CLASS[i % 4]} ${on ? "ring-4 ring-white" : ""}`}
+                    className={`tq-choice ${CHOICE_CLASS[i % 4]} ${on ? "tq-choice-correct" : ""}`}
                     onClick={() => {
                       if (question.multiSelect) {
                         setSelected((prev) =>

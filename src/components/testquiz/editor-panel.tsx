@@ -424,9 +424,7 @@ function QuestionFields({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="rounded-full bg-[rgba(62,207,142,0.15)] px-3 py-1 text-sm font-semibold text-[var(--tq-accent)]">
-          {TESTQUIZ_TYPE_LABEL[question.type]}
-        </span>
+        <span className="tq-badge">{TESTQUIZ_TYPE_LABEL[question.type]}</span>
         <div className="flex flex-wrap gap-2">
           <button type="button" className="tq-btn tq-btn-ghost text-sm" onClick={onDuplicate}>
             Duplicate

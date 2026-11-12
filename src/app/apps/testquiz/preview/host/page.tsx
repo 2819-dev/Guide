@@ -2,14 +2,14 @@ export const runtime = "edge";
 
 export const metadata = { title: "TestQuiz host preview" };
 
-/** Static advanced host lobby mock for screenshots. */
+/** Static host lobby mock for refine screenshots. */
 export default function TestQuizHostPreviewPage() {
   return (
     <div className="tq-rise relative mx-auto max-w-6xl px-5 py-6 sm:px-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm text-[var(--tq-muted)]">Cell parts review</p>
-          <h1 className="tq-brand">Lobby</h1>
+          <p className="tq-kicker">Cell parts review</p>
+          <h1 className="tq-brand mt-1">Lobby</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <span className="tq-btn tq-btn-ghost">Mute music</span>
@@ -17,20 +17,18 @@ export default function TestQuizHostPreviewPage() {
         </div>
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1.25fr_0.85fr]">
-        <div className="tq-panel p-8 text-center sm:p-10">
-          <p className="text-sm uppercase tracking-[0.22em] text-[var(--tq-muted)]">
-            Join with PIN
-          </p>
-          <p className="tq-pin tq-pulse tq-glow mt-4">482917</p>
-          <p className="mt-4 text-[var(--tq-muted)]">
+      <div className="mt-6 grid gap-5 lg:grid-cols-[1.3fr_0.9fr]">
+        <div className="tq-panel p-7 text-center sm:p-9">
+          <p className="tq-kicker">Join with PIN</p>
+          <p className="tq-pin tq-pulse mt-3">482917</p>
+          <p className="mt-3 text-sm text-[var(--tq-muted)]">
             Students open TestQuiz from My apps, then enter this PIN.
           </p>
-          <div className="mt-8 flex flex-wrap items-start justify-center gap-8">
-            <div className="tq-pop inline-block rounded-2xl bg-white p-2 shadow-lg">
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-6">
+            <div className="rounded-xl border border-[var(--tq-line)] bg-white p-2">
               <div
-                className="grid grid-cols-5 gap-1 rounded-xl bg-[#071a14] p-3"
-                style={{ width: 168, height: 168 }}
+                className="grid grid-cols-5 gap-1 rounded-lg bg-[#0f172a] p-3"
+                style={{ width: 148, height: 148 }}
                 aria-hidden
               >
                 {Array.from({ length: 25 }).map((_, i) => (
@@ -38,49 +36,50 @@ export default function TestQuizHostPreviewPage() {
                     key={i}
                     className="rounded-[2px]"
                     style={{
-                      background:
-                        (i * 7) % 3 === 0 ? "#f3faf6" : "transparent",
+                      background: (i * 7) % 3 === 0 ? "#eff6ff" : "transparent",
                     }}
                   />
                 ))}
               </div>
             </div>
-            <div className="max-w-xs text-left text-sm text-[var(--tq-muted)]">
+            <div className="max-w-[14rem] text-left text-sm text-[var(--tq-muted)]">
               <p className="font-semibold text-[var(--tq-ink)]">Projector tip</p>
               <p className="mt-1">
                 Keep this screen up. Students can scan the QR or type the PIN.
               </p>
             </div>
           </div>
-          <div className="mt-10">
-            <span className="tq-btn tq-btn-primary min-w-[10rem] text-lg">
+          <div className="mt-8">
+            <span className="tq-btn tq-btn-primary min-w-[10rem] text-base">
               Start game
             </span>
           </div>
-          <div className="mt-8 grid gap-3 text-left sm:grid-cols-3">
+          <div className="mt-7 grid gap-2 text-left sm:grid-cols-3">
             {["Nicknames", "Avatars", "Music"].map((label) => (
               <div
                 key={label}
-                className="flex items-center justify-between gap-2 rounded-xl bg-white/5 px-3 py-3 text-sm"
+                className="tq-soft flex items-center justify-between gap-2 px-3 py-2.5 text-sm"
               >
-                <span>{label}</span>
-                <span className="text-[var(--tq-accent)]">On</span>
+                <span className="font-semibold">{label}</span>
+                <span className="font-bold text-[var(--tq-accent-deep)]">On</span>
               </div>
             ))}
           </div>
+          <p className="mt-5 text-xs text-[var(--tq-muted)]">4 questions in this quiz</p>
         </div>
-        <div className="tq-panel p-6">
+
+        <div className="tq-panel p-5">
           <h2 className="text-lg font-bold">
-            Players <span className="text-[var(--tq-accent)]">(6)</span>
+            Players <span className="text-[var(--tq-accent-deep)]">(6)</span>
           </h2>
           <ul className="mt-4 flex flex-wrap gap-2">
             {[
-              ["Maya", "#2d6a4f"],
+              ["Maya", "#2563eb"],
               ["Jordan", "#1368ce"],
-              ["Sam", "#d89e00"],
-              ["Ava", "#e21b3c"],
-              ["Leo", "#26890c"],
-              ["Nina", "#3ecf8e"],
+              ["Sam", "#ca8a04"],
+              ["Ava", "#e11d48"],
+              ["Leo", "#16a34a"],
+              ["Nina", "#3b82f6"],
             ].map(([name, color]) => (
               <li key={name} className="tq-lobby-chip">
                 <span
@@ -91,6 +90,16 @@ export default function TestQuizHostPreviewPage() {
               </li>
             ))}
           </ul>
+          <div className="mt-6 grid grid-cols-2 gap-2">
+            <div className="tq-stat">
+              <strong>6</strong>
+              <span className="text-xs text-[var(--tq-muted)]">Ready</span>
+            </div>
+            <div className="tq-stat">
+              <strong>4</strong>
+              <span className="text-xs text-[var(--tq-muted)]">Questions</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

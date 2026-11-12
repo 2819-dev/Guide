@@ -229,6 +229,7 @@ export async function setQuizPublic(opts: {
 export async function listDiscoverQuizzes(opts: {
   q?: string;
   category?: string;
+  sort?: "recent" | "popular";
   limit?: number;
 }): Promise<TestQuizDiscoverCard[]> {
   const db = getDb();
@@ -247,6 +248,11 @@ export async function listDiscoverQuizzes(opts: {
     );
   }
 
+  const order =
+    opts.sort === "popular"
+      ? [desc(testquizQuizzes.copyCount), desc(testquizQuizzes.publishedAt)]
+      : [desc(testquizQuizzes.publishedAt), desc(testquizQuizzes.copyCount)];
+
   const rows = await db
     .select({
       quiz: testquizQuizzes,
@@ -255,7 +261,7 @@ export async function listDiscoverQuizzes(opts: {
     .from(testquizQuizzes)
     .innerJoin(profiles, eq(profiles.id, testquizQuizzes.ownerProfileId))
     .where(and(...filters))
-    .orderBy(desc(testquizQuizzes.publishedAt), desc(testquizQuizzes.copyCount))
+    .orderBy(...order)
     .limit(limit);
 
   return rows.map(({ quiz, ownerName }) => {

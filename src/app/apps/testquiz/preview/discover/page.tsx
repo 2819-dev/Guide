@@ -2,7 +2,7 @@ export const runtime = "edge";
 
 export const metadata = { title: "TestQuiz Discover preview" };
 
-/** Static Discover browse mock for screenshots. */
+/** Static Discover mock for refine screenshots. */
 export default function TestQuizDiscoverPreviewPage() {
   return (
     <div className="tq-rise mx-auto max-w-6xl px-5 py-8 sm:px-8">
@@ -18,15 +18,16 @@ export default function TestQuizDiscoverPreviewPage() {
         <span className="tq-btn tq-btn-ghost">My library</span>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-3">
-        <div className="tq-input max-w-sm flex items-center text-[var(--tq-muted)]">
+      <div className="mt-6 flex flex-wrap gap-2">
+        <div className="tq-input max-w-xs flex items-center text-[var(--tq-muted)]">
           Search title or description
         </div>
-        <div className="tq-select max-w-[12rem] flex items-center">Science</div>
+        <div className="tq-select max-w-[9rem] flex items-center">Science</div>
+        <div className="tq-select max-w-[9rem] flex items-center">Newest</div>
         <span className="tq-btn tq-btn-primary">Search</span>
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
+      <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_340px]">
         <div className="grid gap-3 sm:grid-cols-2">
           {[
             ["Cell parts review", "Science", "4 questions · by Jordan Lee", "12 copies"],
@@ -52,14 +53,18 @@ export default function TestQuizDiscoverPreviewPage() {
           <p className="tq-badge">Science</p>
           <h2 className="text-xl font-bold">Cell parts review</h2>
           <p className="text-sm text-[var(--tq-muted)]">by Jordan Lee</p>
-          <p className="text-sm">Classic science quiz with mixed question types.</p>
+          <p className="text-sm">
+            Classic science quiz with mixed question types.
+          </p>
           <ol className="space-y-2 text-sm">
-            <li className="rounded-xl bg-white/5 px-3 py-2">
+            <li className="tq-soft px-3 py-2">
               <span className="text-xs text-[var(--tq-muted)]">1. Quiz · 20s</span>
               <div className="font-semibold">Powerhouse of the cell?</div>
             </li>
-            <li className="rounded-xl bg-white/5 px-3 py-2">
-              <span className="text-xs text-[var(--tq-muted)]">2. Type answer · 25s</span>
+            <li className="tq-soft px-3 py-2">
+              <span className="text-xs text-[var(--tq-muted)]">
+                2. Type answer · 25s
+              </span>
               <div className="font-semibold">Packages proteins for transport</div>
             </li>
           </ol>

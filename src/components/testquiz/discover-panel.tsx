@@ -14,6 +14,7 @@ export function TestQuizDiscoverPanel() {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [category, setCategory] = useState("");
+  const [sort, setSort] = useState<"recent" | "popular">("recent");
   const [quizzes, setQuizzes] = useState<TestQuizDiscoverCard[]>([]);
   const [preview, setPreview] = useState<
     (TestQuizDocument & { ownerDisplayName: string }) | null
@@ -26,6 +27,7 @@ export function TestQuizDiscoverPanel() {
     const params = new URLSearchParams();
     if (q.trim()) params.set("q", q.trim());
     if (category) params.set("category", category);
+    params.set("sort", sort);
     const res = await fetch(`/api/testquiz/discover?${params}`);
     const data = await res.json();
     if (!res.ok) {
@@ -33,7 +35,7 @@ export function TestQuizDiscoverPanel() {
       return;
     }
     setQuizzes(data.quizzes ?? []);
-  }, [q, category]);
+  }, [q, category, sort]);
 
   useEffect(() => {
     void load();
@@ -104,6 +106,15 @@ export function TestQuizDiscoverPanel() {
               {c.label}
             </option>
           ))}
+        </select>
+        <select
+          className="tq-select max-w-[10rem]"
+          value={sort}
+          onChange={(e) => setSort(e.target.value as "recent" | "popular")}
+          aria-label="Sort"
+        >
+          <option value="recent">Newest</option>
+          <option value="popular">Most copied</option>
         </select>
         <button
           type="button"
