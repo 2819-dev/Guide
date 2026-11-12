@@ -156,7 +156,92 @@
   cursor: pointer;
   padding: 0.95rem 1rem;
   text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   transition: transform 0.1s ease, outline 0.1s ease;
+}
+
+/* Kahoot-style answer shapes */
+.tq-shape {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.tq-shape-tri {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.tq-shape-dia {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.tq-shape-cir {
+  border-radius: 999px;
+}
+
+.tq-shape-sq {
+  border-radius: 3px;
+}
+
+.tq-type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+.tq-type-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  min-height: 52px;
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  border: 1px solid var(--tq-line);
+  background: #fff;
+  color: var(--tq-ink);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.tq-type-chip:hover:not(:disabled) {
+  border-color: #93c5fd;
+  background: var(--tq-accent-wash);
+}
+
+.tq-type-chip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tq-type-chip span {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--tq-muted);
+}
+
+.tq-hero-band {
+  border-radius: 16px;
+  border: 1px solid #bfdbfe;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.1), transparent 55%),
+    linear-gradient(180deg, #fff, var(--tq-accent-wash));
+  padding: 1.35rem 1.4rem;
+}
+
+.tq-cover-strip {
+  height: 0.5rem;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--tq-accent), var(--tq-b), var(--tq-a));
+  margin-bottom: 0.75rem;
 }
 
 .tq-choice:hover:not(:disabled) {

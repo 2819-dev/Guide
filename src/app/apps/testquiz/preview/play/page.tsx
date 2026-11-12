@@ -2,7 +2,7 @@ export const runtime = "edge";
 
 export const metadata = { title: "TestQuiz play preview" };
 
-/** Static student play mock for refine screenshots. */
+/** Static student play mock for Kahoot-class screenshots. */
 export default function TestQuizPlayPreviewPage() {
   return (
     <div className="tq-rise mx-auto max-w-3xl px-4 py-6 sm:px-8">
@@ -15,6 +15,12 @@ export default function TestQuizPlayPreviewPage() {
       </div>
 
       <div className="mt-5">
+        <div className="tq-progress mb-3" aria-hidden>
+          <span className="tq-progress-dot is-done" />
+          <span className="tq-progress-dot is-current" />
+          <span className="tq-progress-dot" />
+          <span className="tq-progress-dot" />
+        </div>
         <div className="tq-timer-track mb-4" aria-hidden>
           <div className="tq-timer-fill" style={{ width: "62%" }} />
         </div>
@@ -24,16 +30,20 @@ export default function TestQuizPlayPreviewPage() {
         </h2>
         <div className="tq-choices mt-6">
           <button type="button" className="tq-choice tq-choice-a tq-choice-correct">
-            Mitochondria
+            <span className="tq-shape tq-shape-tri" aria-hidden />
+            <span>Mitochondria</span>
           </button>
           <button type="button" className="tq-choice tq-choice-b">
-            Nucleus
+            <span className="tq-shape tq-shape-dia" aria-hidden />
+            <span>Nucleus</span>
           </button>
           <button type="button" className="tq-choice tq-choice-c">
-            Ribosome
+            <span className="tq-shape tq-shape-cir" aria-hidden />
+            <span>Ribosome</span>
           </button>
           <button type="button" className="tq-choice tq-choice-d">
-            Golgi
+            <span className="tq-shape tq-shape-sq" aria-hidden />
+            <span>Golgi</span>
           </button>
         </div>
         <div className="tq-feedback tq-feedback-correct mt-6">

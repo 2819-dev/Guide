@@ -20,6 +20,18 @@ export function TestQuizHostPanel({ gameId }: Props) {
   const { game, setGame, error, refresh } = useGamePoll(gameId, 1000);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  async function copyPin() {
+    if (!game) return;
+    try {
+      await navigator.clipboard.writeText(game.pin);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setMsg("Could not copy PIN");
+    }
+  }
 
   async function act(
     action: Record<string, unknown>,
@@ -133,6 +145,15 @@ export function TestQuizHostPanel({ gameId }: Props) {
               Join with PIN
             </p>
             <p className="tq-pin tq-pulse tq-glow mt-4">{game.pin}</p>
+            <div className="mt-3 flex flex-wrap justify-center gap-2">
+              <button
+                type="button"
+                className="tq-btn tq-btn-ghost text-sm"
+                onClick={() => void copyPin()}
+              >
+                {copied ? "PIN copied" : "Copy PIN"}
+              </button>
+            </div>
             <p className="mt-4 text-[var(--tq-muted)]">
               Students open TestQuiz from My apps, then enter this PIN.
             </p>
@@ -143,6 +164,16 @@ export function TestQuizHostPanel({ gameId }: Props) {
                 <p className="mt-1">
                   Keep this screen up. Students can scan the QR or type the PIN.
                 </p>
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  <div className="tq-stat">
+                    <strong>{activePlayers.length}</strong>
+                    <span className="text-xs text-[var(--tq-muted)]">Players</span>
+                  </div>
+                  <div className="tq-stat">
+                    <strong>{game.questions.length}</strong>
+                    <span className="text-xs text-[var(--tq-muted)]">Questions</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="mt-10 flex flex-wrap justify-center gap-3">
@@ -305,8 +336,14 @@ export function TestQuizHostPanel({ gameId }: Props) {
                             : ""
                       }`}
                     >
-                      {c.text || `Option ${i + 1}`}
-                      {game.phase === "reveal" && c.correct ? " ✓" : ""}
+                      <span
+                        className={`tq-shape ${["tq-shape-tri", "tq-shape-dia", "tq-shape-cir", "tq-shape-sq"][i % 4]}`}
+                        aria-hidden
+                      />
+                      <span>
+                        {c.text || `Option ${i + 1}`}
+                        {game.phase === "reveal" && c.correct ? " · correct" : ""}
+                      </span>
                     </div>
                     {showBars ? (
                       <div className="tq-bar-row px-1">
@@ -355,7 +392,7 @@ export function TestQuizHostPanel({ gameId }: Props) {
               ) : null}
             </div>
           ) : (
-            <p className="mt-8 rounded-2xl bg-white/5 px-5 py-8 text-center text-[var(--tq-muted)]">
+            <p className="tq-soft mt-8 px-5 py-8 text-center text-[var(--tq-muted)]">
               Students are answering on their devices…
             </p>
           )}
@@ -415,7 +452,7 @@ export function TestQuizHostPanel({ gameId }: Props) {
             {leaders.map((p, i) => (
               <li
                 key={p.id}
-                className="tq-pop flex items-center justify-between rounded-2xl bg-white/8 px-5 py-4 text-lg font-bold"
+                className="tq-pop tq-soft flex items-center justify-between px-5 py-4 text-lg font-bold"
                 style={{ animationDelay: `${i * 60}ms` }}
               >
                 <span className="flex items-center gap-3">

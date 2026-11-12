@@ -2,7 +2,7 @@ export const runtime = "edge";
 
 export const metadata = { title: "TestQuiz host preview" };
 
-/** Static host lobby mock for refine screenshots. */
+/** Static host lobby mock for Kahoot-class screenshots. */
 export default function TestQuizHostPreviewPage() {
   return (
     <div className="tq-rise relative mx-auto max-w-6xl px-5 py-6 sm:px-8">
@@ -21,6 +21,9 @@ export default function TestQuizHostPreviewPage() {
         <div className="tq-panel p-7 text-center sm:p-9">
           <p className="tq-kicker">Join with PIN</p>
           <p className="tq-pin tq-pulse mt-3">482917</p>
+          <div className="mt-3 flex justify-center">
+            <span className="tq-btn tq-btn-ghost text-sm">Copy PIN</span>
+          </div>
           <p className="mt-3 text-sm text-[var(--tq-muted)]">
             Students open TestQuiz from My apps, then enter this PIN.
           </p>
@@ -47,6 +50,16 @@ export default function TestQuizHostPreviewPage() {
               <p className="mt-1">
                 Keep this screen up. Students can scan the QR or type the PIN.
               </p>
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <div className="tq-stat">
+                  <strong>6</strong>
+                  <span className="text-xs text-[var(--tq-muted)]">Players</span>
+                </div>
+                <div className="tq-stat">
+                  <strong>4</strong>
+                  <span className="text-xs text-[var(--tq-muted)]">Questions</span>
+                </div>
+              </div>
             </div>
           </div>
           <div className="mt-8">
@@ -65,7 +78,6 @@ export default function TestQuizHostPreviewPage() {
               </div>
             ))}
           </div>
-          <p className="mt-5 text-xs text-[var(--tq-muted)]">4 questions in this quiz</p>
         </div>
 
         <div className="tq-panel p-5">

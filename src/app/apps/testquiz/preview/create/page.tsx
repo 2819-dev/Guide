@@ -2,7 +2,7 @@ export const runtime = "edge";
 
 export const metadata = { title: "TestQuiz create preview" };
 
-/** Static editor mock for refine screenshots. */
+/** Static editor mock for Kahoot-class screenshots. */
 export default function TestQuizCreatePreviewPage() {
   return (
     <div className="tq-rise mx-auto max-w-6xl px-5 py-6 sm:px-8">
@@ -41,7 +41,7 @@ export default function TestQuizCreatePreviewPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[270px_1fr]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
         <aside className="space-y-2">
           <p className="tq-kicker px-1">Questions · drag to reorder</p>
           {[
@@ -57,7 +57,7 @@ export default function TestQuizCreatePreviewPage() {
               <span className="tq-drag-handle" aria-hidden>
                 ⠿
               </span>
-              <div>
+              <div className="min-w-0 flex-1">
                 <span className="text-xs uppercase tracking-wide text-[var(--tq-muted)]">
                   {meta}
                 </span>
@@ -65,8 +65,15 @@ export default function TestQuizCreatePreviewPage() {
               </div>
             </div>
           ))}
-          <div className="tq-soft px-3 py-3 text-sm text-[var(--tq-muted)]">
-            Add question · Quiz, T/F, poll, type answer, puzzle…
+          <p className="tq-kicker px-1 pt-2">Add question</p>
+          <div className="tq-type-grid">
+            {["Quiz", "True or false", "Type answer", "Puzzle", "Poll", "Slider"].map(
+              (t) => (
+                <button key={t} type="button" className="tq-type-chip">
+                  {t}
+                </button>
+              ),
+            )}
           </div>
         </aside>
 
@@ -96,16 +103,17 @@ export default function TestQuizCreatePreviewPage() {
           </div>
           <div className="space-y-2">
             {[
-              ["A", "tq-choice-a", "Mitochondria", true],
-              ["B", "tq-choice-b", "Nucleus", false],
-              ["C", "tq-choice-c", "Ribosome", false],
-              ["D", "tq-choice-d", "Golgi", false],
-            ].map(([letter, cls, text, correct]) => (
-              <div key={letter as string} className="flex gap-2">
+              ["tq-choice-a", "tq-shape-tri", "Mitochondria", true],
+              ["tq-choice-b", "tq-shape-dia", "Nucleus", false],
+              ["tq-choice-c", "tq-shape-cir", "Ribosome", false],
+              ["tq-choice-d", "tq-shape-sq", "Golgi", false],
+            ].map(([cls, shape, text, correct]) => (
+              <div key={text as string} className="flex gap-2">
                 <span
-                  className={`inline-flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-white ${cls}`}
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${cls}`}
+                  aria-hidden
                 >
-                  {letter}
+                  <span className={`tq-shape ${shape}`} />
                 </span>
                 <div className="tq-input flex flex-1 items-center">
                   {text as string}

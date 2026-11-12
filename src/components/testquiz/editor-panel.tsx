@@ -131,8 +131,32 @@ export function TestQuizEditorPanel({ quizId }: Props) {
     setSelected(to);
   }
 
+  function validateForHost(): string | null {
+    if (!quiz || quiz.questions.length === 0) {
+      return "Add at least one question before hosting.";
+    }
+    for (let i = 0; i < quiz.questions.length; i++) {
+      const item = quiz.questions[i]!;
+      if (!item.prompt.trim()) {
+        return `Question ${i + 1} needs a prompt.`;
+      }
+      if (
+        (item.type === "quiz" || item.type === "true_false") &&
+        !(item.choices ?? []).some((c) => c.correct)
+      ) {
+        return `Question ${i + 1} needs a correct answer.`;
+      }
+    }
+    return null;
+  }
+
   async function host() {
     if (!quiz) return;
+    const issue = validateForHost();
+    if (issue) {
+      setError(issue);
+      return;
+    }
     await save(quiz);
     const res = await fetch("/api/testquiz/games", {
       method: "POST",
@@ -147,6 +171,9 @@ export function TestQuizEditorPanel({ quizId }: Props) {
     router.push(`/apps/testquiz/host/${data.game.id}`);
   }
 
+  const estSec = quiz?.questions.reduce((s, q) => s + q.timeLimitSec + 8, 0) ?? 0;
+  const estMin = Math.max(1, Math.round(estSec / 60));
+
   if (!quiz && !error) {
     return <p className="px-5 py-10 text-[var(--tq-muted)]">Loading editor…</p>;
   }
@@ -155,7 +182,6 @@ export function TestQuizEditorPanel({ quizId }: Props) {
   }
 
   const q = quiz.questions[selected];
-  const types = allowAll ? TESTQUIZ_QUESTION_TYPES : TESTQUIZ_CORE_TYPES;
 
   return (
     <div className="tq-rise mx-auto max-w-6xl px-5 py-6 sm:px-8">
@@ -238,6 +264,16 @@ export function TestQuizEditorPanel({ quizId }: Props) {
             {quiz.isPublic ? "Unpublish" : "Publish to Discover"}
           </button>
         </div>
+        <div className="ml-auto flex gap-2">
+          <div className="tq-stat">
+            <strong>{quiz.questions.length}</strong>
+            <span className="text-xs text-[var(--tq-muted)]">Questions</span>
+          </div>
+          <div className="tq-stat">
+            <strong>~{estMin}m</strong>
+            <span className="text-xs text-[var(--tq-muted)]">Est. play</span>
+          </div>
+        </div>
       </div>
 
       {error ? (
@@ -284,33 +320,59 @@ export function TestQuizEditorPanel({ quizId }: Props) {
                   {item.prompt || `Untitled question`}
                 </div>
               </button>
+              <span className="flex flex-col gap-0.5">
+                <button
+                  type="button"
+                  className="tq-btn tq-btn-ghost px-2 text-xs"
+                  style={{ minHeight: 28 }}
+                  disabled={i === 0}
+                  aria-label="Move up"
+                  onClick={() => reorder(i, i - 1)}
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  className="tq-btn tq-btn-ghost px-2 text-xs"
+                  style={{ minHeight: 28 }}
+                  disabled={i === quiz.questions.length - 1}
+                  aria-label="Move down"
+                  onClick={() => reorder(i, i + 1)}
+                >
+                  ↓
+                </button>
+              </span>
             </div>
           ))}
           <div className="pt-2">
-            <label className="mb-1 block text-xs text-[var(--tq-muted)]">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--tq-muted)]">
               Add question
-            </label>
-            <select
-              className="tq-select"
-              defaultValue=""
-              onChange={(e) => {
-                const v = e.target.value as TestQuizQuestionType;
-                if (v) addQuestion(v);
-                e.target.value = "";
-              }}
-            >
-              <option value="" disabled>
-                Choose type…
-              </option>
-              {types.map((t) => (
-                <option key={t} value={t}>
-                  {TESTQUIZ_TYPE_LABEL[t]}
-                </option>
-              ))}
-            </select>
+            </p>
+            <div className="tq-type-grid">
+              {TESTQUIZ_QUESTION_TYPES.map((t) => {
+                const locked = !allowAll && !TESTQUIZ_CORE_TYPES.includes(t);
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    className="tq-type-chip"
+                    disabled={locked}
+                    title={
+                      locked
+                        ? "Needs Plus or Ultra"
+                        : `Add ${TESTQUIZ_TYPE_LABEL[t]}`
+                    }
+                    onClick={() => addQuestion(t)}
+                  >
+                    {TESTQUIZ_TYPE_LABEL[t]}
+                    {locked ? <span>Plus</span> : null}
+                  </button>
+                );
+              })}
+            </div>
             {!allowAll ? (
               <p className="mt-2 text-xs text-[var(--tq-muted)]">
-                Free plan: Quiz and True/False. Plus/Ultra unlock all types.
+                Free: Quiz + True/False. Plus/Ultra unlock the full type set.
               </p>
             ) : null}
           </div>
@@ -366,10 +428,14 @@ function PlayerPreview({
         question.type === "true_false" ||
         question.type === "poll" ||
         question.type === "puzzle") && (
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="tq-choices mt-6">
           {(question.choices ?? []).map((c, i) => (
             <div key={c.id} className={`tq-choice ${CHOICE_CLASS[i % 4]}`}>
-              {c.text || `Option ${i + 1}`}
+              <span
+                className={`tq-shape ${["tq-shape-tri", "tq-shape-dia", "tq-shape-cir", "tq-shape-sq"][i % 4]}`}
+                aria-hidden
+              />
+              <span>{c.text || `Option ${i + 1}`}</span>
             </div>
           ))}
         </div>
@@ -511,9 +577,12 @@ function QuestionFields({
           {(question.choices ?? []).map((c, i) => (
             <div key={c.id} className="flex gap-2">
               <span
-                className={`mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white ${CHOICE_CLASS[i % 4]}`}
+                className={`mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${CHOICE_CLASS[i % 4]}`}
+                aria-hidden
               >
-                {String.fromCharCode(65 + i)}
+                <span
+                  className={`tq-shape ${["tq-shape-tri", "tq-shape-dia", "tq-shape-cir", "tq-shape-sq"][i % 4]}`}
+                />
               </span>
               <input
                 className="tq-input"
@@ -719,7 +788,7 @@ function QuestionFields({
       {(question.type === "word_cloud" ||
         question.type === "brainstorm" ||
         question.type === "open_ended") && (
-        <p className="rounded-xl bg-white/5 px-4 py-3 text-sm text-[var(--tq-muted)]">
+        <p className="tq-soft px-4 py-3 text-sm text-[var(--tq-muted)]">
           Students type a short response. These types are ungraded — great for
           discussion and check-ins.
         </p>
@@ -752,7 +821,7 @@ function PuzzleOrderEditor({
   }
 
   return (
-    <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-3">
+    <div className="tq-soft mt-3 p-3">
       <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--tq-muted)]">
         Correct order
       </p>
@@ -760,7 +829,7 @@ function PuzzleOrderEditor({
         {order.map((id, i) => (
           <div
             key={id}
-            className="flex items-center justify-between gap-2 rounded-lg bg-white/5 px-3 py-2"
+            className="flex items-center justify-between gap-2 rounded-lg border border-[var(--tq-line)] bg-white px-3 py-2"
           >
             <span className="text-sm font-semibold">
               {i + 1}. {labels[id]}

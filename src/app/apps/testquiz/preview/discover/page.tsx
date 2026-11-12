@@ -2,7 +2,7 @@ export const runtime = "edge";
 
 export const metadata = { title: "TestQuiz Discover preview" };
 
-/** Static Discover mock for refine screenshots. */
+/** Static Discover mock for Kahoot-class screenshots. */
 export default function TestQuizDiscoverPreviewPage() {
   return (
     <div className="tq-rise mx-auto max-w-6xl px-5 py-8 sm:px-8">
@@ -35,14 +35,15 @@ export default function TestQuizDiscoverPreviewPage() {
             ["Class check-in", "Check-ins", "3 questions · by Sam Ortiz", "21 copies"],
             ["Fractions sprint", "Math", "6 questions · by Ava Kim", "5 copies"],
           ].map(([title, cat, meta, copies]) => (
-            <article key={title} className="tq-tile">
+            <article key={title} className="tq-tile flex flex-col">
+              <div className="tq-cover-strip" />
               <div className="flex flex-wrap items-center gap-2">
                 <span className="tq-badge">{cat}</span>
                 <span className="text-xs text-[var(--tq-muted)]">{copies}</span>
               </div>
               <h2 className="mt-2 text-lg font-bold">{title}</h2>
               <p className="mt-1 text-sm text-[var(--tq-muted)]">{meta}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-auto flex flex-wrap gap-2 pt-4">
                 <span className="tq-btn tq-btn-ghost text-sm">Preview</span>
                 <span className="tq-btn tq-btn-primary text-sm">Use quiz</span>
               </div>

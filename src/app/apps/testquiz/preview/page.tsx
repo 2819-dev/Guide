@@ -17,10 +17,16 @@ export default function TestQuizPreviewPage() {
 
       <div className="mt-8 flex flex-wrap gap-2">
         <Link
-          href="/apps/testquiz/preview/create"
+          href="/apps/testquiz/preview/library"
           className="tq-btn tq-btn-primary no-underline"
         >
-          Create
+          Library
+        </Link>
+        <Link
+          href="/apps/testquiz/preview/create"
+          className="tq-btn tq-btn-ghost no-underline"
+        >
+          Editor
         </Link>
         <Link
           href="/apps/testquiz/preview/host"
@@ -47,11 +53,23 @@ export default function TestQuizPreviewPage() {
           Join with PIN
         </p>
         <p className="tq-pin tq-pulse tq-glow mt-3">482917</p>
-        <div className="mt-8 grid gap-3 sm:grid-cols-2">
-          <div className="tq-choice tq-choice-a">Mitochondria</div>
-          <div className="tq-choice tq-choice-b">Nucleus</div>
-          <div className="tq-choice tq-choice-c">Ribosome</div>
-          <div className="tq-choice tq-choice-d">Golgi</div>
+        <div className="tq-choices mt-8">
+          <div className="tq-choice tq-choice-a">
+            <span className="tq-shape tq-shape-tri" aria-hidden />
+            <span>Mitochondria</span>
+          </div>
+          <div className="tq-choice tq-choice-b">
+            <span className="tq-shape tq-shape-dia" aria-hidden />
+            <span>Nucleus</span>
+          </div>
+          <div className="tq-choice tq-choice-c">
+            <span className="tq-shape tq-shape-cir" aria-hidden />
+            <span>Ribosome</span>
+          </div>
+          <div className="tq-choice tq-choice-d">
+            <span className="tq-shape tq-shape-sq" aria-hidden />
+            <span>Golgi</span>
+          </div>
         </div>
       </section>
     </div>

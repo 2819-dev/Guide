@@ -54,10 +54,13 @@ export function TestQuizJoinPanel({ realName }: Props) {
 
   return (
     <div className="tq-rise mx-auto max-w-lg px-5 py-10 sm:px-8">
-      <h1 className="tq-brand text-center">Join a game</h1>
-      <p className="mt-3 text-center text-[var(--tq-muted)]">
-        Enter the PIN on the projector. Guide login required — no guests.
-      </p>
+      <div className="text-center">
+        <p className="tq-badge">Play</p>
+        <h1 className="tq-brand mt-2">Join a game</h1>
+        <p className="mt-3 text-[var(--tq-muted)]">
+          Enter the PIN on the projector. Guide login required — no guests.
+        </p>
+      </div>
 
       <div className="tq-panel mt-8 p-6 sm:p-8">
         <label className="block text-sm">
@@ -75,7 +78,7 @@ export function TestQuizJoinPanel({ realName }: Props) {
           />
         </label>
 
-        <div className="mt-5 rounded-2xl bg-white/5 px-4 py-3 text-sm text-[var(--tq-muted)]">
+        <div className="tq-soft mt-5 px-4 py-3 text-sm text-[var(--tq-muted)]">
           Playing as{" "}
           <strong className="text-[var(--tq-ink)]">{realName}</strong>
           {peek && !peek.allowNicknames

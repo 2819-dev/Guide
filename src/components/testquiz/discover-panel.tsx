@@ -134,12 +134,13 @@ export function TestQuizDiscoverPanel() {
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="grid gap-3 sm:grid-cols-2">
           {quizzes.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-white/20 p-8 text-[var(--tq-muted)] sm:col-span-2">
+            <div className="tq-soft p-8 text-[var(--tq-muted)] sm:col-span-2">
               No public quizzes yet. Publish one from your library editor.
             </div>
           ) : (
             quizzes.map((item) => (
-              <article key={item.id} className="tq-tile">
+              <article key={item.id} className="tq-tile flex flex-col">
+                <div className="tq-cover-strip" />
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="tq-badge">{categoryLabel(item.category)}</span>
                   <span className="text-xs text-[var(--tq-muted)]">
@@ -153,7 +154,7 @@ export function TestQuizDiscoverPanel() {
                 <p className="mt-2 text-xs text-[var(--tq-muted)]">
                   {item.questionCount} questions · by {item.ownerDisplayName}
                 </p>
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-auto flex flex-wrap gap-2 pt-4">
                   <button
                     type="button"
                     className="tq-btn tq-btn-ghost text-sm"
@@ -191,7 +192,7 @@ export function TestQuizDiscoverPanel() {
               <p className="text-sm">{preview.description}</p>
               <ol className="max-h-[50vh] space-y-2 overflow-auto text-sm">
                 {preview.questions.map((qu, i) => (
-                  <li key={qu.id} className="rounded-xl bg-white/5 px-3 py-2">
+                  <li key={qu.id} className="tq-soft px-3 py-2">
                     <span className="text-xs text-[var(--tq-muted)]">
                       {i + 1}. {TESTQUIZ_TYPE_LABEL[qu.type]} · {qu.timeLimitSec}s
                     </span>

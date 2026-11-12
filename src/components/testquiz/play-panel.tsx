@@ -8,9 +8,17 @@ import {
   playerLabel,
 } from "@/components/testquiz/live-bits";
 import { useGamePoll } from "@/components/testquiz/use-game-poll";
+import { TESTQUIZ_AVATARS } from "@/lib/testquiz/avatars";
+import { TESTQUIZ_TYPE_LABEL } from "@/lib/testquiz/types";
 import type { LiveAnswerPayload } from "@/lib/testquiz/types";
 
 const CHOICE_CLASS = ["tq-choice-a", "tq-choice-b", "tq-choice-c", "tq-choice-d"];
+const SHAPE_CLASS = [
+  "tq-shape-tri",
+  "tq-shape-dia",
+  "tq-shape-cir",
+  "tq-shape-sq",
+];
 
 type Props = { gameId: string; playerId: string };
 
@@ -126,14 +134,25 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
       </div>
 
       {game.phase === "lobby" ? (
-        <div className="mt-16 text-center">
-          <p className="tq-pulse text-3xl font-extrabold tracking-tight">
+        <div className="mt-12 text-center">
+          <p className="tq-kicker">Waiting room</p>
+          <p className="tq-pulse mt-2 text-3xl font-extrabold tracking-tight">
             You’re in!
           </p>
           <p className="mt-3 text-[var(--tq-muted)]">
-            Wait for your teacher to start the game.
+            Wait for your teacher to start · {game.questions.length} questions
           </p>
-          <div className="tq-lobby-chip mt-8">
+          <div className="tq-lobby-chip mt-8 inline-flex">
+            {game.settings.allowAvatars ? (
+              <span
+                className="tq-avatar-dot"
+                style={{
+                  background:
+                    TESTQUIZ_AVATARS.find((a) => a.id === me?.avatarId)?.color ??
+                    "#2563eb",
+                }}
+              />
+            ) : null}
             {playerLabel(
               {
                 displayName: me?.displayName ?? "You",
@@ -142,6 +161,10 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
               game.settings.allowNicknames,
             )}
           </div>
+          <p className="mt-6 text-sm text-[var(--tq-muted)]">
+            {game.players.filter((p) => !p.kicked).length} player
+            {game.players.filter((p) => !p.kicked).length === 1 ? "" : "s"} in lobby
+          </p>
         </div>
       ) : null}
 
@@ -156,13 +179,31 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
 
       {game.phase === "question" && question ? (
         <div className="mt-6">
+          <div className="tq-progress mb-3" aria-hidden>
+            {game.questions.map((q, i) => (
+              <span
+                key={q.id}
+                className={`tq-progress-dot ${
+                  i < game.questionIndex
+                    ? "is-done"
+                    : i === game.questionIndex
+                      ? "is-current"
+                      : ""
+                }`}
+              />
+            ))}
+          </div>
           <div className="mb-4">
             <QuestionTimerBar
               startedAtMs={game.questionStartedAtMs}
               limitSec={question.timeLimitSec}
             />
           </div>
-          <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+          <p className="tq-kicker">
+            Question {game.questionIndex + 1} of {game.questions.length} ·{" "}
+            {TESTQUIZ_TYPE_LABEL[question.type]}
+          </p>
+          <h2 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
             {question.prompt}
           </h2>
 
@@ -200,7 +241,11 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
                       }
                     }}
                   >
-                    {c.text || `Option ${i + 1}`}
+                    <span
+                      className={`tq-shape ${SHAPE_CLASS[i % 4]}`}
+                      aria-hidden
+                    />
+                    <span>{c.text || `Option ${i + 1}`}</span>
                   </button>
                 );
               })}
@@ -408,8 +453,8 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
                   key={p.id}
                   className={`flex justify-between rounded-xl px-4 py-3 ${
                     p.id === playerId
-                      ? "bg-[var(--tq-accent)]/20 font-bold"
-                      : "bg-white/5"
+                      ? "bg-[var(--tq-accent-wash)] font-bold ring-1 ring-[#bfdbfe]"
+                      : "tq-soft"
                   }`}
                 >
                   <span>
@@ -477,7 +522,7 @@ function PuzzlePlay({
       {ids.map((id, i) => (
         <div
           key={id}
-          className="flex items-center justify-between gap-2 rounded-xl bg-white/10 px-3 py-3"
+          className="tq-soft flex items-center justify-between gap-2 px-3 py-3"
         >
           <span className="font-semibold">
             <span className="mr-2 text-[var(--tq-muted)]">{i + 1}.</span>
