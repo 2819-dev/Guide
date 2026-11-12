@@ -56,77 +56,84 @@ export function TestQuizJoinPanel({ realName }: Props) {
     <div className="tq-rise mx-auto max-w-lg px-5 py-10 sm:px-8">
       <h1 className="tq-brand text-center">Join a game</h1>
       <p className="mt-3 text-center text-[var(--tq-muted)]">
-        Enter the PIN your teacher shows on the projector. Guide login required —
-        no guests.
+        Enter the PIN on the projector. Guide login required — no guests.
       </p>
 
-      <label className="mt-8 block text-sm">
-        <span className="mb-1 block text-[var(--tq-muted)]">Game PIN</span>
-        <input
-          className="tq-input text-center text-2xl tracking-[0.3em] font-bold"
-          inputMode="numeric"
-          value={pin}
-          onChange={(e) => setPin(normalizePin(e.target.value))}
-          placeholder="000000"
-          maxLength={6}
-        />
-      </label>
-
-      <div className="mt-5 rounded-2xl bg-white/5 px-4 py-3 text-sm text-[var(--tq-muted)]">
-        Playing as <strong className="text-[var(--tq-ink)]">{realName}</strong>
-        {peek && !peek.allowNicknames
-          ? " (teacher requires your Guide name)"
-          : ""}
-      </div>
-
-      {(!peek || peek.allowNicknames) && (
-        <label className="mt-4 block text-sm">
-          <span className="mb-1 block text-[var(--tq-muted)]">
-            Nickname (if allowed)
+      <div className="tq-panel mt-8 p-6 sm:p-8">
+        <label className="block text-sm">
+          <span className="mb-2 block text-center text-[var(--tq-muted)]">
+            Game PIN
           </span>
           <input
-            className="tq-input"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value.slice(0, 24))}
-            placeholder="Optional nickname"
+            className="tq-input text-center text-3xl font-extrabold tracking-[0.28em]"
+            inputMode="numeric"
+            value={pin}
+            onChange={(e) => setPin(normalizePin(e.target.value))}
+            placeholder="000000"
+            maxLength={6}
+            aria-label="Game PIN"
           />
         </label>
-      )}
 
-      {(!peek || peek.allowAvatars) && (
-        <div className="mt-4">
-          <p className="mb-2 text-sm text-[var(--tq-muted)]">Avatar</p>
-          <div className="flex flex-wrap gap-2">
-            {TESTQUIZ_AVATARS.map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                title={a.label}
-                className={`h-11 w-11 rounded-full border-2 ${
-                  avatarId === a.id ? "border-white" : "border-transparent"
-                }`}
-                style={{ background: a.color }}
-                onClick={() => setAvatarId(a.id)}
-              />
-            ))}
-          </div>
+        <div className="mt-5 rounded-2xl bg-white/5 px-4 py-3 text-sm text-[var(--tq-muted)]">
+          Playing as{" "}
+          <strong className="text-[var(--tq-ink)]">{realName}</strong>
+          {peek && !peek.allowNicknames
+            ? " (teacher requires your Guide name)"
+            : ""}
         </div>
-      )}
 
-      {error ? (
-        <p className="mt-4 rounded-xl bg-[rgba(255,107,74,0.15)] px-4 py-3 text-sm">
-          {error}
-        </p>
-      ) : null}
+        {(!peek || peek.allowNicknames) && (
+          <label className="mt-4 block text-sm">
+            <span className="mb-1 block text-[var(--tq-muted)]">
+              Nickname (if allowed)
+            </span>
+            <input
+              className="tq-input"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value.slice(0, 24))}
+              placeholder="Optional nickname"
+            />
+          </label>
+        )}
 
-      <button
-        type="button"
-        className="tq-btn tq-btn-primary mt-6 w-full"
-        disabled={busy || pin.length !== 6}
-        onClick={() => void join()}
-      >
-        {busy ? "Joining…" : "Join"}
-      </button>
+        {(!peek || peek.allowAvatars) && (
+          <div className="mt-4">
+            <p className="mb-2 text-sm text-[var(--tq-muted)]">Avatar</p>
+            <div className="flex flex-wrap gap-2">
+              {TESTQUIZ_AVATARS.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  title={a.label}
+                  className={`h-11 w-11 rounded-full border-2 transition ${
+                    avatarId === a.id
+                      ? "scale-110 border-white"
+                      : "border-transparent opacity-80 hover:opacity-100"
+                  }`}
+                  style={{ background: a.color }}
+                  onClick={() => setAvatarId(a.id)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {error ? (
+          <p className="mt-4 rounded-xl bg-[rgba(255,107,74,0.15)] px-4 py-3 text-sm">
+            {error}
+          </p>
+        ) : null}
+
+        <button
+          type="button"
+          className="tq-btn tq-btn-primary mt-6 w-full text-lg"
+          disabled={busy || pin.length !== 6}
+          onClick={() => void join()}
+        >
+          {busy ? "Joining…" : "Enter game"}
+        </button>
+      </div>
     </div>
   );
 }

@@ -96,7 +96,9 @@ export async function POST(request: Request, ctx: Ctx) {
       const { getGame } = await import("@/lib/testquiz/store");
       const state = await getGame(id);
       return NextResponse.json({
-        ...result,
+        correct: result.correct,
+        pointsAwarded: result.pointsAwarded,
+        streak: result.streak,
         game: state ? viewForPlayer(state, authz.profile.id) : null,
       });
     }

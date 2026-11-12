@@ -123,6 +123,8 @@ export type PlayerPublic = {
   nickname: string | null;
   avatarId: string | null;
   score: number;
+  /** Consecutive correct answers this game (scored questions only). */
+  streak: number;
   connected: boolean;
   kicked: boolean;
 };

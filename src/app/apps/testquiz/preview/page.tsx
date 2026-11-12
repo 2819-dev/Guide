@@ -17,34 +17,38 @@ export default function TestQuizPreviewPage() {
         enter a PIN — Guide login required.
       </p>
 
-      <section className="mt-10 rounded-3xl border border-white/10 bg-black/25 p-8 text-center">
+      <div className="mt-8 flex flex-wrap gap-2">
+        <Link
+          href="/apps/testquiz/preview/create"
+          className="tq-btn tq-btn-primary no-underline"
+        >
+          Create preview
+        </Link>
+        <Link
+          href="/apps/testquiz/preview/host"
+          className="tq-btn tq-btn-ghost no-underline"
+        >
+          Host preview
+        </Link>
+        <Link
+          href="/apps/testquiz/preview/play"
+          className="tq-btn tq-btn-ghost no-underline"
+        >
+          Play preview
+        </Link>
+      </div>
+
+      <section className="tq-panel mt-10 p-8 text-center">
         <p className="text-sm uppercase tracking-[0.2em] text-[var(--tq-muted)]">
           Join with PIN
         </p>
-        <p className="tq-pin tq-pulse mt-3">482917</p>
+        <p className="tq-pin tq-pulse tq-glow mt-3">482917</p>
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           <div className="tq-choice tq-choice-a">Mitochondria</div>
           <div className="tq-choice tq-choice-b">Nucleus</div>
           <div className="tq-choice tq-choice-c">Ribosome</div>
           <div className="tq-choice tq-choice-d">Golgi</div>
         </div>
-      </section>
-
-      <section className="mt-8 grid gap-3 sm:grid-cols-2">
-        <article className="tq-tile">
-          <h2 className="text-lg font-bold">Cell parts review</h2>
-          <p className="mt-1 text-sm text-[var(--tq-muted)]">8 questions</p>
-          <div className="mt-4 flex gap-2">
-            <span className="tq-btn tq-btn-ghost text-sm">Edit</span>
-            <span className="tq-btn tq-btn-primary text-sm">Host</span>
-          </div>
-        </article>
-        <article className="tq-tile">
-          <h2 className="text-lg font-bold">Plan: Free</h2>
-          <p className="mt-1 text-sm text-[var(--tq-muted)]">
-            12 live games / month · 40 players · Quiz + True/False
-          </p>
-        </article>
       </section>
 
       <p className="mt-8 text-sm text-[var(--tq-muted)]">

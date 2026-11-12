@@ -343,6 +343,7 @@ function publicView(
     .filter((p) => !p.kicked)
     .map((p) => ({
       ...p,
+      streak: p.streak ?? 0,
       displayName: state.settings.allowNicknames
         ? p.nickname || p.displayName
         : p.displayName,
@@ -407,6 +408,7 @@ export async function joinGame(opts: {
       : null,
     avatarId: state.settings.allowAvatars ? (opts.avatarId ?? "oak") : null,
     score: 0,
+    streak: 0,
     connected: true,
     kicked: false,
   };
@@ -585,7 +587,11 @@ export async function submitAnswer(opts: {
   gameId: string;
   playerId: string;
   payload: LiveAnswerPayload;
-}): Promise<{ correct: boolean | null; pointsAwarded: number }> {
+}): Promise<{
+  correct: boolean | null;
+  pointsAwarded: number;
+  streak: number;
+}> {
   let state = await getGame(opts.gameId);
   if (!state) throw new Error("Game not found");
   state = (await tickGame(opts.gameId)) ?? state;
@@ -620,8 +626,13 @@ export async function submitAnswer(opts: {
   };
   state.answers.push(record);
   player.score += pointsAwarded;
+  if (correct === true) {
+    player.streak = (player.streak ?? 0) + 1;
+  } else if (correct === false) {
+    player.streak = 0;
+  }
   await saveGameState(state);
-  return { correct, pointsAwarded };
+  return { correct, pointsAwarded, streak: player.streak ?? 0 };
 }
 
 export async function listGamesForHost(

@@ -2,7 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { TestQuizAudioPlayer } from "@/components/testquiz/audio-player";
+import {
+  CountdownDrama,
+  JoinQr,
+  QuestionTimerBar,
+  playerLabel,
+} from "@/components/testquiz/live-bits";
 import { useGamePoll } from "@/components/testquiz/use-game-poll";
+import { TESTQUIZ_AVATARS } from "@/lib/testquiz/avatars";
 import { TESTQUIZ_TYPE_LABEL } from "@/lib/testquiz/types";
 
 const CHOICE_CLASS = ["tq-choice-a", "tq-choice-b", "tq-choice-c", "tq-choice-d"];
@@ -14,7 +21,10 @@ export function TestQuizHostPanel({ gameId }: Props) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
-  async function act(action: Record<string, unknown>, kind: "host" | "settings" = "host") {
+  async function act(
+    action: Record<string, unknown>,
+    kind: "host" | "settings" = "host",
+  ) {
     setBusy(true);
     setMsg(null);
     try {
@@ -39,13 +49,25 @@ export function TestQuizHostPanel({ gameId }: Props) {
   }
 
   const question = game?.questions[game.questionIndex];
-  const leaders = useMemo(() => {
-    if (!game) return [];
-    return [...game.players]
-      .filter((p) => !p.kicked)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 5);
-  }, [game]);
+  const activePlayers = useMemo(
+    () => (game ? game.players.filter((p) => !p.kicked) : []),
+    [game],
+  );
+  const leaders = useMemo(
+    () => [...activePlayers].sort((a, b) => b.score - a.score).slice(0, 8),
+    [activePlayers],
+  );
+
+  const answerCounts = useMemo(() => {
+    if (!game || !question) return new Map<string, number>();
+    const map = new Map<string, number>();
+    for (const a of game.answers.filter((x) => x.questionId === question.id)) {
+      for (const id of a.payload.choiceIds ?? []) {
+        map.set(id, (map.get(id) ?? 0) + 1);
+      }
+    }
+    return map;
+  }, [game, question]);
 
   if (!game) {
     return (
@@ -54,6 +76,10 @@ export function TestQuizHostPanel({ gameId }: Props) {
       </p>
     );
   }
+
+  const answered = question
+    ? game.answers.filter((a) => a.questionId === question.id).length
+    : 0;
 
   return (
     <div className="tq-rise relative mx-auto max-w-6xl px-5 py-6 sm:px-8">
@@ -68,7 +94,9 @@ export function TestQuizHostPanel({ gameId }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm text-[var(--tq-muted)]">{game.quizTitle}</p>
-          <h1 className="tq-brand">Host</h1>
+          <h1 className="tq-brand">
+            {game.phase === "lobby" ? "Lobby" : "Live host"}
+          </h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
@@ -99,23 +127,32 @@ export function TestQuizHostPanel({ gameId }: Props) {
       ) : null}
 
       {game.phase === "lobby" ? (
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-3xl border border-white/10 bg-black/25 p-8 text-center">
-            <p className="text-sm uppercase tracking-[0.2em] text-[var(--tq-muted)]">
+        <div className="mt-8 grid gap-6 lg:grid-cols-[1.25fr_0.85fr]">
+          <div className="tq-panel p-8 text-center sm:p-10">
+            <p className="text-sm uppercase tracking-[0.22em] text-[var(--tq-muted)]">
               Join with PIN
             </p>
-            <p className="tq-pin tq-pulse mt-3">{game.pin}</p>
+            <p className="tq-pin tq-pulse tq-glow mt-4">{game.pin}</p>
             <p className="mt-4 text-[var(--tq-muted)]">
               Students open TestQuiz from My apps, then enter this PIN.
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <div className="mt-8 flex flex-wrap items-start justify-center gap-8">
+              <JoinQr pin={game.pin} />
+              <div className="max-w-xs text-left text-sm text-[var(--tq-muted)]">
+                <p className="font-semibold text-[var(--tq-ink)]">Projector tip</p>
+                <p className="mt-1">
+                  Keep this screen up. Students can scan the QR or type the PIN.
+                </p>
+              </div>
+            </div>
+            <div className="mt-10 flex flex-wrap justify-center gap-3">
               <button
                 type="button"
-                className="tq-btn tq-btn-primary"
-                disabled={busy || game.players.filter((p) => !p.kicked).length === 0}
+                className="tq-btn tq-btn-primary min-w-[10rem] text-lg"
+                disabled={busy || activePlayers.length === 0}
                 onClick={() => void act({ type: "start" })}
               >
-                Start
+                Start game
               </button>
             </div>
             <div className="mt-8 grid gap-3 text-left sm:grid-cols-3">
@@ -136,46 +173,65 @@ export function TestQuizHostPanel({ gameId }: Props) {
               />
             </div>
           </div>
-          <div className="rounded-3xl border border-white/10 bg-black/25 p-6">
+          <div className="tq-panel p-6">
             <h2 className="text-lg font-bold">
-              Players ({game.players.filter((p) => !p.kicked).length})
+              Players{" "}
+              <span className="text-[var(--tq-accent)]">
+                ({activePlayers.length})
+              </span>
             </h2>
-            <ul className="mt-4 max-h-[50vh] space-y-2 overflow-auto">
-              {game.players
-                .filter((p) => !p.kicked)
-                .map((p) => (
-                  <li
-                    key={p.id}
-                    className="flex items-center justify-between gap-2 rounded-xl bg-white/5 px-3 py-2"
-                  >
-                    <span>
-                      {game.settings.allowNicknames
-                        ? p.nickname || p.displayName
-                        : p.displayName}
-                    </span>
-                    <button
-                      type="button"
-                      className="text-xs text-[var(--tq-warn)]"
-                      onClick={() =>
-                        void act({ type: "kick", playerId: p.id })
-                      }
-                    >
-                      Kick
-                    </button>
-                  </li>
-                ))}
-            </ul>
+            {activePlayers.length === 0 ? (
+              <p className="mt-6 text-sm text-[var(--tq-muted)]">
+                Waiting for students to join…
+              </p>
+            ) : (
+              <ul className="mt-4 flex max-h-[55vh] flex-wrap gap-2 overflow-auto">
+                {activePlayers.map((p) => {
+                  const avatar = TESTQUIZ_AVATARS.find(
+                    (a) => a.id === p.avatarId,
+                  );
+                  return (
+                    <li key={p.id} className="tq-lobby-chip">
+                      {game.settings.allowAvatars ? (
+                        <span
+                          className="tq-avatar-dot"
+                          style={{ background: avatar?.color ?? "#3ecf8e" }}
+                        />
+                      ) : null}
+                      <span>
+                        {playerLabel(p, game.settings.allowNicknames)}
+                      </span>
+                      <button
+                        type="button"
+                        className="text-xs text-[var(--tq-warn)]"
+                        onClick={() =>
+                          void act({ type: "kick", playerId: p.id })
+                        }
+                      >
+                        Kick
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </div>
       ) : null}
 
       {game.phase === "countdown" ? (
         <div className="mt-16 text-center">
-          <p className="text-[var(--tq-muted)]">Get ready</p>
-          <p className="tq-countdown-num" key={game.phaseStartedAtMs}>
-            3
+          <p className="text-sm uppercase tracking-[0.2em] text-[var(--tq-muted)]">
+            Get ready
           </p>
-          <p className="mt-4 text-xl font-semibold">{question?.prompt}</p>
+          <CountdownDrama phaseStartedAtMs={game.phaseStartedAtMs} />
+          <p className="mt-6 text-2xl font-semibold sm:text-3xl">
+            {question?.prompt}
+          </p>
+          <p className="mt-3 text-sm text-[var(--tq-muted)]">
+            Q{game.questionIndex + 1} of {game.questions.length}
+            {question ? ` · ${TESTQUIZ_TYPE_LABEL[question.type]}` : ""}
+          </p>
         </div>
       ) : null}
 
@@ -184,35 +240,83 @@ export function TestQuizHostPanel({ gameId }: Props) {
         game.phase === "reveal") &&
       question ? (
         <div className="mt-8">
-          <p className="text-sm text-[var(--tq-muted)]">
-            Q{game.questionIndex + 1} · {TESTQUIZ_TYPE_LABEL[question.type]}
-          </p>
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-[var(--tq-muted)]">
+              Q{game.questionIndex + 1} · {TESTQUIZ_TYPE_LABEL[question.type]} ·{" "}
+              {answered}/{activePlayers.length} answered
+            </p>
+            {game.phase === "question" ? (
+              <div className="w-full max-w-xs sm:w-48">
+                <QuestionTimerBar
+                  startedAtMs={game.questionStartedAtMs}
+                  limitSec={question.timeLimitSec}
+                />
+              </div>
+            ) : null}
+          </div>
+          <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
             {question.prompt}
           </h2>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {(question.choices ?? []).map((c, i) => (
-              <div
-                key={c.id}
-                className={`tq-choice ${CHOICE_CLASS[i % 4]} ${
-                  game.phase === "reveal" && c.correct
-                    ? "ring-4 ring-white"
-                    : ""
-                }`}
-              >
-                {c.text || `Option ${i + 1}`}
-                {game.phase === "reveal" && c.correct ? " ✓" : ""}
-              </div>
-            ))}
-          </div>
-          <p className="mt-4 text-sm text-[var(--tq-muted)]">
-            Answers:{" "}
-            {
-              game.answers.filter((a) => a.questionId === question.id).length
-            }{" "}
-            / {game.players.filter((p) => !p.kicked).length}
-          </p>
-          <div className="mt-6 flex flex-wrap gap-2">
+          {question.mediaUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={question.mediaUrl}
+              alt=""
+              className="mt-5 max-h-56 rounded-2xl object-contain"
+            />
+          ) : null}
+
+          {(question.choices ?? []).length > 0 ? (
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {(question.choices ?? []).map((c, i) => {
+                const count = answerCounts.get(c.id) ?? 0;
+                const pct =
+                  activePlayers.length > 0
+                    ? Math.round((count / activePlayers.length) * 100)
+                    : 0;
+                const showBars =
+                  game.phase === "reveal" || game.phase === "lock";
+                return (
+                  <div key={c.id} className="space-y-2">
+                    <div
+                      className={`tq-choice ${CHOICE_CLASS[i % 4]} ${
+                        game.phase === "reveal" && c.correct
+                          ? "tq-choice-correct"
+                          : game.phase === "reveal" && !c.correct
+                            ? "tq-choice-miss"
+                            : ""
+                      }`}
+                    >
+                      {c.text || `Option ${i + 1}`}
+                      {game.phase === "reveal" && c.correct ? " ✓" : ""}
+                    </div>
+                    {showBars ? (
+                      <div className="tq-bar-row px-1">
+                        <span className="text-xs font-bold opacity-70">
+                          {String.fromCharCode(65 + i)}
+                        </span>
+                        <div className="tq-bar-track">
+                          <div
+                            className={`tq-bar-fill ${CHOICE_CLASS[i % 4]}`}
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-bold tabular-nums">
+                          {count}
+                        </span>
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="mt-8 rounded-2xl bg-white/5 px-5 py-8 text-center text-[var(--tq-muted)]">
+              Students are answering on their devices…
+            </p>
+          )}
+
+          <div className="mt-8 flex flex-wrap gap-2">
             {game.phase === "question" ? (
               <button
                 type="button"
@@ -245,7 +349,7 @@ export function TestQuizHostPanel({ gameId }: Props) {
                   className="tq-btn tq-btn-ghost"
                   onClick={() => void act({ type: "next" })}
                 >
-                  Next
+                  Next question
                 </button>
               </>
             ) : null}
@@ -267,15 +371,21 @@ export function TestQuizHostPanel({ gameId }: Props) {
             {leaders.map((p, i) => (
               <li
                 key={p.id}
-                className="flex items-center justify-between rounded-2xl bg-white/8 px-5 py-4 text-lg font-bold"
+                className="tq-pop flex items-center justify-between rounded-2xl bg-white/8 px-5 py-4 text-lg font-bold"
+                style={{ animationDelay: `${i * 60}ms` }}
               >
-                <span>
-                  {i + 1}.{" "}
-                  {game.settings.allowNicknames
-                    ? p.nickname || p.displayName
-                    : p.displayName}
+                <span className="flex items-center gap-3">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-sm">
+                    {i + 1}
+                  </span>
+                  {playerLabel(p, game.settings.allowNicknames)}
+                  {(p.streak ?? 0) >= 2 ? (
+                    <span className="tq-streak">🔥 {p.streak}</span>
+                  ) : null}
                 </span>
-                <span>{p.score}</span>
+                <span className="tabular-nums text-[var(--tq-accent)]">
+                  {p.score}
+                </span>
               </li>
             ))}
           </ol>
@@ -292,37 +402,42 @@ export function TestQuizHostPanel({ gameId }: Props) {
       {(game.phase === "podium" || game.phase === "ended") && (
         <div className="mt-12 text-center">
           <h2 className="tq-brand">Podium</h2>
-          <div className="mt-8 flex flex-wrap items-end justify-center gap-4">
+          <p className="mt-2 text-[var(--tq-muted)]">{game.quizTitle}</p>
+          <div className="mt-10 flex flex-wrap items-end justify-center gap-4">
             {leaders.slice(0, 3).map((p, i) => (
               <div
                 key={p.id}
-                className="tq-rise rounded-2xl bg-white/10 px-6 py-8"
+                className={`tq-podium-slot tq-pop ${i === 0 ? "is-first" : ""}`}
                 style={{
                   order: i === 0 ? 2 : i === 1 ? 1 : 3,
-                  minWidth: i === 0 ? 160 : 130,
-                  paddingBottom: i === 0 ? "3.5rem" : "2rem",
+                  minWidth: i === 0 ? 170 : 140,
+                  paddingBottom: i === 0 ? "3.25rem" : "1.75rem",
+                  animationDelay: `${i * 90}ms`,
                 }}
               >
                 <div className="text-3xl font-extrabold">#{i + 1}</div>
-                <div className="mt-2 font-bold">
-                  {game.settings.allowNicknames
-                    ? p.nickname || p.displayName
-                    : p.displayName}
+                <div className="mt-2 text-lg font-bold">
+                  {playerLabel(p, game.settings.allowNicknames)}
                 </div>
-                <div className="mt-1 text-[var(--tq-accent)]">{p.score}</div>
+                <div className="mt-1 text-xl text-[var(--tq-accent)]">
+                  {p.score}
+                </div>
               </div>
             ))}
           </div>
           {game.phase === "podium" ? (
             <button
               type="button"
-              className="tq-btn tq-btn-ghost mt-8"
+              className="tq-btn tq-btn-ghost mt-10"
               onClick={() => void act({ type: "end" })}
             >
               Close
             </button>
           ) : (
-            <a href="/apps/testquiz/library" className="tq-btn tq-btn-primary mt-8 inline-flex no-underline">
+            <a
+              href="/apps/testquiz/library"
+              className="tq-btn tq-btn-primary mt-10 inline-flex no-underline"
+            >
               Back to library
             </a>
           )}
