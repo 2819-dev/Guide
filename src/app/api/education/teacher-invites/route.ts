@@ -134,7 +134,7 @@ export async function POST(request: Request) {
       emailConfigured: resendConfigured(),
       message: resendConfigured()
         ? "Invites sent."
-        : "Invites saved. Add RESEND_API_KEY to send email automatically.",
+        : "Invites saved. Email sending isn’t available yet — contact Guide Official if you need a setup link now.",
     });
   } catch (e) {
     if (e instanceof z.ZodError) {

@@ -52,7 +52,7 @@ export function portalFor(opts: {
     return PORTALS.developer;
   }
   if (as === "educator" || role === "rebbe") {
-    // Teacher / School Administrator portal stays locked until approved.
+    // Teacher / School Administrator full portal after approval.
     return educationOk === true ? PORTALS.teacher : null;
   }
   if (as === "student" || schoolId || badgeCode) {

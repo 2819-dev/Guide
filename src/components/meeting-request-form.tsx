@@ -20,9 +20,8 @@ export function MeetingRequestForm() {
         <p className="portal-eyebrow">Book a meeting</p>
         <h2 className="display-feature mt-1">Request received</h2>
         <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
-          Thanks — Guide Official will review your request and follow up by
-          email. Meanwhile you can explore the demo or start a school
-          application.
+          Thanks — we’ll follow up by email. Meanwhile you can explore the demo
+          or apply for your school.
         </p>
         <p className="mt-5 flex flex-wrap gap-3 text-sm font-semibold text-forest-800">
           <Link href="/schools/demo">View demo →</Link>
@@ -65,8 +64,8 @@ export function MeetingRequestForm() {
         <p className="portal-eyebrow">For schools</p>
         <h2 className="display-feature mt-1">Book a meeting</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Tell us a little about your school. Guide Official reviews every
-          request and will contact you to schedule a walkthrough.
+          Tell us a little about your school. We’ll follow up to schedule a
+          walkthrough.
         </p>
       </div>
 
