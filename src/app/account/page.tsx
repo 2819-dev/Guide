@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { JoinClass } from "@/components/join-class";
 import { RoleBadgeChip } from "@/components/role-badge-chip";
-import { StudentBadgePanel } from "@/components/student-badge-panel";
 import { SupportForm } from "@/components/support-form";
 import { getDb } from "@/lib/db";
 import { portalFor } from "@/lib/portals";
@@ -55,9 +54,6 @@ export default async function AccountPage() {
   }
 
   const roles = await listRolesForProfile(authz.profile.id);
-  const showScanCredential =
-    (role === "customer" || role === "rebbe") &&
-    Boolean(authz.profile.schoolId || authz.profile.badgeCode);
 
   return (
     <div className="portal-page">
@@ -93,15 +89,6 @@ export default async function AccountPage() {
       </header>
 
       {(role === "customer" || role === "rebbe") && <JoinClass />}
-
-      {showScanCredential && (
-        <StudentBadgePanel
-          schoolName={schoolName}
-          badgeCode={authz.profile.badgeCode}
-          badgeReady={Boolean(authz.profile.badgeAuthUserId)}
-          canActivate={Boolean(authz.profile.schoolId)}
-        />
-      )}
 
       <SupportForm />
       </div>

@@ -14,5 +14,8 @@ export default async function OfficialPortalPage() {
     redirect("/auth/sign-in?as=official");
   }
   if (!authz) redirect("/auth/sign-in?as=official");
+  if (authz.profile.mustChangePassword) {
+    redirect("/auth/change-password");
+  }
   redirect("/admin");
 }

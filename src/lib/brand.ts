@@ -24,4 +24,4 @@ export const HOME_HERO_RELEASE_FALLBACK_SRC =
   "/brand/homepage-hero-official-release.jpg" as const;
 export const HOME_HERO_RELEASE_WIDTH = 1400;
 export const HOME_HERO_RELEASE_HEIGHT = 1400;
-export const HOME_HERO_RELEASE_DATE = "11.10.2026" as const;
+export const HOME_HERO_RELEASE_DATE = "11.17.2026" as const;

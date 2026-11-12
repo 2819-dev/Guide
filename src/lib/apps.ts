@@ -17,6 +17,12 @@ export const FIRST_APP_SLUG = "amud";
 export const ARCADE_APP_SLUG = "arcade-education";
 export const ARCADE_APP_NAME = "Arcade Education";
 
+/** Kahoot-class live quiz — hosted in Guide at /apps/testquiz. */
+export const TESTQUIZ_APP_SLUG = "testquiz";
+export const TESTQUIZ_APP_NAME = "TestQuiz";
+
+export type AppAvailability = "available" | "temporarily_unavailable";
+
 export type GuideApp = {
   slug: string;
   name: string;
@@ -27,7 +33,14 @@ export type GuideApp = {
    * When set, My apps / Open use the launch bridge (or this URL), not `/apps/{slug}` as home.
    */
   launchUrl?: string;
+  /** Default available. Temporarily unavailable apps stay listed but are not openable. */
+  availability?: AppAvailability;
 };
+
+export const APP_UNAVAILABLE_LABEL = "Temporarily unavailable";
+
+export const APP_UNAVAILABLE_DETAIL =
+  "This app is temporarily unavailable. It will be ready again soon.";
 
 export const APP_CATALOG: GuideApp[] = [
   {
@@ -36,6 +49,7 @@ export const APP_CATALOG: GuideApp[] = [
     tagline: "Mishnayos and Gemara · Test Yourself",
     description:
       "Open a daf, read Hebrew and English, keep notes, and Test Yourself with questions from the page. Available to everyone on the Amud site; schools can also add it in Guide.",
+    availability: "temporarily_unavailable",
   },
   {
     slug: ARCADE_APP_SLUG,
@@ -44,6 +58,14 @@ export const APP_CATALOG: GuideApp[] = [
     description:
       "A school game center teachers add to a class. Students open Arcade from My apps and play classroom games on the Arcade Education site.",
     launchUrl: arcadePublicUrl(),
+    availability: "temporarily_unavailable",
+  },
+  {
+    slug: TESTQUIZ_APP_SLUG,
+    name: TESTQUIZ_APP_NAME,
+    tagline: "Live classroom quizzes",
+    description:
+      "Teachers host live quizzes; students join with a PIN from My apps. Quiz, poll, puzzle, and more — Guide login required, no guest play.",
   },
 ];
 
@@ -59,6 +81,10 @@ export function isKnownAppSlug(slug: string): boolean {
   return APP_CATALOG.some((a) => a.slug === slug);
 }
 
+export function isAppAvailable(app: GuideApp): boolean {
+  return (app.availability ?? "available") === "available";
+}
+
 /** True when the app opens on an external host (not Guide `/apps/{slug}`). */
 export function isExternalLaunchApp(app: GuideApp): boolean {
   return Boolean(app.launchUrl);
@@ -71,10 +97,12 @@ export function appHomePath(slug: string = FIRST_APP_SLUG): string {
 
 /**
  * Href for My apps / teacher Open.
+ * Unavailable apps return null (UI shows status instead of a link).
  * External apps (Arcade) go through the Guide launch bridge so a token can be minted.
  * Same-origin apps keep `/apps/{slug}`.
  */
-export function appOpenHref(app: GuideApp): string {
+export function appOpenHref(app: GuideApp): string | null {
+  if (!isAppAvailable(app)) return null;
   if (app.launchUrl) {
     return `/api/apps/launch?slug=${encodeURIComponent(app.slug)}`;
   }

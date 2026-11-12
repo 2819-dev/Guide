@@ -19,7 +19,7 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
     label: "Student",
-    description: "Find your school, then username or badge",
+    description: "Find your school, then log in with your password",
     href: "/auth/sign-in?as=student",
   },
   {
@@ -69,7 +69,7 @@ export function loginAsCopy(as: LoginAs): {
     case "student":
       return {
         title: "Student",
-        subtitle: "Find your school, then log in with a username or badge.",
+        subtitle: "Find your school, then log in with your username and password.",
         joinHref: "/auth/sign-up?as=student",
         joinLabel: "Create a student account",
       };
@@ -119,7 +119,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Join as a Student",
         subtitle:
-          "Choose your school and create an account. You’ll get a badge for quick login, then join class from Account.",
+          "Choose your school and create an account. Then join class from Account.",
         roleValue: "customer",
         showRoleChooser: false,
       };

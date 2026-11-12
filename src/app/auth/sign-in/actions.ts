@@ -1,9 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth/server";
-import { badgeAuthEmail, normalizeBadgeCode } from "@/lib/badge";
 import { getDb } from "@/lib/db";
 import { hasDeveloperAccess } from "@/lib/developer-access";
 import { hasEducationAccess } from "@/lib/education-access";
@@ -12,7 +11,7 @@ import { portalFor } from "@/lib/portals";
 import { ensureProfile } from "@/lib/profile";
 import type { Role } from "@/lib/roles";
 import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
-import { profiles, schools } from "@/lib/schema";
+import { profiles } from "@/lib/schema";
 
 function destinationFor(
   as: LoginAs,
@@ -76,6 +75,10 @@ export async function signInWithEmail(
       .where(eq(profiles.id, session.profile.id));
   }
 
+  if (session.profile.mustChangePassword) {
+    redirect("/auth/change-password");
+  }
+
   const role = session.profile.role as Role;
   const educationOk = await hasEducationAccess(session.profile);
   const developerOk = await hasDeveloperAccess(session.profile);
@@ -91,56 +94,3 @@ export async function signInWithEmail(
   );
 }
 
-export async function signInStudentBadge(
-  _prev: { error: string } | null,
-  formData: FormData,
-) {
-  const schoolId = String(formData.get("schoolId") ?? "").trim();
-  const badgeCode = normalizeBadgeCode(String(formData.get("badgeCode") ?? ""));
-
-  if (!schoolId || !badgeCode) {
-    return { error: "Choose your school and enter a badge code." };
-  }
-
-  const db = getDb();
-  const [school] = await db
-    .select()
-    .from(schools)
-    .where(eq(schools.id, schoolId))
-    .limit(1);
-  if (!school) {
-    return { error: "School not found." };
-  }
-
-  const [profile] = await db
-    .select()
-    .from(profiles)
-    .where(
-      and(eq(profiles.schoolId, schoolId), eq(profiles.badgeCode, badgeCode)),
-    )
-    .limit(1);
-
-  if (!profile || !profile.badgeAuthUserId) {
-    return {
-      error:
-        "We couldn’t find that badge for this school. Check the code or ask your teacher.",
-    };
-  }
-
-  const email = badgeAuthEmail(school.slug, badgeCode);
-  const { error } = await auth.signIn.email({
-    email,
-    password: badgeCode,
-  });
-
-  if (error) {
-    return {
-      error:
-        error.message ||
-        "Badge login didn’t work. Try again or use username and password.",
-    };
-  }
-
-  await ensureProfile();
-  redirect("/student");
-}

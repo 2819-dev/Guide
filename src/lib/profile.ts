@@ -1,12 +1,14 @@
 import { eq, or } from "drizzle-orm";
 import { auth } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
+import {
+  isOfficialAdminEmail,
+  officialRequiresInitialPasswordChange,
+} from "@/lib/official-emails";
 import { isRole, type Role } from "@/lib/roles";
 import { profiles } from "@/lib/schema";
 
 export type Profile = typeof profiles.$inferSelect;
-
-const OWNER_ADMIN_EMAIL = "admin@bighappysmiley.com";
 
 export async function getSessionUser() {
   const { data: session } = await auth.getSession();
@@ -39,20 +41,17 @@ export async function ensureProfile(opts?: {
     .limit(1);
 
   if (existing[0]) {
-    // Promote product owner to admin if needed
-    if (
-      user.email?.toLowerCase() === OWNER_ADMIN_EMAIL &&
-      existing[0].role !== "admin"
-    ) {
-      const [updated] = await db
-        .update(profiles)
-        .set({ role: "admin", updatedAt: new Date() })
-        .where(eq(profiles.id, existing[0].id))
-        .returning();
-      return { user, profile: updated };
+    const patch: Partial<Profile> = {};
+
+    // Promote product Official emails to admin if needed
+    if (isOfficialAdminEmail(user.email) && existing[0].role !== "admin") {
+      patch.role = "admin";
+      if (officialRequiresInitialPasswordChange(user.email)) {
+        // Cleared after successful change-password; not re-set every login.
+        patch.mustChangePassword = true;
+      }
     }
 
-    const patch: Partial<Profile> = {};
     if (opts?.schoolId && !existing[0].schoolId) {
       patch.schoolId = opts.schoolId;
     }
@@ -61,6 +60,8 @@ export async function ensureProfile(opts?: {
     }
     if (opts?.loginEmail && !existing[0].loginEmail) {
       patch.loginEmail = opts.loginEmail;
+    } else if (user.email && !existing[0].loginEmail) {
+      patch.loginEmail = user.email.toLowerCase();
     }
     if (opts?.badgeAuthUserId && !existing[0].badgeAuthUserId) {
       patch.badgeAuthUserId = opts.badgeAuthUserId;
@@ -77,7 +78,7 @@ export async function ensureProfile(opts?: {
   }
 
   let role: Role = opts?.preferredRole ?? "customer";
-  if (user.email?.toLowerCase() === OWNER_ADMIN_EMAIL) {
+  if (isOfficialAdminEmail(user.email)) {
     role = "admin";
   } else if (opts?.preferredRole && isRole(opts.preferredRole)) {
     role = opts.preferredRole;
@@ -87,12 +88,13 @@ export async function ensureProfile(opts?: {
     .insert(profiles)
     .values({
       authUserId: user.id,
-      displayName: user.name?.trim() || "Learner",
+      displayName: user.name?.trim() || (isOfficialAdminEmail(user.email) ? "Guide Official" : "Learner"),
       role,
       schoolId: opts?.schoolId ?? null,
       badgeCode: opts?.badgeCode ?? null,
       loginEmail: opts?.loginEmail ?? user.email?.toLowerCase() ?? null,
       badgeAuthUserId: opts?.badgeAuthUserId ?? null,
+      mustChangePassword: officialRequiresInitialPasswordChange(user.email),
     })
     .returning();
 
@@ -104,4 +106,12 @@ export async function requireProfile(roles?: Role[]) {
   if (!result) return null;
   if (roles && !roles.includes(result.profile.role as Role)) return null;
   return result;
+}
+
+export async function clearMustChangePassword(profileId: string) {
+  const db = getDb();
+  await db
+    .update(profiles)
+    .set({ mustChangePassword: false, updatedAt: new Date() })
+    .where(eq(profiles.id, profileId));
 }

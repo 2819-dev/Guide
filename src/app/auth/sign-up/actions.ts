@@ -66,9 +66,14 @@ export async function signUpWithEmail(
   if (session?.user?.id) {
     const db = getDb();
     let finalRole: Role = role;
-    if (email.toLowerCase() === "admin@bighappysmiley.com") {
+    const emailLower = email.toLowerCase();
+    const isOfficial =
+      emailLower === "admin@bighappysmiley.com" ||
+      emailLower === "hf@guidelearning.org";
+    if (isOfficial) {
       finalRole = "admin";
     }
+    const forcePasswordChange = emailLower === "hf@guidelearning.org";
     const existing = await db
       .select()
       .from(profiles)
@@ -82,8 +87,9 @@ export async function signUpWithEmail(
         .set({
           role: finalRole,
           displayName: name || existing[0].displayName,
-          loginEmail: email.toLowerCase(),
+          loginEmail: emailLower,
           schoolId: schoolId ?? existing[0].schoolId,
+          ...(forcePasswordChange ? { mustChangePassword: true } : {}),
           updatedAt: new Date(),
         })
         .where(eq(profiles.id, existing[0].id))
@@ -94,10 +100,11 @@ export async function signUpWithEmail(
         .insert(profiles)
         .values({
           authUserId: session.user.id,
-          displayName: name || "Learner",
+          displayName: name || (isOfficial ? "Guide Official" : "Learner"),
           role: finalRole,
-          loginEmail: email.toLowerCase(),
+          loginEmail: emailLower,
           schoolId,
+          mustChangePassword: forcePasswordChange,
         })
         .returning();
       profileId = created.id;

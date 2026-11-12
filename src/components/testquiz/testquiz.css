@@ -1,0 +1,201 @@
+/* TestQuiz play surface — colorful engagement UI (Guide forest chrome outside). */
+.tq {
+  --tq-bg: #0b1f2a;
+  --tq-panel: #123041;
+  --tq-ink: #f4faf7;
+  --tq-muted: #9bb6c4;
+  --tq-a: #e21b3c;
+  --tq-b: #1368ce;
+  --tq-c: #d89e00;
+  --tq-d: #26890c;
+  --tq-accent: #2dd4a8;
+  --tq-warn: #ff6b4a;
+  font-family: var(--font-manrope), var(--font-body), system-ui, sans-serif;
+}
+
+.tq-shell {
+  min-height: calc(100vh - 4rem);
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #1a4a5c 0%, transparent 55%),
+    radial-gradient(900px 400px at 90% 0%, #2a1f4a 0%, transparent 50%),
+    var(--tq-bg);
+  color: var(--tq-ink);
+}
+
+.tq-band {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tq-brand {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.tq-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 1.25rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.tq-btn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.tq-btn:active {
+  transform: translateY(0);
+}
+
+.tq-btn-primary {
+  background: var(--tq-accent);
+  color: #04261c;
+}
+
+.tq-btn-ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--tq-ink);
+}
+
+.tq-btn-danger {
+  background: var(--tq-warn);
+  color: #1a0a06;
+}
+
+.tq-input,
+.tq-select,
+.tq-textarea {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--tq-ink);
+  padding: 0.65rem 0.9rem;
+  font: inherit;
+}
+
+.tq-textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.tq-pin {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  font-variant-numeric: tabular-nums;
+}
+
+.tq-choice {
+  min-height: 72px;
+  border-radius: 14px;
+  border: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  padding: 1rem;
+  text-align: left;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tq-choice:hover {
+  transform: scale(1.015);
+}
+
+.tq-choice-a {
+  background: var(--tq-a);
+}
+.tq-choice-b {
+  background: var(--tq-b);
+}
+.tq-choice-c {
+  background: var(--tq-c);
+  color: #1a1400;
+}
+.tq-choice-d {
+  background: var(--tq-d);
+}
+
+.tq-tile {
+  display: block;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.1rem 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.tq-tile:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.tq-watermark {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  opacity: 0.35;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  font-size: 0.85rem;
+}
+
+@keyframes tq-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.tq-pulse {
+  animation: tq-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes tq-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tq-rise {
+  animation: tq-rise 0.45s ease both;
+}
+
+@keyframes tq-countdown {
+  from {
+    transform: scale(0.6);
+    opacity: 0.2;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.tq-countdown-num {
+  animation: tq-countdown 0.55s ease;
+  font-size: clamp(4rem, 18vw, 8rem);
+  font-weight: 800;
+}

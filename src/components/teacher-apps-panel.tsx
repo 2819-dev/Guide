@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { appOpenHref, type GuideApp } from "@/lib/apps";
+import {
+  APP_UNAVAILABLE_LABEL,
+  appOpenHref,
+  isAppAvailable,
+  type GuideApp,
+} from "@/lib/apps";
 
 type Classroom = { id: string; name: string };
 
@@ -88,15 +93,21 @@ export function TeacherAppsPanel() {
                     </p>
                   </div>
                 </div>
-                <a
-                  href={appOpenHref(app)}
-                  className="btn-secondary !py-2 text-sm"
-                  {...(app.launchUrl
-                    ? { rel: "noopener noreferrer" }
-                    : {})}
-                >
-                  Open app
-                </a>
+                {isAppAvailable(app) ? (
+                  <a
+                    href={appOpenHref(app) ?? "#"}
+                    className="btn-secondary !py-2 text-sm"
+                    {...(app.launchUrl
+                      ? { rel: "noopener noreferrer" }
+                      : {})}
+                  >
+                    Open app
+                  </a>
+                ) : (
+                  <span className="rounded-[10px] border border-line bg-forest-100 px-3 py-2 text-sm font-semibold text-forest-800">
+                    {APP_UNAVAILABLE_LABEL}
+                  </span>
+                )}
               </div>
               <ul className="divide-y divide-line rounded-[10px] border border-line">
                 {classrooms.map((room) => {
