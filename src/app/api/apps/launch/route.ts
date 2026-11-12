@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { getAppEntitlement, mintLaunchToken } from "@/lib/app-launch";
-import { getApp } from "@/lib/apps";
+import {
+  APP_UNAVAILABLE_DETAIL,
+  APP_UNAVAILABLE_LABEL,
+  getApp,
+  isAppAvailable,
+} from "@/lib/apps";
 import { requireProfile } from "@/lib/profile";
 import { guidePublicUrl } from "@/lib/site";
 
@@ -29,6 +34,16 @@ export async function GET(request: Request) {
     return NextResponse.json(
       { error: "App does not support launch bridge" },
       { status: 400 },
+    );
+  }
+  if (!isAppAvailable(app)) {
+    return NextResponse.json(
+      {
+        error: APP_UNAVAILABLE_LABEL,
+        detail: APP_UNAVAILABLE_DETAIL,
+        availability: "temporarily_unavailable",
+      },
+      { status: 503 },
     );
   }
 

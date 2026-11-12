@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { StudyWorkspace } from "@/components/study-workspace";
-import { FIRST_APP_SLUG, getApp, studyPath } from "@/lib/apps";
+import {
+  FIRST_APP_SLUG,
+  getApp,
+  isAppAvailable,
+  studyPath,
+} from "@/lib/apps";
 import { adjacentDaf, resolveTractateAndDaf } from "@/lib/daf";
 import { ensureProfile } from "@/lib/profile";
 import { fetchDafText } from "@/lib/sefaria";
@@ -24,7 +29,9 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function AppDafPage({ params }: Props) {
   const { appSlug, tractate: slug, daf } = await params;
-  if (appSlug !== FIRST_APP_SLUG || !getApp(appSlug)) notFound();
+  const app = getApp(appSlug);
+  if (appSlug !== FIRST_APP_SLUG || !app) notFound();
+  if (!isAppAvailable(app)) redirect(`/apps/${FIRST_APP_SLUG}`);
 
   const resolved = resolveTractateAndDaf(slug, daf);
   if (!resolved) notFound();

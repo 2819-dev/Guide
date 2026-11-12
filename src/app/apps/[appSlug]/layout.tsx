@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { AppWordmark } from "@/components/app-wordmark";
-import { FIRST_APP_SLUG, getApp, isExternalLaunchApp } from "@/lib/apps";
+import {
+  FIRST_APP_SLUG,
+  getApp,
+  isAppAvailable,
+  isExternalLaunchApp,
+} from "@/lib/apps";
 import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 
 export const runtime = "edge";
@@ -17,7 +22,8 @@ export default async function AppShellLayout({ children, params }: Props) {
   if (!app) notFound();
 
   // External apps (Arcade): no Guide app chrome — launch bridge handles open.
-  if (isExternalLaunchApp(app)) {
+  // Unavailable apps stay on Guide and show the unavailable state in page.tsx.
+  if (isExternalLaunchApp(app) && isAppAvailable(app)) {
     redirect(`/api/apps/launch?slug=${encodeURIComponent(app.slug)}`);
   }
 

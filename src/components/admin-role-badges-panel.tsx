@@ -122,9 +122,8 @@ export function AdminRoleBadgesPanel() {
   return (
     <div className="space-y-8">
       <p className="text-sm text-ink-muted">
-        Discord-style roles with a name, color, and optional icon. Separate from
-        school <span className="font-medium">scan credentials</span> used at
-        student Log In.
+        Create roles with a name, color, and optional icon. Separate from school
+        scan credentials.
       </p>
 
       <div className="portal-panel space-y-4">

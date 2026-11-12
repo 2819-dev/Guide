@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { appOpenHref, type GuideApp } from "@/lib/apps";
+import {
+  APP_UNAVAILABLE_LABEL,
+  appOpenHref,
+  isAppAvailable,
+  type GuideApp,
+} from "@/lib/apps";
 
 type Props = {
   apps: GuideApp[];
@@ -29,23 +34,40 @@ export function MyAppsGrid({
       <ul className="portal-apps-grid">
         {apps.map((app) => {
           const href = appOpenHref(app);
+          const available = isAppAvailable(app);
           const external = Boolean(app.launchUrl);
+          const inner = (
+            <>
+              <span className="portal-app-tile__mark" aria-hidden>
+                {app.name.slice(0, 1)}
+              </span>
+              <span className="portal-app-tile__name">{app.name}</span>
+              <span className="portal-app-tile__tag">
+                {available ? app.tagline : APP_UNAVAILABLE_LABEL}
+              </span>
+            </>
+          );
+
           return (
             <li key={app.slug}>
-              <Link
-                href={href}
-                className="portal-app-tile"
-                aria-label={`Open ${app.name}`}
-                {...(external
-                  ? { rel: "noopener noreferrer" }
-                  : {})}
-              >
-                <span className="portal-app-tile__mark" aria-hidden>
-                  {app.name.slice(0, 1)}
-                </span>
-                <span className="portal-app-tile__name">{app.name}</span>
-                <span className="portal-app-tile__tag">{app.tagline}</span>
-              </Link>
+              {href ? (
+                <Link
+                  href={href}
+                  className="portal-app-tile"
+                  aria-label={`Open ${app.name}`}
+                  {...(external ? { rel: "noopener noreferrer" } : {})}
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div
+                  className="portal-app-tile opacity-75"
+                  aria-disabled="true"
+                  aria-label={`${app.name} — ${APP_UNAVAILABLE_LABEL}`}
+                >
+                  {inner}
+                </div>
+              )}
             </li>
           );
         })}

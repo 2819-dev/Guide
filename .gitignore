@@ -50,3 +50,4 @@ next-env.d.ts
 
 # agent Pages go-live status (no secrets)
 .cf-pages-go-live-status.json
+.env.local

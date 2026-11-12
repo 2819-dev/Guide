@@ -34,8 +34,11 @@ export const profiles = pgTable(
     /**
      * Neon Auth user id for badge.{slug}.{code}@guide.student identity.
      * ensureProfile resolves sessions for either authUserId or this id.
+     * Badge login was removed from consumer auth; field kept for scan credentials.
      */
     badgeAuthUserId: varchar("badge_auth_user_id", { length: 128 }),
+    /** Official (and future) first-login password change gate. */
+    mustChangePassword: boolean("must_change_password").notNull().default(false),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -495,6 +498,80 @@ export const developerApplications = pgTable("developer_applications", {
     .defaultNow()
     .notNull(),
 });
+
+/**
+ * TestQuiz — teacher plan entitlements (billing stub; default free).
+ */
+export const testquizEntitlements = pgTable("testquiz_entitlements", {
+  profileId: uuid("profile_id")
+    .primaryKey()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  planId: varchar("plan_id", { length: 16 }).notNull().default("free"),
+  liveGamesUsedThisMonth: integer("live_games_used_this_month")
+    .notNull()
+    .default(0),
+  usageMonth: varchar("usage_month", { length: 7 }).notNull().default(""),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/** TestQuiz quiz library documents (questions stored as jsonb). */
+export const testquizQuizzes = pgTable("testquiz_quizzes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  ownerProfileId: uuid("owner_profile_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  classroomId: uuid("classroom_id").references(() => classrooms.id, {
+    onDelete: "set null",
+  }),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description").notNull().default(""),
+  questions: jsonb("questions").notNull().default([]),
+  /** Teacher Discover: publicly listed for other teachers to copy. */
+  isPublic: boolean("is_public").notNull().default(false),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  category: varchar("category", { length: 64 }).notNull().default("general"),
+  tags: jsonb("tags").notNull().default([]),
+  copyCount: integer("copy_count").notNull().default(0),
+  sourceQuizId: uuid("source_quiz_id"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/** Live / historical TestQuiz games (authoritative state in jsonb). */
+export const testquizGames = pgTable(
+  "testquiz_games",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    pin: varchar("pin", { length: 6 }).notNull(),
+    quizId: uuid("quiz_id")
+      .notNull()
+      .references(() => testquizQuizzes.id, { onDelete: "cascade" }),
+    hostProfileId: uuid("host_profile_id")
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    classroomId: uuid("classroom_id").references(() => classrooms.id, {
+      onDelete: "set null",
+    }),
+    phase: varchar("phase", { length: 24 }).notNull().default("lobby"),
+    state: jsonb("state").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
+  },
+  // Active PIN uniqueness enforced in store (ended games free the PIN).
+);
+
+
 
 /** Apps owned by an approved developer partner. */
 export const developerApps = pgTable(

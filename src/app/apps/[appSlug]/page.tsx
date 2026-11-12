@@ -1,6 +1,15 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { TractatePicker } from "@/components/tractate-picker";
-import { FIRST_APP_SLUG, getApp, isExternalLaunchApp } from "@/lib/apps";
+import {
+  APP_UNAVAILABLE_DETAIL,
+  APP_UNAVAILABLE_LABEL,
+  FIRST_APP_SLUG,
+  TESTQUIZ_APP_SLUG,
+  getApp,
+  isAppAvailable,
+  isExternalLaunchApp,
+} from "@/lib/apps";
 
 export const runtime = "edge";
 
@@ -20,8 +29,40 @@ export default async function AppHomePage({ params }: Props) {
   const app = getApp(appSlug);
   if (!app) notFound();
 
+  // Dedicated app trees (e.g. /apps/testquiz) win over this dynamic route.
+  if (appSlug === TESTQUIZ_APP_SLUG) {
+    redirect("/apps/testquiz");
+  }
+
+  if (!isAppAvailable(app)) {
+    return (
+      <div>
+        <section className="hero-band">
+          <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
+            <p className="text-sm font-semibold text-forest-700">
+              {APP_UNAVAILABLE_LABEL}
+            </p>
+            <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
+              {app.name}
+            </h1>
+            <p className="mt-3 max-w-2xl text-base text-ink-muted">
+              {APP_UNAVAILABLE_DETAIL}
+            </p>
+            <p className="mt-6">
+              <Link
+                href="/apps"
+                className="font-semibold text-forest-800 no-underline hover:underline"
+              >
+                ← Back to app library
+              </Link>
+            </p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   // External apps (Arcade): shim → launch bridge → subdomain product home.
-  // Do not render a Guide-hosted Arcade surface here.
   if (isExternalLaunchApp(app)) {
     redirect(`/api/apps/launch?slug=${encodeURIComponent(app.slug)}`);
   }

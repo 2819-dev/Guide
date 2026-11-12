@@ -27,8 +27,8 @@ export function TeacherApplicationForm({
         <p className="portal-eyebrow">Teacher application</p>
         <h2 className="display-feature mt-1">Application received</h2>
         <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
-          Thanks — your class request is pending review. The teacher portal
-          stays locked until Guide Official accepts or declines.
+          Thanks — your class request is pending review. You can use a limited
+          portal while you wait for Guide Official to accept or decline.
         </p>
       </div>
     );

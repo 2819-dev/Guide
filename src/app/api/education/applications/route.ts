@@ -5,6 +5,7 @@ import { getDb } from "@/lib/db";
 import { ensureProfile, requireProfile } from "@/lib/profile";
 import { profiles, schoolApplications } from "@/lib/schema";
 import { syncSchoolFromApplication } from "@/lib/schools";
+import { isSmokeOrTestApplication } from "@/lib/visibility";
 
 export const runtime = 'edge';
 
@@ -50,7 +51,9 @@ export async function GET() {
     .from(schoolApplications)
     .orderBy(desc(schoolApplications.createdAt));
 
-  return NextResponse.json({ applications: rows });
+  return NextResponse.json({
+    applications: rows.filter((r) => !isSmokeOrTestApplication(r)),
+  });
 }
 
 export async function POST(request: Request) {

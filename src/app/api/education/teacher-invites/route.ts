@@ -36,7 +36,7 @@ export async function GET() {
   }
   const allowed = await hasEducationAccess(authz.profile);
   if (!allowed) {
-    return NextResponse.json({ error: "Portal locked" }, { status: 403 });
+    return NextResponse.json({ error: "School access required" }, { status: 403 });
   }
 
   const db = getDb();
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
   }
   const allowed = await hasEducationAccess(authz.profile);
   if (!allowed) {
-    return NextResponse.json({ error: "Portal locked" }, { status: 403 });
+    return NextResponse.json({ error: "School access required" }, { status: 403 });
   }
 
   try {

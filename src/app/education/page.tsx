@@ -48,7 +48,7 @@ export default async function EducationLandingPage() {
             </h1>
             <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
               {isPending
-                ? `${pendingLabel} The portal stays locked until Guide Official accepts or declines.`
+                ? `${pendingLabel} You can use a limited portal while you wait for Guide Official to accept or decline.`
                 : `${approvedLabel} Open your portal to invite teachers, create classes, and add apps.`}
             </p>
           </header>
@@ -65,7 +65,7 @@ export default async function EducationLandingPage() {
             ) : (
               <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-[0.95rem] leading-relaxed text-ink-muted">
-                  Your school portal is unlocked.
+                  Your school portal is ready.
                 </p>
                 <Link href="/education/panel" className="btn-primary shrink-0">
                   Open portal
@@ -124,7 +124,7 @@ export default async function EducationLandingPage() {
               Apply
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              School or district application. Tools stay locked until accepted.
+              School or district application. Full tools open after acceptance.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
@@ -157,8 +157,8 @@ export default async function EducationLandingPage() {
               {appStatus.schoolName
                 ? `${appStatus.schoolName} was not approved.`
                 : "Your previous application was not approved."}{" "}
-              Update the details and re-apply below. The portal stays locked
-              until an application is accepted.
+              Update the details and re-apply below. Full portal tools open after
+              an application is accepted.
             </p>
           </div>
         ) : null}

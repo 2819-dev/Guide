@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { DafPicker } from "@/components/daf-picker";
-import { FIRST_APP_SLUG, getApp, studyIndexPath, studyPath } from "@/lib/apps";
+import {
+  FIRST_APP_SLUG,
+  getApp,
+  isAppAvailable,
+  studyIndexPath,
+  studyPath,
+} from "@/lib/apps";
 import { parseDafId } from "@/lib/daf";
 import { getFeaturedTractate, getTractate } from "@/lib/tractates";
 
@@ -21,7 +27,9 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function AppTractatePage({ params }: Props) {
   const { appSlug, tractate: slug } = await params;
-  if (appSlug !== FIRST_APP_SLUG || !getApp(appSlug)) notFound();
+  const app = getApp(appSlug);
+  if (appSlug !== FIRST_APP_SLUG || !app) notFound();
+  if (!isAppAvailable(app)) redirect(`/apps/${FIRST_APP_SLUG}`);
 
   const featured = getFeaturedTractate();
   if (parseDafId(slug, featured)) {

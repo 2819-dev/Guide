@@ -1,6 +1,10 @@
 import { asc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { schoolApplications, schools } from "@/lib/schema";
+import {
+  filterVisibleRows,
+  isSmokeOrTestSchool,
+} from "@/lib/visibility";
 
 export type SchoolRow = typeof schools.$inferSelect;
 
@@ -24,6 +28,9 @@ export async function syncSchoolFromApplication(applicationId: string) {
     .where(eq(schoolApplications.id, applicationId))
     .limit(1);
   if (!app || app.status !== "approved") return null;
+  if (isSmokeOrTestSchool({ name: app.schoolName, schoolName: app.schoolName })) {
+    return null;
+  }
 
   const [existing] = await db
     .select()
@@ -75,7 +82,8 @@ export async function ensureApprovedSchools(): Promise<SchoolRow[]> {
     await syncSchoolFromApplication(app.id);
   }
 
-  return db.select().from(schools).orderBy(asc(schools.name));
+  const all = await db.select().from(schools).orderBy(asc(schools.name));
+  return filterVisibleRows(all, (s) => !isSmokeOrTestSchool(s));
 }
 
 export async function listSchools(query?: string): Promise<SchoolRow[]> {
@@ -84,6 +92,7 @@ export async function listSchools(query?: string): Promise<SchoolRow[]> {
   if (!q) return rows;
   return rows.filter(
     (s) =>
-      s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q),
+      (s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q)) &&
+      !isSmokeOrTestSchool(s),
   );
 }
