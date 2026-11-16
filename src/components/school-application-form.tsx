@@ -43,9 +43,10 @@ export function SchoolApplicationForm({
       <div className="portal-panel">
         <p className="portal-eyebrow">School application</p>
         <h2 className="display-feature mt-1">Application received</h2>
-        <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-          {alreadyAppliedMessage ??
-            "Your school application is already submitted. Open your School Administrator Portal anytime to check status."}
+        <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
+          Thanks — your school request is under review. You can use a limited
+          School Administrator Portal while you wait. After approval, invite
+          teachers and manage classes.
         </p>
         <a href="/education/panel" className="btn-primary mt-5 inline-flex">
           School Administrator Portal
@@ -100,9 +101,8 @@ export function SchoolApplicationForm({
         <p className="portal-eyebrow">School application</p>
         <h2 className="display-feature mt-1">Apply for your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          {hasAccount
-            ? "Share a few details about your school or district. After you submit, open your School Administrator Portal. Classroom tools open when your school is approved."
-            : "Applying creates your Guide account and opens your School Administrator Portal. Classroom tools open when your school is approved."}
+          Tell us about your school or district. After approval, invite
+          teachers, create classes, and add apps.
         </p>
       </div>
 

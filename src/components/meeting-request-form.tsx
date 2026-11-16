@@ -65,8 +65,8 @@ export function MeetingRequestForm() {
         <p className="portal-eyebrow">Meeting request</p>
         <h2 className="display-feature mt-1">Tell us about your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Share a few details and the Guide team will follow up to schedule a
-          walkthrough. Prefer to explore first? Open the demo anytime.
+          Tell us a little about your school. We’ll follow up to schedule a
+          walkthrough.
         </p>
       </div>
 

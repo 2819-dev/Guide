@@ -30,7 +30,7 @@ export default async function DeveloperPortalPage() {
     <PortalShell
       eyebrow="Developer"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Your verified apps sit in the center. Manage listings and docs from the tabs above — so schools can keep students engaged."
+      subtitle="Your verified apps appear here. Use the tabs to manage listings and docs."
       chips={[
         { href: "#apps", label: "My apps", active: true },
         { href: "#manage", label: "Manage apps" },

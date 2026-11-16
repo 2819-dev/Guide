@@ -116,8 +116,8 @@ export default async function EducationLandingPage() {
               Apply and create your account
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Submitting creates your Guide account. Open your {portalLabel}
-              while we review your school.
+              Submit a school or district application. Full tools open after
+              acceptance.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
@@ -126,8 +126,7 @@ export default async function EducationLandingPage() {
               Invite teachers
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              After approval, add work emails. Each teacher receives a setup
-              link to join your school.
+              Add teacher emails in your portal. Guide sends setup links.
             </p>
           </li>
           <li className="p-6">
@@ -151,8 +150,8 @@ export default async function EducationLandingPage() {
               {appStatus.schoolName
                 ? `${appStatus.schoolName} was not approved.`
                 : "Your previous application was not approved."}{" "}
-              Update the details below and re-apply when you are ready. Your{" "}
-              {portalLabel} stays open.
+              Update the details and re-apply below. Full tools open after
+              acceptance.
             </p>
             <div className="portal-empty__action">
               <Link href="/education/panel" className="btn-primary">
@@ -174,8 +173,8 @@ export default async function EducationLandingPage() {
               className="font-semibold text-forest-800"
             >
               Log in
-            </Link>
-            , then apply — or create your account when you submit below.
+            </Link>{" "}
+            before applying so approval opens your portal automatically.
           </p>
         )}
       </section>

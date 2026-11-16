@@ -41,8 +41,8 @@ function SignUpForm() {
     return (
       <AuthCard
         eyebrow="For schools"
-        title="Join with a school invite"
-        subtitle="Teachers receive a setup link from their school, then sign in to manage classes and apps. School and district administrators apply for Guide below."
+        title="Teachers log in only"
+        subtitle="Teachers receive a setup invite from their school. School and district administrators apply for Guide."
         footer={
           <>
             Already invited?{" "}

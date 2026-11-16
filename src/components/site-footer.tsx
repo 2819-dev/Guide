@@ -54,7 +54,7 @@ export function SiteFooter() {
                   href="/auth/sign-in?as=educator"
                   className="site-footer-link"
                 >
-                  Admin
+                  Teacher or administrator log in
                 </Link>
               </li>
             </ul>
