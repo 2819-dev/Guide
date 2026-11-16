@@ -3495,3 +3495,217 @@ body {
 .gh-hero__ctas .hero-link-card__label {
   font-size: 1.25rem;
 }
+
+/* ---------- Student log in ---------- */
+.student-login {
+  display: grid;
+  min-height: 100vh;
+  background: var(--sky-soft);
+}
+
+@media (min-width: 960px) {
+  .student-login {
+    grid-template-columns: minmax(380px, 40%) 1fr;
+  }
+}
+
+.student-login__side {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .student-login__side {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2.5rem 3rem 3rem;
+    background:
+      radial-gradient(ellipse 70% 50% at 20% 10%, rgba(255, 255, 255, 0.12), transparent 60%),
+      linear-gradient(165deg, var(--forest-800) 0%, var(--forest-950) 100%);
+    color: #fff;
+  }
+}
+
+.student-login__art {
+  width: min(100%, 340px);
+  margin: 0 auto;
+}
+
+.student-login__tagline {
+  margin: 0;
+  max-width: 20ch;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.student-login__main {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.25rem 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .student-login__main {
+    padding: 1.75rem 2.5rem 3rem;
+  }
+}
+
+.student-login__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.student-login__home {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--forest-800);
+  text-decoration: none;
+}
+
+.student-login__home:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 960px) {
+  .student-login__top .guide-wordmark {
+    visibility: hidden;
+  }
+
+  .student-login__top {
+    justify-content: flex-end;
+  }
+}
+
+.student-login__body {
+  width: 100%;
+  max-width: 28rem;
+  margin: auto;
+  padding-top: 2.5rem;
+}
+
+.student-login__card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.75rem;
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+@media (min-width: 640px) {
+  .student-login__card {
+    padding: 1.75rem;
+  }
+}
+
+.student-login__remembered {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.student-login__school-btn {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.student-login__school-btn:hover {
+  border-color: var(--forest-400);
+  background: var(--forest-100);
+}
+
+.student-login__results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.student-login__hint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ink-muted);
+}
+
+.student-login__empty {
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  background: var(--sky-soft);
+  border: 1px solid var(--line);
+}
+
+.student-login__error {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid #f1b5b5;
+  background: #fdecec;
+  color: #8a1c1c;
+  font-size: 0.9rem;
+}
+
+.student-login__chosen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: var(--forest-100);
+}
+
+.student-login__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+@media (prefers-color-scheme: dark) {
+  .student-login__home {
+    color: var(--forest-400);
+  }
+
+  .student-login__error {
+    border-color: #7a2a2a;
+    background: #2a1414;
+    color: #ffc9c9;
+  }
+}
+
+/* Fields already show a focus glow; skip the global outline on them */
+.field:focus-visible {
+  outline: none;
+}

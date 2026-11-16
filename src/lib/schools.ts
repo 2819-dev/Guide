@@ -20,6 +20,20 @@ export function slugifySchoolName(name: string): string {
   return base || "school";
 }
 
+type ApplicationRow = typeof schoolApplications.$inferSelect;
+
+/**
+ * Accepting a teacher invite records an approved application so the
+ * teacher's portal unlocks. That row is an access grant, not a new school,
+ * and must never create (or list) a schools row.
+ */
+export function isTeacherInviteGrant(app: ApplicationRow): boolean {
+  return (
+    app.studentCountEstimate === "invited" &&
+    (app.contactRole ?? "").toLowerCase() === "teacher"
+  );
+}
+
 export async function syncSchoolFromApplication(applicationId: string) {
   const db = getDb();
   const [app] = await db
@@ -28,6 +42,7 @@ export async function syncSchoolFromApplication(applicationId: string) {
     .where(eq(schoolApplications.id, applicationId))
     .limit(1);
   if (!app || app.status !== "approved") return null;
+  if (isTeacherInviteGrant(app)) return null;
   if (isSmokeOrTestSchool({ name: app.schoolName, schoolName: app.schoolName })) {
     return null;
   }
@@ -78,12 +93,23 @@ export async function ensureApprovedSchools(): Promise<SchoolRow[]> {
     .from(schoolApplications)
     .where(eq(schoolApplications.status, "approved"));
 
+  const inviteGrantIds = new Set<string>();
   for (const app of approved) {
+    if (isTeacherInviteGrant(app)) {
+      inviteGrantIds.add(app.id);
+      continue;
+    }
     await syncSchoolFromApplication(app.id);
   }
 
   const all = await db.select().from(schools).orderBy(asc(schools.name));
-  return filterVisibleRows(all, (s) => !isSmokeOrTestSchool(s));
+  return filterVisibleRows(
+    all,
+    (s) =>
+      !isSmokeOrTestSchool(s) &&
+      // Hide duplicates created by older invite grants before this fix.
+      !(s.applicationId && inviteGrantIds.has(s.applicationId)),
+  );
 }
 
 export async function listSchools(query?: string): Promise<SchoolRow[]> {

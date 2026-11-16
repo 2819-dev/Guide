@@ -2,225 +2,280 @@
 
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
-import { LoginMenu } from "@/components/login-menu";
-import { loginAsCopy } from "@/lib/login-roles";
 import { signInWithEmail } from "@/app/auth/sign-in/actions";
+import { GuideWordmark } from "@/components/guide-logo";
+import { HeroStudentArt } from "@/components/home-illustrations";
+import { LoginMenu } from "@/components/login-menu";
+import { PhotoFrame } from "@/components/photo-frame";
 
 type School = { id: string; name: string; slug: string };
 
-/** Student login: school typeahead → password only (no Badge login). */
+const LAST_SCHOOL_KEY = "guide:last-school";
+
+function readLastSchool(): School | null {
+  try {
+    const raw = window.localStorage.getItem(LAST_SCHOOL_KEY);
+    return raw ? (JSON.parse(raw) as School) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveLastSchool(school: School) {
+  try {
+    window.localStorage.setItem(LAST_SCHOOL_KEY, JSON.stringify(school));
+  } catch {
+    // Private mode / blocked storage — remembering the school is optional.
+  }
+}
+
+/**
+ * Student log in (Clever-style): find your school, then email + password.
+ * Remembers the last school on this device so returning students skip search.
+ */
 export function StudentSignIn() {
-  const copy = loginAsCopy("student");
   const [schools, setSchools] = useState<School[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [loadingSchools, setLoadingSchools] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [school, setSchool] = useState<School | null>(null);
+  const [remembered, setRemembered] = useState<School | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [passState, passAction, passPending] = useActionState(
-    signInWithEmail,
-    null,
-  );
+  const [state, action, pending] = useActionState(signInWithEmail, null);
 
   useEffect(() => {
     let cancelled = false;
-    async function load() {
-      setLoadingSchools(true);
-      setLoadError(null);
+    (async () => {
       try {
         const res = await fetch("/api/schools");
         const data = await res.json();
-        if (!cancelled) {
-          setSchools(data.schools ?? []);
-          if (!res.ok) setLoadError(data.error ?? "Could not load schools");
-        }
+        if (cancelled) return;
+        const list: School[] = data.schools ?? [];
+        setSchools(list);
+        if (!res.ok) setLoadError("We couldn’t load schools. Refresh to try again.");
+        // Only offer the remembered school if it's still on Guide.
+        const last = readLastSchool();
+        if (last) setRemembered(list.find((s) => s.id === last.id) ?? null);
       } catch {
-        if (!cancelled) setLoadError("Could not load schools");
+        if (!cancelled) setLoadError("We couldn’t load schools. Refresh to try again.");
       } finally {
-        if (!cancelled) setLoadingSchools(false);
+        if (!cancelled) setLoading(false);
       }
-    }
-    void load();
+    })();
     return () => {
       cancelled = true;
     };
   }, []);
 
   const q = query.trim().toLowerCase();
-  const filtered = !q
-    ? []
-    : schools.filter(
-        (s) =>
-          s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q),
-      );
+  const matches = q
+    ? schools.filter(
+        (s) => s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q),
+      )
+    : [];
 
-  function changeSchool() {
-    setSchool(null);
+  function choose(s: School) {
+    setSchool(s);
     setQuery("");
+    saveLastSchool(s);
   }
 
   return (
-    <div className="login-split">
-      <div className="login-split__visual" aria-hidden />
+    <div className="student-login">
+      <aside className="student-login__side" aria-hidden>
+        <GuideWordmark href={null} tone="onDark" size="lg" />
+        <div className="student-login__art">
+          <PhotoFrame shape="pill" accent="sun">
+            <HeroStudentArt />
+          </PhotoFrame>
+        </div>
+        <p className="student-login__tagline">
+          One login for every app your class uses.
+        </p>
+      </aside>
 
-      <div className="login-split__panel">
-        <div className="w-full max-w-[700px]">
-          <h1 className="login-title">Log in with Guide</h1>
-          <p className="mx-auto mt-2.5 max-w-md text-center text-[0.9375rem] leading-relaxed text-ink-muted">
-            {!school
-              ? copy.subtitle
-              : "Use the username and password from your school."}
-          </p>
-
-          <div className="mt-9">
-            {!school ? (
-              <div className="mx-auto max-w-md space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)] sm:p-7">
-                <label className="block text-sm font-semibold text-forest-900">
-                  Find your school
-                  <input
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search by school name"
-                    className="field mt-1.5"
-                    autoFocus
-                  />
-                </label>
-                {loadingSchools && (
-                  <p className="text-sm text-ink-muted">Loading schools…</p>
-                )}
-                {loadError && (
-                  <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
-                    {loadError}
-                  </p>
-                )}
-                {!loadingSchools && schools.length === 0 && !loadError && (
-                  <div className="portal-empty !py-7">
-                    <p className="portal-empty__title">No schools yet</p>
-                    <p className="portal-empty__body">
-                      Ask your teacher to apply for Guide. Once approved, your
-                      school will show up here.
-                    </p>
-                  </div>
-                )}
-                {q ? (
-                  <ul className="max-h-64 divide-y divide-line overflow-y-auto rounded-[10px] border border-line">
-                    {filtered.length === 0 ? (
-                      <li className="px-4 py-3.5 text-sm text-ink-muted">
-                        No schools match that name. Check the spelling, or ask
-                        your teacher if your school uses Guide.
-                      </li>
-                    ) : (
-                      filtered.map((s) => (
-                        <li key={s.id}>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSchool(s);
-                              setQuery("");
-                            }}
-                            className="flex min-h-[52px] w-full items-center justify-between gap-3 px-4 py-3.5 text-left text-base font-semibold text-forest-950 transition hover:bg-forest-100"
-                          >
-                            <span>{s.name}</span>
-                            <span aria-hidden className="text-forest-600">
-                              →
-                            </span>
-                          </button>
-                        </li>
-                      ))
-                    )}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-ink-muted">
-                    Start typing to find your school.
-                  </p>
-                )}
-                <p className="text-center text-sm text-ink-muted">
-                  New to Guide?{" "}
-                  <Link
-                    href="/auth/sign-up?as=student"
-                    className="font-semibold text-forest-800"
-                  >
-                    Create a student account
-                  </Link>
-                </p>
-                <div className="text-center text-sm text-ink-muted">
-                  Not a student?{" "}
-                  <span className="inline-block align-middle">
-                    <LoginMenu variant="nav" />
-                  </span>
-                  <span aria-hidden className="mx-1.5 text-forest-300">
-                    ·
-                  </span>
-                  <Link
-                    href="/auth/sign-in?as=official"
-                    className="font-semibold text-forest-800"
-                  >
-                    Guide Official
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <form
-                action={passAction}
-                className="mx-auto max-w-md space-y-4 rounded-[10px] bg-surface p-6 shadow-[var(--shadow-card)]"
-              >
-                <div className="flex items-center justify-between gap-3 text-sm">
-                  <span className="font-semibold text-forest-950">
-                    {school.name}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={changeSchool}
-                    className="font-semibold text-forest-800"
-                  >
-                    Change school
-                  </button>
-                </div>
-                <input type="hidden" name="as" value="student" />
-                <input type="hidden" name="schoolId" value={school.id} />
-                <label className="block text-sm font-semibold text-forest-900">
-                  Username
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="username"
-                    placeholder="Your Guide email"
-                    className="field mt-1.5"
-                    autoFocus
-                  />
-                </label>
-                <label className="block text-sm font-semibold text-forest-900">
-                  Password
-                  <input
-                    name="password"
-                    type="password"
-                    required
-                    autoComplete="current-password"
-                    className="field mt-1.5"
-                  />
-                </label>
-                {passState?.error && (
-                  <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
-                    {passState.error}
-                  </p>
-                )}
-                <button
-                  type="submit"
-                  disabled={passPending}
-                  className="btn-primary w-full !py-3"
-                >
-                  {passPending ? "Signing in…" : "Log In"}
-                </button>
-              </form>
-            )}
-          </div>
+      <div className="student-login__main">
+        <div className="student-login__top">
+          <GuideWordmark href="/" size="md" />
+          <Link href="/" className="student-login__home">
+            ← Back to Guide
+          </Link>
         </div>
 
-        <p className="absolute bottom-4 right-4 text-xs text-ink-muted sm:right-6">
-          Guide © 2026
-        </p>
+        <div className="student-login__body">
+          <p className="login-eyebrow">Student</p>
+          <h1 className="login-title">Log in to Guide</h1>
+
+          {!school ? (
+            <div className="student-login__card">
+              {remembered ? (
+                <div className="student-login__remembered">
+                  <p className="text-sm text-ink-muted">Welcome back</p>
+                  <button
+                    type="button"
+                    className="student-login__school-btn"
+                    onClick={() => choose(remembered)}
+                  >
+                    <span>{remembered.name}</span>
+                    <span aria-hidden>→</span>
+                  </button>
+                  <p className="text-center text-sm text-ink-muted">
+                    Not your school? Search below.
+                  </p>
+                </div>
+              ) : null}
+
+              <label className="block text-sm font-semibold text-forest-900" htmlFor="school-search">
+                Find your school
+              </label>
+              <input
+                id="school-search"
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Start typing your school’s name"
+                className="field"
+                autoComplete="off"
+                autoFocus={!remembered}
+                aria-describedby="school-search-status"
+              />
+
+              <div id="school-search-status" aria-live="polite">
+                {loading ? (
+                  <p className="student-login__hint">Loading schools…</p>
+                ) : loadError ? (
+                  <p className="student-login__error">{loadError}</p>
+                ) : schools.length === 0 ? (
+                  <div className="student-login__empty">
+                    <p className="font-semibold text-forest-950">No schools on Guide yet</p>
+                    <p className="mt-1 text-sm text-ink-muted">
+                      When your school joins Guide, you’ll find it here. Your
+                      teacher can tell you when it’s ready.
+                    </p>
+                  </div>
+                ) : !q ? (
+                  <p className="student-login__hint">
+                    Type at least a few letters of your school’s name.
+                  </p>
+                ) : matches.length === 0 ? (
+                  <div className="student-login__empty">
+                    <p className="font-semibold text-forest-950">No school matches “{query.trim()}”</p>
+                    <p className="mt-1 text-sm text-ink-muted">
+                      Check the spelling, or ask your teacher whether your
+                      school uses Guide.
+                    </p>
+                  </div>
+                ) : (
+                  <ul className="student-login__results" aria-label="Matching schools">
+                    {matches.slice(0, 8).map((s) => (
+                      <li key={s.id}>
+                        <button
+                          type="button"
+                          className="student-login__school-btn"
+                          onClick={() => choose(s)}
+                        >
+                          <span>{s.name}</span>
+                          <span aria-hidden>→</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          ) : (
+            <form action={action} className="student-login__card">
+              <div className="student-login__chosen">
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
+                    Your school
+                  </p>
+                  <p className="truncate font-semibold text-forest-950">{school.name}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSchool(null)}
+                  className="shrink-0 text-sm font-semibold text-forest-800 hover:underline"
+                >
+                  Change
+                </button>
+              </div>
+
+              <input type="hidden" name="as" value="student" />
+              <input type="hidden" name="schoolId" value={school.id} />
+
+              <label className="block text-sm font-semibold text-forest-900">
+                Email
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="username"
+                  inputMode="email"
+                  placeholder="you@example.com"
+                  className="field mt-1.5"
+                  autoFocus
+                />
+              </label>
+
+              <label className="block text-sm font-semibold text-forest-900">
+                Password
+                <span className="relative mt-1.5 block">
+                  <input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    autoComplete="current-password"
+                    className="field pr-20"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute inset-y-0 right-0 px-4 text-sm font-semibold text-forest-800"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </span>
+              </label>
+
+              {state?.error ? (
+                <p className="student-login__error" role="alert">
+                  {state.error}
+                </p>
+              ) : null}
+
+              <button type="submit" disabled={pending} className="btn-primary w-full !py-3">
+                {pending ? "Logging in…" : "Log in"}
+              </button>
+
+              <p className="text-center text-sm text-ink-muted">
+                Forgot your password? Ask your teacher, or email{" "}
+                <a href="mailto:hello@guidelearning.org" className="font-semibold text-forest-800 underline">
+                  hello@guidelearning.org
+                </a>
+                .
+              </p>
+            </form>
+          )}
+
+          <div className="student-login__links">
+            <p>
+              New to Guide?{" "}
+              <Link
+                href="/auth/sign-up?as=student"
+                className="font-semibold text-forest-800 hover:underline"
+              >
+                Create a student account
+              </Link>
+            </p>
+            <div className="flex items-center justify-center gap-2">
+              <span>Not a student?</span>
+              <LoginMenu variant="nav" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
