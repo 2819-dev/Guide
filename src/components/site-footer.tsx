@@ -61,8 +61,8 @@ export function SiteFooter() {
         <div className="content-band site-footer-legal__inner">
           <p>Copyright © 2026 Guide</p>
           <p className="flex flex-wrap gap-x-4 gap-y-1">
-            <a href="mailto:hello@guidelearning.org">Terms</a>
-            <a href="mailto:hello@guidelearning.org">Privacy</a>
+            <Link href="/terms">Terms</Link>
+            <Link href="/privacy">Privacy</Link>
             <a href="mailto:hello@guidelearning.org">Accessibility</a>
           </p>
         </div>
