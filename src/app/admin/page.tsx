@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { AdminDevelopersPanel } from "@/components/admin-developers-panel";
@@ -7,6 +8,8 @@ import { AdminSchoolsPanel } from "@/components/admin-schools-panel";
 import { AdminSuggestionsPanel } from "@/components/admin-suggestions-panel";
 import { AdminSupportPanel } from "@/components/admin-support-panel";
 import { PortalShell } from "@/components/portal-shell";
+import { getBlitzOverview, type BlitzOverview } from "@/lib/blitz/admin";
+import { checkoutConfigured } from "@/lib/blitz/billing-config";
 import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
@@ -35,6 +38,48 @@ function OfficialSection({
   );
 }
 
+async function BlitzOfficialCard() {
+  let overview: BlitzOverview | null = null;
+  try {
+    overview = await getBlitzOverview();
+  } catch (error) {
+    console.error("[admin] blitz overview", error);
+  }
+  const payments = checkoutConfigured();
+  const stats = overview
+    ? [
+        { value: overview.planCounts.plus + overview.planCounts.ultra, label: "Teachers on Plus / Ultra" },
+        { value: overview.liveGamesThisMonth, label: "Live games this month" },
+        { value: overview.activePromoCodes, label: "Active promo codes" },
+      ]
+    : [];
+  return (
+    <div className="flex flex-col gap-4">
+      {stats.length > 0 ? (
+        <div className="official-stat-row">
+          {stats.map((s) => (
+            <div key={s.label} className="official-stat">
+              <p className="official-stat__value">{s.value.toLocaleString()}</p>
+              <p className="official-stat__label">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      ) : null}
+      <div className="flex flex-wrap items-center gap-3">
+        <Link href="/apps/blitz/admin" className="btn-primary no-underline">
+          Open Blitz admin
+        </Link>
+        <Link href="/apps/blitz/admin?tab=plans" className="btn-secondary no-underline">
+          Grant a plan
+        </Link>
+        <span className="text-sm text-ink-muted">
+          {payments ? "Stripe payments are on." : "Stripe payments aren’t set up yet. Codes and grants still work."}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default async function AdminPage() {
   let authz = null;
   try {
@@ -60,6 +105,7 @@ export default async function AdminPage() {
         { href: "#developers", label: "Developers" },
         { href: "#roles", label: "Roles" },
         { href: "#suggestions", label: "Suggestions" },
+        { href: "#blitz", label: "Blitz" },
         ...(isAdmin ? [{ href: "#support", label: "Get help" }] : []),
       ]}
       accountName={authz.profile.displayName}
@@ -102,6 +148,14 @@ export default async function AdminPage() {
         lede="Review student suggestions and study prompts from across Guide."
       >
         <AdminSuggestionsPanel />
+      </OfficialSection>
+
+      <OfficialSection
+        id="blitz"
+        title="Blitz"
+        lede="Live classroom quizzes: promo codes, teacher plans, subscribers, and usage."
+      >
+        <BlitzOfficialCard />
       </OfficialSection>
 
       {isAdmin ? (

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
-import { getEntitlement, setPlan } from "@/lib/blitz/entitlements";
+import { getEntitlement, grantPlan } from "@/lib/blitz/entitlements";
 import type { BlitzPlanId } from "@/lib/blitz/plans";
 
 export const runtime = "edge";
@@ -19,9 +19,13 @@ export async function GET() {
   return NextResponse.json(snap);
 }
 
-/** Stub: Official/admin can set a teacher's plan until billing ships. */
+/**
+ * Official: set a teacher's plan as a permanent Official grant ("free"
+ * revokes Official grants). Stripe subscriptions and promo codes still apply;
+ * the Blitz admin console (/apps/blitz/admin) is the full UI for this.
+ */
 export async function POST(request: Request) {
-  const authz = await requireProfile(["admin"]);
+  const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
     return NextResponse.json({ error: "Official access required" }, { status: 403 });
   }
@@ -32,7 +36,11 @@ export async function POST(request: Request) {
         planId: z.enum(["free", "plus", "ultra"]),
       })
       .parse(await request.json());
-    const snap = await setPlan(body.profileId, body.planId as BlitzPlanId);
+    const snap = await grantPlan({
+      profileId: body.profileId,
+      planId: body.planId as BlitzPlanId,
+      grantedBy: authz.profile.id,
+    });
     return NextResponse.json(snap);
   } catch (error) {
     console.error(error);
