@@ -1,75 +1,73 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { BlitzAudioPlayer } from "@/components/blitz/audio-player";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
-  CountdownDrama,
-  QuestionTimerBar,
-  playerLabel,
-} from "@/components/blitz/live-bits";
+  BlitzAvatar,
+  BlitzBolt,
+  Confetti,
+  Flame,
+  SpeakerIcon,
+} from "@/components/blitz/brand";
+import { CountdownNumber, TimerBar, ordinal, playerLabel } from "@/components/blitz/live-bits";
+import {
+  PlayerAnswerInput,
+  correctAnswerText,
+} from "@/components/blitz/question-views";
+import { BlitzStage } from "@/components/blitz/stage";
+import { playBlitzSfx, useBlitzAudio } from "@/components/blitz/use-blitz-audio";
 import { useGamePoll } from "@/components/blitz/use-game-poll";
-import { BLITZ_AVATARS } from "@/lib/blitz/avatars";
-import { BLITZ_TYPE_LABEL } from "@/lib/blitz/types";
-import type { LiveAnswerPayload } from "@/lib/blitz/types";
-
-const CHOICE_CLASS = ["tq-choice-a", "tq-choice-b", "tq-choice-c", "tq-choice-d"];
-const SHAPE_CLASS = [
-  "tq-shape-tri",
-  "tq-shape-dia",
-  "tq-shape-cir",
-  "tq-shape-sq",
-];
+import { gameMode, gameTheme, teamStandings } from "@/lib/blitz/modes";
+import { isScoredType } from "@/lib/blitz/scoring";
+import {
+  BLITZ_TYPE_LABEL,
+  type LiveAnswerPayload,
+  type LiveGameState,
+} from "@/lib/blitz/types";
 
 type Props = { gameId: string; playerId: string };
 
+const LINES = {
+  correct: ["Nailed it!", "Zap!", "On fire!", "Brilliant!", "Yes!!"],
+  wrong: ["Not quite", "So close", "Shake it off", "Next one’s yours"],
+  late: ["Too slow!", "Time’s up!"],
+  neutral: ["Got it!", "Noted!", "Thanks!"],
+};
+
+function pick(list: string[], n: number) {
+  return list[n % list.length]!;
+}
+
 export function BlitzPlayPanel({ gameId, playerId }: Props) {
-  const { game, setGame, error } = useGamePoll(gameId, 900);
-  const [feedback, setFeedback] = useState<{
-    kind: "correct" | "wrong" | "neutral";
-    text: string;
-    streak?: number;
-  } | null>(null);
+  const { game, setGame, error, skewMs } = useGamePoll(gameId, 900);
   const [busy, setBusy] = useState(false);
-  const [text, setText] = useState("");
-  const [number, setNumber] = useState(50);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [order, setOrder] = useState<string[]>([]);
-  const [pin, setPin] = useState<{ x: number; y: number } | null>(null);
-  const [questionKey, setQuestionKey] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { muted, setMuted } = useBlitzAudio(null);
 
   const question = game?.questions[game.questionIndex];
-  const myAnswer = useMemo(() => {
-    if (!game || !question) return null;
-    return game.answers.find(
-      (a) => a.playerId === playerId && a.questionId === question.id,
-    );
-  }, [game, question, playerId]);
-
+  const myAnswer = useMemo(
+    () =>
+      game && question
+        ? game.answers.find((a) => a.playerId === playerId && a.questionId === question.id) ?? null
+        : null,
+    [game, question, playerId],
+  );
   const me = game?.players.find((p) => p.id === playerId);
 
-  // Reset local answer UI when the question changes
+  // Sound on reveal
+  const lastRevealed = useRef<string | null>(null);
   useEffect(() => {
-    if (!question) return;
-    if (question.id === questionKey) return;
-    setQuestionKey(question.id);
-    setSelected([]);
-    setText("");
-    setOrder((question.choices ?? []).map((c) => c.id));
-    setNumber(
-      question.sliderCorrect ??
-        Math.round(
-          ((question.sliderMin ?? 0) + (question.sliderMax ?? 100)) / 2,
-        ),
-    );
-    setPin(null);
-    setFeedback(null);
-  }, [question, questionKey]);
+    if (!game || !question || game.phase !== "reveal") return;
+    if (lastRevealed.current === question.id) return;
+    lastRevealed.current = question.id;
+    if (myAnswer?.correct === true) playBlitzSfx("correct");
+    else if (myAnswer?.correct === false || (!myAnswer && isScoredType(question.type))) playBlitzSfx("wrong", 0.8);
+  }, [game, question, myAnswer]);
 
   async function submit(payload: LiveAnswerPayload) {
     if (busy || myAnswer) return;
     setBusy(true);
-    setFeedback(null);
+    setSubmitError(null);
     try {
       const res = await fetch(`/api/blitz/games/${gameId}/action`, {
         method: "POST",
@@ -79,22 +77,8 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Could not submit");
       if (data.game) setGame(data.game);
-      if (data.correct === true) {
-        setFeedback({
-          kind: "correct",
-          text: `Correct! +${data.pointsAwarded}`,
-          streak: data.streak,
-        });
-      } else if (data.correct === false) {
-        setFeedback({ kind: "wrong", text: "Not quite" });
-      } else {
-        setFeedback({ kind: "neutral", text: "Response recorded" });
-      }
     } catch (e) {
-      setFeedback({
-        kind: "wrong",
-        text: e instanceof Error ? e.message : "Submit failed",
-      });
+      setSubmitError(e instanceof Error ? e.message : "Submit failed");
     } finally {
       setBusy(false);
     }
@@ -102,459 +86,329 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
 
   if (!game) {
     return (
-      <p className="px-5 py-10 text-[var(--tq-muted)]">
-        {error ?? "Loading…"}
-      </p>
+      <BlitzStage>
+        <div className="bz-center">
+          <BlitzBolt size={64} className="bz-spinner-bolt" />
+          <p className="bz-muted">{error ?? "Joining…"}</p>
+          {error ? (
+            <Link href="/apps/blitz/join" className="bz-btn bz-btn--primary no-underline">
+              Back to join
+            </Link>
+          ) : null}
+        </div>
+      </BlitzStage>
     );
   }
+
+  const theme = gameTheme(game.settings);
 
   if (me?.kicked) {
     return (
-      <p className="px-5 py-10 text-center text-[var(--tq-warn)]">
-        You were removed from this game.
-      </p>
+      <BlitzStage theme={theme}>
+        <div className="bz-phone">
+          <div className="bz-center">
+            <h1 className="bz-h1">You’re out of this one</h1>
+            <p className="bz-muted">The host removed you from the game.</p>
+            <Link href="/apps/blitz/join" className="bz-btn bz-btn--primary no-underline">
+              Join another game
+            </Link>
+          </div>
+        </div>
+      </BlitzStage>
     );
   }
 
+  const ranked = [...game.players].filter((p) => !p.kicked).sort((a, b) => b.score - a.score);
+  const myRank = ranked.findIndex((p) => p.id === playerId) + 1;
+  const ahead = myRank > 1 ? ranked[myRank - 2] : null;
+  const team = me?.teamId ? game.teams?.find((t) => t.id === me.teamId) : null;
+  const name = me ? playerLabel(me, game.settings.allowNicknames) : "You";
+
+  let tone: "correct" | "wrong" | "neutral" | "late" | null = null;
+  if (game.phase === "reveal" && question) {
+    if (!myAnswer) tone = isScoredType(question.type) ? "late" : "neutral";
+    else if (myAnswer.correct === true) tone = "correct";
+    else if (myAnswer.correct === false) tone = "wrong";
+    else tone = "neutral";
+  }
+
   return (
-    <div className="tq-rise mx-auto max-w-3xl px-4 py-5 sm:px-8 sm:py-6">
-      <BlitzAudioPlayer
-        src={game.musicTrack}
-        enabled={game.settings.musicEnabled && !!game.musicTrack}
-      />
-      <div className="flex items-center justify-between gap-3 text-sm">
-        <span className="truncate text-[var(--tq-muted)]">{game.quizTitle}</span>
-        <div className="flex items-center gap-2">
-          {(me?.streak ?? 0) >= 2 ? (
-            <span className="tq-streak">Streak {me?.streak}</span>
-          ) : null}
-          <span className="font-bold tabular-nums text-[var(--tq-ink)]">
-            {me?.score ?? 0} pts
+    <BlitzStage theme={theme} tone={tone}>
+      <div className="bz-phone">
+        <div className="bz-phone-top">
+          <span className="bz-scorechip">
+            {game.settings.allowAvatars ? <BlitzAvatar id={me?.avatarId} seed={playerId} size={30} /> : null}
+            <span>{name}</span>
           </span>
-        </div>
-      </div>
-
-      {game.phase === "lobby" ? (
-        <div className="mt-12 text-center">
-          <p className="tq-kicker">Waiting room</p>
-          <p className="tq-pulse mt-2 text-3xl font-extrabold tracking-tight">
-            You’re in!
-          </p>
-          <p className="mt-3 text-[var(--tq-muted)]">
-            Wait for your teacher to start · {game.questions.length} questions
-          </p>
-          <div className="tq-lobby-chip mt-8 inline-flex">
-            {game.settings.allowAvatars ? (
-              <span
-                className="tq-avatar-dot"
-                style={{
-                  background:
-                    BLITZ_AVATARS.find((a) => a.id === me?.avatarId)?.color ??
-                    "#2563eb",
-                }}
-              />
+          <span className="flex items-center gap-2">
+            {(me?.streak ?? 0) >= 2 ? (
+              <span className="bz-streak">
+                <Flame size={16} />
+                {me?.streak}
+              </span>
             ) : null}
-            {playerLabel(
-              {
-                displayName: me?.displayName ?? "You",
-                nickname: me?.nickname ?? null,
-              },
-              game.settings.allowNicknames,
-            )}
-          </div>
-          <p className="mt-6 text-sm text-[var(--tq-muted)]">
-            {game.players.filter((p) => !p.kicked).length} player
-            {game.players.filter((p) => !p.kicked).length === 1 ? "" : "s"} in lobby
-          </p>
-        </div>
-      ) : null}
-
-      {game.phase === "countdown" ? (
-        <div className="mt-14 text-center">
-          <CountdownDrama phaseStartedAtMs={game.phaseStartedAtMs} />
-          <p className="mt-4 text-xl font-semibold sm:text-2xl">
-            {question?.prompt}
-          </p>
-        </div>
-      ) : null}
-
-      {game.phase === "question" && question ? (
-        <div className="mt-6">
-          <div className="tq-progress mb-3" aria-hidden>
-            {game.questions.map((q, i) => (
-              <span
-                key={q.id}
-                className={`tq-progress-dot ${
-                  i < game.questionIndex
-                    ? "is-done"
-                    : i === game.questionIndex
-                      ? "is-current"
-                      : ""
-                }`}
-              />
-            ))}
-          </div>
-          <div className="mb-4">
-            <QuestionTimerBar
-              startedAtMs={game.questionStartedAtMs}
-              limitSec={question.timeLimitSec}
-            />
-          </div>
-          <p className="tq-kicker">
-            Question {game.questionIndex + 1} of {game.questions.length} ·{" "}
-            {BLITZ_TYPE_LABEL[question.type]}
-          </p>
-          <h2 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
-            {question.prompt}
-          </h2>
-
-          {question.mediaUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={question.mediaUrl}
-              alt=""
-              className="mt-4 max-h-48 w-full rounded-2xl object-contain"
-            />
-          ) : null}
-
-          {(question.type === "quiz" ||
-            question.type === "true_false" ||
-            question.type === "poll") && (
-            <div className="tq-choices mt-6">
-              {(question.choices ?? []).map((c, i) => {
-                const on = selected.includes(c.id);
-                return (
-                  <button
-                    key={c.id}
-                    type="button"
-                    disabled={!!myAnswer || busy}
-                    className={`tq-choice ${CHOICE_CLASS[i % 4]} ${on ? "tq-choice-correct" : ""}`}
-                    onClick={() => {
-                      if (question.multiSelect) {
-                        setSelected((prev) =>
-                          prev.includes(c.id)
-                            ? prev.filter((x) => x !== c.id)
-                            : [...prev, c.id],
-                        );
-                      } else {
-                        setSelected([c.id]);
-                        void submit({ choiceIds: [c.id] });
-                      }
-                    }}
-                  >
-                    <span
-                      className={`tq-shape ${SHAPE_CLASS[i % 4]}`}
-                      aria-hidden
-                    />
-                    <span>{c.text || `Option ${i + 1}`}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {question.multiSelect && !myAnswer ? (
+            <span className="bz-pill" style={tone ? { background: "rgba(255,255,255,.45)", color: "var(--bz-ink)", borderColor: "var(--bz-ink)" } : undefined}>
+              {(me?.score ?? 0).toLocaleString()}
+            </span>
             <button
               type="button"
-              className="tq-btn tq-btn-primary mt-4 w-full sm:w-auto"
-              disabled={selected.length === 0 || busy}
-              onClick={() => void submit({ choiceIds: selected })}
+              className="bz-iconbtn"
+              style={{ width: 38, height: 38 }}
+              aria-pressed={muted}
+              aria-label={muted ? "Unmute sounds" : "Mute sounds"}
+              onClick={() => setMuted(!muted)}
             >
-              Submit answers
+              <SpeakerIcon off={muted} />
             </button>
-          ) : null}
+          </span>
+        </div>
 
-          {(question.type === "type_answer" ||
-            question.type === "word_cloud" ||
-            question.type === "brainstorm" ||
-            question.type === "open_ended") &&
-            !myAnswer && (
-              <div className="mt-6 space-y-3">
-                <input
-                  className="tq-input text-lg"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  placeholder="Type your answer"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && text.trim()) {
-                      void submit({ text });
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  className="tq-btn tq-btn-primary w-full"
-                  disabled={!text.trim() || busy}
-                  onClick={() => void submit({ text })}
-                >
-                  Submit
-                </button>
-              </div>
-            )}
-
-          {(question.type === "slider" ||
-            question.type === "scale" ||
-            question.type === "nps_scale") &&
-            !myAnswer && (
-              <div className="mt-6 space-y-4">
-                <input
-                  type="range"
-                  className="w-full accent-[var(--tq-accent)]"
-                  min={question.sliderMin ?? 0}
-                  max={question.sliderMax ?? 100}
-                  step={question.sliderStep ?? 1}
-                  value={number}
-                  onChange={(e) => setNumber(Number(e.target.value))}
-                />
-                <p className="text-center text-4xl font-extrabold tabular-nums">
-                  {number}
-                </p>
-                <div className="flex justify-between text-xs text-[var(--tq-muted)]">
-                  <span>{question.scaleMinLabel ?? question.sliderMin}</span>
-                  <span>{question.scaleMaxLabel ?? question.sliderMax}</span>
-                </div>
-                <button
-                  type="button"
-                  className="tq-btn tq-btn-primary w-full"
-                  disabled={busy}
-                  onClick={() => void submit({ number })}
-                >
-                  Submit
-                </button>
-              </div>
-            )}
-
-          {question.type === "puzzle" && !myAnswer && (
-            <PuzzlePlay
-              choiceIds={(question.choices ?? []).map((c) => c.id)}
-              labels={Object.fromEntries(
-                (question.choices ?? []).map((c) => [c.id, c.text]),
-              )}
-              order={order.length ? order : (question.choices ?? []).map((c) => c.id)}
-              setOrder={setOrder}
-              onSubmit={() =>
-                void submit({
-                  order: order.length
-                    ? order
-                    : (question.choices ?? []).map((c) => c.id),
-                })
-              }
-              busy={busy}
-            />
-          )}
-
-          {(question.type === "pin_answer" || question.type === "drop_pin") &&
-            !myAnswer && (
-              <div className="mt-6 space-y-3">
-                {question.mediaUrl ? (
-                  <button
-                    type="button"
-                    className="relative block w-full overflow-hidden rounded-2xl border border-white/15 p-0"
-                    onClick={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const x = (e.clientX - rect.left) / rect.width;
-                      const y = (e.clientY - rect.top) / rect.height;
-                      setPin({ x, y });
-                    }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={question.mediaUrl}
-                      alt="Tap to place pin"
-                      className="block max-h-72 w-full object-contain"
-                    />
-                    {pin ? (
-                      <span
-                        className="absolute h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[var(--tq-warn)] shadow-lg"
-                        style={{ left: `${pin.x * 100}%`, top: `${pin.y * 100}%` }}
-                      />
-                    ) : null}
-                  </button>
-                ) : (
-                  <p className="text-sm text-[var(--tq-muted)]">
-                    No image set — submitting center pin.
-                  </p>
-                )}
-                <button
-                  type="button"
-                  className="tq-btn tq-btn-primary w-full"
-                  disabled={busy || (!!question.mediaUrl && !pin)}
-                  onClick={() =>
-                    void submit({
-                      pinX: pin?.x ?? 0.5,
-                      pinY: pin?.y ?? 0.5,
-                    })
-                  }
-                >
-                  Drop pin
-                </button>
-              </div>
-            )}
-
-          {myAnswer || feedback ? (
-            <div
-              className={`tq-feedback mt-6 ${
-                feedback?.kind === "correct"
-                  ? "tq-feedback-correct"
-                  : feedback?.kind === "wrong"
-                    ? "tq-feedback-wrong tq-shake"
-                    : "tq-feedback-neutral"
-              }`}
-            >
-              <p className="text-2xl font-extrabold">
-                {feedback?.text ?? "Answer locked in"}
-              </p>
-              {(feedback?.streak ?? 0) >= 2 ? (
-                <p className="tq-streak mt-3">Streak {feedback?.streak}</p>
-              ) : null}
-              {myAnswer && !feedback ? (
-                <p className="mt-1 text-sm text-[var(--tq-muted)]">
-                  Wait for the reveal…
-                </p>
-              ) : null}
+        {game.phase === "lobby" ? (
+          <div className="bz-center">
+            <div className="bz-bigavatar">
+              <BlitzAvatar id={me?.avatarId} seed={playerId} size={150} />
             </div>
-          ) : null}
+            <h1 className="bz-h1">You’re in!</h1>
+            <p className="bz-feedback-sub">
+              Look for <strong>{name}</strong> on the big screen.
+            </p>
+            {team ? (
+              <span className="bz-chip" style={{ background: team.color, color: "var(--bz-ink)", borderColor: "var(--bz-ink)" }}>
+                You’re on {team.name}
+              </span>
+            ) : null}
+            <p className="bz-faint">
+              {game.players.filter((p) => !p.kicked).length} players · {game.questions.length} questions ·{" "}
+              {gameMode(game.settings) === "accuracy" ? "Accuracy mode" : gameMode(game.settings) === "team" ? "Team battle" : "Classic"}
+            </p>
+          </div>
+        ) : null}
+
+        {game.phase === "countdown" && question ? (
+          <div className="bz-center">
+            <span className="bz-pill bz-pill--accent">
+              Question {game.questionIndex + 1} · {BLITZ_TYPE_LABEL[question.type]}
+            </span>
+            <CountdownNumber phaseStartedAtMs={game.phaseStartedAtMs} />
+            <p className="bz-feedback-sub">{question.prompt}</p>
+          </div>
+        ) : null}
+
+        {game.phase === "question" && question ? (
+          myAnswer ? (
+            <div className="bz-center">
+              <BlitzBolt size={96} className="bz-spinner-bolt" />
+              <h1 className="bz-h1">Locked in!</h1>
+              <p className="bz-feedback-sub">
+                {myAnswer.responseMs < question.timeLimitSec * 300 ? "Lightning fingers. " : ""}
+                Eyes on the big screen…
+              </p>
+            </div>
+          ) : (
+            <>
+              <TimerBar startedAtMs={game.questionStartedAtMs} limitSec={question.timeLimitSec} skewMs={skewMs} />
+              <div className="flex items-center justify-between gap-2">
+                <span className="bz-kicker">
+                  {game.questionIndex + 1}/{game.questions.length} · {BLITZ_TYPE_LABEL[question.type]}
+                </span>
+                {question.points === 2000 ? <span className="bz-chip bz-chip--sun">Double points</span> : null}
+              </div>
+              <div className="bz-prompt-card bz-prompt-card--sm">{question.prompt}</div>
+              {submitError ? <p className="bz-alert">{submitError}</p> : null}
+              <PlayerAnswerInput key={question.id} question={question} busy={busy} onSubmit={(p) => void submit(p)} />
+            </>
+          )
+        ) : null}
+
+        {game.phase === "lock" ? (
+          <div className="bz-center">
+            <BlitzBolt size={80} className="bz-spinner-bolt" />
+            <h1 className="bz-h1">Pencils down</h1>
+            <p className="bz-feedback-sub">Results coming up…</p>
+          </div>
+        ) : null}
+
+        {game.phase === "reveal" && question ? (
+          <RevealCard game={game} tone={tone!} myRank={myRank} aheadName={ahead ? playerLabel(ahead, game.settings.allowNicknames) : null} aheadGap={ahead && me ? ahead.score - me.score : 0} />
+        ) : null}
+
+        {game.phase === "leaderboard" ? (
+          <div className="bz-center">
+            <p className="bz-kicker">You’re in</p>
+            <p className="bz-feedback-title" style={{ color: "var(--bz-accent)" }}>
+              {ordinal(myRank)}
+            </p>
+            <p className="bz-feedback-sub">
+              {ahead && me ? (
+                <>
+                  {(ahead.score - me.score).toLocaleString()} pts behind <strong>{playerLabel(ahead, game.settings.allowNicknames)}</strong>
+                </>
+              ) : (
+                "Top of the board. Hold on to it!"
+              )}
+            </p>
+            {team ? <TeamLine game={game} teamId={team.id} /> : null}
+          </div>
+        ) : null}
+
+        {game.phase === "podium" || game.phase === "ended" ? (
+          <FinalCard game={game} playerId={playerId} myRank={myRank} />
+        ) : null}
+      </div>
+    </BlitzStage>
+  );
+}
+
+function RevealCard({
+  game,
+  tone,
+  myRank,
+  aheadName,
+  aheadGap,
+}: {
+  game: LiveGameState;
+  tone: "correct" | "wrong" | "neutral" | "late";
+  myRank: number;
+  aheadName: string | null;
+  aheadGap: number;
+}) {
+  const question = game.questions[game.questionIndex]!;
+  const mine = game.answers.find((a) => a.questionId === question.id);
+  const right = correctAnswerText(question);
+  const n = game.questionIndex;
+  const title =
+    tone === "correct"
+      ? pick(LINES.correct, n)
+      : tone === "wrong"
+        ? pick(LINES.wrong, n)
+        : tone === "late"
+          ? pick(LINES.late, n)
+          : pick(LINES.neutral, n);
+  return (
+    <div className={`bz-center ${tone === "wrong" ? "bz-shake" : ""}`}>
+      <FeedbackGlyph tone={tone} />
+      <h1 className="bz-feedback-title">{title}</h1>
+      {mine && mine.pointsAwarded > 0 ? (
+        <span className="bz-points">+{mine.pointsAwarded.toLocaleString()}</span>
+      ) : null}
+      {mine?.streakBonus ? (
+        <span className="bz-chip" style={{ background: "var(--bz-paper)", color: "var(--bz-ink)", borderColor: "var(--bz-ink)" }}>
+          <Flame size={16} /> Streak bonus +{mine.streakBonus}
+        </span>
+      ) : null}
+      {(tone === "wrong" || tone === "late") && right ? (
+        <div className="bz-feedback-card">
+          The answer was
+          <strong>{right}</strong>
         </div>
       ) : null}
-
-      {(game.phase === "lock" || game.phase === "reveal") && (
-        <div className="mt-12">
-          <div
-            className={`tq-feedback mx-auto max-w-md ${
-              feedback?.kind === "correct"
-                ? "tq-feedback-correct"
-                : feedback?.kind === "wrong"
-                  ? "tq-feedback-wrong"
-                  : "tq-feedback-neutral"
-            }`}
-          >
-            <p className="text-2xl font-extrabold">
-              {feedback?.text ??
-                (game.phase === "lock" ? "Answers locked" : "Reveal")}
-            </p>
-            {(feedback?.streak ?? me?.streak ?? 0) >= 2 ? (
-              <p className="tq-streak mt-3">
-                Streak {feedback?.streak ?? me?.streak}
-              </p>
-            ) : null}
-          </div>
-        </div>
-      )}
-
-      {game.phase === "leaderboard" && (
-        <div className="mt-10">
-          <h2 className="tq-brand text-center">Scores</h2>
-          <ol className="mt-6 space-y-2">
-            {[...game.players]
-              .filter((p) => !p.kicked)
-              .sort((a, b) => b.score - a.score)
-              .slice(0, 8)
-              .map((p, i) => (
-                <li
-                  key={p.id}
-                  className={`flex justify-between rounded-xl px-4 py-3 ${
-                    p.id === playerId
-                      ? "bg-[var(--tq-accent-wash)] font-bold ring-1 ring-[#bfdbfe]"
-                      : "tq-soft"
-                  }`}
-                >
-                  <span>
-                    {i + 1}.{" "}
-                    {playerLabel(p, game.settings.allowNicknames)}
-                    {(p.streak ?? 0) >= 2 ? ` · streak ${p.streak}` : ""}
-                  </span>
-                  <span className="tabular-nums">{p.score}</span>
-                </li>
-              ))}
-          </ol>
-        </div>
-      )}
-
-      {(game.phase === "podium" || game.phase === "ended") && (
-        <div className="mt-14 text-center">
-          <h2 className="tq-brand">Nice work!</h2>
-          <p className="mt-3 text-xl">
-            You finished with{" "}
-            <strong className="text-[var(--tq-accent)]">{me?.score ?? 0}</strong>{" "}
-            points
-          </p>
-          <Link
-            href="/apps/blitz/join"
-            className="tq-btn tq-btn-primary mt-8 inline-flex no-underline"
-          >
-            Join another
-          </Link>
-        </div>
-      )}
+      {isScoredType(question.type) ? (
+        <p className="bz-rankline">
+          {ordinal(myRank)} place
+          {aheadName ? (
+            <span style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, opacity: 0.8 }}>
+              {aheadGap.toLocaleString()} behind {aheadName}
+            </span>
+          ) : null}
+        </p>
+      ) : null}
     </div>
   );
 }
 
-function PuzzlePlay({
-  choiceIds,
-  labels,
-  order,
-  setOrder,
-  onSubmit,
-  busy,
-}: {
-  choiceIds: string[];
-  labels: Record<string, string>;
-  order: string[];
-  setOrder: (o: string[]) => void;
-  onSubmit: () => void;
-  busy: boolean;
-}) {
-  function move(id: string, dir: -1 | 1) {
-    const idx = order.indexOf(id);
-    if (idx < 0) return;
-    const next = [...order];
-    const j = idx + dir;
-    if (j < 0 || j >= next.length) return;
-    [next[idx], next[j]] = [next[j]!, next[idx]!];
-    setOrder(next);
+function FeedbackGlyph({ tone }: { tone: "correct" | "wrong" | "neutral" | "late" }) {
+  const common = { width: 120, height: 120, viewBox: "0 0 120 120", "aria-hidden": true } as const;
+  if (tone === "correct") {
+    return (
+      <svg {...common} className="bz-rise">
+        <circle cx="60" cy="60" r="52" fill="#fffaf0" stroke="#15123b" strokeWidth="6" />
+        <path d="M34 62 52 80 88 40" fill="none" stroke="#15123b" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
   }
+  if (tone === "wrong") {
+    return (
+      <svg {...common} className="bz-rise">
+        <circle cx="60" cy="60" r="52" fill="#fffaf0" stroke="#15123b" strokeWidth="6" />
+        <path d="M40 40 80 80M80 40 40 80" stroke="#15123b" strokeWidth="11" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  if (tone === "late") {
+    return (
+      <svg {...common} className="bz-rise">
+        <circle cx="60" cy="64" r="46" fill="#fffaf0" stroke="#15123b" strokeWidth="6" />
+        <path d="M60 64V38M60 64l16 10" stroke="#15123b" strokeWidth="8" strokeLinecap="round" />
+        <path d="M46 10h28" stroke="#15123b" strokeWidth="8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  return <BlitzBolt size={110} color="var(--bz-sun)" />;
+}
 
-  const ids = order.length ? order : choiceIds;
-
+function TeamLine({ game, teamId }: { game: LiveGameState; teamId: string }) {
+  const standings = teamStandings(game.teams, game.players);
+  const i = standings.findIndex((t) => t.id === teamId);
+  const t = standings[i];
+  if (!t) return null;
   return (
-    <div className="mt-6 space-y-2">
-      <p className="text-sm text-[var(--tq-muted)]">Put these in the right order</p>
-      {ids.map((id, i) => (
-        <div
-          key={id}
-          className="tq-soft flex items-center justify-between gap-2 px-3 py-3"
-        >
-          <span className="font-semibold">
-            <span className="mr-2 text-[var(--tq-muted)]">{i + 1}.</span>
-            {labels[id] || "Item"}
-          </span>
-          <span className="flex gap-1">
-            <button
-              type="button"
-              className="tq-btn tq-btn-ghost text-sm"
-              onClick={() => move(id, -1)}
-            >
-              ↑
-            </button>
-            <button
-              type="button"
-              className="tq-btn tq-btn-ghost text-sm"
-              onClick={() => move(id, 1)}
-            >
-              ↓
-            </button>
-          </span>
-        </div>
-      ))}
-      <button
-        type="button"
-        className="tq-btn tq-btn-primary mt-3 w-full"
-        disabled={busy}
-        onClick={onSubmit}
+    <span className="bz-chip" style={{ background: t.color, color: "var(--bz-ink)", borderColor: "var(--bz-ink)", fontSize: "0.95rem" }}>
+      {t.name} is {ordinal(i + 1)} · {t.average.toLocaleString()} avg
+    </span>
+  );
+}
+
+function FinalCard({ game, playerId, myRank }: { game: LiveGameState; playerId: string; myRank: number }) {
+  const me = game.players.find((p) => p.id === playerId);
+  const mine = game.answers.filter((a) => a.playerId === playerId);
+  const scoredIds = new Set(game.questions.filter((q) => isScoredType(q.type)).map((q) => q.id));
+  const correct = mine.filter((a) => a.correct === true).length;
+  const medal = myRank === 1 ? "var(--bz-sun)" : myRank === 2 ? "var(--bz-cyan)" : myRank === 3 ? "var(--bz-coral)" : "var(--bz-paper)";
+  const standings = teamStandings(game.teams, game.players);
+  const myTeam = me?.teamId ? standings.find((t) => t.id === me.teamId) : null;
+  const teamWon = myTeam && standings[0]?.id === myTeam.id;
+  return (
+    <div className="bz-center">
+      {myRank > 0 && myRank <= 3 ? <Confetti pieces={40} /> : null}
+      <p className="bz-kicker">Final rank</p>
+      <div
+        className="bz-rise"
+        style={{
+          display: "grid",
+          placeItems: "center",
+          width: 170,
+          height: 170,
+          borderRadius: "50%",
+          background: medal,
+          color: "var(--bz-ink)",
+          border: "5px solid var(--bz-ink)",
+          boxShadow: "0 8px 0 var(--bz-ink-deep)",
+          fontFamily: "var(--bz-display)",
+          fontWeight: 800,
+          fontStretch: "75%",
+          fontSize: "4.4rem",
+          lineHeight: 1,
+          "--rot": "-4deg",
+        } as CSSProperties}
       >
-        Submit order
-      </button>
+        {ordinal(myRank || 0)}
+      </div>
+      <p className="bz-feedback-sub">
+        <strong style={{ fontSize: "1.5rem" }}>{(me?.score ?? 0).toLocaleString()}</strong> points
+        {scoredIds.size ? (
+          <>
+            {" "}· {correct}/{scoredIds.size} correct
+          </>
+        ) : null}
+      </p>
+      {myTeam ? (
+        <span className="bz-chip" style={{ background: myTeam.color, color: "var(--bz-ink)", borderColor: "var(--bz-ink)", fontSize: "1rem" }}>
+          {teamWon ? `${myTeam.name} wins!` : `${myTeam.name} finished ${ordinal(standings.findIndex((t) => t.id === myTeam.id) + 1)}`}
+        </span>
+      ) : null}
+      <Link href="/apps/blitz/join" className="bz-btn bz-btn--primary bz-btn--lg no-underline">
+        Play another
+      </Link>
     </div>
   );
 }

@@ -2,12 +2,19 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import type { BlitzDocument } from "@/lib/blitz/types";
-import { BLITZ_TYPE_LABEL } from "@/lib/blitz/types";
-import type { BlitzPlan } from "@/lib/blitz/plans";
-import { BLITZ_TEMPLATES } from "@/lib/blitz/templates";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { Squiggle, TileSymbol } from "@/components/blitz/brand";
+import { GameSetupDialog } from "@/components/blitz/game-setup-dialog";
 import { categoryLabel } from "@/lib/blitz/discover";
+import type { BlitzPlan } from "@/lib/blitz/plans";
+import {
+  BLITZ_TEMPLATE_CATEGORIES,
+  BLITZ_TEMPLATES,
+  templateNeedsPlus,
+  type BlitzTemplate,
+  type BlitzTemplateCategory,
+} from "@/lib/blitz/templates";
+import { BLITZ_TYPE_LABEL, type BlitzDocument } from "@/lib/blitz/types";
 
 type Entitlement = {
   plan: BlitzPlan;
@@ -15,53 +22,69 @@ type Entitlement = {
   liveGamesRemaining: number | null;
 };
 
+const NEON = ["var(--bz-lime)", "var(--bz-coral)", "var(--bz-cyan)", "var(--bz-sun)", "var(--bz-violet)", "var(--bz-mint)"];
+
+const CATEGORY_COLOR: Record<BlitzTemplateCategory, string> = {
+  "warm-up": "var(--bz-sun)",
+  review: "var(--bz-cyan)",
+  vocabulary: "var(--bz-violet)",
+  math: "var(--bz-lime)",
+  science: "var(--bz-mint)",
+  "check-in": "var(--bz-coral)",
+  fun: "#ff8fd1",
+  exit: "#9ae6ff",
+};
+
+const MOTIF_INDEX = { bolt: 0, star: 1, hex: 2, moon: 3, spark: 4, wave: 5 } as const;
+
+function hashIndex(s: string, n: number) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 33 + s.charCodeAt(i)) >>> 0;
+  return h % n;
+}
+
 export function BlitzLibraryPanel() {
   const router = useRouter();
-  const [quizzes, setQuizzes] = useState<BlitzDocument[]>([]);
+  const [quizzes, setQuizzes] = useState<BlitzDocument[] | null>(null);
   const [entitlement, setEntitlement] = useState<Entitlement | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<"all" | "public" | "private">("all");
+  const [cat, setCat] = useState<BlitzTemplateCategory | "all">("all");
+  const [setup, setSetup] = useState<{ quiz: BlitzDocument; tab: "live" | "challenge" } | null>(null);
 
   async function load() {
-    const [qRes, eRes] = await Promise.all([
-      fetch("/api/blitz/quizzes"),
-      fetch("/api/blitz/entitlements"),
-    ]);
+    const [qRes, eRes] = await Promise.all([fetch("/api/blitz/quizzes"), fetch("/api/blitz/entitlements")]);
     const qData = await qRes.json();
-    const eData = await eRes.json();
+    const eData = await eRes.json().catch(() => null);
     if (!qRes.ok) {
       setError(qData.error ?? "Could not load quizzes");
+      setQuizzes([]);
       return;
     }
     setQuizzes(qData.quizzes ?? []);
-    if (eRes.ok) setEntitlement(eData);
+    if (eRes.ok && eData?.plan) setEntitlement(eData);
   }
 
   useEffect(() => {
     void load();
   }, []);
 
+  const allTypes = entitlement?.plan.questionTypes === "all";
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return quizzes.filter((quiz) => {
-      if (filter === "public" && !quiz.isPublic) return false;
-      if (filter === "private" && quiz.isPublic) return false;
-      if (!q) return true;
-      return (
-        quiz.title.toLowerCase().includes(q) ||
-        quiz.description.toLowerCase().includes(q)
-      );
-    });
-  }, [quizzes, query, filter]);
+    return (quizzes ?? []).filter(
+      (quiz) => !q || quiz.title.toLowerCase().includes(q) || quiz.description.toLowerCase().includes(q),
+    );
+  }, [quizzes, query]);
 
-  async function createQuiz(opts?: {
-    title?: string;
-    description?: string;
-    questions?: unknown[];
-    category?: string;
-  }) {
+  const templates = useMemo(
+    () => BLITZ_TEMPLATES.filter((t) => cat === "all" || t.category === cat),
+    [cat],
+  );
+
+  async function createQuiz(opts?: { title?: string; description?: string; questions?: unknown[]; category?: string }) {
     setBusy(true);
     setError(null);
     try {
@@ -69,7 +92,7 @@ export function BlitzLibraryPanel() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: opts?.title ?? "New quiz",
+          title: opts?.title ?? "Untitled Blitz",
           description: opts?.description,
           questions: opts?.questions ?? [],
         }),
@@ -90,6 +113,19 @@ export function BlitzLibraryPanel() {
     }
   }
 
+  function startFromTemplate(t: BlitzTemplate) {
+    if (!allTypes && templateNeedsPlus(t)) {
+      setError(`“${t.title}” uses question types from Blitz Plus. Upgrade to use it, or start from a Quiz / True-false template.`);
+      return;
+    }
+    void createQuiz({
+      title: t.title,
+      description: t.description,
+      questions: t.questions(),
+      category: t.discoverCategory,
+    });
+  }
+
   async function duplicateQuiz(quiz: BlitzDocument) {
     setBusy(true);
     setError(null);
@@ -97,43 +133,14 @@ export function BlitzLibraryPanel() {
       const res = await fetch("/api/blitz/quizzes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: `${quiz.title} (copy)`,
-          description: quiz.description,
-          questions: quiz.questions,
-        }),
+        body: JSON.stringify({ title: `${quiz.title} (copy)`, description: quiz.description, questions: quiz.questions }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Could not duplicate");
-      await fetch(`/api/blitz/quizzes/${data.quiz.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          category: quiz.category,
-          tags: quiz.tags,
-        }),
-      });
-      router.push(`/apps/blitz/edit/${data.quiz.id}`);
+      await load();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not duplicate");
-      setBusy(false);
-    }
-  }
-
-  async function hostQuiz(quizId: string) {
-    setBusy(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/blitz/games", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quizId }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not host");
-      router.push(`/apps/blitz/host/${data.game.id}`);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not host");
+    } finally {
       setBusy(false);
     }
   }
@@ -143,9 +150,7 @@ export function BlitzLibraryPanel() {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch(`/api/blitz/quizzes/${quizId}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/blitz/quizzes/${quizId}`, { method: "DELETE" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Could not delete");
       await load();
@@ -156,214 +161,222 @@ export function BlitzLibraryPanel() {
     }
   }
 
-  return (
-    <div className="tq-rise mx-auto max-w-6xl px-5 py-8 sm:px-8">
-      <div className="tq-hero-band flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="tq-badge">Blitz</p>
-          <h1 className="tq-brand mt-2">Quiz library</h1>
-          <p className="mt-2 max-w-xl text-[var(--tq-muted)]">
-            Build quizzes, host live PIN games, or pull ideas from Discover —
-            Kahoot-class create and play for class.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href="/apps/blitz/discover"
-            className="tq-btn tq-btn-ghost no-underline"
-          >
-            Discover
-          </Link>
-          <Link
-            href="/apps/blitz/join"
-            className="tq-btn tq-btn-ghost no-underline"
-          >
-            Join
-          </Link>
-          <Link
-            href="/apps/blitz/reports"
-            className="tq-btn tq-btn-ghost no-underline"
-          >
-            Reports
-          </Link>
-          <button
-            type="button"
-            className="tq-btn tq-btn-primary"
-            disabled={busy}
-            onClick={() => void createQuiz()}
-          >
-            Create quiz
-          </button>
-        </div>
-      </div>
+  const plan = entitlement?.plan;
 
-      {entitlement ? (
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <div className="tq-stat">
-            <strong>{entitlement.plan.label}</strong>
-            <span className="text-xs text-[var(--tq-muted)]">Your plan</span>
-          </div>
-          <div className="tq-stat">
-            <strong>
-              {entitlement.liveGamesRemaining == null
-                ? "∞"
-                : entitlement.liveGamesRemaining}
-            </strong>
-            <span className="text-xs text-[var(--tq-muted)]">
-              Live games left this month
+  return (
+    <div className="bz-page">
+      <section className="bz-hero">
+        <div>
+          <p className="bz-kicker">Live classroom quizzes</p>
+          <h1 className="bz-h1 mt-2">
+            Make the room go{" "}
+            <span className="bz-mark">
+              loud
+              <Squiggle />
             </span>
-          </div>
-          <div className="tq-stat">
-            <strong>{entitlement.plan.maxPlayersPerGame}</strong>
-            <span className="text-xs text-[var(--tq-muted)]">
-              Max players per game
-            </span>
+            .
+          </h1>
+          <p className="bz-muted mt-4" style={{ maxWidth: 520, fontSize: "1.05rem" }}>
+            Build a Blitz, put the PIN on the projector, and watch answers fly in. Host it live, run it in teams, or assign it as a self-paced challenge.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <button type="button" className="bz-btn bz-btn--primary bz-btn--lg" disabled={busy} onClick={() => void createQuiz()}>
+              + New Blitz
+            </button>
+            <Link href="/apps/blitz/discover" className="bz-btn bz-btn--lg no-underline">
+              Browse Discover
+            </Link>
           </div>
         </div>
-      ) : null}
+        <div>
+          <div className="bz-hero-stats">
+            <div className="bz-stat">
+              <b style={{ color: "var(--bz-lime)" }}>{plan?.label ?? "—"}</b>
+              <span>your plan</span>
+            </div>
+            <div className="bz-stat">
+              <b>{entitlement ? (entitlement.liveGamesRemaining == null ? "∞" : entitlement.liveGamesRemaining) : "—"}</b>
+              <span>live games left this month</span>
+            </div>
+            <div className="bz-stat">
+              <b>{plan?.maxPlayersPerGame ?? "—"}</b>
+              <span>players per game</span>
+            </div>
+          </div>
+          {plan && plan.id === "free" ? (
+            <p className="bz-plan-strip">
+              Free covers Quiz + True/False and the Night &amp; Arcade stages.
+              <Link href="/apps/blitz/upgrade">Get Plus →</Link>
+            </p>
+          ) : null}
+        </div>
+      </section>
 
       {error ? (
-        <p className="mt-4 rounded-xl border border-[#fed7aa] bg-[#fff7ed] px-4 py-3 text-sm text-[var(--tq-warn)]">
+        <p className="bz-alert mt-6" role="alert">
           {error}
+          {error.includes("Plus") ? (
+            <Link href="/apps/blitz/upgrade" style={{ color: "var(--bz-sun)", marginLeft: 6 }}>
+              See plans
+            </Link>
+          ) : null}
         </p>
       ) : null}
 
-      <section className="mt-8">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="tq-kicker">Starter templates</h2>
+      <section className="bz-section">
+        <div className="bz-section-head">
+          <div>
+            <p className="bz-kicker">Start from a template</p>
+            <h2 className="bz-h2 mt-1">Ready-to-play starters</h2>
+          </div>
         </div>
-        <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          {BLITZ_TEMPLATES.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              disabled={busy}
-              className="tq-tile w-full text-left"
-              onClick={() =>
-                void createQuiz({
-                  title: t.title,
-                  description: t.description,
-                  questions: t.questions(),
-                })
-              }
-            >
-              <div className="mb-2 h-1.5 w-12 rounded-full bg-[var(--tq-accent)]" />
-              <h3 className="font-bold">{t.title}</h3>
-              <p className="mt-1 text-sm text-[var(--tq-muted)]">{t.blurb}</p>
-              <p className="mt-3 text-sm font-semibold text-[var(--tq-accent-deep)]">
-                Use template →
-              </p>
+        <div className="bz-filters mb-3" role="group" aria-label="Template categories">
+          <button type="button" className="bz-filter" aria-pressed={cat === "all"} onClick={() => setCat("all")}>
+            All
+          </button>
+          {BLITZ_TEMPLATE_CATEGORIES.map((c) => (
+            <button key={c.id} type="button" className="bz-filter" aria-pressed={cat === c.id} onClick={() => setCat(c.id)}>
+              {c.label}
             </button>
           ))}
         </div>
+        <div className="bz-templates">
+          {templates.map((t, i) => {
+            const locked = !allTypes && templateNeedsPlus(t);
+            const catLabel = BLITZ_TEMPLATE_CATEGORIES.find((c) => c.id === t.category)?.label;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                disabled={busy}
+                className="bz-tpl"
+                style={{ "--tpl": CATEGORY_COLOR[t.category], "--tilt": `${[-1.2, 0.8, -0.5, 1.1][i % 4]}deg` } as CSSProperties}
+                onClick={() => startFromTemplate(t)}
+              >
+                <span className="bz-tpl-motif">
+                  <TileSymbol index={MOTIF_INDEX[t.motif]} size={120} />
+                </span>
+                <span className="bz-tpl-cat">{catLabel}</span>
+                <span className="bz-tpl-title">{t.title}</span>
+                <span className="bz-tpl-desc">{t.description}</span>
+                <span className="bz-tpl-foot">
+                  <span>{t.blurb}</span>
+                  {locked ? <span className="bz-lock">Plus</span> : <span className="bz-tpl-go">Use →</span>}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </section>
 
-      <section className="mt-10">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 className="tq-kicker">Your quizzes</h2>
-          <div className="flex flex-wrap gap-2">
-            <input
-              className="tq-input max-w-[14rem]"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search quizzes"
-              aria-label="Search quizzes"
-            />
-            <select
-              className="tq-select max-w-[9rem]"
-              value={filter}
-              onChange={(e) =>
-                setFilter(e.target.value as "all" | "public" | "private")
-              }
-              aria-label="Filter"
-            >
-              <option value="all">All</option>
-              <option value="public">On Discover</option>
-              <option value="private">Private</option>
-            </select>
+      <section className="bz-section">
+        <div className="bz-section-head">
+          <div>
+            <p className="bz-kicker">Your library</p>
+            <h2 className="bz-h2 mt-1">
+              My Blitzes {quizzes ? <span className="bz-muted">({quizzes.length})</span> : null}
+            </h2>
           </div>
+          <input
+            className="bz-input"
+            style={{ maxWidth: 260 }}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search your quizzes"
+            aria-label="Search your quizzes"
+          />
         </div>
 
-        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.length === 0 ? (
-            <div className="tq-soft p-8 text-[var(--tq-muted)] sm:col-span-2 lg:col-span-3">
-              {quizzes.length === 0
-                ? "No quizzes yet. Start from a template or create a blank quiz."
-                : "No quizzes match this search."}
-            </div>
-          ) : (
-            filtered.map((q) => {
-              const types = [
-                ...new Set(q.questions.map((qq) => BLITZ_TYPE_LABEL[qq.type])),
-              ].slice(0, 3);
+        {quizzes === null ? (
+          <p className="bz-muted">Loading…</p>
+        ) : filtered.length === 0 ? (
+          <div className="bz-empty">
+            <TileSymbol index={0} size={48} className="text-[var(--bz-lime)]" />
+            <p className="bz-h3" style={{ color: "var(--bz-text)" }}>
+              {quizzes.length === 0 ? "Your library is empty — for now." : "Nothing matches that search."}
+            </p>
+            {quizzes.length === 0 ? (
+              <p>Pick a template above or start a fresh Blitz.</p>
+            ) : null}
+          </div>
+        ) : (
+          <div className="bz-quiz-grid">
+            {filtered.map((q) => {
+              const types = [...new Set(q.questions.map((qq) => BLITZ_TYPE_LABEL[qq.type]))];
+              const ci = hashIndex(q.id, NEON.length);
+              const empty = q.questions.length === 0;
               return (
-                <article key={q.id} className="tq-tile flex flex-col">
-                  <div
-                    className="mb-3 h-2 w-full rounded-full"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, var(--tq-accent), var(--tq-b), var(--tq-a))",
-                    }}
-                  />
-                  <div className="flex flex-wrap items-center gap-2">
-                    {q.isPublic ? (
-                      <span className="tq-badge">Discover</span>
-                    ) : (
-                      <span className="text-xs font-semibold uppercase tracking-wide text-[var(--tq-muted)]">
-                        Private
-                      </span>
-                    )}
-                    <span className="text-xs text-[var(--tq-muted)]">
-                      {categoryLabel(q.category)}
+                <article key={q.id} className="bz-card bz-quiz">
+                  <div className="bz-cover" style={{ "--cv": NEON[ci] } as CSSProperties}>
+                    <span className="bz-cover-sym">
+                      <TileSymbol index={ci} size={58} />
+                    </span>
+                    <span className="bz-cover-sym">
+                      <TileSymbol index={ci + 1} size={84} />
+                    </span>
+                    <span className="bz-cover-sym">
+                      <TileSymbol index={ci + 2} size={40} />
+                    </span>
+                    <span className="bz-cover-count">
+                      {q.questions.length} Q{q.questions.length === 1 ? "" : "s"}
                     </span>
                   </div>
-                  <h2 className="mt-2 text-lg font-bold">{q.title}</h2>
-                  <p className="mt-1 line-clamp-2 text-sm text-[var(--tq-muted)]">
-                    {q.description || "No description"}
-                  </p>
-                  <p className="mt-2 text-sm text-[var(--tq-muted)]">
-                    {q.questions.length} question
-                    {q.questions.length === 1 ? "" : "s"}
-                    {types.length ? ` · ${types.join(", ")}` : ""}
-                  </p>
-                  <div className="mt-auto flex flex-wrap gap-2 pt-4">
-                    <button
-                      type="button"
-                      className="tq-btn tq-btn-primary text-sm"
-                      disabled={busy || q.questions.length === 0}
-                      onClick={() => void hostQuiz(q.id)}
-                    >
-                      Host
-                    </button>
-                    <Link
-                      href={`/apps/blitz/edit/${q.id}`}
-                      className="tq-btn tq-btn-ghost text-sm no-underline"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      type="button"
-                      className="tq-btn tq-btn-ghost text-sm"
-                      disabled={busy}
-                      onClick={() => void duplicateQuiz(q)}
-                    >
-                      Duplicate
-                    </button>
-                    <button
-                      type="button"
-                      className="tq-btn tq-btn-danger text-sm"
-                      disabled={busy}
-                      onClick={() => void deleteQuiz(q.id)}
-                    >
-                      Delete
-                    </button>
+                  <div className="bz-quiz-body">
+                    <h3 className="bz-quiz-title">{q.title}</h3>
+                    <div className="bz-quiz-meta">
+                      {q.isPublic ? <span className="bz-chip bz-chip--cyan">On Discover</span> : null}
+                      <span className="bz-chip">{categoryLabel(q.category)}</span>
+                      {types.slice(0, 2).map((t) => (
+                        <span key={t} className="bz-chip">
+                          {t}
+                        </span>
+                      ))}
+                      {types.length > 2 ? <span className="bz-chip">+{types.length - 2}</span> : null}
+                    </div>
+                    {q.description ? (
+                      <p className="bz-faint" style={{ marginTop: 6, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                        {q.description}
+                      </p>
+                    ) : null}
+                    <div className="bz-quiz-actions">
+                      <button
+                        type="button"
+                        className="bz-btn bz-btn--primary bz-btn--sm"
+                        disabled={busy || empty}
+                        title={empty ? "Add a question first" : "Host live"}
+                        onClick={() => setSetup({ quiz: q, tab: "live" })}
+                      >
+                        Host live
+                      </button>
+                      <button
+                        type="button"
+                        className="bz-btn bz-btn--sm"
+                        disabled={busy || empty}
+                        onClick={() => setSetup({ quiz: q, tab: "challenge" })}
+                      >
+                        Assign
+                      </button>
+                      <Link href={`/apps/blitz/edit/${q.id}`} className="bz-btn bz-btn--sm no-underline">
+                        Edit
+                      </Link>
+                      <button type="button" className="bz-btn bz-btn--quiet bz-btn--sm" disabled={busy} onClick={() => void duplicateQuiz(q)}>
+                        Copy
+                      </button>
+                      <button type="button" className="bz-btn bz-btn--quiet bz-btn--sm" disabled={busy} onClick={() => void deleteQuiz(q.id)} aria-label={`Delete ${q.title}`}>
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </article>
               );
-            })
-          )}
-        </div>
+            })}
+          </div>
+        )}
       </section>
+
+      {setup ? (
+        <GameSetupDialog quiz={setup.quiz} plan={plan ?? null} initialTab={setup.tab} onClose={() => setSetup(null)} />
+      ) : null}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { BlitzJoinPanel } from "@/components/blitz/join-panel";
+import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
@@ -12,14 +13,13 @@ export default async function BlitzJoinPage() {
   if (!authz) {
     redirect("/auth/sign-in?as=student");
   }
+  const isTeacher =
+    (authz.profile.role === "rebbe" || authz.profile.role === "admin") &&
+    (await hasEducationAccess(authz.profile));
 
   return (
-    <Suspense
-      fallback={
-        <p className="px-5 py-10 text-center text-[var(--tq-muted)]">Loading…</p>
-      }
-    >
-      <BlitzJoinPanel realName={authz.profile.displayName} />
+    <Suspense fallback={<p className="bz-page bz-muted">Loading…</p>}>
+      <BlitzJoinPanel realName={authz.profile.displayName} isTeacher={isTeacher} />
     </Suspense>
   );
 }

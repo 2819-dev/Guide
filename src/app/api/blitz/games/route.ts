@@ -30,6 +30,11 @@ export async function POST(request: Request) {
             allowNicknames: z.boolean().optional(),
             allowAvatars: z.boolean().optional(),
             musicEnabled: z.boolean().optional(),
+            mode: z.enum(["classic", "accuracy", "team"]).optional(),
+            theme: z
+              .enum(["night", "arcade", "ocean", "sunset", "space"])
+              .optional(),
+            teamCount: z.number().int().min(2).max(4).optional(),
           })
           .optional(),
       })

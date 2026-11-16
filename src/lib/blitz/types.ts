@@ -1,6 +1,5 @@
 /**
- * Kahoot-parity live question types (help center live set).
- * Multi-select is a flag on `quiz`, not a separate type.
+ * Live question types. Multi-select is a flag on `quiz`, not a separate type.
  */
 
 export const BLITZ_QUESTION_TYPES = [
@@ -67,7 +66,7 @@ export type BlitzQuestion = {
   /** Optional image / media URL */
   mediaUrl?: string;
   timeLimitSec: number;
-  /** 0 | 1000 | 2000 — Kahoot-style base points */
+  /** 0 | 1000 | 2000 base points (2000 = double) */
   points: 0 | 1000 | 2000;
   /** Quiz: allow selecting more than one correct answer */
   multiSelect?: boolean;
@@ -131,10 +130,27 @@ export type GamePhase =
   | "podium"
   | "ended";
 
+/** How points are awarded in a live game (host picks at start). */
+export type BlitzGameMode = "classic" | "accuracy" | "team";
+
+/** Stage theme the host picks per game. Tile colors never change. */
+export type BlitzThemeId = "night" | "arcade" | "ocean" | "sunset" | "space";
+
 export type GameSettings = {
   allowNicknames: boolean;
   allowAvatars: boolean;
   musicEnabled: boolean;
+  /** Older games stored before modes existed read as "classic". */
+  mode?: BlitzGameMode;
+  theme?: BlitzThemeId;
+  /** Team mode only: 2–4 teams, auto-balanced. */
+  teamCount?: number;
+};
+
+export type BlitzTeam = {
+  id: string;
+  name: string;
+  color: string;
 };
 
 export type PlayerPublic = {
@@ -147,6 +163,8 @@ export type PlayerPublic = {
   streak: number;
   connected: boolean;
   kicked: boolean;
+  /** Team mode: assigned team id. */
+  teamId?: string | null;
 };
 
 export type LiveAnswerPayload = {
@@ -166,6 +184,8 @@ export type LiveAnswerRecord = {
   pointsAwarded: number;
   answeredAtMs: number;
   responseMs: number;
+  /** Bonus share of pointsAwarded that came from an answer streak. */
+  streakBonus?: number;
 };
 
 export type LiveGameState = {
@@ -181,6 +201,8 @@ export type LiveGameState = {
   questions: BlitzQuestion[];
   players: PlayerPublic[];
   answers: LiveAnswerRecord[];
+  /** Team mode teams (empty / missing otherwise). */
+  teams?: BlitzTeam[];
   phaseStartedAtMs: number;
   questionStartedAtMs: number | null;
   musicTrack: string | null;

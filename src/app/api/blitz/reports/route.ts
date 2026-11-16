@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 import { getEntitlement } from "@/lib/blitz/entitlements";
+import { gameMode, teamStandings } from "@/lib/blitz/modes";
+import { isScoredType } from "@/lib/blitz/scoring";
 import { getGame, listGamesForHost } from "@/lib/blitz/store";
 
 export const runtime = "edge";
@@ -32,6 +34,9 @@ export async function GET(request: Request) {
           ? p.nickname || p.displayName
           : p.displayName,
         score: p.score,
+        team: p.teamId
+          ? (game.teams ?? []).find((t) => t.id === p.teamId)?.name ?? null
+          : null,
         correctCount: game.answers.filter(
           (a) => a.playerId === p.id && a.correct === true,
         ).length,
@@ -62,7 +67,16 @@ export async function GET(request: Request) {
         title: game.quizTitle,
         phase: game.phase,
         createdAt: game.createdAt,
+        mode: gameMode(game.settings),
+        questionCount: game.questions.length,
+        scoredCount: game.questions.filter((q) => isScoredType(q.type)).length,
       },
+      teams: teamStandings(game.teams, game.players).map((t) => ({
+        name: t.name,
+        color: t.color,
+        average: t.average,
+        members: t.members,
+      })),
       players,
       byQuestion,
       canExport: entitlement.plan.reportsExport,

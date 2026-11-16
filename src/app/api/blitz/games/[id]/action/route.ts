@@ -28,6 +28,8 @@ export async function POST(request: Request, ctx: Ctx) {
           .object({
             type: z.enum([
               "start",
+              "advance",
+              "shuffle_teams",
               "lock",
               "reveal",
               "leaderboard",
@@ -47,6 +49,11 @@ export async function POST(request: Request, ctx: Ctx) {
             allowNicknames: z.boolean().optional(),
             allowAvatars: z.boolean().optional(),
             musicEnabled: z.boolean().optional(),
+            mode: z.enum(["classic", "accuracy", "team"]).optional(),
+            theme: z
+              .enum(["night", "arcade", "ocean", "sunset", "space"])
+              .optional(),
+            teamCount: z.number().int().min(2).max(4).optional(),
           })
           .optional(),
         payload: z
@@ -92,14 +99,12 @@ export async function POST(request: Request, ctx: Ctx) {
         playerId: authz.profile.id,
         payload: body.payload ?? {},
       });
-      // Re-fetch view after submit is inside submitAnswer's save; get via hostAction path
-      const { getGame } = await import("@/lib/blitz/store");
-      const state = await getGame(id);
       return NextResponse.json({
         correct: result.correct,
         pointsAwarded: result.pointsAwarded,
         streak: result.streak,
-        game: state ? viewForPlayer(state, authz.profile.id) : null,
+        streakBonus: result.streakBonus,
+        game: viewForPlayer(result.state, authz.profile.id),
       });
     }
 

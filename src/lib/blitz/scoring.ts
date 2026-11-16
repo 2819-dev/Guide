@@ -1,5 +1,6 @@
 import {
   BLITZ_SCORED_TYPES,
+  type BlitzGameMode,
   type LiveAnswerPayload,
   type BlitzQuestion,
 } from "@/lib/blitz/types";
@@ -92,16 +93,28 @@ export function gradeAnswer(
 }
 
 /**
- * Kahoot-style points: base × time factor (linear from 1 → 0.5 over the limit).
+ * Points for one answer.
+ *
+ * - classic / team: base × time factor (linear 1 → 0.5 across the time limit)
+ *   plus a streak bonus of 100 per streak step (2nd correct in a row = +100,
+ *   capped at +500).
+ * - accuracy: flat base points, no speed or streak bonus.
+ *
+ * `streakBefore` is the player's streak before this answer.
  */
 export function awardPoints(
   question: BlitzQuestion,
   correct: boolean | null,
   responseMs: number,
-): number {
-  if (correct !== true || !question.points) return 0;
+  mode: BlitzGameMode = "classic",
+  streakBefore = 0,
+): { points: number; streakBonus: number } {
+  if (correct !== true || !question.points) return { points: 0, streakBonus: 0 };
+  if (mode === "accuracy") return { points: question.points, streakBonus: 0 };
   const limitMs = Math.max(1, question.timeLimitSec) * 1000;
   const clamped = Math.min(Math.max(responseMs, 0), limitMs);
   const factor = 1 - (clamped / limitMs) * 0.5;
-  return Math.round(question.points * factor);
+  const base = Math.round(question.points * factor);
+  const streakBonus = Math.min(500, Math.max(0, streakBefore) * 100);
+  return { points: base + streakBonus, streakBonus };
 }

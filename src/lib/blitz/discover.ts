@@ -1,4 +1,4 @@
-/** Teacher Discover categories (Kahoot-like browse). */
+/** Teacher Discover categories. */
 
 export const BLITZ_DISCOVER_CATEGORIES = [
   { id: "general", label: "General" },

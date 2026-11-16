@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireProfile } from "@/lib/profile";
 import {
-  getGame,
   tickGame,
   viewForHost,
   viewForPlayer,
@@ -17,8 +16,7 @@ export async function GET(_req: Request, ctx: Ctx) {
     return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   }
   const { id } = await ctx.params;
-  await tickGame(id);
-  const state = await getGame(id);
+  const state = await tickGame(id);
   if (!state) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -37,11 +35,13 @@ export async function GET(_req: Request, ctx: Ctx) {
     return NextResponse.json({
       game: viewForHost(state),
       role: "host" as const,
+      serverNowMs: Date.now(),
     });
   }
   return NextResponse.json({
     game: viewForPlayer(state, authz.profile.id),
     role: "player" as const,
     playerId: authz.profile.id,
+    serverNowMs: Date.now(),
   });
 }

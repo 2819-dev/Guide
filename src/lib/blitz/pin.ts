@@ -1,4 +1,4 @@
-/** 6-digit Kahoot-style PIN (digits only, no leading zeros collapsed). */
+/** 6-digit game PIN (digits only, leading zeros kept). */
 
 export function generateGamePin(): string {
   const n = globalThis.crypto.getRandomValues(new Uint32Array(1))[0]! % 1_000_000;

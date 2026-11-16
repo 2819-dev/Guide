@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { hasEducationAccess } from "@/lib/education-access";
 import { requireProfile } from "@/lib/profile";
 import { listDiscoverQuizzes } from "@/lib/blitz/store";

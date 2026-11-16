@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { BLITZ_TYPE_LABEL, type BlitzQuestionType } from "@/lib/blitz/types";
 
 type GameRow = {
   id: string;
@@ -9,18 +11,78 @@ type GameRow = {
   quizTitle: string;
   phase: string;
   playerCount: number;
+  mode?: string;
+  questionCount?: number;
   createdAt: string;
   endedAt: string | null;
 };
 
+type GameDetail = {
+  game: { id: string; title: string; pin: string; createdAt: string; mode: string; questionCount: number; scoredCount: number };
+  players: { rank: number; name: string; score: number; correctCount: number; team: string | null }[];
+  teams: { name: string; color: string; average: number; members: number }[];
+  byQuestion?: { prompt: string; type: string; responses: number; accuracy: number | null }[];
+  canExport: boolean;
+};
+
+type ChallengeRow = {
+  id: string;
+  title: string;
+  classroomName: string;
+  questionCount: number;
+  dueAt: string | null;
+  closedAt: string | null;
+  createdAt: string;
+  rosterCount: number;
+  finishedCount: number;
+  startedCount: number;
+  averageAccuracy: number | null;
+};
+
+type ChallengeDetail = {
+  challenge: ChallengeRow & { open: boolean; settings: { mode: string; theme: string } };
+  students: {
+    profileId: string;
+    name: string;
+    status: "not_started" | "in_progress" | "finished";
+    score: number;
+    correctCount: number;
+    answeredCount: number;
+    accuracy: number | null;
+    finishedAt: string | null;
+    results: ("ok" | "miss" | "na" | "none")[];
+  }[];
+  byQuestion: { prompt: string; type: string; responses: number; accuracy: number | null }[];
+};
+
+function when(iso: string) {
+  return new Date(iso).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+
+function meterClass(pct: number) {
+  return pct >= 70 ? "" : pct >= 40 ? "is-mid" : "is-low";
+}
+
+function downloadCsv(name: string, rows: (string | number)[][]) {
+  const esc = (v: string | number) => `"${String(v).replace(/"/g, '""')}"`;
+  const blob = new Blob([rows.map((r) => r.map(esc).join(",")).join("\n")], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export function BlitzReportsPanel() {
-  const [games, setGames] = useState<GameRow[]>([]);
-  const [detail, setDetail] = useState<{
-    players: { rank: number; name: string; score: number; correctCount: number }[];
-    byQuestion?: { prompt: string; type: string; responses: number; accuracy: number | null }[];
-    canExport: boolean;
-    game: { title: string; pin: string };
-  } | null>(null);
+  const params = useSearchParams();
+  const initialChallenge = params.get("challenge");
+  const [tab, setTab] = useState<"live" | "challenges">(initialChallenge ? "challenges" : "live");
+  const [games, setGames] = useState<GameRow[] | null>(null);
+  const [canExport, setCanExport] = useState(false);
+  const [challenges, setChallenges] = useState<ChallengeRow[] | null>(null);
+  const [gameDetail, setGameDetail] = useState<GameDetail | null>(null);
+  const [chDetail, setChDetail] = useState<ChallengeDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -29,140 +91,355 @@ export function BlitzReportsPanel() {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error ?? "Could not load reports");
+        setGames([]);
         return;
       }
       setGames(data.games ?? []);
+      setCanExport(!!data.canExport);
+    })();
+    void (async () => {
+      const res = await fetch("/api/blitz/challenges");
+      const data = await res.json().catch(() => ({}));
+      setChallenges(res.ok && data.role === "teacher" ? data.challenges : []);
     })();
   }, []);
 
   async function openGame(id: string) {
     const res = await fetch(`/api/blitz/reports?gameId=${id}`);
     const data = await res.json();
-    if (!res.ok) {
-      setError(data.error ?? "Could not load game");
-      return;
-    }
-    setDetail(data);
+    if (!res.ok) return setError(data.error ?? "Could not load game");
+    setGameDetail(data);
   }
 
-  function exportCsv() {
-    if (!detail?.canExport) return;
-    const lines = [
-      "rank,name,score,correct",
-      ...detail.players.map(
-        (p) => `${p.rank},"${p.name.replace(/"/g, '""')}",${p.score},${p.correctCount}`,
-      ),
-    ];
-    const blob = new Blob([lines.join("\n")], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `blitz-${detail.game.pin}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const openChallenge = useCallback(async (id: string) => {
+    const res = await fetch(`/api/blitz/challenges/${id}`, { cache: "no-store" });
+    const data = await res.json();
+    if (!res.ok || data.role !== "teacher") return setError(data.error ?? "Could not load challenge");
+    setChDetail(data);
+  }, []);
+
+  useEffect(() => {
+    if (initialChallenge) void openChallenge(initialChallenge);
+  }, [initialChallenge, openChallenge]);
+
+  async function toggleClosed(d: ChallengeDetail) {
+    await fetch(`/api/blitz/challenges/${d.challenge.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ closed: d.challenge.open }),
+    });
+    void openChallenge(d.challenge.id);
   }
 
   return (
-    <div className="tq-rise mx-auto max-w-5xl px-5 py-8 sm:px-8">
-      <Link
-        href="/apps/blitz/library"
-        className="text-sm text-[var(--tq-muted)] no-underline hover:underline"
-      >
-        ← Library
-      </Link>
-      <h1 className="tq-brand mt-3">Reports</h1>
-      <p className="mt-2 text-[var(--tq-muted)]">
-        Recent live games and basic score summaries.
-      </p>
+    <div className="bz-page">
+      <p className="bz-kicker">Reports</p>
+      <h1 className="bz-h1 mt-2">How did they do?</h1>
 
-      {error ? (
-        <p className="mt-4 rounded-xl bg-[rgba(255,107,74,0.15)] px-4 py-3 text-sm">
-          {error}
-        </p>
-      ) : null}
+      <div className="bz-seg mt-5">
+        <button type="button" aria-pressed={tab === "live"} onClick={() => setTab("live")}>
+          Live games
+        </button>
+        <button type="button" aria-pressed={tab === "challenges"} onClick={() => setTab("challenges")}>
+          Self-paced challenges
+        </button>
+      </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <div className="space-y-2">
-          {games.length === 0 ? (
-            <p className="text-[var(--tq-muted)]">No games yet.</p>
+      {error ? <p className="bz-alert mt-4">{error}</p> : null}
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)]">
+        <div className="bz-list">
+          {tab === "live" ? (
+            games === null ? (
+              <p className="bz-muted">Loading…</p>
+            ) : games.length === 0 ? (
+              <div className="bz-empty">No live games yet. Host one from your library.</div>
+            ) : (
+              games.map((g) => (
+                <button key={g.id} type="button" className={`bz-listrow ${gameDetail?.game.id === g.id ? "is-active" : ""}`} onClick={() => void openGame(g.id)}>
+                  <span className="min-w-0">
+                    <strong className="bz-h3" style={{ display: "block", fontSize: "1.05rem" }}>
+                      {g.quizTitle}
+                    </strong>
+                    <span className="bz-faint">
+                      {when(g.createdAt)} · {g.playerCount} players
+                    </span>
+                  </span>
+                  <span className={`bz-chip ${g.mode === "team" ? "bz-chip--sun" : ""}`}>
+                    {g.mode === "team" ? "Teams" : g.mode === "accuracy" ? "Accuracy" : g.phase === "ended" ? "Done" : g.phase}
+                  </span>
+                </button>
+              ))
+            )
+          ) : challenges === null ? (
+            <p className="bz-muted">Loading…</p>
+          ) : challenges.length === 0 ? (
+            <div className="bz-empty">
+              No challenges yet. Use <strong>Assign</strong> on a quiz in your library to set one for a class.
+            </div>
           ) : (
-            games.map((g) => (
-              <button
-                key={g.id}
-                type="button"
-                className="tq-tile w-full text-left"
-                onClick={() => void openGame(g.id)}
-              >
-                <div className="font-bold">{g.quizTitle}</div>
-                <div className="mt-1 text-sm text-[var(--tq-muted)]">
-                  PIN {g.pin} · {g.playerCount} players · {g.phase}
-                </div>
-              </button>
-            ))
+            challenges.map((c) => {
+              const pct = c.rosterCount ? Math.round((c.finishedCount / c.rosterCount) * 100) : 0;
+              return (
+                <button key={c.id} type="button" className={`bz-listrow ${chDetail?.challenge.id === c.id ? "is-active" : ""}`} onClick={() => void openChallenge(c.id)} style={{ flexDirection: "column", alignItems: "stretch" }}>
+                  <span className="flex items-start justify-between gap-2">
+                    <strong className="bz-h3" style={{ fontSize: "1.05rem" }}>
+                      {c.title}
+                    </strong>
+                    <span className="bz-chip">{c.classroomName}</span>
+                  </span>
+                  <span className="bz-faint">
+                    {c.finishedCount}/{c.rosterCount} finished
+                    {c.averageAccuracy != null ? ` · ${c.averageAccuracy}% avg` : ""}
+                    {c.dueAt ? ` · due ${when(c.dueAt)}` : ""}
+                  </span>
+                  <span className="bz-meter mt-1">
+                    <i style={{ width: `${pct}%` }} />
+                  </span>
+                </button>
+              );
+            })
           )}
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
-          {!detail ? (
-            <p className="text-[var(--tq-muted)]">Select a game.</p>
+        <div className="bz-card bz-card--pad" style={{ minHeight: 280 }}>
+          {tab === "live" ? (
+            gameDetail ? (
+              <GameReport d={gameDetail} canExport={canExport} />
+            ) : (
+              <p className="bz-muted">Pick a game to see scores and question-by-question accuracy.</p>
+            )
+          ) : chDetail ? (
+            <ChallengeReport d={chDetail} canExport={canExport} onToggle={() => void toggleClosed(chDetail)} />
           ) : (
-            <>
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h2 className="text-xl font-bold">{detail.game.title}</h2>
-                  <p className="text-sm text-[var(--tq-muted)]">
-                    PIN {detail.game.pin}
-                  </p>
-                </div>
-                {detail.canExport ? (
-                  <button
-                    type="button"
-                    className="tq-btn tq-btn-ghost text-sm"
-                    onClick={exportCsv}
-                  >
-                    Export CSV
-                  </button>
-                ) : (
-                  <span className="text-xs text-[var(--tq-muted)]">
-                    Export on Plus/Ultra
-                  </span>
-                )}
-              </div>
-              <ol className="mt-4 space-y-2">
-                {detail.players.map((p) => (
-                  <li
-                    key={p.rank}
-                    className="flex justify-between rounded-xl bg-white/5 px-3 py-2 text-sm"
-                  >
-                    <span>
-                      {p.rank}. {p.name}
-                    </span>
-                    <span>
-                      {p.score} pts · {p.correctCount} correct
-                    </span>
-                  </li>
-                ))}
-              </ol>
-              {detail.byQuestion ? (
-                <div className="mt-6">
-                  <h3 className="font-semibold">By question</h3>
-                  <ul className="mt-2 space-y-2 text-sm">
-                    {detail.byQuestion.map((q, i) => (
-                      <li key={i} className="rounded-xl bg-white/5 px-3 py-2">
-                        <div className="font-medium">{q.prompt || q.type}</div>
-                        <div className="text-[var(--tq-muted)]">
-                          {q.responses} responses
-                          {q.accuracy != null ? ` · ${q.accuracy}% accuracy` : ""}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-            </>
+            <p className="bz-muted">Pick a challenge to see who has played and how they did.</p>
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function QuestionBreakdown({ rows }: { rows: { prompt: string; type: string; responses: number; accuracy: number | null }[] }) {
+  return (
+    <div className="mt-6">
+      <p className="bz-kicker mb-2">Question by question</p>
+      <div className="flex flex-col gap-2">
+        {rows.map((q, i) => (
+          <div key={i} className="grid items-center gap-3" style={{ gridTemplateColumns: "2rem minmax(0,1fr) 9rem" }}>
+            <span className="bz-qnum" style={{ width: "1.9rem", height: "1.9rem", fontSize: "0.85rem" }}>
+              {i + 1}
+            </span>
+            <span className="min-w-0">
+              <span style={{ display: "block", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {q.prompt || "Untitled"}
+              </span>
+              <span className="bz-faint">
+                {BLITZ_TYPE_LABEL[q.type as BlitzQuestionType] ?? q.type} · {q.responses} responses
+              </span>
+            </span>
+            {q.accuracy != null ? (
+              <span className="flex items-center gap-2">
+                <span className="bz-meter" style={{ flex: 1 }}>
+                  <i className={meterClass(q.accuracy)} style={{ width: `${q.accuracy}%` }} />
+                </span>
+                <b style={{ minWidth: 38, textAlign: "right" }}>{q.accuracy}%</b>
+              </span>
+            ) : (
+              <span className="bz-faint">opinion</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GameReport({ d, canExport }: { d: GameDetail; canExport: boolean }) {
+  return (
+    <div className="bz-rise">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="bz-h2">{d.game.title}</h2>
+          <p className="bz-faint mt-1">
+            {when(d.game.createdAt)} · PIN {d.game.pin} · {d.game.mode === "team" ? "Team battle" : d.game.mode === "accuracy" ? "Accuracy" : "Classic"}
+          </p>
+        </div>
+        {canExport ? (
+          <button
+            type="button"
+            className="bz-btn bz-btn--sm"
+            onClick={() =>
+              downloadCsv(`blitz-${d.game.pin}.csv`, [
+                ["rank", "name", "team", "score", "correct"],
+                ...d.players.map((p) => [p.rank, p.name, p.team ?? "", p.score, p.correctCount]),
+              ])
+            }
+          >
+            Export CSV
+          </button>
+        ) : (
+          <Link href="/apps/blitz/upgrade" className="bz-faint" style={{ color: "var(--bz-sun)" }}>
+            CSV export with Plus →
+          </Link>
+        )}
+      </div>
+
+      {d.teams.length ? (
+        <div className="mt-5 flex flex-wrap gap-2">
+          {d.teams.map((t, i) => (
+            <span key={t.name} className="bz-chip" style={{ background: t.color, color: "var(--bz-ink)", borderColor: "var(--bz-ink)", fontSize: "0.9rem" }}>
+              {i + 1}. {t.name} · {t.average.toLocaleString()} avg
+            </span>
+          ))}
+        </div>
+      ) : null}
+
+      <table className="bz-table mt-4">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Player</th>
+            <th style={{ textAlign: "right" }}>Correct</th>
+            <th style={{ textAlign: "right" }}>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {d.players.map((p) => (
+            <tr key={p.rank}>
+              <td style={{ width: 40, fontWeight: 800 }}>{p.rank}</td>
+              <td>
+                <strong>{p.name}</strong>
+                {p.team ? <span className="bz-faint"> · {p.team}</span> : null}
+              </td>
+              <td style={{ textAlign: "right" }}>
+                {p.correctCount}/{d.game.scoredCount}
+              </td>
+              <td style={{ textAlign: "right", fontWeight: 800 }}>{p.score.toLocaleString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {d.players.length === 0 ? <p className="bz-muted">Nobody joined this game.</p> : null}
+
+      {d.byQuestion ? (
+        <QuestionBreakdown rows={d.byQuestion} />
+      ) : (
+        <p className="bz-alert bz-alert--info mt-6">
+          Question-by-question accuracy comes with Plus. <Link href="/apps/blitz/upgrade">See plans</Link>
+        </p>
+      )}
+    </div>
+  );
+}
+
+function ChallengeReport({ d, canExport, onToggle }: { d: ChallengeDetail; canExport: boolean; onToggle: () => void }) {
+  const c = d.challenge;
+  const [copied, setCopied] = useState(false);
+  const link = typeof window !== "undefined" ? `${window.location.origin}/apps/blitz/challenge/${c.id}` : "";
+  const finished = d.students.filter((s) => s.status === "finished").length;
+  return (
+    <div className="bz-rise">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="bz-h2">{c.title}</h2>
+          <p className="bz-faint mt-1">
+            {c.classroomName} · {c.questionCount} questions · {c.settings.mode === "accuracy" ? "accuracy scoring" : "speed bonus"}
+            {c.dueAt ? ` · due ${when(c.dueAt)}` : ""}
+          </p>
+        </div>
+        <span className={`bz-chip ${c.open ? "bz-chip--lime" : "bz-chip--coral"}`}>{c.open ? "Open" : "Closed"}</span>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="bz-btn bz-btn--sm"
+          onClick={() =>
+            void navigator.clipboard?.writeText(link).then(() => {
+              setCopied(true);
+              window.setTimeout(() => setCopied(false), 1500);
+            })
+          }
+        >
+          {copied ? "Link copied" : "Copy student link"}
+        </button>
+        <button type="button" className="bz-btn bz-btn--sm" onClick={onToggle}>
+          {c.open ? "Close now" : "Reopen"}
+        </button>
+        {canExport ? (
+          <button
+            type="button"
+            className="bz-btn bz-btn--sm"
+            onClick={() =>
+              downloadCsv(`blitz-challenge-${c.id.slice(0, 8)}.csv`, [
+                ["name", "status", "score", "correct", "accuracy"],
+                ...d.students.map((s) => [s.name, s.status, s.score, s.correctCount, s.accuracy ?? ""]),
+              ])
+            }
+          >
+            Export CSV
+          </button>
+        ) : null}
+      </div>
+
+      <div className="bz-hero-stats mt-5">
+        <div className="bz-stat">
+          <b>
+            {finished}/{d.students.length}
+          </b>
+          <span>finished</span>
+        </div>
+        <div className="bz-stat">
+          <b>{d.students.filter((s) => s.status === "in_progress").length}</b>
+          <span>in progress</span>
+        </div>
+        <div className="bz-stat">
+          <b>{c.averageAccuracy != null ? `${c.averageAccuracy}%` : (() => {
+            const acc = d.students.filter((s) => s.status === "finished" && s.accuracy != null).map((s) => s.accuracy!);
+            return acc.length ? `${Math.round(acc.reduce((a, b) => a + b, 0) / acc.length)}%` : "—";
+          })()}</b>
+          <span>average accuracy</span>
+        </div>
+      </div>
+
+      <div style={{ overflowX: "auto" }}>
+        <table className="bz-table mt-4" style={{ minWidth: 520 }}>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Status</th>
+              <th>Answers</th>
+              <th style={{ textAlign: "right" }}>Accuracy</th>
+              <th style={{ textAlign: "right" }}>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {d.students.map((s) => (
+              <tr key={s.profileId}>
+                <td>
+                  <strong>{s.name}</strong>
+                </td>
+                <td>
+                  <span className={`bz-chip ${s.status === "finished" ? "bz-chip--lime" : s.status === "in_progress" ? "bz-chip--sun" : ""}`}>
+                    {s.status === "finished" ? "Done" : s.status === "in_progress" ? "Playing" : "Not started"}
+                  </span>
+                </td>
+                <td>
+                  <span className="bz-dots" aria-label={`${s.correctCount} correct`}>
+                    {s.results.map((r, i) => (
+                      <i key={i} className={r === "none" ? "" : `is-${r}`} />
+                    ))}
+                  </span>
+                </td>
+                <td style={{ textAlign: "right" }}>{s.accuracy != null && s.status !== "not_started" ? `${s.accuracy}%` : "—"}</td>
+                <td style={{ textAlign: "right", fontWeight: 800 }}>{s.status === "not_started" ? "—" : s.score.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {d.students.length === 0 ? <p className="bz-muted">This class has no students yet.</p> : null}
+      <QuestionBreakdown rows={d.byQuestion} />
     </div>
   );
 }

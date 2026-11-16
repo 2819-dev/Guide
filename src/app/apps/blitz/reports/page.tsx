@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { BlitzReportsPanel } from "@/components/blitz/reports-panel";
 import { hasEducationAccess } from "@/lib/education-access";
@@ -12,5 +13,9 @@ export default async function BlitzReportsPage() {
   if (!authz || !(await hasEducationAccess(authz.profile))) {
     redirect("/apps/blitz/join");
   }
-  return <BlitzReportsPanel />;
+  return (
+    <Suspense fallback={<p className="bz-page bz-muted">Loading…</p>}>
+      <BlitzReportsPanel />
+    </Suspense>
+  );
 }
