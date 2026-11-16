@@ -37,10 +37,17 @@ export type GuideApp = {
   availability?: AppAvailability;
 };
 
-export const APP_UNAVAILABLE_LABEL = "Temporarily unavailable";
+export const APP_UNAVAILABLE_LABEL = "Coming soon";
 
 export const APP_UNAVAILABLE_DETAIL =
-  "This app is temporarily unavailable. It will be ready again soon.";
+  "Coming soon to Guide. You’ll be able to add it to a class when it’s ready.";
+
+/** Catalog with available apps first, "Coming soon" apps last. */
+export function sortAppsAvailableFirst<T extends GuideApp>(apps: T[]): T[] {
+  return [...apps].sort(
+    (a, b) => Number(isAppAvailable(b)) - Number(isAppAvailable(a)),
+  );
+}
 
 export const APP_CATALOG: GuideApp[] = [
   {

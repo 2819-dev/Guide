@@ -83,7 +83,7 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
             .map((app) => (
             <div
               key={app.slug}
-              className={`portal-panel space-y-4${isAppAvailable(app) ? "" : " opacity-75"}`}
+              className={`portal-panel space-y-4${isAppAvailable(app) ? "" : " portal-tile--soon"}`}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex items-start gap-3">
@@ -119,10 +119,7 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
                 )}
               </div>
               {!isAppAvailable(app) ? (
-                <p className="text-sm text-ink-muted">
-                  {app.name} will be back soon. You can add it to a class once
-                  it’s available again.
-                </p>
+                <p className="text-sm text-ink-muted">{app.description}</p>
               ) : (
               <ul className="divide-y divide-line rounded-[10px] border border-line">
                 {classrooms.map((room) => {

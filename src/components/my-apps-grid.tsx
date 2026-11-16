@@ -3,6 +3,7 @@ import {
   APP_UNAVAILABLE_LABEL,
   appOpenHref,
   isAppAvailable,
+  sortAppsAvailableFirst,
   type GuideApp,
 } from "@/lib/apps";
 
@@ -38,7 +39,7 @@ export function MyAppsGrid({
         Tap an app to open it for class.
       </p>
       <ul className="portal-apps-grid">
-        {apps.map((app) => {
+        {sortAppsAvailableFirst(apps).map((app) => {
           const href = appOpenHref(app);
           const available = isAppAvailable(app);
           const external = Boolean(app.launchUrl);
@@ -70,7 +71,7 @@ export function MyAppsGrid({
                 </Link>
               ) : (
                 <div
-                  className="portal-app-tile opacity-75"
+                  className="portal-app-tile portal-tile--soon"
                   aria-disabled="true"
                   aria-label={`${app.name} — ${APP_UNAVAILABLE_LABEL}`}
                 >

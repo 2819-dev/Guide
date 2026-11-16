@@ -1,10 +1,10 @@
 import Link from "next/link";
 import {
   APP_CATALOG,
-  APP_UNAVAILABLE_DETAIL,
   APP_UNAVAILABLE_LABEL,
   appOpenHref,
   isAppAvailable,
+  sortAppsAvailableFirst,
 } from "@/lib/apps";
 
 export const runtime = "edge";
@@ -28,7 +28,7 @@ export default function AppsLibraryPage() {
         </header>
 
         <ul className="grid gap-4 sm:grid-cols-2">
-          {APP_CATALOG.map((app) => {
+          {sortAppsAvailableFirst(APP_CATALOG).map((app) => {
             const available = isAppAvailable(app);
             const href = appOpenHref(app);
             const body = (
@@ -47,11 +47,13 @@ export default function AppsLibraryPage() {
                   {app.tagline}
                 </p>
                 <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-muted">
-                  {available ? app.description : APP_UNAVAILABLE_DETAIL}
+                  {app.description}
                 </p>
-                <p className="mt-5 text-sm font-semibold text-forest-800">
-                  {available ? `Open ${app.name} →` : APP_UNAVAILABLE_LABEL}
-                </p>
+                {available ? (
+                  <p className="mt-5 text-sm font-semibold text-forest-800">
+                    Open {app.name} →
+                  </p>
+                ) : null}
               </>
             );
 
@@ -62,7 +64,7 @@ export default function AppsLibraryPage() {
                     {body}
                   </Link>
                 ) : (
-                  <div className="portal-tile opacity-90" aria-disabled="true">
+                  <div className="portal-tile portal-tile--soon" aria-disabled="true">
                     {body}
                   </div>
                 )}

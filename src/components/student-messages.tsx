@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   MessagesBubble,
@@ -128,6 +127,7 @@ export function StudentMessages() {
 
   return (
     <MessagesInbox
+      idle={!composing && !activeId}
       sidebar={
         <>
           <button
@@ -146,7 +146,7 @@ export function StudentMessages() {
             <div className="portal-empty !py-6">
               <p className="portal-empty__title">No conversations yet</p>
               <p className="portal-empty__body">
-                Message a teacher after you join a class from Account.
+                Tap New message to write to one of your teachers.
               </p>
             </div>
           ) : (
@@ -184,11 +184,8 @@ export function StudentMessages() {
             <div className="portal-empty">
               <p className="portal-empty__title">Join a class first</p>
               <p className="portal-empty__body">
-                Open{" "}
-                <Link href="/account" className="font-semibold text-forest-800">
-                  Account
-                </Link>{" "}
-                and enter your teacher’s invite code, then write them here.
+                Once your teacher adds you to a class, you can write to them
+                here.
               </p>
             </div>
           ) : (

@@ -126,13 +126,13 @@ export function TeacherInvitesPanel() {
           </p>
         </div>
       ) : (
-        <div className="portal-panel overflow-x-auto">
-          <table className="w-full min-w-[420px] border-collapse text-left text-sm">
+        <div className="portal-panel">
+          <table className="w-full border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-line text-forest-700">
                 <th className="py-2 pr-3 font-semibold">Email</th>
                 <th className="py-2 pr-3 font-semibold">Status</th>
-                <th className="py-2 pr-3 font-semibold">Sent</th>
+                <th className="hidden py-2 pr-3 font-semibold sm:table-cell">Sent</th>
                 <th className="py-2 font-semibold">
                   <span className="sr-only">Setup link</span>
                 </th>
@@ -141,7 +141,7 @@ export function TeacherInvitesPanel() {
             <tbody>
               {invites.map((inv) => (
                 <tr key={inv.id} className="border-b border-line/70">
-                  <td className="py-2.5 pr-3 font-medium text-forest-950">
+                  <td className="break-all py-2.5 pr-3 font-medium text-forest-950">
                     {inv.email}
                   </td>
                   <td className="py-2.5 pr-3">
@@ -155,7 +155,7 @@ export function TeacherInvitesPanel() {
                             : inv.status}
                     </span>
                   </td>
-                  <td className="py-2.5 pr-3 text-ink-muted">
+                  <td className="hidden py-2.5 pr-3 text-ink-muted sm:table-cell">
                     {new Date(inv.sentAt ?? inv.createdAt).toLocaleDateString()}
                   </td>
                   <td className="py-2.5 text-right">

@@ -82,7 +82,7 @@ export function SiteHeader() {
     <header className="site-header sticky top-0 z-40">
       <div className="site-header__inner">
         <GuideWordmark size="lg" />
-        <nav className="flex flex-wrap items-center justify-end gap-1 sm:gap-5">
+        <nav className="flex items-center justify-end gap-1 sm:gap-5">
           {loggedIn ? (
             <>
               <Link href={portalHref} className={`${navLink} font-semibold`}>
@@ -90,12 +90,15 @@ export function SiteHeader() {
               </Link>
               {portalId ? (
                 <>
-                  <Link href={messagesHrefFor(portalId)} className={navLink}>
+                  <Link
+                    href={messagesHrefFor(portalId)}
+                    className={`hidden sm:inline ${navLink}`}
+                  >
                     Messaging
                   </Link>
                   <Link
                     href={suggestionsHrefFor(portalId)}
-                    className={navLink}
+                    className={`hidden sm:inline ${navLink}`}
                   >
                     Suggestions
                   </Link>

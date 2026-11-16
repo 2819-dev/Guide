@@ -6,12 +6,15 @@ import type { ReactNode } from "react";
 export function MessagesInbox({
   sidebar,
   children,
+  idle = false,
 }: {
   sidebar: ReactNode;
   children: ReactNode;
+  /** Nothing open: hide the empty reading pane on phones. */
+  idle?: boolean;
 }) {
   return (
-    <div className="msg-inbox">
+    <div className={idle ? "msg-inbox msg-inbox--idle" : "msg-inbox"}>
       <aside className="msg-inbox__side">{sidebar}</aside>
       <section className="msg-inbox__main">{children}</section>
     </div>

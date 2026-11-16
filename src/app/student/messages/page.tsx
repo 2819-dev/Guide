@@ -13,6 +13,7 @@ export default async function StudentMessagesPage() {
 
   return (
     <PortalShell
+      studentTabs
       eyebrow="Student"
       title="Messages"
       subtitle="Write to teachers of classes you joined — keep class work moving."

@@ -13,6 +13,7 @@ export default async function StudentSuggestionsPage() {
 
   return (
     <PortalShell
+      studentTabs
       eyebrow="Student"
       title="Suggestions"
       subtitle="Ideas and study prompts from Guide."

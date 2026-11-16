@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { JoinClass } from "@/components/join-class";
 import { PortalShell } from "@/components/portal-shell";
 import { RoleBadgeChip } from "@/components/role-badge-chip";
 import { SupportForm } from "@/components/support-form";
@@ -65,6 +64,7 @@ export default async function AccountPage() {
 
   return (
     <PortalShell
+      studentTabs={role === "customer"}
       eyebrow={shortRole}
       title={authz.profile.displayName}
       subtitle={[
@@ -95,7 +95,6 @@ export default async function AccountPage() {
         </ul>
       ) : null}
 
-      {(role === "customer" || role === "rebbe") && <JoinClass />}
 
       <SupportForm />
     </PortalShell>

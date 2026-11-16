@@ -151,13 +151,13 @@ export function EducationPanel({
                   username and password to give them.
                 </p>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[520px] border-collapse text-left text-sm">
+                <div>
+                  <table className="w-full border-collapse text-left text-sm">
                     <thead>
                       <tr className="border-b border-line text-forest-700">
                         <th className="py-2 pr-3 font-semibold">Student</th>
-                        <th className="py-2 pr-3 font-semibold">Username</th>
-                        <th className="py-2 pr-3 font-semibold">Quizzes</th>
+                        <th className="hidden py-2 pr-3 font-semibold sm:table-cell">Username</th>
+                        <th className="hidden py-2 pr-3 font-semibold sm:table-cell">Quizzes</th>
                         <th className="py-2 font-semibold">
                           <span className="sr-only">Password</span>
                         </th>
@@ -168,11 +168,16 @@ export function EducationPanel({
                         <tr key={s.id} className="border-b border-line/70 align-top">
                           <td className="py-3 pr-3 font-medium text-forest-950">
                             {s.displayName}
+                            {s.username ? (
+                              <span className="block font-mono text-xs font-normal text-ink-muted sm:hidden">
+                                {s.username}
+                              </span>
+                            ) : null}
                           </td>
-                          <td className="py-3 pr-3 font-mono">
+                          <td className="hidden py-3 pr-3 font-mono sm:table-cell">
                             {s.username ?? <span className="text-ink-muted">—</span>}
                           </td>
-                          <td className="py-3 pr-3">{s.quizAttempts}</td>
+                          <td className="hidden py-3 pr-3 sm:table-cell">{s.quizAttempts}</td>
                           <td className="py-3 text-right">
                             {s.username ? (
                               <ResetPasswordButton

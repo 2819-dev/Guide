@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { StudentTabBar } from "@/components/student-tab-bar";
 import {
   useCallback,
   useEffect,
@@ -38,6 +39,8 @@ type Props = {
   embed?: boolean;
   embedBadge?: string;
   embedActions?: ReactNode;
+  /** Show the student bottom tab bar on phones. */
+  studentTabs?: boolean;
   children: ReactNode;
 };
 
@@ -119,6 +122,7 @@ export function PortalShell({
   embed = false,
   embedBadge,
   embedActions,
+  studentTabs = false,
   children,
 }: Props) {
   const roleLabel = eyebrow ?? "Portal";
@@ -210,11 +214,13 @@ export function PortalShell({
 
   return (
     <div
-      className={
-        embed
-          ? "portal-shell portal-shell--embed"
-          : "portal-shell"
-      }
+      className={[
+        "portal-shell",
+        embed ? "portal-shell--embed" : "",
+        studentTabs ? "portal-shell--tabs" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <header className="portal-topbar">
         <div className="portal-topbar__inner">
@@ -399,6 +405,7 @@ export function PortalShell({
           <div className="portal-dash__body">{children}</div>
         </div>
       </div>
+      {studentTabs ? <StudentTabBar /> : null}
     </div>
   );
 }

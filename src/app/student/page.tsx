@@ -54,6 +54,7 @@ export default async function StudentHubPage() {
 
   return (
     <PortalShell
+      studentTabs
       eyebrow="Student"
       title={`Hi, ${authz.profile.displayName}`}
       subtitle={
@@ -114,7 +115,7 @@ export default async function StudentHubPage() {
         <JoinClass />
       </section>
 
-      <section id="tools">
+      <section id="tools" className="hidden md:block">
         <h2 className="portal-section-title">Tools</h2>
         <div className="portal-tools-grid">
           <PortalToolTile
