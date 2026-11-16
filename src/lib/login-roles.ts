@@ -14,7 +14,7 @@ export type LoginRoleOption = {
   href: string;
 };
 
-/** Header Log In menu — Student · Admin · Official. */
+/** Header Log In menu — Student · Teachers · Developer · Guide Official. */
 export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   {
     id: "student",
@@ -24,9 +24,15 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
   },
   {
     id: "educator",
-    label: "Admin",
+    label: "Teachers",
     description: "Teachers and school administrators",
     href: "/auth/sign-in?as=educator",
+  },
+  {
+    id: "developer",
+    label: "Developer",
+    description: "Partners who build apps for Guide",
+    href: "/auth/sign-in?as=developer",
   },
   {
     id: "official",
@@ -75,7 +81,7 @@ export function loginAsCopy(as: LoginAs): {
       };
     case "educator":
       return {
-        title: "Admin",
+        title: "Teachers",
         subtitle:
           "Teachers use the account from their school invite. School administrators apply, then log in.",
         // Teachers = login only. School/district apply stays for admins.

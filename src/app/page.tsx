@@ -156,7 +156,7 @@ function GuideHomePage() {
                   </span>
                 </Link>
                 <Link href="/developers/apply" className="hero-link-card">
-                  <span className="hero-link-card__label">For app partners</span>
+                  <span className="hero-link-card__label">For developers</span>
                   <span className="hero-link-card__arrow" aria-hidden>
                     <ArrowIcon size={15} />
                   </span>
