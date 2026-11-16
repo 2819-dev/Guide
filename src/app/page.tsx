@@ -1,12 +1,6 @@
 import Link from "next/link";
 import { AmudHomePage } from "@/components/amud-home";
-import {
-  QuizPreview,
-  SchoolReviewPreview,
-  StudentPhonePreview,
-  StudentPortalPreview,
-  TeacherClassesPreview,
-} from "@/components/home-previews";
+import { PhotoFrame, type FrameAccent, type FrameShape } from "@/components/photo-frame";
 import { isAmudSite } from "@/lib/site";
 
 export const runtime = "edge";
@@ -32,34 +26,72 @@ function ArrowIcon({ size = 16 }: { size?: number }) {
   );
 }
 
-const FEATURES = [
+type Feature = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  link: { href: string; label: string };
+  photo: {
+    src: string;
+    alt: string;
+    shape: FrameShape;
+    accent: FrameAccent;
+    position?: string;
+  };
+};
+
+const FEATURES: Feature[] = [
   {
     eyebrow: "For teachers",
     title: "Run every class from one place",
     body: "Create classes, add the apps your students need, and see who is active today. Invite co-teachers by email — no IT ticket required.",
     link: { href: "/education", label: "See how schools use Guide" },
-    Visual: TeacherClassesPreview,
+    photo: {
+      src: "/photos/teacher-classroom.webp",
+      alt: "A teacher at the front of a classroom while students raise their hands",
+      shape: "leaf",
+      accent: "sun",
+      position: "60% 45%",
+    },
   },
   {
     eyebrow: "For students",
     title: "One login. Everything for class.",
     body: "Students find their school, log in once, and land on a calm portal with their apps and messages from teachers. It works on a Chromebook, a tablet, or a phone.",
     link: { href: "/auth/sign-in?as=student", label: "Log in as a student" },
-    Visual: StudentPhonePreview,
+    photo: {
+      src: "/photos/student-writing.webp",
+      alt: "A student writing at a table with classmates",
+      shape: "arch",
+      accent: "mint",
+      position: "68% 40%",
+    },
   },
   {
     eyebrow: "Learning apps",
     title: "Apps that keep attention",
     body: "Host a live TestQuiz in seconds, and add more learning apps as your school grows. Every app opens from the student's portal — no extra passwords.",
     link: { href: "/apps", label: "Browse the app library" },
-    Visual: QuizPreview,
+    photo: {
+      src: "/photos/students-hands-up.webp",
+      alt: "Young students on a classroom carpet eagerly raising their hands",
+      shape: "blob",
+      accent: "forest",
+      position: "55% 55%",
+    },
   },
   {
     eyebrow: "For administrators",
     title: "Set up your school in days, not months",
     body: "Apply once. Guide Official reviews every school before it goes live, then you invite your teachers and they add their classes.",
     link: { href: "/schools/meeting", label: "Book a meeting" },
-    Visual: SchoolReviewPreview,
+    photo: {
+      src: "/photos/administrator.webp",
+      alt: "A smiling school administrator standing in a classroom",
+      shape: "petal",
+      accent: "sun",
+      position: "30% 35%",
+    },
   },
 ];
 
@@ -140,7 +172,14 @@ function GuideHomePage() {
             </div>
           </div>
           <div className="gh-hero__visual">
-            <StudentPortalPreview />
+            <PhotoFrame
+              src="/photos/hero-student-chromebook.webp"
+              alt="A student wearing headphones smiling at her Chromebook"
+              shape="pill"
+              accent="sun"
+              position="72% 45%"
+              priority
+            />
           </div>
         </div>
       </section>
@@ -175,7 +214,7 @@ function GuideHomePage() {
             className={`content-band gh-feature__grid${i % 2 === 1 ? " gh-feature__grid--flip" : ""}`}
           >
             <div className="gh-feature__visual">
-              <f.Visual />
+              <PhotoFrame {...f.photo} />
             </div>
             <div className="gh-feature__copy">
               <p className="eyebrow">{f.eyebrow}</p>
