@@ -44,7 +44,10 @@ export function MyAppsGrid({
           const external = Boolean(app.launchUrl);
           const inner = (
             <>
-              <span className="portal-app-tile__mark" aria-hidden>
+              <span
+                className={`portal-app-tile__mark portal-app-tile__mark--${app.slug}`}
+                aria-hidden
+              >
                 {app.name.slice(0, 1)}
               </span>
               <span className="portal-app-tile__name">{app.name}</span>

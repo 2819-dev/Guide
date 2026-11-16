@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
+import { JoinClass } from "@/components/join-class";
 import { MyAppsGrid } from "@/components/my-apps-grid";
 import { PortalShell, PortalToolTile } from "@/components/portal-shell";
 import { RoleBadgeChip } from "@/components/role-badge-chip";
@@ -7,7 +8,12 @@ import { listAppsForStudent } from "@/lib/app-installs";
 import { getDb } from "@/lib/db";
 import { requireProfile } from "@/lib/profile";
 import { listRolesForProfile } from "@/lib/role-badges";
-import { schools } from "@/lib/schema";
+import {
+  classroomMembers,
+  classrooms,
+  profiles,
+  schools,
+} from "@/lib/schema";
 import { isStudentSuggestionsBlocked } from "@/lib/suggestions-access";
 
 export const runtime = "edge";
@@ -29,6 +35,17 @@ export default async function StudentHubPage() {
     schoolName = school?.name ?? null;
   }
 
+  const myClasses = await db
+    .select({
+      id: classrooms.id,
+      name: classrooms.name,
+      teacher: profiles.displayName,
+    })
+    .from(classroomMembers)
+    .innerJoin(classrooms, eq(classroomMembers.classroomId, classrooms.id))
+    .innerJoin(profiles, eq(classrooms.rebbeId, profiles.id))
+    .where(eq(classroomMembers.studentId, authz.profile.id));
+
   const roles = await listRolesForProfile(authz.profile.id);
   const apps = await listAppsForStudent(authz.profile.id);
   const suggestionsAccess = await isStudentSuggestionsBlocked(
@@ -46,10 +63,8 @@ export default async function StudentHubPage() {
       }
       chips={[
         { href: "/student#apps", label: "My apps", active: true },
-        { href: "/student#tools", label: "Tools" },
-      ]}
-      utilities={[
-        { href: "/student/messages", label: "Messaging" },
+        { href: "/student#classes", label: "Classes" },
+        { href: "/student/messages", label: "Messages" },
         { href: "/student/suggestions", label: "Suggestions" },
       ]}
       accountName={authz.profile.displayName}
@@ -69,12 +84,34 @@ export default async function StudentHubPage() {
         </ul>
       ) : null}
 
-      <section id="apps" className="portal-primary">
-        <h2 className="portal-section-title">My apps</h2>
+      <div className="portal-primary">
         <MyAppsGrid
           apps={apps}
-          emptyHint="Join a class from Account, then ask your teacher to add an app."
+          emptyHint={
+            myClasses.length === 0
+              ? "Join your class with the code from your teacher below. Your class apps will show up here."
+              : "Your teacher hasn’t added an app to your class yet. Check back soon."
+          }
         />
+      </div>
+
+      <section id="classes">
+        <h2 className="portal-section-title">My classes</h2>
+        {myClasses.length > 0 ? (
+          <ul className="mb-4 grid gap-3 sm:grid-cols-2">
+            {myClasses.map((c) => (
+              <li key={c.id} className="portal-panel !py-4">
+                <p className="font-semibold text-forest-950">{c.name}</p>
+                <p className="mt-0.5 text-sm text-ink-muted">{c.teacher}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="-mt-2 mb-4 text-sm text-ink-muted">
+            You haven’t joined a class yet. Ask your teacher for the class code.
+          </p>
+        )}
+        <JoinClass />
       </section>
 
       <section id="tools">

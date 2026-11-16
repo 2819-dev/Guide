@@ -107,7 +107,8 @@ export function StudentSignIn() {
                   <ul className="max-h-64 divide-y divide-line overflow-y-auto rounded-[10px] border border-line">
                     {filtered.length === 0 ? (
                       <li className="px-4 py-3.5 text-sm text-ink-muted">
-                        No schools match that name.
+                        No schools match that name. Check the spelling, or ask
+                        your teacher if your school uses Guide.
                       </li>
                     ) : (
                       filtered.map((s) => (
@@ -134,6 +135,15 @@ export function StudentSignIn() {
                     Start typing to find your school.
                   </p>
                 )}
+                <p className="text-center text-sm text-ink-muted">
+                  New to Guide?{" "}
+                  <Link
+                    href="/auth/sign-up?as=student"
+                    className="font-semibold text-forest-800"
+                  >
+                    Create a student account
+                  </Link>
+                </p>
                 <div className="text-center text-sm text-ink-muted">
                   Not a student?{" "}
                   <span className="inline-block align-middle">

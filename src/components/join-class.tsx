@@ -1,11 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function JoinClass() {
   const [code, setCode] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const router = useRouter();
 
   async function join() {
     setBusy(true);
@@ -20,6 +22,7 @@ export function JoinClass() {
       if (!res.ok) throw new Error(data.error ?? "Could not join");
       setMessage(`Joined “${data.classroom.name}”.`);
       setCode("");
+      router.refresh();
     } catch (e) {
       setMessage(e instanceof Error ? e.message : "Failed");
     } finally {
@@ -30,7 +33,7 @@ export function JoinClass() {
   return (
     <div className="panel flex flex-wrap items-end gap-3">
       <label className="flex-1 text-sm font-semibold text-forest-800">
-        Class invite code
+        Class code
         <input
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
@@ -44,7 +47,7 @@ export function JoinClass() {
         onClick={() => void join()}
         className="btn-primary"
       >
-        Join class
+        {busy ? "Joining…" : "Join class"}
       </button>
       {message && <p className="w-full text-sm text-forest-700">{message}</p>}
     </div>
