@@ -64,9 +64,10 @@ export function TeacherSuggestionsAccess() {
       <section>
         <h2 className="portal-section-title">Suggestions</h2>
         <div className="portal-empty">
-          <p className="portal-empty__title">No classes yet</p>
+          <p className="portal-empty__title">Create a class first</p>
           <p className="portal-empty__body">
-            Create a class and invite students to manage Suggestions access.
+            Then you can pause Suggestions for a class or for individual
+            students.
           </p>
         </div>
       </section>

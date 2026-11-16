@@ -2,6 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+  MessagesBubble,
+  MessagesInbox,
+  MessagesThreadButton,
+} from "@/components/messages-inbox";
 
 type Teacher = {
   id: string;
@@ -122,154 +127,161 @@ export function StudentMessages() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,14rem)_1fr]">
-      <aside className="space-y-3">
-        <button
-          type="button"
-          onClick={() => {
-            setActiveId(null);
-            setMsgs([]);
-            setComposing(true);
-            setDraft("");
-          }}
-          className="btn-primary w-full !py-2.5 text-sm"
-        >
-          New message
-        </button>
-        {threads.length === 0 ? (
-          <p className="text-sm text-ink-muted">No conversations yet.</p>
-        ) : (
-          <ul className="divide-y divide-line rounded-xl border border-line">
-            {threads.map((t) => (
-              <li key={t.id}>
-                <button
-                  type="button"
-                  onClick={() => void openThread(t.id)}
-                  className={`w-full px-3 py-3 text-left transition hover:bg-forest-100 ${
-                    activeId === t.id ? "bg-forest-100" : ""
-                  }`}
-                >
-                  <span className="block text-sm font-semibold text-forest-950">
-                    {t.otherName}
-                  </span>
-                  <span className="mt-0.5 block truncate text-xs text-ink-muted">
-                    {t.subject}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </aside>
-
-      <section className="portal-panel min-h-[20rem]">
-        {error && <p className="mb-3 text-sm text-red-700">{error}</p>}
-
-        {composing ? (
-          <div className="space-y-4">
-            <h2 className="display text-xl text-forest-950">New message</h2>
-            {teachers.length === 0 ? (
-              <p className="text-sm text-ink-muted">
-                Join a class from{" "}
-                <Link href="/account" className="font-semibold text-forest-800">
-                  Account
-                </Link>{" "}
-                with your teacher’s invite code, then you can message them here.
+    <MessagesInbox
+      sidebar={
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveId(null);
+              setMsgs([]);
+              setComposing(true);
+              setDraft("");
+            }}
+            className="btn-primary w-full"
+          >
+            New message
+          </button>
+          {threads.length === 0 ? (
+            <div className="portal-empty !py-6">
+              <p className="portal-empty__title">No conversations yet</p>
+              <p className="portal-empty__body">
+                Message a teacher after you join a class from Account.
               </p>
-            ) : (
-              <>
-                <label className="block text-sm font-semibold text-forest-900">
-                  Teacher
-                  <select
-                    value={teacherId}
-                    onChange={(e) => setTeacherId(e.target.value)}
-                    className="field mt-1.5"
-                  >
-                    {teachers.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.name}
-                        {t.classrooms[0] ? ` · ${t.classrooms[0].name}` : ""}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="block text-sm font-semibold text-forest-900">
-                  Subject (optional)
-                  <input
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    className="field mt-1.5"
-                    placeholder="What’s this about?"
+            </div>
+          ) : (
+            <ul className="msg-thread-list">
+              {threads.map((t) => (
+                <li key={t.id}>
+                  <MessagesThreadButton
+                    active={activeId === t.id}
+                    title={t.otherName}
+                    subtitle={t.subject}
+                    onClick={() => void openThread(t.id)}
                   />
-                </label>
-                <label className="block text-sm font-semibold text-forest-900">
-                  Message
-                  <textarea
-                    value={draft}
-                    onChange={(e) => setDraft(e.target.value)}
-                    rows={5}
-                    className="field mt-1.5"
-                    placeholder="Write to your teacher…"
-                  />
-                </label>
-                <button
-                  type="button"
-                  disabled={busy || !teacherId || draft.trim().length < 1}
-                  onClick={() => void startThread()}
-                  className="btn-primary"
-                >
-                  {busy ? "Sending…" : "Send"}
-                </button>
-              </>
-            )}
-          </div>
-        ) : activeId ? (
-          <div className="flex h-full flex-col">
-            <header className="border-b border-line pb-3">
-              <p className="text-sm font-semibold text-forest-700">
-                {otherName}
-              </p>
-              <h2 className="display mt-0.5 text-xl text-forest-950">
-                {subject || "Conversation"}
-              </h2>
-            </header>
-            <ul className="mt-4 max-h-[22rem] flex-1 space-y-3 overflow-y-auto">
-              {msgs.map((m) => (
-                <li key={m.id} className="text-sm">
-                  <p className="font-semibold text-forest-900">
-                    {m.senderName}
-                    <span className="ml-2 font-normal text-ink-muted">
-                      {new Date(m.createdAt).toLocaleString()}
-                    </span>
-                  </p>
-                  <p className="mt-1 whitespace-pre-wrap text-ink">{m.body}</p>
                 </li>
               ))}
             </ul>
-            <div className="mt-4 space-y-2 border-t border-line pt-4">
-              <textarea
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                rows={3}
-                className="field"
-                placeholder="Reply…"
-              />
+          )}
+        </>
+      }
+    >
+      {error ? (
+        <p className="mb-3 rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          {error}
+        </p>
+      ) : null}
+
+      {composing ? (
+        <div className="space-y-4">
+          <header>
+            <p className="portal-eyebrow">Compose</p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight text-forest-950">
+              New message
+            </h2>
+          </header>
+          {teachers.length === 0 ? (
+            <div className="portal-empty">
+              <p className="portal-empty__title">Join a class first</p>
+              <p className="portal-empty__body">
+                Open{" "}
+                <Link href="/account" className="font-semibold text-forest-800">
+                  Account
+                </Link>{" "}
+                and enter your teacher’s invite code, then write them here.
+              </p>
+            </div>
+          ) : (
+            <>
+              <label className="block text-sm font-semibold text-forest-900">
+                Teacher
+                <select
+                  value={teacherId}
+                  onChange={(e) => setTeacherId(e.target.value)}
+                  className="field mt-1.5"
+                >
+                  {teachers.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name}
+                      {t.classrooms[0] ? ` · ${t.classrooms[0].name}` : ""}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block text-sm font-semibold text-forest-900">
+                Subject (optional)
+                <input
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  className="field mt-1.5"
+                  placeholder="What’s this about?"
+                />
+              </label>
+              <label className="block text-sm font-semibold text-forest-900">
+                Message
+                <textarea
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  rows={5}
+                  className="field mt-1.5"
+                  placeholder="Write to your teacher…"
+                />
+              </label>
               <button
                 type="button"
-                disabled={busy || draft.trim().length < 1}
-                onClick={() => void sendReply()}
+                disabled={busy || !teacherId || draft.trim().length < 1}
+                onClick={() => void startThread()}
                 className="btn-primary"
               >
-                {busy ? "Sending…" : "Reply"}
+                {busy ? "Sending…" : "Send"}
               </button>
-            </div>
+            </>
+          )}
+        </div>
+      ) : activeId ? (
+        <div className="msg-conversation">
+          <header className="msg-conversation__head">
+            <p className="portal-eyebrow">{otherName}</p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight text-forest-950">
+              {subject || "Conversation"}
+            </h2>
+          </header>
+          <ul className="msg-conversation__list">
+            {msgs.map((m) => (
+              <MessagesBubble
+                key={m.id}
+                name={m.senderName}
+                when={new Date(m.createdAt).toLocaleString()}
+                body={m.body}
+              />
+            ))}
+          </ul>
+          <div className="msg-conversation__compose">
+            <textarea
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              rows={3}
+              className="field"
+              placeholder="Reply…"
+            />
+            <button
+              type="button"
+              disabled={busy || draft.trim().length < 1}
+              onClick={() => void sendReply()}
+              className="btn-primary"
+            >
+              {busy ? "Sending…" : "Reply"}
+            </button>
           </div>
-        ) : (
-          <p className="text-ink-muted">
-            Select a conversation or start a new message to your teacher.
+        </div>
+      ) : (
+        <div className="portal-empty !border-0 !bg-transparent !shadow-none">
+          <p className="portal-empty__title">Select a conversation</p>
+          <p className="portal-empty__body">
+            Or start a new message to a teacher of a class you joined.
           </p>
-        )}
-      </section>
-    </div>
+        </div>
+      )}
+    </MessagesInbox>
   );
 }

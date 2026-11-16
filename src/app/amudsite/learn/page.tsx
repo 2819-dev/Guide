@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { TractatePicker } from "@/components/tractate-picker";
 import { FIRST_APP_NAME } from "@/lib/apps";
-import { publicAmudLearnBase } from "@/lib/site";
+import { publicAmudHomePath, publicAmudLearnBase } from "@/lib/site";
 
 export const runtime = "edge";
 
@@ -11,21 +12,26 @@ export const metadata = {
 /** Public Amud learning index under /amudsite/learn */
 export default function AmudSiteLearnIndexPage() {
   const learnBase = publicAmudLearnBase();
+  const home = publicAmudHomePath();
+
   return (
-    <div>
-      <section className="hero-band">
-        <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
-          <h1 className="display text-3xl text-forest-950 sm:text-4xl">
-            Choose what to learn
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-ink-muted">
-            {FIRST_APP_NAME} — pick a Gemara or Mishnah that is open today. Bava
-            Metzia is available now.
+    <div className="portal-page">
+      <div className="content-band portal-page__inner">
+        <header className="portal-hero !border-0 !pb-2">
+          <p className="portal-eyebrow">{FIRST_APP_NAME}</p>
+          <h1 className="display-feature mt-1">Choose what to learn</h1>
+          <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
+            Pick a Gemara or Mishnah that is open today. Open a daf, then Test
+            Yourself — Bava Metzia is available now.
           </p>
+          <p className="mt-3 text-sm font-semibold text-forest-800">
+            <Link href={home}>← {FIRST_APP_NAME}</Link>
+          </p>
+        </header>
+
+        <div className="mt-6">
+          <TractatePicker learnBase={learnBase} />
         </div>
-      </section>
-      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-10">
-        <TractatePicker learnBase={learnBase} />
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ export function AdminSupportPanel() {
   async function load() {
     const res = await fetch("/api/admin/support");
     if (!res.ok) {
-      setError("Could not load support queue");
+      setError("Could not load Get help queue");
       return;
     }
     const data = await res.json();
@@ -43,48 +43,80 @@ export function AdminSupportPanel() {
     if (res.ok) await load();
   }
 
+  const openCount = tickets.filter(
+    (t) => t.status === "open" || t.status === "in_progress",
+  ).length;
+
   return (
-    <div className="space-y-6">
-      <div className="rounded-xl border border-forest-300 bg-forest-100 px-4 py-3 text-sm text-forest-900">
+    <div className="space-y-4">
+      <p className="rounded-[10px] border border-line bg-sky-soft px-3.5 py-3 text-sm leading-snug text-forest-900">
         {note ??
-          "Admin support shows operational ticket data only. Personal information is never shown here."}
-      </div>
-      {error && <p className="text-sm text-red-700">{error}</p>}
+          "Get help shows operational ticket data only. Personal information is never shown here."}
+      </p>
+      {error ? (
+        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          {error}
+        </p>
+      ) : null}
 
       {tickets.length === 0 ? (
-        <p className="panel text-ink-muted">No support tickets yet.</p>
+        <div className="portal-empty">
+          <p className="portal-empty__title">No help requests yet</p>
+          <p className="portal-empty__body">
+            Help requests from school users appear here for follow-up.
+          </p>
+        </div>
       ) : (
-        <ul className="space-y-4">
-          {tickets.map((t) => (
-            <li key={t.id} className="panel space-y-3">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="font-mono text-sm font-semibold text-forest-700">
-                    {t.ticketNumber}
-                  </p>
-                  <h3 className="display text-xl font-semibold text-forest-950">
-                    {t.subject}
-                  </h3>
-                  <p className="mt-1 text-xs text-ink-muted">
-                    {t.category} · reporter {t.reporterCode} ·{" "}
-                    {new Date(t.createdAt).toLocaleString()}
-                  </p>
+        <>
+          <div className="official-stat-row">
+            <div className="official-stat">
+              <p className="official-stat__value">{tickets.length}</p>
+              <p className="official-stat__label">Total</p>
+            </div>
+            <div className="official-stat">
+              <p className="official-stat__value">{openCount}</p>
+              <p className="official-stat__label">Open</p>
+            </div>
+            <div className="official-stat">
+              <p className="official-stat__value">
+                {tickets.filter((t) => t.status === "resolved").length}
+              </p>
+              <p className="official-stat__label">Resolved</p>
+            </div>
+          </div>
+          <ul className="space-y-3">
+            {tickets.map((t) => (
+              <li key={t.id} className="portal-panel space-y-3">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="font-mono text-sm font-semibold text-forest-700">
+                      {t.ticketNumber}
+                    </p>
+                    <h3 className="mt-1 text-lg font-semibold tracking-tight text-forest-950">
+                      {t.subject}
+                    </h3>
+                    <p className="mt-1 text-xs text-ink-muted">
+                      {t.category} · reporter {t.reporterCode} ·{" "}
+                      {new Date(t.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                  <select
+                    value={t.status}
+                    onChange={(e) => void setStatus(t.id, e.target.value)}
+                    className="field !w-auto !min-h-12"
+                    aria-label={`Status for ${t.ticketNumber}`}
+                  >
+                    <option value="open">open</option>
+                    <option value="in_progress">in_progress</option>
+                    <option value="resolved">resolved</option>
+                    <option value="closed">closed</option>
+                  </select>
                 </div>
-                <select
-                  value={t.status}
-                  onChange={(e) => void setStatus(t.id, e.target.value)}
-                  className="field !w-auto"
-                >
-                  <option value="open">open</option>
-                  <option value="in_progress">in_progress</option>
-                  <option value="resolved">resolved</option>
-                  <option value="closed">closed</option>
-                </select>
-              </div>
-              <p className="text-ink-muted">{t.body}</p>
-            </li>
-          ))}
-        </ul>
+                <p className="text-sm leading-relaxed text-ink-muted">{t.body}</p>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );

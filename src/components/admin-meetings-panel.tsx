@@ -78,8 +78,26 @@ export function AdminMeetingsPanel() {
     );
   }
 
+  const pendingCount = requests.filter((r) => r.status === "pending").length;
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      <div className="official-stat-row" aria-label="Meeting queue summary">
+        <div className="official-stat">
+          <p className="official-stat__value">{requests.length}</p>
+          <p className="official-stat__label">Total</p>
+        </div>
+        <div className="official-stat">
+          <p className="official-stat__value">{pendingCount}</p>
+          <p className="official-stat__label">Pending</p>
+        </div>
+        <div className="official-stat">
+          <p className="official-stat__value">
+            {requests.filter((r) => r.status === "scheduled").length}
+          </p>
+          <p className="official-stat__label">Scheduled</p>
+        </div>
+      </div>
       {error ? (
         <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
           {error}
@@ -89,14 +107,14 @@ export function AdminMeetingsPanel() {
         <article key={r.id} className="portal-panel space-y-3">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
-              <h3 className="text-base font-semibold text-forest-950">
+              <h3 className="text-base font-semibold tracking-tight text-forest-950">
                 {r.organization}
               </h3>
               <p className="mt-0.5 text-sm text-ink-muted">
                 {r.contactName} · {r.contactEmail} · {r.contactRole}
               </p>
             </div>
-            <span className="rounded-[8px] border border-line bg-sky-soft px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-forest-800">
+            <span className={`status-chip status-chip--${r.status}`}>
               {r.status}
             </span>
           </div>
@@ -120,14 +138,14 @@ export function AdminMeetingsPanel() {
                 type="button"
                 disabled={busyId === r.id || r.status === status}
                 onClick={() => void setStatus(r.id, status)}
-                className="btn-secondary !min-h-[40px] !px-3 !text-sm"
+                className="btn-secondary !min-h-12 !px-3.5 !text-sm"
               >
                 {label}
               </button>
             ))}
             <a
               href={`mailto:${r.contactEmail}?subject=${encodeURIComponent(`Guide meeting · ${r.organization}`)}`}
-              className="btn-primary !min-h-[40px] !px-3 !text-sm"
+              className="btn-primary !min-h-12 !px-3.5 !text-sm"
             >
               Email
             </a>

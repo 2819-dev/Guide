@@ -33,33 +33,30 @@ export default async function AmudSiteLearnTractatePage({ params }: Props) {
 
   if (!tractate.available) {
     return (
-      <div>
-        <section className="hero-band">
-          <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
-            <Link
-              href={studyIndexPath(learnBase)}
-              className="text-sm font-medium text-forest-700 no-underline hover:underline"
-            >
-              ← Choose what to learn
-            </Link>
-            <p className="hebrew mt-4 text-lg text-forest-800">
+      <div className="portal-page">
+        <div className="content-band portal-page__inner max-w-2xl">
+          <p className="text-sm font-semibold text-forest-800">
+            <Link href={studyIndexPath(learnBase)}>← Choose what to learn</Link>
+          </p>
+          <div className="portal-empty mt-6">
+            <p className="hebrew text-base text-forest-800">
               {tractate.hebrewName}
             </p>
-            <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
-              {tractate.englishName}
-            </h1>
-            <p className="mt-3 max-w-2xl text-base text-ink-muted">
-              Coming soon. Create an account so you&apos;re ready when this
-              opens.
+            <p className="portal-empty__title mt-2">{tractate.englishName}</p>
+            <p className="portal-empty__body">
+              Coming soon. Log in or create an Amud account so you&apos;re ready
+              when this opens.
             </p>
-            <Link
-              href="/auth/sign-up?as=learner"
-              className="btn-primary mt-6 inline-flex"
-            >
-              Create account
-            </Link>
+            <p className="mt-5">
+              <Link
+                href="/auth/sign-in?as=learner"
+                className="btn-primary inline-flex"
+              >
+                Log In
+              </Link>
+            </p>
           </div>
-        </section>
+        </div>
       </div>
     );
   }
@@ -67,22 +64,17 @@ export default async function AmudSiteLearnTractatePage({ params }: Props) {
   const featuredChapter = tractate.featuredChapter;
 
   return (
-    <div>
-      <section className="hero-band">
-        <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
-          <Link
-            href={studyIndexPath(learnBase)}
-            className="text-sm font-medium text-forest-700 no-underline hover:underline"
-          >
-            ← Choose what to learn
-          </Link>
+    <div className="portal-page">
+      <div className="content-band portal-page__inner">
+        <header className="portal-hero !border-0 !pb-2">
+          <p className="text-sm font-semibold text-forest-800">
+            <Link href={studyIndexPath(learnBase)}>← Choose what to learn</Link>
+          </p>
           <p className="hebrew mt-4 text-lg text-forest-800">
             {tractate.hebrewName}
           </p>
-          <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
-            Choose a daf
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-ink-muted">
+          <h1 className="display-feature mt-1">Choose a daf</h1>
+          <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
             {featuredChapter ? (
               <>
                 Open any page of {tractate.englishName}.{" "}
@@ -93,22 +85,24 @@ export default async function AmudSiteLearnTractatePage({ params }: Props) {
               <>Open any page of {tractate.englishName}.</>
             )}
           </p>
-          {featuredChapter && (
-            <Link
-              href={studyPath(
-                tractate.slug,
-                featuredChapter.startDaf,
-                learnBase,
-              )}
-              className="btn-primary mt-5 inline-flex"
-            >
-              Start at {featuredChapter.hebrew}
-            </Link>
-          )}
+          {featuredChapter ? (
+            <p className="mt-5">
+              <Link
+                href={studyPath(
+                  tractate.slug,
+                  featuredChapter.startDaf,
+                  learnBase,
+                )}
+                className="btn-primary inline-flex"
+              >
+                Start at {featuredChapter.hebrew}
+              </Link>
+            </p>
+          ) : null}
+        </header>
+        <div className="mt-6">
+          <DafPicker tractate={tractate} learnBase={learnBase} />
         </div>
-      </section>
-      <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
-        <DafPicker tractate={tractate} learnBase={learnBase} />
       </div>
     </div>
   );

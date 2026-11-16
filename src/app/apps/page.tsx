@@ -10,8 +10,9 @@ import {
 export const runtime = "edge";
 
 export const metadata = {
-  title: "Apps",
-  description: "Guide app library — add apps to your class for students.",
+  title: "App library · Guide",
+  description:
+    "Learning apps teachers add to a class — students open them from My apps.",
 };
 
 export default function AppsLibraryPage() {
@@ -22,8 +23,8 @@ export default function AppsLibraryPage() {
           <p className="portal-eyebrow">For schools</p>
           <h1 className="display-feature mt-1">App library</h1>
           <p className="mt-1.5 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-            Teachers add an app to a class. Students open it from My apps on
-            their portal.
+            Teachers add an app to a class. Students open it from My apps —
+            keeping attention on learning that feels inviting.
           </p>
         </header>
 
@@ -74,6 +75,13 @@ export default function AppsLibraryPage() {
           Teachers: add apps from your{" "}
           <Link href="/teacher" className="font-semibold text-forest-800">
             teacher portal
+          </Link>
+          . Partners:{" "}
+          <Link
+            href="/developers/apply"
+            className="font-semibold text-forest-800"
+          >
+            apply as a developer
           </Link>
           .
         </p>

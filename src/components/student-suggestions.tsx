@@ -59,7 +59,8 @@ export function StudentSuggestionsPad() {
       <div className="portal-empty">
         <p className="portal-empty__title">No suggestions yet</p>
         <p className="portal-empty__body">
-          Check back after Guide posts something new.
+          When Guide Official posts something new, it shows up here — ideas and
+          notes that keep school feeling inviting.
         </p>
       </div>
     );

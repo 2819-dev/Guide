@@ -105,10 +105,10 @@ export function EducationPanel() {
 
         {classrooms.length === 0 ? (
           <div className="portal-empty">
-            <p className="portal-empty__title">No classes yet</p>
+            <p className="portal-empty__title">Create your first class</p>
             <p className="portal-empty__body">
-              Create a class above. Student progress appears after they join
-              with the invite code from Account.
+              Use the form above. Students join with the invite code from
+              Account, then progress shows here.
             </p>
           </div>
         ) : (
@@ -129,7 +129,7 @@ export function EducationPanel() {
 
               {room.students.length === 0 ? (
                 <div className="portal-empty !py-6">
-                  <p className="portal-empty__title">No students yet</p>
+                  <p className="portal-empty__title">Waiting for students</p>
                   <p className="portal-empty__body">
                     Share the invite code so students can join from Account.
                   </p>
