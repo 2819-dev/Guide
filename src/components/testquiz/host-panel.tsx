@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { TestQuizAudioPlayer } from "@/components/testquiz/audio-player";
 import {
@@ -515,12 +516,12 @@ export function TestQuizHostPanel({ gameId }: Props) {
               Close
             </button>
           ) : (
-            <a
+            <Link
               href="/apps/testquiz/library"
               className="tq-btn tq-btn-primary mt-10 inline-flex no-underline"
             >
               Back to library
-            </a>
+            </Link>
           )}
         </div>
       )}

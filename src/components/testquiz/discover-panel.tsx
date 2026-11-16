@@ -56,7 +56,7 @@ export function TestQuizDiscoverPanel() {
     }
   }
 
-  async function useQuiz(id: string) {
+  async function copyQuiz(id: string) {
     setBusy(true);
     setError(null);
     try {
@@ -167,7 +167,7 @@ export function TestQuizDiscoverPanel() {
                     type="button"
                     className="tq-btn tq-btn-primary text-sm"
                     disabled={busy}
-                    onClick={() => void useQuiz(item.id)}
+                    onClick={() => void copyQuiz(item.id)}
                   >
                     Use quiz
                   </button>
@@ -204,7 +204,7 @@ export function TestQuizDiscoverPanel() {
                 type="button"
                 className="tq-btn tq-btn-primary w-full"
                 disabled={busy}
-                onClick={() => void useQuiz(preview.id)}
+                onClick={() => void copyQuiz(preview.id)}
               >
                 Copy to my library
               </button>

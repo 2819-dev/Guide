@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { AmudHomePage } from "@/components/amud-home";
-import { HeroReleasePanel } from "@/components/hero-release-panel";
-import { FIRST_APP_NAME, appHomePath } from "@/lib/apps";
-import { amudPublicUrl, isAmudSite } from "@/lib/site";
+import {
+  QuizPreview,
+  SchoolReviewPreview,
+  StudentPhonePreview,
+  StudentPortalPreview,
+  TeacherClassesPreview,
+} from "@/components/home-previews";
+import { isAmudSite } from "@/lib/site";
 
 export const runtime = "edge";
 
@@ -15,13 +20,7 @@ export default function HomePage() {
 
 function ArrowIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden
-    >
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden>
       <path
         d="M3 8h9M8 3.5 12.5 8 8 12.5"
         stroke="currentColor"
@@ -33,192 +32,199 @@ function ArrowIcon({ size = 16 }: { size?: number }) {
   );
 }
 
-/**
- * Guide marketing home — forest brand, Clever marketing structure.
- */
-function GuideHomePage() {
-  const amudHref = amudPublicUrl() || appHomePath();
+const FEATURES = [
+  {
+    eyebrow: "For teachers",
+    title: "Run every class from one place",
+    body: "Create classes, add the apps your students need, and see who is active today. Invite co-teachers by email — no IT ticket required.",
+    link: { href: "/education", label: "See how schools use Guide" },
+    Visual: TeacherClassesPreview,
+  },
+  {
+    eyebrow: "For students",
+    title: "One login. Everything for class.",
+    body: "Students find their school, log in once, and land on a calm portal with their apps and messages from teachers. It works on a Chromebook, a tablet, or a phone.",
+    link: { href: "/auth/sign-in?as=student", label: "Log in as a student" },
+    Visual: StudentPhonePreview,
+  },
+  {
+    eyebrow: "Learning apps",
+    title: "Apps that keep attention",
+    body: "Host a live TestQuiz in seconds, and add more learning apps as your school grows. Every app opens from the student's portal — no extra passwords.",
+    link: { href: "/apps", label: "Browse the app library" },
+    Visual: QuizPreview,
+  },
+  {
+    eyebrow: "For administrators",
+    title: "Set up your school in days, not months",
+    body: "Apply once. Guide Official reviews every school before it goes live, then you invite your teachers and they add their classes.",
+    link: { href: "/schools/meeting", label: "Book a meeting" },
+    Visual: SchoolReviewPreview,
+  },
+];
 
+const STEPS = [
+  {
+    n: "1",
+    t: "Your school applies",
+    d: "An administrator tells us about the school. It takes about five minutes.",
+  },
+  {
+    n: "2",
+    t: "Guide Official approves",
+    d: "We review every school so students only ever meet trusted people and apps.",
+  },
+  {
+    n: "3",
+    t: "Teachers and students join",
+    d: "Teachers accept their email invite. Students find their school and log in.",
+  },
+];
+
+const AUDIENCES = [
+  {
+    t: "Students",
+    d: "Log in to your school's portal.",
+    href: "/auth/sign-in?as=student",
+    cta: "Student log in",
+  },
+  {
+    t: "Teachers",
+    d: "Use the invite from your school.",
+    href: "/auth/sign-in?as=educator",
+    cta: "Teacher log in",
+  },
+  {
+    t: "Administrators",
+    d: "Bring Guide to your school.",
+    href: "/education",
+    cta: "Apply for your school",
+  },
+  {
+    t: "Developers",
+    d: "Put your app in front of classrooms.",
+    href: "/developers/apply",
+    cta: "Partner with Guide",
+  },
+];
+
+/** Guide marketing home — Clever-style structure, Guide's forest brand. */
+function GuideHomePage() {
   return (
     <div className="guide-home">
-      <section className="hero-band">
-        <div className="content-band hero-band__grid">
-          {/* Primary band: copy + CTA share height with Official Release panel */}
-          <div className="hero-primary">
-            <h1 className="display-hero max-w-[16ch] lg:max-w-none">
-              Keep every student{" "}
-              <span className="sun-underline">engaged</span>
+      <section className="gh-hero">
+        <div className="content-band gh-hero__grid">
+          <div className="gh-hero__copy">
+            <h1 className="display-hero">
+              Keep every student <span className="sun-underline">engaged</span>
             </h1>
             <p className="hero-lede">
-              Clear classroom management and learning apps that keep students
-              involved — so school feels inviting and purposeful.
+              Guide gives teachers one place to run their classes and gives
+              students one login for every learning app their school uses.
             </p>
-
-            <div className="hero-cta-stack">
+            <div className="gh-hero__ctas">
               <Link href="/auth/sign-in?as=student" className="btn-hero-bar">
                 <span>Log in as a student</span>
                 <span className="btn-hero-bar__arrow">
                   <ArrowIcon />
                 </span>
               </Link>
+              <div className="gh-hero__secondary">
+                <Link href="/education" className="btn-secondary">
+                  For schools
+                </Link>
+                <Link href="/auth/sign-in?as=educator" className="gh-textlink">
+                  Teacher log in <ArrowIcon size={14} />
+                </Link>
+              </div>
             </div>
           </div>
-
-          <HeroReleasePanel />
-
-          {/* Twin cards start at hero panel bottom */}
-          <div className="hero-link-row">
-            <Link href="/education" className="hero-link-card">
-              <span className="hero-link-card__label">For schools</span>
-              <span className="hero-link-card__arrow" aria-hidden>
-                <ArrowIcon size={15} />
-              </span>
-            </Link>
-            <Link href="/developers/apply" className="hero-link-card">
-              <span className="hero-link-card__label">For developers</span>
-              <span className="hero-link-card__arrow" aria-hidden>
-                <ArrowIcon size={15} />
-              </span>
-            </Link>
+          <div className="gh-hero__visual">
+            <StudentPortalPreview />
           </div>
         </div>
       </section>
 
-      <section id="what" className="clever-intro">
-        <div className="content-band clever-intro__inner">
-          <h2 className="display-section">What is Guide?</h2>
-          <p className="clever-intro__body">
-            Guide helps schools keep students engaged and classrooms well
-            managed — classes, learning apps, and a calm place for class work.
-          </p>
-        </div>
-      </section>
-
-      {/* Four mid rows — image L/R alternating */}
-      <section className="clever-feature">
-        <div className="content-band clever-feature__grid">
-          <div
-            className="clever-feature__visual clever-feature__visual--frame-a"
-            aria-hidden
-          >
-            <div className="feature-scene feature-scene--classes">
-              <span className="feature-scene__pane" />
-              <span className="feature-scene__pane feature-scene__pane--mid" />
-              <span className="feature-scene__pane feature-scene__pane--tall" />
-            </div>
-            <span className="clever-feature__mark">01</span>
-          </div>
-          <div className="clever-feature__copy">
-            <h2 className="display-feature">Classroom management, made clear</h2>
-            <p className="clever-feature__body">
-              Teachers create classes, assign apps, and follow progress from one
-              place. Students see only what their class needs.
+      <section id="what" className="gh-steps">
+        <div className="content-band">
+          <div className="gh-section-head">
+            <h2 className="display-section">What is Guide?</h2>
+            <p className="gh-section-lede">
+              A school platform for classroom management and learning apps.
+              Every school is reviewed before it goes live.
             </p>
-            <Link href="/education" className="clever-feature__link">
-              For schools
-              <span aria-hidden>→</span>
-            </Link>
           </div>
+          <ol className="gh-steps__list">
+            {STEPS.map((s) => (
+              <li key={s.n} className="gh-step">
+                <span className="gh-step__n">{s.n}</span>
+                <p className="gh-step__t">{s.t}</p>
+                <p className="gh-step__d">{s.d}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
-      <section className="clever-feature clever-feature--alt">
-        <div className="content-band clever-feature__grid clever-feature__grid--flip">
-          <div className="clever-feature__copy">
-            <h2 className="display-feature">School that feels inviting</h2>
-            <p className="clever-feature__body">
-              Students open a calm place for class — their apps and work
-              together in one welcoming space.
-            </p>
-            <Link
-              href="/auth/sign-in?as=student"
-              className="clever-feature__link"
-            >
-              Log in as a student
-              <span aria-hidden>→</span>
-            </Link>
-          </div>
+      {FEATURES.map((f, i) => (
+        <section
+          key={f.title}
+          className={`gh-feature${i % 2 === 1 ? " gh-feature--alt" : ""}`}
+        >
           <div
-            className="clever-feature__visual clever-feature__visual--frame-b"
-            aria-hidden
+            className={`content-band gh-feature__grid${i % 2 === 1 ? " gh-feature__grid--flip" : ""}`}
           >
-            <div className="feature-scene feature-scene--badge">
-              <span className="feature-scene__badge-ring" />
+            <div className="gh-feature__visual">
+              <f.Visual />
             </div>
-            <span className="clever-feature__mark">02</span>
+            <div className="gh-feature__copy">
+              <p className="eyebrow">{f.eyebrow}</p>
+              <h2 className="display-feature mt-3">{f.title}</h2>
+              <p className="clever-feature__body">{f.body}</p>
+              <Link href={f.link.href} className="clever-feature__link">
+                {f.link.label}
+                <span aria-hidden>→</span>
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ))}
 
-      <section className="clever-feature">
-        <div className="content-band clever-feature__grid">
-          <div
-            className="clever-feature__visual clever-feature__visual--frame-c"
-            aria-hidden
-          >
-            <div className="feature-scene feature-scene--apps">
-              <span className="feature-scene__tile" />
-              <span className="feature-scene__tile" />
-              <span className="feature-scene__tile" />
-              <span className="feature-scene__tile" />
-            </div>
-            <span className="clever-feature__mark">03</span>
-          </div>
-          <div className="clever-feature__copy">
-            <h2 className="display-feature">Apps that keep attention</h2>
-            <p className="clever-feature__body">
-              Learning apps sit at the center of each student’s class space, so
-              the next lesson is clear and engaging.
-            </p>
-            <a href={amudHref} className="clever-feature__link">
-              Visit {FIRST_APP_NAME}
-              <span aria-hidden>→</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section className="clever-feature clever-feature--alt">
-        <div className="content-band clever-feature__grid clever-feature__grid--flip">
-          <div className="clever-feature__copy">
-            <h2 className="display-feature">Teachers and administrators, together</h2>
-            <p className="clever-feature__body">
-              Administrators apply once and invite teachers by email. The whole
-              school meets students in the same inviting space.
-            </p>
-            <Link href="/schools/meeting" className="clever-feature__link">
-              Book a meeting
-              <span aria-hidden>→</span>
-            </Link>
-          </div>
-          <div
-            className="clever-feature__visual clever-feature__visual--frame-d"
-            aria-hidden
-          >
-            <div className="feature-scene feature-scene--teams">
-              <span className="feature-scene__row" />
-              <span className="feature-scene__row" />
-              <span className="feature-scene__row feature-scene__row--accent" />
-            </div>
-            <span className="clever-feature__mark">04</span>
-          </div>
+      <section className="gh-audiences">
+        <div className="content-band">
+          <h2 className="display-feature text-center">Find your way in</h2>
+          <ul className="gh-audiences__grid">
+            {AUDIENCES.map((a) => (
+              <li key={a.t}>
+                <Link href={a.href} className="gh-audience">
+                  <span className="gh-audience__t">{a.t}</span>
+                  <span className="gh-audience__d">{a.d}</span>
+                  <span className="gh-audience__cta">
+                    {a.cta} <ArrowIcon size={14} />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       <section className="cta-band">
         <div className="content-band cta-band__inner">
-          <h2 className="display-section cta-band__title">
-            Engaged students. Well-run classrooms.
-          </h2>
-          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-            <Link href="/auth/sign-in?as=student" className="btn-light shrink-0">
-              Log in as a student
+          <div>
+            <h2 className="display-section cta-band__title">
+              Bring Guide to your school
+            </h2>
+            <p className="gh-cta__lede">
+              Apply in about five minutes, or talk with us first.
+            </p>
+          </div>
+          <div className="gh-cta__buttons">
+            <Link href="/education" className="btn-light">
+              Apply for your school
             </Link>
-            <Link
-              href="/education"
-              className="text-center text-sm font-semibold text-white/90 underline-offset-4 hover:underline"
-            >
-              For schools →
+            <Link href="/schools/meeting" className="gh-cta__ghost">
+              Book a meeting
             </Link>
           </div>
         </div>

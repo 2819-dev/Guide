@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { TestQuizAudioPlayer } from "@/components/testquiz/audio-player";
 import {
@@ -477,12 +478,12 @@ export function TestQuizPlayPanel({ gameId, playerId }: Props) {
             <strong className="text-[var(--tq-accent)]">{me?.score ?? 0}</strong>{" "}
             points
           </p>
-          <a
+          <Link
             href="/apps/testquiz/join"
             className="tq-btn tq-btn-primary mt-8 inline-flex no-underline"
           >
             Join another
-          </a>
+          </Link>
         </div>
       )}
     </div>
