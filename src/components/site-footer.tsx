@@ -63,7 +63,7 @@ export function SiteFooter() {
           <p className="flex flex-wrap gap-x-4 gap-y-1">
             <Link href="/terms">Terms</Link>
             <Link href="/privacy">Privacy</Link>
-            <a href="mailto:hello@guidelearning.org">Accessibility</a>
+            <Link href="/accessibility">Accessibility</Link>
           </p>
         </div>
       </div>

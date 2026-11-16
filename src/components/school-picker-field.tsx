@@ -78,9 +78,7 @@ export function SchoolPickerField({
             className="field mt-1.5"
             required={required && !selected}
             autoComplete="organization"
-            aria-autocomplete="list"
-            aria-controls="signup-school-results"
-            aria-expanded={queryTrimmed.length > 0}
+            aria-describedby="signup-school-results"
           />
         )}
       </label>
@@ -101,11 +99,11 @@ export function SchoolPickerField({
         <ul
           id="signup-school-results"
           className="max-h-40 space-y-1 overflow-y-auto rounded-xl border border-line p-1"
-          role="listbox"
           aria-label="Matching schools"
+          aria-live="polite"
         >
           {filtered.map((s) => (
-            <li key={s.id} role="option">
+            <li key={s.id}>
               <button
                 type="button"
                 onClick={() => setSelected(s)}

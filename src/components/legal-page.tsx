@@ -22,6 +22,7 @@ export function LegalPage({
         <nav className="legal-page__switch" aria-label="Legal pages">
           <Link href="/terms">Terms of Service</Link>
           <Link href="/privacy">Privacy Policy</Link>
+          <Link href="/accessibility">Accessibility</Link>
         </nav>
         <article className="legal-prose">{children}</article>
         <p className="legal-page__contact">

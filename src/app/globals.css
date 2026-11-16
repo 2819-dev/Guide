@@ -9,9 +9,9 @@
    */
   --forest-950: #1e3f30;
   --forest-900: #27523d;
-  --forest-800: #3d7a5c;
-  --forest-700: #4a8f6c;
-  --forest-600: #5aa37d;
+  --forest-800: #2f6a4c;
+  --forest-700: #367553;
+  --forest-600: #3a7a59;
   --forest-500: #6bb58e;
   --forest-400: #8dcaa9;
   --forest-300: #b5dfc6;
@@ -22,7 +22,7 @@
   --sky-soft: #f6fbf8;
   --paper: #ffffff;
   --ink: #243530;
-  --ink-muted: #657870;
+  --ink-muted: #5a6c65;
   --line: #e4efe8;
   --surface: #ffffff;
   --on-primary: #ffffff;
@@ -3471,7 +3471,7 @@ body {
   font-size: 15px;
 }
 
-.pv-mark--green { background: linear-gradient(135deg, #4a8f6c, #2f6b4d); }
+.pv-mark--green { background: linear-gradient(135deg, #367553, #2a5e44); }
 .pv-mark--blue { background: linear-gradient(135deg, #3b82f6, #2459c9); }
 .pv-mark--gold { background: linear-gradient(135deg, #d4a73c, #b07f1c); }
 .pv-mark--plum { background: linear-gradient(135deg, #9a5fc4, #6f3b99); }
@@ -3684,13 +3684,12 @@ body {
 .pv-ans__pct {
   font-size: 12px;
   font-weight: 700;
-  opacity: 0.9;
 }
 
-.pv-ans--a { background: #2f6fdb; }
-.pv-ans--b { background: #2f8a5b; box-shadow: 0 0 0 3px color-mix(in srgb, #2f8a5b 30%, transparent); }
-.pv-ans--c { background: #c58a1a; }
-.pv-ans--d { background: #b4445a; }
+.pv-ans--a { background: #2459c4; }
+.pv-ans--b { background: #24704a; box-shadow: 0 0 0 3px color-mix(in srgb, #24704a 30%, transparent); }
+.pv-ans--c { background: #8f620c; }
+.pv-ans--d { background: #a33a50; }
 
 .pv-status {
   padding: 0.3rem 0.75rem;
@@ -3767,7 +3766,7 @@ body {
 
 /* Per-app tile colors (portal My apps) */
 .portal-app-tile__mark--testquiz { background: linear-gradient(135deg, #3b82f6, #2459c9); }
-.portal-app-tile__mark--amud { background: linear-gradient(135deg, #4a8f6c, #2f6b4d); }
+.portal-app-tile__mark--amud { background: linear-gradient(135deg, #367553, #2a5e44); }
 .portal-app-tile__mark--arcade-education { background: linear-gradient(135deg, #d4a73c, #b07f1c); }
 
 /* Terms / Privacy */
@@ -3860,6 +3859,48 @@ body {
   .legal-page__switch a,
   .legal-page__contact a,
   .legal-prose a {
+    color: var(--forest-400);
+  }
+}
+
+
+/* ---------- Accessibility: contrast fixes (WCAG 2.1 AA) ----------
+ * Kept last so these win over component rules declared earlier.
+ */
+.legal-prose a,
+.legal-page__contact a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--forest-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .text-forest-600,
+  .text-forest-700,
+  .text-forest-800,
+  .site-footer-follow a,
+  .portal-eyebrow,
+  .eyebrow {
+    color: var(--forest-400);
+  }
+
+  .btn-secondary {
+    color: var(--ink);
+    border-color: var(--forest-400);
+  }
+
+  .schools-feature__title {
+    color: var(--ink);
+  }
+
+  .clever-feature__link,
+  .gh-textlink,
+  .gh-audience__cta,
+  .hero-link-card__arrow {
     color: var(--forest-400);
   }
 }
