@@ -76,7 +76,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Student",
         subtitle: "Find your school, then log in with your password.",
-        joinHref: "/auth/sign-up?as=student",
+        joinHref: null,
         joinLabel: "Create a student account",
       };
     case "educator":

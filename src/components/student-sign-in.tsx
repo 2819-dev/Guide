@@ -1,14 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
-import { signInWithEmail } from "@/app/auth/sign-in/actions";
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { signInStudent } from "@/app/auth/sign-in/actions";
 import { GuideWordmark } from "@/components/guide-logo";
-import { HeroStudentArt } from "@/components/home-illustrations";
-import { LoginMenu } from "@/components/login-menu";
-import { PhotoFrame } from "@/components/photo-frame";
 
 type School = { id: string; name: string; slug: string };
+type Step = "school" | "username" | "password" | "forgot" | "forgot-sent";
 
 const LAST_SCHOOL_KEY = "guide:last-school";
 
@@ -25,24 +23,29 @@ function saveLastSchool(school: School) {
   try {
     window.localStorage.setItem(LAST_SCHOOL_KEY, JSON.stringify(school));
   } catch {
-    // Private mode / blocked storage — remembering the school is optional.
+    // Remembering the school is optional.
   }
 }
 
 /**
- * Student log in (Clever-style): find your school, then email + password.
- * Remembers the last school on this device so returning students skip search.
+ * Student log in, one thing at a time: school → username → password.
+ * Accounts come from teachers; "Forgot password?" asks the student's
+ * teachers for a new one.
  */
 export function StudentSignIn() {
+  const router = useRouter();
+  const [step, setStep] = useState<Step>("school");
   const [schools, setSchools] = useState<School[]>([]);
-  const [loadError, setLoadError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [query, setQuery] = useState("");
   const [school, setSchool] = useState<School | null>(null);
   const [remembered, setRemembered] = useState<School | null>(null);
+  const [username, setUsername] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const [state, action, pending] = useActionState(signInWithEmail, null);
+  const [helpBusy, setHelpBusy] = useState(false);
+  const [state, action, pending] = useActionState(signInStudent, null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -53,12 +56,11 @@ export function StudentSignIn() {
         if (cancelled) return;
         const list: School[] = data.schools ?? [];
         setSchools(list);
-        if (!res.ok) setLoadError("We couldn’t load schools. Refresh to try again.");
-        // Only offer the remembered school if it's still on Guide.
+        setLoadError(!res.ok);
         const last = readLastSchool();
         if (last) setRemembered(list.find((s) => s.id === last.id) ?? null);
       } catch {
-        if (!cancelled) setLoadError("We couldn’t load schools. Refresh to try again.");
+        if (!cancelled) setLoadError(true);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -68,214 +70,204 @@ export function StudentSignIn() {
     };
   }, []);
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [step]);
+
   const q = query.trim().toLowerCase();
   const matches = q
-    ? schools.filter(
-        (s) => s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q),
-      )
+    ? schools.filter((s) => s.name.toLowerCase().includes(q) || s.slug.includes(q))
     : [];
 
-  function choose(s: School) {
+  function chooseSchool(s: School) {
     setSchool(s);
-    setQuery("");
     saveLastSchool(s);
+    setQuery("");
+    setStep("username");
   }
 
+  function back() {
+    if (step === "school") router.push("/");
+    else if (step === "username") setStep("school");
+    else if (step === "password") setStep("username");
+    else setStep("password");
+  }
+
+  async function askForHelp() {
+    if (!school) return;
+    setHelpBusy(true);
+    await fetch("/api/student/password-help", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ schoolId: school.id, username }),
+    }).catch(() => null);
+    setHelpBusy(false);
+    setStep("forgot-sent");
+  }
+
+  const heading = {
+    school: "Find your school",
+    username: "Enter your username",
+    password: "Enter your password",
+    forgot: "Forgot your password?",
+    "forgot-sent": "Your teachers have been told",
+  }[step];
+
   return (
-    <div className="student-login">
-      <aside className="student-login__side" aria-hidden>
-        <GuideWordmark href={null} tone="onDark" size="lg" />
-        <div className="student-login__art">
-          <PhotoFrame shape="pill" accent="sun">
-            <HeroStudentArt />
-          </PhotoFrame>
-        </div>
-        <p className="student-login__tagline">
-          One login for every app your class uses.
-        </p>
-      </aside>
+    <div className="slogin">
+      <button type="button" onClick={back} className="slogin__back" aria-label="Back">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden>
+          <path
+            d="M13 8H3.5M7.5 3.5 3 8l4.5 4.5"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        Back
+      </button>
 
-      <div className="student-login__main">
-        <div className="student-login__top">
-          <GuideWordmark href="/" size="md" />
-          <Link href="/" className="student-login__home">
-            ← Back to Guide
-          </Link>
-        </div>
+      <div className="slogin__body">
+        <GuideWordmark href={null} size="lg" className="slogin__mark" />
+        <h1 className="slogin__title">{heading}</h1>
+        {school && step !== "school" ? (
+          <p className="slogin__context">
+            {school.name}
+            {step !== "username" && username ? ` · ${username}` : ""}
+          </p>
+        ) : null}
 
-        <div className="student-login__body">
-          <p className="login-eyebrow">Student</p>
-          <h1 className="login-title">Log in to Guide</h1>
-
-          {!school ? (
-            <div className="student-login__card">
-              {remembered ? (
-                <div className="student-login__remembered">
-                  <p className="text-sm text-ink-muted">Welcome back</p>
-                  <button
-                    type="button"
-                    className="student-login__school-btn"
-                    onClick={() => choose(remembered)}
-                  >
-                    <span>{remembered.name}</span>
+        {step === "school" && (
+          <div className="slogin__stack">
+            {remembered && !q ? (
+              <button type="button" className="slogin__option" onClick={() => chooseSchool(remembered)}>
+                <span>{remembered.name}</span>
+                <span aria-hidden>→</span>
+              </button>
+            ) : null}
+            <input
+              ref={inputRef}
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="School name"
+              aria-label="School name"
+              className="field slogin__input"
+              autoComplete="off"
+            />
+            <div aria-live="polite" className="slogin__stack">
+              {loading ? null : loadError ? (
+                <p className="slogin__note">Couldn’t load schools. Refresh to try again.</p>
+              ) : q && matches.length === 0 ? (
+                <p className="slogin__note">No school found. Check the spelling.</p>
+              ) : (
+                matches.slice(0, 6).map((s) => (
+                  <button key={s.id} type="button" className="slogin__option" onClick={() => chooseSchool(s)}>
+                    <span>{s.name}</span>
                     <span aria-hidden>→</span>
                   </button>
-                  <p className="text-center text-sm text-ink-muted">
-                    Not your school? Search below.
-                  </p>
-                </div>
-              ) : null}
-
-              <label className="block text-sm font-semibold text-forest-900" htmlFor="school-search">
-                Find your school
-              </label>
-              <input
-                id="school-search"
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Start typing your school’s name"
-                className="field"
-                autoComplete="off"
-                autoFocus={!remembered}
-                aria-describedby="school-search-status"
-              />
-
-              <div id="school-search-status" aria-live="polite">
-                {loading ? (
-                  <p className="student-login__hint">Loading schools…</p>
-                ) : loadError ? (
-                  <p className="student-login__error">{loadError}</p>
-                ) : schools.length === 0 ? (
-                  <div className="student-login__empty">
-                    <p className="font-semibold text-forest-950">No schools on Guide yet</p>
-                    <p className="mt-1 text-sm text-ink-muted">
-                      When your school joins Guide, you’ll find it here. Your
-                      teacher can tell you when it’s ready.
-                    </p>
-                  </div>
-                ) : !q ? (
-                  <p className="student-login__hint">
-                    Type at least a few letters of your school’s name.
-                  </p>
-                ) : matches.length === 0 ? (
-                  <div className="student-login__empty">
-                    <p className="font-semibold text-forest-950">No school matches “{query.trim()}”</p>
-                    <p className="mt-1 text-sm text-ink-muted">
-                      Check the spelling, or ask your teacher whether your
-                      school uses Guide.
-                    </p>
-                  </div>
-                ) : (
-                  <ul className="student-login__results" aria-label="Matching schools">
-                    {matches.slice(0, 8).map((s) => (
-                      <li key={s.id}>
-                        <button
-                          type="button"
-                          className="student-login__school-btn"
-                          onClick={() => choose(s)}
-                        >
-                          <span>{s.name}</span>
-                          <span aria-hidden>→</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          ) : (
-            <form action={action} className="student-login__card">
-              <div className="student-login__chosen">
-                <div className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
-                    Your school
-                  </p>
-                  <p className="truncate font-semibold text-forest-950">{school.name}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSchool(null)}
-                  className="shrink-0 text-sm font-semibold text-forest-800 hover:underline"
-                >
-                  Change
-                </button>
-              </div>
-
-              <input type="hidden" name="as" value="student" />
-              <input type="hidden" name="schoolId" value={school.id} />
-
-              <label className="block text-sm font-semibold text-forest-900">
-                Email
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="username"
-                  inputMode="email"
-                  placeholder="you@example.com"
-                  className="field mt-1.5"
-                  autoFocus
-                />
-              </label>
-
-              <label className="block text-sm font-semibold text-forest-900">
-                Password
-                <span className="relative mt-1.5 block">
-                  <input
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    autoComplete="current-password"
-                    className="field pr-20"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    className="absolute inset-y-0 right-0 px-4 text-sm font-semibold text-forest-800"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                </span>
-              </label>
-
-              {state?.error ? (
-                <p className="student-login__error" role="alert">
-                  {state.error}
-                </p>
-              ) : null}
-
-              <button type="submit" disabled={pending} className="btn-primary w-full !py-3">
-                {pending ? "Logging in…" : "Log in"}
-              </button>
-
-              <p className="text-center text-sm text-ink-muted">
-                Forgot your password? Ask your teacher, or email{" "}
-                <a href="mailto:hello@guidelearning.org" className="font-semibold text-forest-800 underline">
-                  hello@guidelearning.org
-                </a>
-                .
-              </p>
-            </form>
-          )}
-
-          <div className="student-login__links">
-            <p>
-              New to Guide?{" "}
-              <Link
-                href="/auth/sign-up?as=student"
-                className="font-semibold text-forest-800 hover:underline"
-              >
-                Create a student account
-              </Link>
-            </p>
-            <div className="flex items-center justify-center gap-2">
-              <span>Not a student?</span>
-              <LoginMenu variant="nav" />
+                ))
+              )}
             </div>
           </div>
-        </div>
+        )}
+
+        {step === "username" && (
+          <form
+            className="slogin__stack"
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (username.trim()) setStep("password");
+            }}
+          >
+            <input
+              ref={inputRef}
+              value={username}
+              onChange={(e) => setUsername(e.target.value.trim())}
+              placeholder="Username"
+              aria-label="Username"
+              className="field slogin__input"
+              autoComplete="username"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              required
+            />
+            <button type="submit" className="btn-primary slogin__submit" disabled={!username.trim()}>
+              Next
+            </button>
+          </form>
+        )}
+
+        {step === "password" && school && (
+          <form action={action} className="slogin__stack">
+            <input type="hidden" name="schoolId" value={school.id} />
+            <input type="hidden" name="username" value={username} />
+            <span className="relative block">
+              <input
+                ref={inputRef}
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                aria-label="Password"
+                className="field slogin__input pr-20"
+                autoComplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="slogin__show"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </span>
+            {state?.error ? (
+              <p className="slogin__error" role="alert">
+                {state.error}
+              </p>
+            ) : null}
+            <button type="submit" className="btn-primary slogin__submit" disabled={pending}>
+              {pending ? "Logging in…" : "Log in"}
+            </button>
+            <button type="button" className="slogin__link" onClick={() => setStep("forgot")}>
+              Forgot password?
+            </button>
+          </form>
+        )}
+
+        {step === "forgot" && (
+          <div className="slogin__stack">
+            <p className="slogin__text">
+              We’ll ask your teachers to give you a new password.
+            </p>
+            <button
+              type="button"
+              className="btn-primary slogin__submit"
+              onClick={() => void askForHelp()}
+              disabled={helpBusy}
+            >
+              {helpBusy ? "Sending…" : "Ask my teachers"}
+            </button>
+          </div>
+        )}
+
+        {step === "forgot-sent" && (
+          <div className="slogin__stack">
+            <p className="slogin__text">
+              They’ll give you a new password. Then come back and log in.
+            </p>
+            <button
+              type="button"
+              className="btn-primary slogin__submit"
+              onClick={() => setStep("password")}
+            >
+              Back to log in
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

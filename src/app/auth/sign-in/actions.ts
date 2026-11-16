@@ -12,6 +12,7 @@ import { ensureProfile } from "@/lib/profile";
 import type { Role } from "@/lib/roles";
 import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 import { profiles } from "@/lib/schema";
+import { loginEmailForStudent } from "@/lib/student-accounts";
 
 function destinationFor(
   as: LoginAs,
@@ -103,4 +104,38 @@ function friendlyAuthError(message?: string): string {
     return "That email and password don’t match. Check them and try again.";
   }
   return message;
+}
+
+/**
+ * Student log in: school → username → password. Accounts are created by
+ * teachers, so the username maps to a private login email. Older
+ * self-signup accounts can still type their email in the username box.
+ */
+export async function signInStudent(
+  _prev: { error: string } | null,
+  formData: FormData,
+) {
+  const schoolId = String(formData.get("schoolId") ?? "").trim();
+  const username = String(formData.get("username") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const mismatch = {
+    error: "That username and password don’t match. Check them and try again.",
+  };
+  if (!schoolId || !username || !password) return mismatch;
+
+  const email = username.includes("@")
+    ? username.toLowerCase()
+    : await loginEmailForStudent(schoolId, username);
+  if (!email) return mismatch;
+
+  const { data, error } = await auth.signIn.email({ email, password });
+  if (error) {
+    return /verif/i.test(error.message ?? "")
+      ? { error: "This account isn’t ready yet. Ask your teacher for help." }
+      : mismatch;
+  }
+
+  const session = await ensureProfile({ user: data?.user ?? null, schoolId });
+  if (!session) return mismatch;
+  redirect("/student");
 }

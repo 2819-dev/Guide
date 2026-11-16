@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  AddStudentForm,
+  PasswordHelpPanel,
+  ResetPasswordButton,
+} from "@/components/student-accounts-ui";
 import { TeacherAppsPanel } from "@/components/teacher-apps-panel";
 import { TeacherInvitesPanel } from "@/components/teacher-invites-panel";
 import { TeacherMessages } from "@/components/teacher-messages";
@@ -9,6 +14,7 @@ import { TeacherSuggestionsAccess } from "@/components/teacher-suggestions-acces
 type Student = {
   id: string;
   displayName: string;
+  username: string | null;
   dapimStudied: number;
   quizAttempts: number;
   bestScore: number | null;
@@ -72,6 +78,8 @@ export function EducationPanel({
 
   return (
     <>
+      <PasswordHelpPanel refreshKey={classesVersion} />
+
       <section id="classes" className="space-y-4">
         <div>
           <h2 className="portal-section-title">Classes</h2>
@@ -131,45 +139,42 @@ export function EducationPanel({
               </div>
 
               {room.students.length === 0 ? (
-                <div className="portal-empty !py-6">
-                  <p className="portal-empty__title">Waiting for students</p>
-                  <p className="portal-empty__body">
-                    Share the invite code so students can join from Account.
-                  </p>
-                </div>
+                <p className="text-sm text-ink-muted">
+                  No students yet. Add each student below — you’ll get a
+                  username and password to give them.
+                </p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+                  <table className="w-full min-w-[520px] border-collapse text-left text-sm">
                     <thead>
                       <tr className="border-b border-line text-forest-700">
                         <th className="py-2 pr-3 font-semibold">Student</th>
-                        <th className="py-2 pr-3 font-semibold">Visited</th>
+                        <th className="py-2 pr-3 font-semibold">Username</th>
                         <th className="py-2 pr-3 font-semibold">Quizzes</th>
-                        <th className="py-2 pr-3 font-semibold">Best</th>
-                        <th className="py-2 pr-3 font-semibold">Avg</th>
-                        <th className="py-2 pr-3 font-semibold">Notes</th>
-                        <th className="py-2 font-semibold">Recent</th>
+                        <th className="py-2 font-semibold">
+                          <span className="sr-only">Password</span>
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {room.students.map((s) => (
-                        <tr key={s.id} className="border-b border-line/70">
+                        <tr key={s.id} className="border-b border-line/70 align-top">
                           <td className="py-3 pr-3 font-medium text-forest-950">
                             {s.displayName}
                           </td>
-                          <td className="py-3 pr-3">{s.dapimStudied}</td>
+                          <td className="py-3 pr-3 font-mono">
+                            {s.username ?? <span className="text-ink-muted">—</span>}
+                          </td>
                           <td className="py-3 pr-3">{s.quizAttempts}</td>
-                          <td className="py-3 pr-3">
-                            {s.bestScore == null ? "—" : `${s.bestScore}%`}
-                          </td>
-                          <td className="py-3 pr-3">
-                            {s.averageQuizScore == null
-                              ? "—"
-                              : `${s.averageQuizScore}%`}
-                          </td>
-                          <td className="py-3 pr-3">{s.notesSubmitted}</td>
-                          <td className="py-3 text-ink-muted">
-                            {s.recentDafim.join(", ") || "—"}
+                          <td className="py-3 text-right">
+                            {s.username ? (
+                              <ResetPasswordButton
+                                studentId={s.id}
+                                name={s.displayName}
+                                username={s.username}
+                                onDone={() => setClassesVersion((v) => v + 1)}
+                              />
+                            ) : null}
                           </td>
                         </tr>
                       ))}
@@ -177,6 +182,11 @@ export function EducationPanel({
                   </table>
                 </div>
               )}
+
+              <AddStudentForm
+                classroomId={room.id}
+                onAdded={() => void load()}
+              />
             </div>
           ))
         )}

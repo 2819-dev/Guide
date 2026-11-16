@@ -73,7 +73,7 @@ const EMAIL_INK = "#243530";
 const EMAIL_MUTED = "#5f7268";
 const EMAIL_LINE = "#e4efe8";
 const EMAIL_SKY = "#f6fbf8";
-const EMAIL_PRIMARY = "#4a8f6c";
+const EMAIL_PRIMARY = "#367553";
 const EMAIL_FOOTER = "#3d7a5c";
 
 function shell(inner: string): string {
@@ -105,6 +105,29 @@ export async function sendWelcomeEmail(opts: {
       <p style="margin:0;color:${EMAIL_MUTED};font-size:14px">If you did not expect this email, you can ignore it.</p>
     `),
     text: `Welcome to Guide\n\nLog in: ${guidePublicUrl()}/auth/sign-in`,
+  });
+}
+
+/** Tell a teacher a student asked for password help. */
+export async function sendPasswordHelpEmail(opts: {
+  to: string;
+  teacherName: string;
+  studentName: string;
+  username: string;
+}): Promise<SendEmailResult> {
+  const portal = `${guidePublicUrl()}/education/panel#password-help`;
+  return sendEmail({
+    to: opts.to,
+    subject: `${opts.studentName} needs a new Guide password`,
+    html: shell(`
+      <p style="margin:0 0 14px">Hi ${escapeHtml(opts.teacherName)},</p>
+      <p style="margin:0 0 14px"><strong>${escapeHtml(opts.studentName)}</strong>
+      (username <strong>${escapeHtml(opts.username)}</strong>) forgot their password
+      and asked for help.</p>
+      <p style="margin:0 0 18px"><a href="${portal}" style="display:inline-block;background:${EMAIL_PRIMARY};color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Set a new password</a></p>
+      <p style="margin:0;color:${EMAIL_MUTED};font-size:14px">You’re getting this because the student is in one of your classes.</p>
+    `),
+    text: `${opts.studentName} (username ${opts.username}) forgot their Guide password. Set a new one: ${portal}`,
   });
 }
 

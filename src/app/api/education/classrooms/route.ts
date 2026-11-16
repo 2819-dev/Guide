@@ -5,6 +5,7 @@ import { getDb } from "@/lib/db";
 import { hasEducationAccess } from "@/lib/education-access";
 import { makeInviteCode } from "@/lib/invite";
 import { requireProfile } from "@/lib/profile";
+import { usernamesForStudents } from "@/lib/student-accounts";
 import {
   classroomMembers,
   classrooms,
@@ -49,6 +50,7 @@ export async function GET() {
       .where(eq(classroomMembers.classroomId, room.id));
 
     const studentIds = members.map((m) => m.studentId);
+    const usernames = await usernamesForStudents(studentIds);
     let progressRows: (typeof progress.$inferSelect)[] = [];
     let quizRows: { profileId: string; score: number | null; dafId: string; completedAt: Date | null }[] = [];
     let noteCounts: { profileId: string; count: number }[] = [];
@@ -95,6 +97,7 @@ export async function GET() {
         return {
           id: m.studentId,
           displayName: m.displayName,
+          username: usernames.get(m.studentId) ?? null,
           joinedAt: m.joinedAt,
           dapimStudied: pRows.filter((p) => p.visited).length,
           quizAttempts: pRows.reduce((s, p) => s + p.quizAttempts, 0),

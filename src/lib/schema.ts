@@ -599,3 +599,30 @@ export const developerApps = pgTable(
   },
   (t) => [uniqueIndex("developer_apps_slug_idx").on(t.slug)],
 );
+
+/**
+ * Narrow view of profiles for the student username column. Kept separate
+ * from `profiles` so existing select-all queries never depend on a column
+ * that is added at runtime (see ensureStudentAccountSchema).
+ */
+export const profileLogins = pgTable("profiles", {
+  id: uuid("id").primaryKey(),
+  schoolId: uuid("school_id"),
+  username: varchar("username", { length: 40 }),
+  loginEmail: varchar("login_email", { length: 254 }),
+  displayName: varchar("display_name", { length: 120 }).notNull(),
+});
+
+/** Student "forgot password" requests, shown to the student's teachers. */
+export const passwordResetRequests = pgTable("password_reset_requests", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  studentId: uuid("student_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  status: varchar("status", { length: 16 }).notNull().default("pending"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+  resolvedBy: uuid("resolved_by").references(() => profiles.id, {
+    onDelete: "set null",
+  }),
+});

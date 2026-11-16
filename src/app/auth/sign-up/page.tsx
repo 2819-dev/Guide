@@ -9,7 +9,6 @@ import { AdminKeyIcon } from "@/components/admin-entry";
 import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
-import { SchoolPickerField } from "@/components/school-picker-field";
 import { FIRST_APP_NAME } from "@/lib/apps";
 import { parseLoginAs, signupAsCopy } from "@/lib/login-roles";
 import { publicAmudHomePath } from "@/lib/site";
@@ -31,6 +30,22 @@ function SignUpForm() {
       >
         <Link href="/auth/sign-in?as=official" className="btn-primary inline-flex">
           Log In
+        </Link>
+      </AuthCard>
+    );
+  }
+
+  // Students never sign up: their teacher creates the account.
+  if (as === "student") {
+    return (
+      <AuthCard
+        eyebrow="Students"
+        title="Your teacher sets up your account"
+        subtitle="Ask your teacher for your username and password, then log in."
+        footer={null}
+      >
+        <Link href="/auth/sign-in?as=student" className="btn-primary inline-flex">
+          Go to student log in
         </Link>
       </AuthCard>
     );
@@ -76,9 +91,7 @@ function SignUpForm() {
 
   return (
     <AuthCard
-      eyebrow={
-        as === "student" ? "Join as a" : as === "developer" ? "Partners" : null
-      }
+      eyebrow={as === "developer" ? "Partners" : null}
       title={copy.title}
       subtitle={copy.subtitle}
       footer={
@@ -96,7 +109,6 @@ function SignUpForm() {
       <form action={formAction} className="space-y-4">
         <input type="hidden" name="as" value={as} />
         <input type="hidden" name="role" value={copy.roleValue} />
-        {as === "student" && <SchoolPickerField required />}
         <label className="block text-sm font-semibold text-forest-900">
           Name
           <input

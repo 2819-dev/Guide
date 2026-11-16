@@ -6,6 +6,7 @@ import {
   officialRequiresInitialPasswordChange,
 } from "@/lib/official-emails";
 import { isRole, type Role } from "@/lib/roles";
+import { isStudentSyntheticEmail } from "@/lib/student-accounts";
 import { profiles } from "@/lib/schema";
 
 export type Profile = typeof profiles.$inferSelect;
@@ -91,6 +92,10 @@ export async function ensureProfile(opts?: {
   } else if (opts?.preferredRole && isRole(opts.preferredRole)) {
     role = opts.preferredRole;
   }
+
+  // Student logins are created by teachers. An unknown student identity is
+  // one retired by a password reset — treat it as signed out.
+  if (isStudentSyntheticEmail(user.email)) return null;
 
   const [created] = await db
     .insert(profiles)

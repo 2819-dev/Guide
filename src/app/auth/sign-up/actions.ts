@@ -47,8 +47,8 @@ export async function signUpWithEmail(
     };
   }
 
-  if (as === "student" && !schoolId) {
-    return { error: "Choose your school to create a student account." };
+  if (as === "student") {
+    return { error: "Student accounts are created by teachers. Ask your teacher for your username." };
   }
 
   const { data: signUpData, error } = await auth.signUp.email({
@@ -110,7 +110,6 @@ export async function signUpWithEmail(
   }
 
   if (as === "developer") redirect("/developers/apply");
-  if (as === "student") redirect("/student");
   if (as === "learner") redirect(publicAmudLearnBase());
   redirect("/apps");
 }
