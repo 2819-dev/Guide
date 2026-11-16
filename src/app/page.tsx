@@ -148,12 +148,18 @@ function GuideHomePage() {
                   <ArrowIcon />
                 </span>
               </Link>
-              <div className="gh-hero__secondary">
-                <Link href="/education" className="btn-secondary">
-                  For schools
+              <div className="hero-link-row">
+                <Link href="/education" className="hero-link-card">
+                  <span className="hero-link-card__label">For schools</span>
+                  <span className="hero-link-card__arrow" aria-hidden>
+                    <ArrowIcon size={15} />
+                  </span>
                 </Link>
-                <Link href="/auth/sign-in?as=educator" className="gh-textlink">
-                  Teacher log in <ArrowIcon size={14} />
+                <Link href="/developers/apply" className="hero-link-card">
+                  <span className="hero-link-card__label">For app partners</span>
+                  <span className="hero-link-card__arrow" aria-hidden>
+                    <ArrowIcon size={15} />
+                  </span>
                 </Link>
               </div>
             </div>

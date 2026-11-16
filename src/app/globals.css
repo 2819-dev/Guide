@@ -3480,3 +3480,18 @@ body {
     color: var(--forest-400);
   }
 }
+
+/* Hero twin cards (For schools / For app partners) under the student bar */
+.gh-hero__ctas {
+  max-width: 34rem;
+}
+
+.gh-hero__ctas .hero-link-card {
+  height: auto;
+  min-height: 92px;
+  padding: 1.25rem 1.35rem;
+}
+
+.gh-hero__ctas .hero-link-card__label {
+  font-size: 1.25rem;
+}
