@@ -65,7 +65,7 @@ const FEATURES: Feature[] = [
   {
     eyebrow: "Learning apps",
     title: "Apps that keep attention",
-    body: "Host a live TestQuiz in seconds, and add more learning apps as your school grows. Every app opens from the student's portal — no extra passwords.",
+    body: "Host a live Blitz in seconds, and add more learning apps as your school grows. Every app opens from the student's portal — no extra passwords.",
     link: { href: "/apps", label: "Browse the app library" },
     art: QuizClassArt,
     shape: "blob",

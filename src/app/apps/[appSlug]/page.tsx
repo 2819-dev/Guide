@@ -5,7 +5,7 @@ import {
   APP_UNAVAILABLE_DETAIL,
   APP_UNAVAILABLE_LABEL,
   FIRST_APP_SLUG,
-  TESTQUIZ_APP_SLUG,
+  BLITZ_APP_SLUG,
   getApp,
   isAppAvailable,
   isExternalLaunchApp,
@@ -29,9 +29,9 @@ export default async function AppHomePage({ params }: Props) {
   const app = getApp(appSlug);
   if (!app) notFound();
 
-  // Dedicated app trees (e.g. /apps/testquiz) win over this dynamic route.
-  if (appSlug === TESTQUIZ_APP_SLUG) {
-    redirect("/apps/testquiz");
+  // Dedicated app trees (e.g. /apps/blitz) win over this dynamic route.
+  if (appSlug === BLITZ_APP_SLUG) {
+    redirect("/apps/blitz");
   }
 
   if (!isAppAvailable(app)) {

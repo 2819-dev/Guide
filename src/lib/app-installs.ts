@@ -7,6 +7,22 @@ import {
   classrooms,
 } from "@/lib/schema";
 
+let legacySlugsMigrated: Promise<void> | null = null;
+
+/** One-time per isolate: installs saved as "testquiz" become "blitz". */
+function migrateLegacySlugs(): Promise<void> {
+  legacySlugsMigrated ??= getDb()
+    .update(classroomAppInstalls)
+    .set({ appSlug: "blitz" })
+    .where(eq(classroomAppInstalls.appSlug, "testquiz"))
+    .then(() => undefined)
+    .catch((e) => {
+      legacySlugsMigrated = null;
+      console.error("legacy app slug migration", e);
+    });
+  return legacySlugsMigrated;
+}
+
 export type ClassroomInstall = {
   id: string;
   classroomId: string;
@@ -20,6 +36,7 @@ export type ClassroomInstall = {
 export async function listInstallsForTeacher(
   teacherProfileId: string,
 ): Promise<ClassroomInstall[]> {
+  await migrateLegacySlugs();
   const db = getDb();
   const rows = await db
     .select({
@@ -46,6 +63,7 @@ export async function listInstallsForTeacher(
 export async function listAppsForStudent(
   studentProfileId: string,
 ): Promise<GuideApp[]> {
+  await migrateLegacySlugs();
   const db = getDb();
   const memberships = await db
     .select({ classroomId: classroomMembers.classroomId })
@@ -68,6 +86,7 @@ export async function listAppsForStudent(
 export async function listInstallsForClassroom(
   classroomId: string,
 ): Promise<{ appSlug: string; id: string }[]> {
+  await migrateLegacySlugs();
   const db = getDb();
   return db
     .select({
@@ -84,6 +103,7 @@ export async function setClassroomAppInstall(opts: {
   install: boolean;
   teacherProfileId: string;
 }): Promise<{ ok: true } | { error: string }> {
+  await migrateLegacySlugs();
   if (!getApp(opts.appSlug)) {
     return { error: "Unknown app" };
   }

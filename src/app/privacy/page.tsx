@@ -54,7 +54,7 @@ export default function PrivacyPage() {
       <h3>Learning activity</h3>
       <p>
         Activity inside Guide’s own apps that teachers use to follow
-        progress. For example: TestQuiz games, answers, and scores; Amud pages
+        progress. For example: Blitz games, answers, and scores; Amud pages
         opened, quiz results, and notes a student saves.
       </p>
       <h3>Messages and requests</h3>

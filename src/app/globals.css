@@ -3341,7 +3341,7 @@ body {
 }
 
 /* Per-app tile colors (portal My apps) */
-.portal-app-tile__mark--testquiz { background: linear-gradient(135deg, #3b82f6, #2459c9); }
+.portal-app-tile__mark--blitz { background: linear-gradient(135deg, #3b82f6, #2459c9); }
 .portal-app-tile__mark--amud { background: linear-gradient(135deg, #367553, #2a5e44); }
 .portal-app-tile__mark--arcade-education { background: linear-gradient(135deg, #d4a73c, #b07f1c); }
 

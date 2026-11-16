@@ -48,7 +48,7 @@ export default function AccessibilityPage() {
           are hidden from screen readers.
         </li>
         <li>
-          In TestQuiz, teachers choose each question’s time limit, so they can
+          In Blitz, teachers choose each question’s time limit, so they can
           give students more time when they need it.
         </li>
       </ul>
@@ -61,7 +61,7 @@ export default function AccessibilityPage() {
           get one.
         </li>
         <li>
-          Signed-in portals and live TestQuiz games haven’t been fully tested
+          Signed-in portals and live Blitz games haven’t been fully tested
           with every screen reader. Fast-moving live games can be harder to
           follow with assistive technology.
         </li>

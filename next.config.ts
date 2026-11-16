@@ -7,6 +7,13 @@ const nextConfig: NextConfig = {
    */
   async redirects() {
     return [
+      // TestQuiz was renamed Blitz.
+      { source: "/apps/testquiz", destination: "/apps/blitz", permanent: true },
+      {
+        source: "/apps/testquiz/:path*",
+        destination: "/apps/blitz/:path*",
+        permanent: true,
+      },
       {
         source: "/study",
         destination: "/apps/amud",

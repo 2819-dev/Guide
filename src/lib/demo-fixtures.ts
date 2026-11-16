@@ -91,14 +91,14 @@ export function createDemoSession(): DemoSession {
         name: "Period 3 · Grade 9",
         inviteCode: "8F2K",
         studentCount: 12,
-        installedAppSlugs: ["testquiz", "amud"],
+        installedAppSlugs: ["blitz", "amud"],
       },
       {
         id: "c2",
         name: "Homeroom · Grade 7",
         inviteCode: "Q9LM",
         studentCount: 6,
-        installedAppSlugs: ["testquiz"],
+        installedAppSlugs: ["blitz"],
       },
       {
         id: "c3",
@@ -130,7 +130,7 @@ export function createDemoSession(): DemoSession {
     ],
     invites: [],
     catalog: APP_CATALOG.map((a) => ({ ...a })),
-    studentAppSlugs: ["testquiz", "amud"],
+    studentAppSlugs: ["blitz", "amud"],
     messages: [
       {
         id: "m1",

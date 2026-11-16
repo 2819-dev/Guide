@@ -83,7 +83,7 @@ export default async function EducationLandingPage() {
           <article className="schools-feature">
             <h2 className="schools-feature__title">Apps students open</h2>
             <p className="schools-feature__body">
-              Teachers add apps like TestQuiz to a class. Students find them
+              Teachers add apps like Blitz to a class. Students find them
               under My apps — no extra passwords.
             </p>
           </article>

@@ -69,7 +69,7 @@ export default function TermsPage() {
         You keep ownership of what you create in Guide, such as quizzes,
         notes, and messages. You let us store, display, and process it only so
         we can provide Guide to you and your school. If you choose to publish a
-        quiz to TestQuiz Discover, other teachers can view and copy it.
+        quiz to Blitz Discover, other teachers can view and copy it.
       </p>
 
       <h2>Apps and developer partners</h2>

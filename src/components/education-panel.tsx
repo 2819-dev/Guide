@@ -231,7 +231,7 @@ function GettingStarted({
   const steps = [
     { done: hasClass, label: "Create your first class", href: "#classes" },
     { done: hasStudents, label: "Add students to it", href: "#classes" },
-    { done: false, label: "Add an app like TestQuiz", href: "#apps" },
+    { done: false, label: "Add an app like Blitz", href: "#apps" },
     ...(canInviteTeachers
       ? [{ done: false, label: "Invite your teachers (optional)", href: "#teachers" }]
       : []),

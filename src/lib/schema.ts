@@ -500,7 +500,7 @@ export const developerApplications = pgTable("developer_applications", {
 });
 
 /**
- * TestQuiz — teacher plan entitlements (billing stub; default free).
+ * Blitz — teacher plan entitlements (billing stub; default free).
  */
 export const testquizEntitlements = pgTable("testquiz_entitlements", {
   profileId: uuid("profile_id")
@@ -516,7 +516,7 @@ export const testquizEntitlements = pgTable("testquiz_entitlements", {
     .notNull(),
 });
 
-/** TestQuiz quiz library documents (questions stored as jsonb). */
+/** Blitz quiz library documents (questions stored as jsonb). */
 export const testquizQuizzes = pgTable("testquiz_quizzes", {
   id: uuid("id").defaultRandom().primaryKey(),
   ownerProfileId: uuid("owner_profile_id")
@@ -543,7 +543,7 @@ export const testquizQuizzes = pgTable("testquiz_quizzes", {
     .notNull(),
 });
 
-/** Live / historical TestQuiz games (authoritative state in jsonb). */
+/** Live / historical Blitz games (authoritative state in jsonb). */
 export const testquizGames = pgTable(
   "testquiz_games",
   {

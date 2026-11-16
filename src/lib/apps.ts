@@ -17,9 +17,9 @@ export const FIRST_APP_SLUG = "amud";
 export const ARCADE_APP_SLUG = "arcade-education";
 export const ARCADE_APP_NAME = "Arcade Education";
 
-/** Kahoot-class live quiz — hosted in Guide at /apps/testquiz. */
-export const TESTQUIZ_APP_SLUG = "testquiz";
-export const TESTQUIZ_APP_NAME = "TestQuiz";
+/** Kahoot-class live quiz — hosted in Guide at /apps/blitz. */
+export const BLITZ_APP_SLUG = "blitz";
+export const BLITZ_APP_NAME = "Blitz";
 
 export type AppAvailability = "available" | "temporarily_unavailable";
 
@@ -68,8 +68,8 @@ export const APP_CATALOG: GuideApp[] = [
     availability: "temporarily_unavailable",
   },
   {
-    slug: TESTQUIZ_APP_SLUG,
-    name: TESTQUIZ_APP_NAME,
+    slug: BLITZ_APP_SLUG,
+    name: BLITZ_APP_NAME,
     tagline: "Live classroom quizzes",
     description:
       "Teachers host live quizzes; students join with a PIN from My apps. Quiz, poll, puzzle, and more — Guide login required, no guest play.",
