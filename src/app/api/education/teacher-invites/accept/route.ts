@@ -40,7 +40,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const { error } = await auth.signUp.email({
+    let authUserId: string | undefined;
+    const { data: signUpData, error } = await auth.signUp.email({
       email: invite.email,
       name: body.name,
       password: body.password,
@@ -52,6 +53,7 @@ export async function POST(request: Request) {
         email: invite.email,
         password: body.password,
       });
+      authUserId = signIn.data?.user?.id;
       if (signIn.error) {
         return NextResponse.json(
           {
@@ -64,8 +66,10 @@ export async function POST(request: Request) {
       }
     }
 
-    const { data: session } = await auth.getSession();
-    if (!session?.user?.id) {
+    // Use the user from signUp/signIn: getSession() reads this request's
+    // cookies, which do not carry the session that was just created.
+    authUserId ??= signUpData?.user?.id;
+    if (!authUserId) {
       return NextResponse.json(
         { error: "Account created but session missing — please log in." },
         { status: 500 },
@@ -75,7 +79,7 @@ export async function POST(request: Request) {
     const existing = await db
       .select()
       .from(profiles)
-      .where(eq(profiles.authUserId, session.user.id))
+      .where(eq(profiles.authUserId, authUserId))
       .limit(1);
 
     let profileId: string;
@@ -96,7 +100,7 @@ export async function POST(request: Request) {
       const [created] = await db
         .insert(profiles)
         .values({
-          authUserId: session.user.id,
+          authUserId,
           displayName: body.name,
           role: "rebbe",
           loginEmail: invite.email.toLowerCase(),

@@ -24,11 +24,16 @@ type Classroom = {
   students: Student[];
 };
 
-export function EducationPanel() {
+export function EducationPanel({
+  canInviteTeachers = true,
+}: {
+  canInviteTeachers?: boolean;
+}) {
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [classesVersion, setClassesVersion] = useState(0);
 
   async function load() {
     const res = await fetch("/api/education/classrooms");
@@ -57,6 +62,7 @@ export function EducationPanel() {
       if (!res.ok) throw new Error(data.error ?? "Failed");
       setName("");
       await load();
+      setClassesVersion((v) => v + 1);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed");
     } finally {
@@ -66,9 +72,6 @@ export function EducationPanel() {
 
   return (
     <>
-      <TeacherAppsPanel />
-      <TeacherInvitesPanel />
-
       <section id="classes" className="space-y-4">
         <div>
           <h2 className="portal-section-title">Classes</h2>
@@ -179,8 +182,11 @@ export function EducationPanel() {
         )}
       </section>
 
+      <TeacherAppsPanel refreshKey={classesVersion} />
+      {canInviteTeachers ? <TeacherInvitesPanel /> : null}
+
       <div id="suggestions-access">
-        <TeacherSuggestionsAccess />
+        <TeacherSuggestionsAccess refreshKey={classesVersion} />
       </div>
       <div id="messages">
         <TeacherMessages />

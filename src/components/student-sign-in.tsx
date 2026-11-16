@@ -134,7 +134,7 @@ export function StudentSignIn() {
                     Start typing to find your school.
                   </p>
                 )}
-                <p className="text-center text-sm text-ink-muted">
+                <div className="text-center text-sm text-ink-muted">
                   Not a student?{" "}
                   <span className="inline-block align-middle">
                     <LoginMenu variant="nav" />
@@ -148,7 +148,7 @@ export function StudentSignIn() {
                   >
                     Guide Official
                   </Link>
-                </p>
+                </div>
               </div>
             ) : (
               <form

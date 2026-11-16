@@ -16,7 +16,8 @@ type ClassRow = {
   students: StudentRow[];
 };
 
-export function TeacherSuggestionsAccess() {
+/** `refreshKey` changes when classes are created so this panel reloads. */
+export function TeacherSuggestionsAccess({ refreshKey = 0 }: { refreshKey?: number }) {
   const [classrooms, setClassrooms] = useState<ClassRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busyKey, setBusyKey] = useState<string | null>(null);
@@ -33,7 +34,7 @@ export function TeacherSuggestionsAccess() {
 
   useEffect(() => {
     void load();
-  }, []);
+  }, [refreshKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function setBlock(opts: {
     classroomId: string;

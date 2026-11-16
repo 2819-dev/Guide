@@ -7,6 +7,7 @@ type Invite = {
   email: string;
   schoolName: string;
   status: string;
+  token?: string;
   sentAt: string | null;
   createdAt: string;
 };
@@ -18,6 +19,19 @@ export function TeacherInvitesPanel() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  async function copyLink(inv: Invite) {
+    if (!inv.token) return;
+    const url = `${window.location.origin}/invite/teacher/${inv.token}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedId(inv.id);
+      setTimeout(() => setCopiedId((id) => (id === inv.id ? null : id)), 2000);
+    } catch {
+      window.prompt("Copy this setup link and send it to the teacher:", url);
+    }
+  }
 
   async function load() {
     const res = await fetch("/api/education/teacher-invites");
@@ -29,7 +43,7 @@ export function TeacherInvitesPanel() {
 
   useEffect(() => {
     void load();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function send() {
     setBusy(true);
@@ -59,16 +73,16 @@ export function TeacherInvitesPanel() {
       <div>
         <h2 className="portal-section-title">Invite teachers</h2>
         <p className="-mt-2 text-sm text-ink-muted">
-          Type work emails (one per line or comma-separated). Guide sends each
-          teacher a setup link.
+          Add work emails (one per line or comma-separated). Each teacher gets a
+          setup link to create their password.
         </p>
       </div>
 
       <div className="portal-panel space-y-3">
         {!emailConfigured ? (
           <p className="rounded-[10px] border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">
-            Email invites aren’t sending yet. Guide still saves each invite —
-            contact Guide Official if you need a setup link now.
+            Invite emails aren’t turned on yet. After you add teachers, use
+            “Copy setup link” and send it to them yourself.
           </p>
         ) : null}
 
@@ -99,7 +113,7 @@ export function TeacherInvitesPanel() {
           onClick={() => void send()}
           className="btn-primary"
         >
-          {busy ? "Sending…" : "Send invites"}
+          {busy ? "Saving…" : emailConfigured ? "Send invites" : "Add teachers"}
         </button>
       </div>
 
@@ -118,7 +132,10 @@ export function TeacherInvitesPanel() {
               <tr className="border-b border-line text-forest-700">
                 <th className="py-2 pr-3 font-semibold">Email</th>
                 <th className="py-2 pr-3 font-semibold">Status</th>
-                <th className="py-2 font-semibold">Sent</th>
+                <th className="py-2 pr-3 font-semibold">Sent</th>
+                <th className="py-2 font-semibold">
+                  <span className="sr-only">Setup link</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -133,15 +150,24 @@ export function TeacherInvitesPanel() {
                         ? "Sent"
                         : inv.status === "accepted"
                           ? "Joined"
-                          : inv.status === "queued"
-                            ? "Queued"
+                          : inv.status === "queued" || inv.status === "pending"
+                            ? "Not joined yet"
                             : inv.status}
                     </span>
                   </td>
-                  <td className="py-2.5 text-ink-muted">
-                    {inv.sentAt
-                      ? new Date(inv.sentAt).toLocaleDateString()
-                      : "—"}
+                  <td className="py-2.5 pr-3 text-ink-muted">
+                    {new Date(inv.sentAt ?? inv.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="py-2.5 text-right">
+                    {inv.status !== "accepted" && inv.token ? (
+                      <button
+                        type="button"
+                        onClick={() => void copyLink(inv)}
+                        className="text-sm font-semibold text-forest-800 hover:underline"
+                      >
+                        {copiedId === inv.id ? "Copied ✓" : "Copy setup link"}
+                      </button>
+                    ) : null}
                   </td>
                 </tr>
               ))}

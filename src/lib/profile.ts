@@ -15,17 +15,25 @@ export async function getSessionUser() {
   return session?.user ?? null;
 }
 
+type SessionUser = NonNullable<Awaited<ReturnType<typeof getSessionUser>>>;
+
 export async function ensureProfile(opts?: {
+  /**
+   * User returned by a sign-in/sign-up call in this same request. Needed
+   * because getSession() reads the incoming request's cookies, which do not
+   * yet carry the session that was just created.
+   */
+  user?: { id: string; email?: string | null; name?: string | null } | null;
   preferredRole?: Role;
   schoolId?: string | null;
   badgeCode?: string | null;
   loginEmail?: string | null;
   badgeAuthUserId?: string | null;
 }): Promise<{
-  user: NonNullable<Awaited<ReturnType<typeof getSessionUser>>>;
+  user: SessionUser;
   profile: Profile;
 } | null> {
-  const user = await getSessionUser();
+  const user = (opts?.user ?? (await getSessionUser())) as SessionUser | null;
   if (!user?.id) return null;
 
   const db = getDb();

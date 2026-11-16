@@ -10,7 +10,8 @@ import {
 
 type Classroom = { id: string; name: string };
 
-export function TeacherAppsPanel() {
+/** `refreshKey` changes when classes are created so this panel reloads. */
+export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
   const [catalog, setCatalog] = useState<GuideApp[]>([]);
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [installsByClassroom, setInstallsByClassroom] = useState<
@@ -33,7 +34,7 @@ export function TeacherAppsPanel() {
 
   useEffect(() => {
     void load();
-  }, []);
+  }, [refreshKey]);  
 
   async function toggle(classroomId: string, appSlug: string, install: boolean) {
     const key = `${classroomId}:${appSlug}`;
@@ -75,8 +76,15 @@ export function TeacherAppsPanel() {
         </div>
       ) : (
         <div className="space-y-4">
-          {catalog.map((app) => (
-            <div key={app.slug} className="portal-panel space-y-4">
+          {[...catalog]
+            .sort(
+              (a, b) => Number(isAppAvailable(b)) - Number(isAppAvailable(a)),
+            )
+            .map((app) => (
+            <div
+              key={app.slug}
+              className={`portal-panel space-y-4${isAppAvailable(app) ? "" : " opacity-75"}`}
+            >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex items-start gap-3">
                   <span
@@ -110,6 +118,12 @@ export function TeacherAppsPanel() {
                   </span>
                 )}
               </div>
+              {!isAppAvailable(app) ? (
+                <p className="text-sm text-ink-muted">
+                  {app.name} will be back soon. You can add it to a class once
+                  it’s available again.
+                </p>
+              ) : (
               <ul className="divide-y divide-line rounded-[10px] border border-line">
                 {classrooms.map((room) => {
                   const installed =
@@ -141,6 +155,7 @@ export function TeacherAppsPanel() {
                   );
                 })}
               </ul>
+              )}
             </div>
           ))}
         </div>

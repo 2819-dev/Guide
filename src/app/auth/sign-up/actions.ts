@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth/server";
-import { provisionStudentBadge } from "@/lib/badge-auth";
 import { getDb } from "@/lib/db";
 import { parseLoginAs } from "@/lib/login-roles";
 import { isRole, type Role } from "@/lib/roles";
@@ -52,7 +51,7 @@ export async function signUpWithEmail(
     return { error: "Choose your school to create a student account." };
   }
 
-  const { error } = await auth.signUp.email({
+  const { data: signUpData, error } = await auth.signUp.email({
     email,
     name: name || "Learner",
     password,
@@ -62,8 +61,11 @@ export async function signUpWithEmail(
     return { error: error.message || "Could not create account" };
   }
 
-  const { data: session } = await auth.getSession();
-  if (session?.user?.id) {
+  // Use the user from signUp: getSession() would read this request's cookies,
+  // which do not carry the session that was just created.
+  const authUserId: string | undefined =
+    signUpData?.user?.id ?? (await auth.getSession()).data?.user?.id;
+  if (authUserId) {
     const db = getDb();
     let finalRole: Role = role;
     const emailLower = email.toLowerCase();
@@ -77,12 +79,11 @@ export async function signUpWithEmail(
     const existing = await db
       .select()
       .from(profiles)
-      .where(eq(profiles.authUserId, session.user.id))
+      .where(eq(profiles.authUserId, authUserId))
       .limit(1);
 
-    let profileId: string;
     if (existing[0]) {
-      const [updated] = await db
+      await db
         .update(profiles)
         .set({
           role: finalRole,
@@ -92,35 +93,20 @@ export async function signUpWithEmail(
           ...(forcePasswordChange ? { mustChangePassword: true } : {}),
           updatedAt: new Date(),
         })
-        .where(eq(profiles.id, existing[0].id))
-        .returning();
-      profileId = updated.id;
+        .where(eq(profiles.id, existing[0].id));
     } else {
-      const [created] = await db
+      await db
         .insert(profiles)
         .values({
-          authUserId: session.user.id,
+          authUserId,
           displayName: name || (isOfficial ? "Guide Official" : "Learner"),
           role: finalRole,
           loginEmail: emailLower,
           schoolId,
           mustChangePassword: forcePasswordChange,
-        })
-        .returning();
-      profileId = created.id;
+        });
     }
 
-    if (as === "student" && schoolId) {
-      const badge = await provisionStudentBadge({
-        profileId,
-        schoolId,
-        displayName: name || "Student",
-      });
-      if (badge.error) {
-        // Account exists; badge can be activated from Account
-        console.error("badge provision:", badge.error);
-      }
-    }
   }
 
   if (as === "developer") redirect("/developers/apply");

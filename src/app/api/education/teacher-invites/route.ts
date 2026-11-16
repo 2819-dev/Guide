@@ -140,7 +140,7 @@ export async function POST(request: Request) {
       emailConfigured: resendConfigured(),
       message: resendConfigured()
         ? "Invites sent."
-        : "Invites saved. Email sending isn’t available yet — contact Guide Official if you need a setup link now.",
+        : "Teachers added. Use “Copy setup link” next to each one and send it to them.",
     });
   } catch (e) {
     if (e instanceof z.ZodError) {

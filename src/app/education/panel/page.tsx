@@ -41,28 +41,32 @@ export default async function EducationPanelPage() {
   }
 
   const appStatus = await getApplicantEducationStatus(authz.profile.id);
-  const portalLabel = educatorPortalLabel({ kind: appStatus.kind });
-  const shortRole =
-    portalLabel === "Teacher Portal" ? "Teacher" : "School administrator";
+  const portalLabel = educatorPortalLabel({
+    kind: appStatus.kind,
+    contactRole: appStatus.contactRole,
+  });
+  const isTeacher = portalLabel === "Teacher Portal";
+  const shortRole = isTeacher ? "Teacher" : "School administrator";
 
   return (
     <PortalShell
       eyebrow={shortRole}
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Add apps, invite teachers, manage classes, and message students."
+      subtitle={
+        isTeacher
+          ? "Create classes, add apps, and message your students."
+          : "Create classes, add apps, invite teachers, and message students."
+      }
       chips={[
-        { href: "#apps", label: "Apps", active: true },
-        { href: "#teachers", label: "Teachers" },
-        { href: "#classes", label: "Classes" },
+        { href: "#classes", label: "Classes", active: true },
+        { href: "#apps", label: "Apps" },
+        ...(isTeacher ? [] : [{ href: "#teachers", label: "Teachers" }]),
         { href: "#suggestions-access", label: "Suggestions" },
         { href: "#messages", label: "Messages" },
       ]}
-      utilities={[
-        { href: "#messages", label: "Messaging" },
-      ]}
       accountName={authz.profile.displayName}
     >
-      <EducationPanel />
+      <EducationPanel canInviteTeachers={!isTeacher} />
     </PortalShell>
   );
 }

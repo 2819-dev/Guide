@@ -54,18 +54,19 @@ export async function signInWithEmail(
   const as = parseLoginAs(String(formData.get("as") ?? "student"));
   const schoolId = String(formData.get("schoolId") ?? "").trim() || null;
 
-  const { error } = await auth.signIn.email({
+  const { data, error } = await auth.signIn.email({
     email: String(formData.get("email") ?? ""),
     password: String(formData.get("password") ?? ""),
   });
 
   if (error) {
-    return { error: error.message || "Could not sign in" };
+    return { error: friendlyAuthError(error.message) };
   }
 
-  const session = await ensureProfile(
-    schoolId ? { schoolId } : undefined,
-  );
+  const session = await ensureProfile({
+    user: data?.user ?? null,
+    schoolId,
+  });
   if (!session) redirect(isAmudSite() ? publicAmudLearnBase() : "/apps");
 
   if (schoolId && session.profile.schoolId !== schoolId) {
@@ -95,3 +96,11 @@ export async function signInWithEmail(
   );
 }
 
+
+function friendlyAuthError(message?: string): string {
+  if (!message) return "Could not log in. Please try again.";
+  if (/invalid (email|password)|credentials/i.test(message)) {
+    return "That email and password don’t match. Check them and try again.";
+  }
+  return message;
+}
