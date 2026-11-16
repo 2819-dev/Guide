@@ -3245,7 +3245,7 @@ body {
   }
 }
 
-/* ---------- photo frames (homepage people photography) ---------- */
+/* ---------- shaped frames (homepage illustrations) ---------- */
 
 .photo-frame {
   position: relative;
@@ -3261,8 +3261,14 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  overflow: hidden;
   background: var(--forest-100);
+}
+
+.photo-frame__img > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .photo-frame__accent {

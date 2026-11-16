@@ -1,5 +1,12 @@
 import Link from "next/link";
 import { AmudHomePage } from "@/components/amud-home";
+import {
+  AdminSchoolArt,
+  HeroStudentArt,
+  QuizClassArt,
+  StudentTabletArt,
+  TeacherClassArt,
+} from "@/components/home-illustrations";
 import { PhotoFrame, type FrameAccent, type FrameShape } from "@/components/photo-frame";
 import { isAmudSite } from "@/lib/site";
 
@@ -31,13 +38,9 @@ type Feature = {
   title: string;
   body: string;
   link: { href: string; label: string };
-  photo: {
-    src: string;
-    alt: string;
-    shape: FrameShape;
-    accent: FrameAccent;
-    position?: string;
-  };
+  art: () => React.ReactElement;
+  shape: FrameShape;
+  accent: FrameAccent;
 };
 
 const FEATURES: Feature[] = [
@@ -46,52 +49,36 @@ const FEATURES: Feature[] = [
     title: "Run every class from one place",
     body: "Create classes, add the apps your students need, and see who is active today. Invite co-teachers by email — no IT ticket required.",
     link: { href: "/education", label: "See how schools use Guide" },
-    photo: {
-      src: "/photos/teacher-classroom.webp",
-      alt: "A teacher at the front of a classroom while students raise their hands",
-      shape: "leaf",
-      accent: "sun",
-      position: "60% 45%",
-    },
+    art: TeacherClassArt,
+    shape: "leaf",
+    accent: "sun",
   },
   {
     eyebrow: "For students",
     title: "One login. Everything for class.",
     body: "Students find their school, log in once, and land on a calm portal with their apps and messages from teachers. It works on a Chromebook, a tablet, or a phone.",
     link: { href: "/auth/sign-in?as=student", label: "Log in as a student" },
-    photo: {
-      src: "/photos/student-writing.webp",
-      alt: "A student writing at a table with classmates",
-      shape: "arch",
-      accent: "mint",
-      position: "68% 40%",
-    },
+    art: StudentTabletArt,
+    shape: "arch",
+    accent: "mint",
   },
   {
     eyebrow: "Learning apps",
     title: "Apps that keep attention",
     body: "Host a live TestQuiz in seconds, and add more learning apps as your school grows. Every app opens from the student's portal — no extra passwords.",
     link: { href: "/apps", label: "Browse the app library" },
-    photo: {
-      src: "/photos/students-hands-up.webp",
-      alt: "Young students on a classroom carpet eagerly raising their hands",
-      shape: "blob",
-      accent: "forest",
-      position: "55% 55%",
-    },
+    art: QuizClassArt,
+    shape: "blob",
+    accent: "forest",
   },
   {
     eyebrow: "For administrators",
     title: "Set up your school in days, not months",
     body: "Apply once. Guide Official reviews every school before it goes live, then you invite your teachers and they add their classes.",
     link: { href: "/schools/meeting", label: "Book a meeting" },
-    photo: {
-      src: "/photos/administrator.webp",
-      alt: "A smiling school administrator standing in a classroom",
-      shape: "petal",
-      accent: "sun",
-      position: "30% 35%",
-    },
+    art: AdminSchoolArt,
+    shape: "petal",
+    accent: "sun",
   },
 ];
 
@@ -172,14 +159,9 @@ function GuideHomePage() {
             </div>
           </div>
           <div className="gh-hero__visual">
-            <PhotoFrame
-              src="/photos/hero-student-chromebook.webp"
-              alt="A student wearing headphones smiling at her Chromebook"
-              shape="pill"
-              accent="sun"
-              position="72% 45%"
-              priority
-            />
+            <PhotoFrame shape="pill" accent="sun">
+              <HeroStudentArt />
+            </PhotoFrame>
           </div>
         </div>
       </section>
@@ -214,7 +196,9 @@ function GuideHomePage() {
             className={`content-band gh-feature__grid${i % 2 === 1 ? " gh-feature__grid--flip" : ""}`}
           >
             <div className="gh-feature__visual">
-              <PhotoFrame {...f.photo} />
+              <PhotoFrame shape={f.shape} accent={f.accent}>
+                <f.art />
+              </PhotoFrame>
             </div>
             <div className="gh-feature__copy">
               <p className="eyebrow">{f.eyebrow}</p>
