@@ -4,17 +4,17 @@
 # One-time setup: GitHub repo → Settings → Secrets and variables → Actions →
 # New repository secret: CLOUDFLARE_API_TOKEN (permission: Account · Cloudflare Pages · Edit).
 #
-# - Push to main            → production deploy
-# - Actions → Run workflow  → preview deploy of the chosen branch
+# - Push to main or the Claude working branch → production deploy
+#   (guidelearning.org). Pages treats --branch=main as production.
 name: Deploy to Cloudflare Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/vibrant-pascal-cxfqm7]
   workflow_dispatch:
 
 concurrency:
-  group: pages-deploy-${{ github.ref }}
+  group: pages-deploy-production
   cancel-in-progress: true
 
 jobs:
@@ -52,8 +52,8 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: a464339742f7a2946723614c52cb9522
         run: |
-          BRANCH="${GITHUB_REF_NAME}"
           npx wrangler pages deploy .vercel/output/static \
             --project-name=guide \
-            --branch="$BRANCH" \
-            --commit-hash="$GITHUB_SHA"
+            --branch=main \
+            --commit-hash="$GITHUB_SHA" \
+            --commit-message="Deploy ${GITHUB_SHA::7} from ${GITHUB_REF_NAME}"
