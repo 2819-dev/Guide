@@ -30,6 +30,7 @@
   --foreground: var(--ink);
   --font-display: var(--font-manrope);
   --font-body: var(--font-manrope);
+  --font-frank-ruhl: var(--font-frank-ruhl-latin), var(--font-frank-ruhl-hebrew);
   --font-hebrew: var(--font-frank-ruhl);
   /* Wordmark: licensed Gulfs Display (next/font/local) */
   --font-wordmark: var(--font-gulfs-display), "Gulfs Display", Georgia, serif;
