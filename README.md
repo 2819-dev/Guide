@@ -40,15 +40,15 @@ on `drizzle-kit migrate`.
 
 ## Deploying
 
-Deploys run from GitHub Actions (`.github/workflows/deploy-pages.yml`) with
-`wrangler pages deploy` to the Cloudflare **Pages** project `guide` (not Workers).
+Cloudflare Pages builds this repo from GitHub (Git-connected project, no API tokens):
 
-- Push / merge to `main` → production (guidelearning.org)
-- Actions → *Deploy to Cloudflare Pages* → *Run workflow* on another branch → preview URL
+- Build command: `npx @cloudflare/next-on-pages@1`
+- Build output directory: `.vercel/output/static`
+- Compatibility flag `nodejs_compat` comes from `wrangler.toml`
 
-One-time setup: add the repository secret `CLOUDFLARE_API_TOKEN`
-(Account · Cloudflare Pages · Edit). Runtime secrets (`DATABASE_URL`, Neon Auth,
-`RESEND_API_KEY`) live in the Pages project settings, not in GitHub.
+Push / merge to `main` → production. Any other branch → its own preview URL.
+Runtime secrets (`DATABASE_URL`, Neon Auth, `RESEND_API_KEY`) live in the Pages
+project settings.
 
 ## Checks
 
