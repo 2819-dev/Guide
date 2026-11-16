@@ -334,7 +334,7 @@ function TeacherPortal({
         classrooms: [room, ...session.classrooms],
       });
       setClassName("");
-      setNotice(`Created “${name}”. Share invite code ${room.inviteCode}.`);
+      setNotice(`Created “${name}”. Next, add your students — each gets a username and password.`);
       setTab("classes");
     });
   }
@@ -407,7 +407,7 @@ function TeacherPortal({
           <div>
             <h2 className="portal-section-title">Classes</h2>
             <p className="-mt-2 text-sm text-ink-muted">
-              Create a class, share the invite code, then follow progress.
+              Create a class, add your students, then pick apps.
             </p>
           </div>
           <div className="portal-panel space-y-3">
@@ -651,7 +651,7 @@ function AdminPortal({
                 Classroom management
               </p>
               <p className="mt-1 text-sm leading-snug text-ink-muted">
-                Classes, invite codes, and teacher invites stay in one
+                Classes, students, and teacher invites stay in one
                 professional school portal.
               </p>
             </div>
@@ -777,7 +777,7 @@ export function SchoolDemo() {
         <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
           <Link href="/schools/meeting">Book a meeting →</Link>
           <Link href="/education#apply">Apply for your school →</Link>
-          <Link href="/auth/sign-in?as=educator">Admin →</Link>
+          <Link href="/auth/sign-in?as=educator">Teacher log in →</Link>
         </p>
       </header>
 

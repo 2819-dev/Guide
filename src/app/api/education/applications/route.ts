@@ -3,10 +3,10 @@ import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { auth } from "@/lib/auth/server";
 import { getDb } from "@/lib/db";
-import { sendWelcomeEmail } from "@/lib/email";
+import { sendSchoolDecisionEmail, sendWelcomeEmail } from "@/lib/email";
 import { ensureProfile, requireProfile } from "@/lib/profile";
 import { profiles, schoolApplications } from "@/lib/schema";
-import { syncSchoolFromApplication } from "@/lib/schools";
+import { isTeacherInviteGrant, syncSchoolFromApplication } from "@/lib/schools";
 import { isSmokeOrTestApplication } from "@/lib/visibility";
 
 export const runtime = "edge";
@@ -56,7 +56,10 @@ export async function GET() {
     .orderBy(desc(schoolApplications.createdAt));
 
   return NextResponse.json({
-    applications: rows.filter((r) => !isSmokeOrTestApplication(r)),
+    // Teacher-invite grants are access records, not applications to review.
+    applications: rows.filter(
+      (r) => !isSmokeOrTestApplication(r) && !isTeacherInviteGrant(r),
+    ),
   });
 }
 
@@ -369,7 +372,7 @@ export async function POST(request: Request) {
     }
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Please complete all required fields." },
+        { error: friendlyFieldError(error) },
         { status: 400 },
       );
     }
@@ -418,22 +421,37 @@ export async function PATCH(request: Request) {
         (updated.kind === "teacher" &&
           updated.schoolName.trim().length > 0 &&
           updated.schoolName !== "Teacher class");
-      if (shouldSyncSchool) {
-        await syncSchoolFromApplication(updated.id);
-      }
+      const school = shouldSyncSchool
+        ? await syncSchoolFromApplication(updated.id)
+        : null;
       if (updated.applicantProfileId) {
         const [profile] = await db
           .select()
           .from(profiles)
           .where(eq(profiles.id, updated.applicantProfileId))
           .limit(1);
-        if (profile && profile.role === "customer") {
-          await db
-            .update(profiles)
-            .set({ role: "rebbe", updatedAt: new Date() })
-            .where(eq(profiles.id, profile.id));
+        if (profile) {
+          const patch: Partial<typeof profiles.$inferInsert> = {};
+          if (profile.role === "customer") patch.role = "rebbe";
+          // Link the administrator to their school (used for student accounts).
+          if (school && !profile.schoolId) patch.schoolId = school.id;
+          if (Object.keys(patch).length > 0) {
+            await db
+              .update(profiles)
+              .set({ ...patch, updatedAt: new Date() })
+              .where(eq(profiles.id, profile.id));
+          }
         }
       }
+    }
+
+    if (existing.status !== body.status && updated.contactEmail) {
+      await sendSchoolDecisionEmail({
+        to: updated.contactEmail,
+        name: updated.contactName,
+        schoolName: updated.schoolName,
+        approved: body.status === "approved",
+      }).catch((e) => console.error("decision email", e));
     }
 
     return NextResponse.json({ application: updated });
@@ -444,4 +462,28 @@ export async function PATCH(request: Request) {
     }
     return NextResponse.json({ error: "Could not review" }, { status: 500 });
   }
+}
+
+const FIELD_LABELS: Record<string, string> = {
+  schoolName: "School or district name",
+  contactName: "Your name",
+  contactEmail: "Work email",
+  contactRole: "Your role",
+  studentCountEstimate: "Students (estimate)",
+  intendedUse: "How will your school use Guide?",
+  password: "Password",
+  className: "Class name",
+};
+
+/** Name the field that needs fixing instead of a generic message. */
+function friendlyFieldError(error: z.ZodError): string {
+  const issue = error.issues[0];
+  const field = String(issue?.path[0] ?? "");
+  const label = FIELD_LABELS[field];
+  if (!label) return "Please complete all required fields.";
+  if (field === "contactEmail") return "Enter a valid work email.";
+  if (issue?.code === "too_small" && "minimum" in issue) {
+    return `“${label}” needs at least ${issue.minimum} characters.`;
+  }
+  return `Please check “${label}”.`;
 }

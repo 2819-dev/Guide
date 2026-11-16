@@ -83,7 +83,7 @@ export function loginAsCopy(as: LoginAs): {
       return {
         title: "Teachers",
         subtitle:
-          "Teachers use the account from their school invite. School administrators apply, then log in.",
+          "For teachers and school administrators. Use the email and password for your Guide account.",
         // Teachers = login only. School/district apply stays for admins.
         joinHref: "/education#apply",
         joinLabel: "Apply for your school",

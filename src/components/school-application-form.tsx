@@ -214,6 +214,7 @@ export function SchoolApplicationForm({
         How will your school use Guide?
         <textarea
           required
+          minLength={10}
           rows={3}
           value={intendedUse}
           onChange={(e) => setIntendedUse(e.target.value)}

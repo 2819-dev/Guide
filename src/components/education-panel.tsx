@@ -80,11 +80,17 @@ export function EducationPanel({
     <>
       <PasswordHelpPanel refreshKey={classesVersion} />
 
+      <GettingStarted
+        hasClass={classrooms.length > 0}
+        hasStudents={classrooms.some((c) => c.students.length > 0)}
+        canInviteTeachers={canInviteTeachers}
+      />
+
       <section id="classes" className="space-y-4">
         <div>
           <h2 className="portal-section-title">Classes</h2>
           <p className="-mt-2 text-sm text-ink-muted">
-            Create a class, share the invite code, then follow student progress.
+            Create a class, then add each student with a username and password.
           </p>
         </div>
         <div className="portal-panel space-y-3">
@@ -118,8 +124,8 @@ export function EducationPanel({
           <div className="portal-empty">
             <p className="portal-empty__title">Create your first class</p>
             <p className="portal-empty__body">
-              Use the form above. Students join with the invite code from
-              Account, then progress shows here.
+              Name it above — for example “Grade 5 · Room 12”. Then add your
+              students to it.
             </p>
           </div>
         ) : (
@@ -130,11 +136,12 @@ export function EducationPanel({
                   {room.name}
                 </h3>
                 <p className="mt-1 text-sm text-ink-muted">
-                  Invite code:{" "}
+                  Class code:{" "}
                   <span className="font-mono font-semibold text-forest-800">
                     {room.inviteCode}
                   </span>{" "}
-                  — students enter this after signing in.
+                  — students with an account can also join this class from
+                  their portal.
                 </p>
               </div>
 
@@ -202,5 +209,56 @@ export function EducationPanel({
         <TeacherMessages />
       </div>
     </>
+  );
+}
+
+/** First-run checklist; hides once a class has students. */
+function GettingStarted({
+  hasClass,
+  hasStudents,
+  canInviteTeachers,
+}: {
+  hasClass: boolean;
+  hasStudents: boolean;
+  canInviteTeachers: boolean;
+}) {
+  if (hasClass && hasStudents) return null;
+  const steps = [
+    { done: hasClass, label: "Create your first class", href: "#classes" },
+    { done: hasStudents, label: "Add students to it", href: "#classes" },
+    { done: false, label: "Add an app like TestQuiz", href: "#apps" },
+    ...(canInviteTeachers
+      ? [{ done: false, label: "Invite your teachers (optional)", href: "#teachers" }]
+      : []),
+  ];
+  return (
+    <section className="portal-panel" aria-labelledby="get-started-title">
+      <h2 id="get-started-title" className="text-lg font-semibold text-forest-950">
+        Get started
+      </h2>
+      <ol className="mt-3 space-y-2">
+        {steps.map((step, i) => (
+          <li key={step.label} className="flex items-center gap-3">
+            <span
+              className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-sm font-bold ${
+                step.done
+                  ? "bg-forest-700 text-white"
+                  : "border-2 border-forest-300 text-forest-800"
+              }`}
+              aria-hidden
+            >
+              {step.done ? "✓" : i + 1}
+            </span>
+            {step.done ? (
+              <span className="text-ink-muted line-through">{step.label}</span>
+            ) : (
+              <a href={step.href} className="font-semibold text-forest-800 hover:underline">
+                {step.label}
+              </a>
+            )}
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }

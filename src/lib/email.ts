@@ -108,6 +108,41 @@ export async function sendWelcomeEmail(opts: {
   });
 }
 
+/** Tell a school administrator their application was reviewed. */
+export async function sendSchoolDecisionEmail(opts: {
+  to: string;
+  name: string;
+  schoolName: string;
+  approved: boolean;
+}): Promise<SendEmailResult> {
+  const portal = `${guidePublicUrl()}/education/panel`;
+  const first = opts.name.split(/\s+/)[0] || "there";
+  if (opts.approved) {
+    return sendEmail({
+      to: opts.to,
+      subject: `${opts.schoolName} is approved on Guide`,
+      html: shell(`
+        <p style="margin:0 0 14px">Hi ${escapeHtml(first)},</p>
+        <p style="margin:0 0 14px">Good news — <strong>${escapeHtml(opts.schoolName)}</strong> is approved.
+        You can now create classes, add students, invite teachers, and add apps.</p>
+        <p style="margin:0 0 18px"><a href="${portal}" style="display:inline-block;background:${EMAIL_PRIMARY};color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Open your school portal</a></p>
+      `),
+      text: `${opts.schoolName} is approved on Guide. Open your school portal: ${portal}`,
+    });
+  }
+  return sendEmail({
+    to: opts.to,
+    subject: `Update on your Guide application for ${opts.schoolName}`,
+    html: shell(`
+      <p style="margin:0 0 14px">Hi ${escapeHtml(first)},</p>
+      <p style="margin:0 0 14px">We weren’t able to approve <strong>${escapeHtml(opts.schoolName)}</strong> yet.
+      You can update your details and apply again from your portal, or reply to hello@guidelearning.org and we’ll help.</p>
+      <p style="margin:0 0 18px"><a href="${portal}" style="display:inline-block;background:${EMAIL_PRIMARY};color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Open your portal</a></p>
+    `),
+    text: `We weren't able to approve ${opts.schoolName} yet. Open your portal: ${portal}`,
+  });
+}
+
 /** Tell a teacher a student asked for password help. */
 export async function sendPasswordHelpEmail(opts: {
   to: string;

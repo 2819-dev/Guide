@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AdminKeyIcon } from "@/components/admin-entry";
 import { EducationApply } from "@/components/education-apply";
 import {
   getApplicantEducationStatus,
@@ -49,7 +48,7 @@ export default async function EducationLandingPage() {
               Keep students engaged and classrooms well managed
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">
-              Classes, apps, and teacher invites in one calm place.
+              Classes, students, and learning apps in one calm place.
               Administrators apply here; teachers join with a school invite.
             </p>
             <div className="mt-8 flex flex-col items-center gap-2">
@@ -57,17 +56,7 @@ export default async function EducationLandingPage() {
                 {isRejected ? "Update & re-apply" : "Apply for your school"}
               </a>
               <p className="hero-secondary-links !mt-2">
-                <Link
-                  href="/auth/sign-in?as=educator"
-                  className="inline-flex items-center gap-1.5"
-                >
-                  <AdminKeyIcon className="h-[0.95em] w-[0.95em]" />
-                  Admin
-                </Link>
-                <span aria-hidden className="hero-secondary-links__dot">
-                  ·
-                </span>
-                <Link href="/schools/demo">Demo</Link>
+                <Link href="/schools/demo">Try the demo</Link>
                 <span aria-hidden className="hero-secondary-links__dot">
                   ·
                 </span>
@@ -75,7 +64,7 @@ export default async function EducationLandingPage() {
                 <span aria-hidden className="hero-secondary-links__dot">
                   ·
                 </span>
-                <Link href="/apps">App library</Link>
+                <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
               </p>
             </div>
           </div>
@@ -87,15 +76,15 @@ export default async function EducationLandingPage() {
           <article className="schools-feature">
             <h2 className="schools-feature__title">Classroom management</h2>
             <p className="schools-feature__body">
-              Create classes, share invite codes, and follow progress without
-              switching between tools.
+              Create classes, add each student with a username and password,
+              and reset passwords when someone forgets.
             </p>
           </article>
           <article className="schools-feature">
             <h2 className="schools-feature__title">Apps students open</h2>
             <p className="schools-feature__body">
-              Teachers add apps to a class. Students find them under My apps —
-              Amud, Arcade Education, and more your school chooses.
+              Teachers add apps like TestQuiz to a class. Students find them
+              under My apps — no extra passwords.
             </p>
           </article>
           <article className="schools-feature">
@@ -113,30 +102,31 @@ export default async function EducationLandingPage() {
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
             <p className="text-xs font-semibold text-forest-600">01</p>
             <h2 className="mt-2 text-lg font-semibold text-forest-950">
-              Apply and create your account
+              Apply for your school
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Submit a school or district application. Full tools open after
-              acceptance.
+              It takes about five minutes and creates your administrator
+              account. Guide Official reviews it and emails you.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
             <p className="text-xs font-semibold text-forest-600">02</p>
             <h2 className="mt-2 text-lg font-semibold text-forest-950">
-              Invite teachers
+              Invite your teachers
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Add teacher emails in your portal. Guide sends setup links.
+              Once approved, add teacher emails in your portal. Each teacher
+              gets a setup link.
             </p>
           </li>
           <li className="p-6">
             <p className="text-xs font-semibold text-forest-600">03</p>
             <h2 className="mt-2 text-lg font-semibold text-forest-950">
-              Engage students
+              Add classes and students
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Teachers create classes and add apps. Students open them from My
-              apps.
+              Teachers create classes, add students, and pick apps. Students
+              log in with their school, username, and password.
             </p>
           </li>
         </ol>

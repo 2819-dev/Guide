@@ -5,7 +5,6 @@ export const runtime = "edge";
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
-import { AdminKeyIcon } from "@/components/admin-entry";
 import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
@@ -61,16 +60,7 @@ function SignInForm() {
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8 lg:max-w-xl">
         <AuthCard
           eyebrow={isEducator ? null : isLearner || isOfficial ? null : "Log in"}
-          title={
-            isEducator ? (
-              <span className="inline-flex items-center gap-2.5">
-                <AdminKeyIcon className="h-[1.05em] w-[1.05em] text-forest-700" />
-                {copy.title}
-              </span>
-            ) : (
-              copy.title
-            )
-          }
+          title={copy.title}
           subtitle={copy.subtitle}
           footer={
             copy.joinHref && copy.joinLabel ? (
@@ -111,12 +101,6 @@ function SignInForm() {
             ) : null
           }
         >
-          {isEducator ? (
-            <p className="auth-soft-note">
-              Teachers sign in with the setup link from their school invite.
-              School administrators apply for Guide first.
-            </p>
-          ) : null}
           <form action={formAction} className="space-y-4">
             <input type="hidden" name="as" value={as} />
             <label className="block text-sm font-semibold text-forest-900">

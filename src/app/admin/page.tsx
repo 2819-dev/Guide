@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
-import { AdminBadgesPanel } from "@/components/admin-badges-panel";
 import { AdminDevelopersPanel } from "@/components/admin-developers-panel";
 import { AdminMeetingsPanel } from "@/components/admin-meetings-panel";
 import { AdminRoleBadgesPanel } from "@/components/admin-role-badges-panel";
@@ -54,32 +53,31 @@ export default async function AdminPage() {
     <PortalShell
       eyebrow="Guide Official"
       title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Review schools and partners, follow meetings, and manage Roles, scan credentials, and Suggestions."
+      subtitle="Approve schools and partners, follow up on meetings, and manage Roles and Suggestions."
       chips={[
-        { href: "#meetings", label: "Meetings", active: true },
-        { href: "#schools", label: "Schools" },
+        { href: "#schools", label: "Schools", active: true },
+        { href: "#meetings", label: "Meetings" },
         { href: "#developers", label: "Developers" },
         { href: "#roles", label: "Roles" },
-        { href: "#credentials", label: "Scan credentials" },
         { href: "#suggestions", label: "Suggestions" },
         ...(isAdmin ? [{ href: "#support", label: "Get help" }] : []),
       ]}
       accountName={authz.profile.displayName}
     >
       <OfficialSection
+        id="schools"
+        title="School applications"
+        lede="Approve a school so its administrator can create classes, add students, and invite teachers. They get an email either way."
+      >
+        <AdminSchoolsPanel />
+      </OfficialSection>
+
+      <OfficialSection
         id="meetings"
         title="Meeting requests"
         lede="Book a meeting from For schools lands here — mark contacted, scheduled, or closed."
       >
         <AdminMeetingsPanel />
-      </OfficialSection>
-
-      <OfficialSection
-        id="schools"
-        title="School applications"
-        lede="Approve a school so administrators can invite teachers, create classes, and add apps."
-      >
-        <AdminSchoolsPanel />
       </OfficialSection>
 
       <OfficialSection
@@ -93,17 +91,9 @@ export default async function AdminPage() {
       <OfficialSection
         id="roles"
         title="Roles"
-        lede="Community role badges for schools — keep these separate from student badge login."
+        lede="Community role badges people can show on their profile."
       >
         <AdminRoleBadgesPanel />
-      </OfficialSection>
-
-      <OfficialSection
-        id="credentials"
-        title="Student accounts"
-        lede="Create student logins and manage school scan credentials."
-      >
-        <AdminBadgesPanel />
       </OfficialSection>
 
       <OfficialSection
