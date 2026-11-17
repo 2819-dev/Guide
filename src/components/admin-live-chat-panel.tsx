@@ -78,7 +78,7 @@ export function AdminLiveChatPanel() {
   const loadList = useCallback(async () => {
     const res = await fetch("/api/admin/chats");
     if (!res.ok) {
-      setError("Could not load live chats.");
+      setError("Live chats could not be loaded. Refresh the page to try again.");
       return;
     }
     const data = await res.json();
@@ -139,7 +139,7 @@ export function AdminLiveChatPanel() {
       });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
-        setError(d.error ?? "That didn't work. Try again.");
+        setError(d.error ?? "The action could not be completed. Please try again.");
         return false;
       }
       await Promise.all([loadChat(activeId), loadList()]);
@@ -165,15 +165,15 @@ export function AdminLiveChatPanel() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settings),
     });
-    setSavedNote(res.ok ? "Saved." : "Could not save. Check the fields.");
+    setSavedNote(res.ok ? "Settings saved." : "Settings could not be saved. Check the fields and try again.");
   }
 
   return (
     <div className="space-y-4">
       {!aiConfigured ? (
         <p className="rounded-[10px] border border-amber-300 bg-amber-50 px-3.5 py-3 text-sm leading-snug text-amber-900">
-          Guide Assistant is not connected yet: add the <code>ANTHROPIC_API_KEY</code> secret in
-          Cloudflare Pages. Until then, every chat goes straight to the Guide team.
+          Guide Assistant is not connected. Add the <code>ANTHROPIC_API_KEY</code> secret in Cloudflare
+          Pages to turn it on. Until then, every chat goes directly to the Guide team.
         </p>
       ) : null}
       {error ? (
@@ -215,7 +215,7 @@ export function AdminLiveChatPanel() {
           {shown.length === 0 ? (
             <div className="portal-empty">
               <p className="portal-empty__title">No chats here</p>
-              <p className="portal-empty__body">Chats from the bubble on every Guide page show up here.</p>
+              <p className="portal-empty__body">Conversations from the chat button on Guide pages appear here.</p>
             </div>
           ) : (
             <ul className="lchat-items">
@@ -245,8 +245,8 @@ export function AdminLiveChatPanel() {
         <div className="lchat-convo">
           {!active ? (
             <div className="portal-empty">
-              <p className="portal-empty__title">Pick a chat</p>
-              <p className="portal-empty__body">Reply to take over from Guide Assistant.</p>
+              <p className="portal-empty__title">No conversation selected</p>
+              <p className="portal-empty__body">Select a conversation to read it. Replying takes over from Guide Assistant.</p>
             </div>
           ) : (
             <>
@@ -351,7 +351,7 @@ export function AdminLiveChatPanel() {
           <form onSubmit={saveSettings} className="mt-4 space-y-4">
             <fieldset disabled={!canEdit} className="space-y-4">
               {!canEdit ? (
-                <p className="text-sm text-ink-muted">Only Guide Official admins can change these.</p>
+                <p className="text-sm text-ink-muted">Only Guide Official administrators can change these settings.</p>
               ) : null}
               <label className="flex items-center gap-3 text-sm font-semibold text-forest-950">
                 <input
@@ -360,7 +360,7 @@ export function AdminLiveChatPanel() {
                   checked={settings.aiEnabled}
                   onChange={(e) => setSettings({ ...settings, aiEnabled: e.target.checked })}
                 />
-                Guide Assistant answers first (off = every chat goes to the team)
+                Guide Assistant answers first (when off, every chat goes directly to the Guide team)
               </label>
               <label className="block text-sm font-semibold text-forest-950">
                 Greeting
@@ -369,7 +369,7 @@ export function AdminLiveChatPanel() {
               <label className="block text-sm font-semibold text-forest-950">
                 Team notes for Guide Assistant
                 <span className="block text-xs font-normal text-ink-muted">
-                  Facts, answers, or rules it should know (e.g. office hours, current issues). It trusts these over its built-in notes.
+                  Facts, answers, or guidance the assistant should use, such as support hours or known issues. These take priority over its built-in information.
                 </span>
                 <textarea className="field mt-1 !min-h-32" maxLength={8000} value={settings.knowledge} onChange={(e) => setSettings({ ...settings, knowledge: e.target.value })} />
               </label>
@@ -380,7 +380,7 @@ export function AdminLiveChatPanel() {
               <label className="block text-sm font-semibold text-forest-950">
                 Email alerts go to
                 <span className="block text-xs font-normal text-ink-muted">
-                  Comma-separated. Empty = the Guide Official @guidelearning.org addresses.
+                  Separate addresses with commas. If empty, alerts go to the Guide Official @guidelearning.org addresses.
                 </span>
                 <input className="field mt-1" maxLength={500} value={settings.notifyEmails} onChange={(e) => setSettings({ ...settings, notifyEmails: e.target.value })} />
               </label>

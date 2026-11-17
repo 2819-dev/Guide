@@ -92,7 +92,7 @@ export async function GET(request: Request) {
   const authz = await requireProfile();
   if (!authz) {
     return NextResponse.json(
-      { error: "Sign in required" },
+      { error: "Please log in to continue." },
       { status: 401, headers: cors },
     );
   }

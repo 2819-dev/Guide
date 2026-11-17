@@ -43,11 +43,11 @@ export type ChatSettings = {
 export const DEFAULT_CHAT_SETTINGS: ChatSettings = {
   aiEnabled: true,
   greeting:
-    "Hi! I'm Guide Assistant. Ask me anything about Guide, logging in, classes, or Blitz. I can also get you a person from the Guide team.",
+    "Hello, I'm Guide Assistant. I can help with logging in, accounts, classes, and the apps on Guide. If you'd like to speak with a person, just ask.",
   knowledge: "",
   notifyEmails: "",
   offlineMessage:
-    "Thanks! A Guide team member will reply here as soon as they can. You can close this window; your chat stays open on this device.",
+    "A member of the Guide team will reply here as soon as possible. You can close this window; the conversation stays open on this device.",
 };
 
 let schemaReady: Promise<void> | null = null;

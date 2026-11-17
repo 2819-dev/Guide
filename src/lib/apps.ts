@@ -17,7 +17,7 @@ export const FIRST_APP_SLUG = "amud";
 export const ARCADE_APP_SLUG = "arcade-education";
 export const ARCADE_APP_NAME = "Arcade Education";
 
-/** Kahoot-class live quiz — hosted in Guide at /apps/blitz. */
+/** Live classroom quizzes, hosted in Guide at /apps/blitz. */
 export const BLITZ_APP_SLUG = "blitz";
 export const BLITZ_APP_NAME = "Blitz";
 
@@ -35,6 +35,11 @@ export type GuideApp = {
   launchUrl?: string;
   /** Default available. Temporarily unavailable apps stay listed but are not openable. */
   availability?: AppAvailability;
+  /**
+   * Short facts Guide Assistant (live chat) may share about this app. Each app
+   * carries its own notes, so the assistant learns new apps from the catalog.
+   */
+  helpNotes?: string;
 };
 
 export const APP_UNAVAILABLE_LABEL = "Coming soon";
@@ -55,15 +60,15 @@ export const APP_CATALOG: GuideApp[] = [
     name: FIRST_APP_NAME,
     tagline: "Mishnayos and Gemara · Test Yourself",
     description:
-      "Read Mishnayos and Gemara, keep notes, and Test Yourself. Schools can add Amud to a class.",
+      "Read Mishnayos and Gemara, keep notes, and test yourself on what you learned.",
     availability: "temporarily_unavailable",
   },
   {
     slug: ARCADE_APP_SLUG,
     name: ARCADE_APP_NAME,
-    tagline: "Classroom games for every school",
+    tagline: "Learning games for the classroom",
     description:
-      "A school game center teachers add to a class. Students open it from My apps.",
+      "A collection of learning games teachers add to a class. Students open it from My apps.",
     launchUrl: arcadePublicUrl(),
     availability: "temporarily_unavailable",
   },
@@ -72,7 +77,9 @@ export const APP_CATALOG: GuideApp[] = [
     name: BLITZ_APP_NAME,
     tagline: "Live classroom quizzes",
     description:
-      "Teachers host live quizzes; students join with a PIN from My apps. Quiz, poll, puzzle, and more — Guide login required, no guest play.",
+      "Teachers host live quizzes and polls on a shared screen. Students join with a game PIN from their own device after logging in to Guide.",
+    helpNotes:
+      "Teachers create a quiz or start from a template, then host it on the classroom screen; students join with the game PIN. Also offers self-paced challenges, team play, and several question types. Plans: Free, Plus, and Ultra; paid checkout is coming soon, and promo codes from Guide can unlock a plan now.",
   },
 ];
 

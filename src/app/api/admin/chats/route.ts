@@ -68,7 +68,7 @@ export async function POST(request: Request) {
   try {
     input = actionSchema.parse(await request.json());
   } catch {
-    return NextResponse.json({ error: "Type a reply first." }, { status: 400 });
+    return NextResponse.json({ error: "Enter a reply to send." }, { status: 400 });
   }
   const chat = await getChat(input.chatId);
   if (!chat) return NextResponse.json({ error: "Chat not found" }, { status: 404 });
@@ -87,10 +87,10 @@ export async function POST(request: Request) {
     await addMessage(chat.id, "system", `${agentName} joined the chat.`);
   } else if (input.status === "ai") {
     await updateChat(chat.id, { status: "ai" });
-    await addMessage(chat.id, "system", "Guide Assistant is back to help. Ask for a person any time.");
+    await addMessage(chat.id, "system", "Guide Assistant has rejoined the chat. You can ask for a person at any time.");
   } else {
     await updateChat(chat.id, { status: "closed" });
-    await addMessage(chat.id, "system", "This chat was closed. Send a message to start again.");
+    await addMessage(chat.id, "system", "This chat has been closed. Send a message to start a new conversation.");
   }
   return NextResponse.json({ ok: true });
 }

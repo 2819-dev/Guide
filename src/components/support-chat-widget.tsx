@@ -45,9 +45,9 @@ function writeStored(v: Stored | null) {
 }
 
 function statusLine(status: Status, agentName: string | null) {
-  if (status === "agent") return `Chatting with ${agentName ?? "the Guide team"}`;
-  if (status === "waiting") return "Waiting for the Guide team";
-  return "AI helper · can get you a person";
+  if (status === "agent") return agentName && agentName !== "Guide team" ? `${agentName}, Guide team` : "Guide team";
+  if (status === "waiting") return "Waiting for a team member";
+  return "AI assistant · Ask for a person anytime";
 }
 
 function ChatGlyph() {
@@ -199,7 +199,7 @@ export function SupportChatWidget() {
       body: JSON.stringify({ ...payload, after: lastId.current }),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error ?? "Something went wrong. Please try again.");
+    if (!res.ok) throw new Error(data.error ?? "Your message could not be sent. Please try again.");
     return data;
   }
 
@@ -245,7 +245,7 @@ export function SupportChatWidget() {
     try {
       apply(await post({ action: "human", chatId: stored.chatId, token: stored.token }));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not reach the Guide team.");
+      setError(err instanceof Error ? err.message : "We could not reach the Guide team. Please try again.");
     } finally {
       setSending(false);
     }
@@ -258,7 +258,7 @@ export function SupportChatWidget() {
       await post({ action: "email", chatId: stored.chatId, token: stored.token, email });
       setEmailSaved(true);
     } catch {
-      setError("That email doesn't look right.");
+      setError("Enter a valid email address.");
     }
   }
 
@@ -316,7 +316,7 @@ export function SupportChatWidget() {
             <div className="gchat-row gchat-row--them">
               <Avatar kind="assistant" />
               <div className="gchat-bubble">
-                {greeting === null ? "…" : greeting || "Hi! How can I help with Guide today?"}
+                {greeting === null ? "…" : greeting || "Hello. How can I help you with Guide today?"}
               </div>
             </div>
             {messages.map((m) =>
@@ -348,7 +348,7 @@ export function SupportChatWidget() {
             ) : null}
             {showEmailAsk ? (
               <form className="gchat-email" onSubmit={saveEmail}>
-                <label htmlFor="gchat-email">Want an email if we reply after you leave? (optional)</label>
+                <label htmlFor="gchat-email">Email address (optional). We'll follow up by email if you've left the chat.</label>
                 <div className="gchat-email__row">
                   <input
                     id="gchat-email"
@@ -363,7 +363,7 @@ export function SupportChatWidget() {
               </form>
             ) : null}
             {emailSaved && status === "waiting" ? (
-              <p className="gchat-note">Got it. We&apos;ll follow up by email if you&apos;re away.</p>
+              <p className="gchat-note">Thank you. We&apos;ll follow up by email if you&apos;ve left the chat.</p>
             ) : null}
           </div>
 
@@ -382,7 +382,7 @@ export function SupportChatWidget() {
               ref={inputRef}
               rows={1}
               maxLength={2000}
-              placeholder={status === "agent" ? "Reply to the Guide team…" : "Ask a question…"}
+              placeholder={status === "agent" ? "Type a reply…" : "Type your question…"}
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
@@ -398,7 +398,7 @@ export function SupportChatWidget() {
               </svg>
             </button>
           </form>
-          <p className="gchat-foot">Guide Assistant is AI and can make mistakes.</p>
+          <p className="gchat-foot">Guide Assistant uses AI and can make mistakes.</p>
         </section>
       ) : null}
 

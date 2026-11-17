@@ -20,7 +20,7 @@ const postSchema = z.object({
 export async function GET(request: Request) {
   const authz = await requireProfile(["customer", "rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Please log in to continue." }, { status: 401 });
   }
   try {
     const url = new URL(request.url);
@@ -52,7 +52,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const authz = await requireProfile(["customer", "rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Please log in to continue." }, { status: 401 });
   }
   try {
     const body = postSchema.parse(await request.json());

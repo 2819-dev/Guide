@@ -18,7 +18,7 @@ const createSchema = z.object({
 export async function GET() {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Please log in to continue." }, { status: 401 });
   }
 
   const isOfficial =
@@ -85,6 +85,6 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    return NextResponse.json({ error: "Could not create suggestion" }, { status: 500 });
+    return NextResponse.json({ error: "Your suggestion could not be saved. Please try again." }, { status: 500 });
   }
 }

@@ -63,7 +63,7 @@ async function teachersForStudent(studentId: string) {
 export async function GET(request: Request) {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Please log in to continue." }, { status: 401 });
   }
 
   const { searchParams } = new URL(request.url);
@@ -154,7 +154,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Please log in to continue." }, { status: 401 });
   }
 
   const db = getDb();
@@ -245,6 +245,6 @@ export async function POST(request: Request) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid message" }, { status: 400 });
     }
-    return NextResponse.json({ error: "Could not send message" }, { status: 500 });
+    return NextResponse.json({ error: "Your message could not be sent. Please try again." }, { status: 500 });
   }
 }

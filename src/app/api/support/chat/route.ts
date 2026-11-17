@@ -24,7 +24,7 @@ const MAX_AI_REPLIES = 25;
 const MAX_USER_MESSAGES = 80;
 
 const NO_AI_REPLY =
-  "I can't answer right now, so I'm connecting you with the Guide team.";
+  "I'm unable to answer right now, so I've connected you with the Guide team.";
 
 async function visitorInfo() {
   try {
@@ -94,7 +94,7 @@ export async function GET(request: Request) {
     return NextResponse.json(await snapshot(chat, after));
   } catch (error) {
     console.error("[chat] GET", error);
-    return NextResponse.json({ error: "Chat is unavailable right now" }, { status: 500 });
+    return NextResponse.json({ error: "Chat is temporarily unavailable" }, { status: 500 });
   }
 }
 
@@ -126,7 +126,7 @@ export async function POST(request: Request) {
   try {
     input = bodySchema.parse(await request.json());
   } catch {
-    return NextResponse.json({ error: "Type a message first." }, { status: 400 });
+    return NextResponse.json({ error: "Enter a message to send." }, { status: 400 });
   }
 
   try {
@@ -169,7 +169,7 @@ export async function POST(request: Request) {
     const history = await listMessages(chat.id);
     if (history.filter((m) => m.sender === "user").length >= MAX_USER_MESSAGES) {
       return NextResponse.json(
-        { error: "This chat is full. Please start a new chat." },
+        { error: "This conversation has reached its limit. Please start a new chat." },
         { status: 429 },
       );
     }
@@ -209,7 +209,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("[chat] POST", error);
     return NextResponse.json(
-      { error: "Chat is unavailable right now. Please try again." },
+      { error: "Chat is temporarily unavailable. Please try again in a moment." },
       { status: 500 },
     );
   }
