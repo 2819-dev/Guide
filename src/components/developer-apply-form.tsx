@@ -28,8 +28,9 @@ export function DeveloperApplyForm({
         <div className="portal-empty !border-0 !bg-transparent !p-0 !shadow-none">
           <p className="portal-empty__title">Application received</p>
           <p className="portal-empty__body">
-            Guide will review your application. When approved, partner log in
-            opens your portal so you can manage apps schools add to class.
+            Thank you. The Guide team will review your application and contact
+            you by email. After approval, log in to your developer portal to
+            manage your apps.
           </p>
         </div>
         <p className="mt-5">
@@ -37,7 +38,7 @@ export function DeveloperApplyForm({
             href="/auth/sign-in?as=developer"
             className="btn-primary inline-flex"
           >
-            Partner log in
+            Developer log in
           </Link>
         </p>
       </div>
@@ -62,10 +63,19 @@ export function DeveloperApplyForm({
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not submit");
+      if (!res.ok) {
+        throw new Error(
+          data.error ??
+            "We couldn’t submit your application. Please try again.",
+        );
+      }
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not submit");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "We couldn’t submit your application. Please try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -77,8 +87,8 @@ export function DeveloperApplyForm({
         <p className="portal-eyebrow">For developers</p>
         <h2 className="display-feature mt-1">Apply as a developer</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Share your organization, website, and app details. Guide Official
-          reviews each partner application.
+          Tell us about your organization and your app. The Guide team
+          reviews every developer application.
         </p>
       </div>
 
@@ -90,6 +100,7 @@ export function DeveloperApplyForm({
             value={contactName}
             onChange={(e) => setContactName(e.target.value)}
             className="field mt-1.5"
+            autoComplete="name"
           />
         </label>
         <label className="block text-sm font-semibold text-forest-900">
@@ -100,6 +111,7 @@ export function DeveloperApplyForm({
             value={contactEmail}
             onChange={(e) => setContactEmail(e.target.value)}
             className="field mt-1.5"
+            autoComplete="email"
           />
         </label>
         <label className="block text-sm font-semibold text-forest-900">
@@ -109,6 +121,7 @@ export function DeveloperApplyForm({
             value={organization}
             onChange={(e) => setOrganization(e.target.value)}
             className="field mt-1.5"
+            autoComplete="organization"
           />
         </label>
         <label className="block text-sm font-semibold text-forest-900">
@@ -142,12 +155,15 @@ export function DeveloperApplyForm({
           onChange={(e) => setAppAbout(e.target.value)}
           className="field mt-1.5 min-h-[140px]"
           minLength={20}
-          placeholder="What schools get, who it is for, and how it fits classroom use."
+          placeholder="What the app does, which grades or subjects it serves, and how teachers use it in class."
         />
       </label>
 
       {error ? (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p
+          role="alert"
+          className="form-error rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+        >
           {error}
         </p>
       ) : null}

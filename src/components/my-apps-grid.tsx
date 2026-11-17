@@ -15,17 +15,17 @@ type Props = {
 /** Student / developer app launcher — square tiles in the portal only. */
 export function MyAppsGrid({
   apps,
-  emptyHint = "Ask your teacher to add an app to your class — it will show up here.",
+  emptyHint = "When your teacher adds an app to your class, it will appear here.",
 }: Props) {
   if (apps.length === 0) {
     return (
       <section id="apps">
         <h2 className="portal-section-title">My apps</h2>
         <p className="-mt-2 mb-4 text-sm text-ink-muted">
-          Apps your teacher adds for class open here.
+          Apps your teachers add to your classes appear here.
         </p>
         <div className="portal-empty">
-          <p className="portal-empty__title">Ready when your class is</p>
+          <p className="portal-empty__title">No apps yet</p>
           <p className="portal-empty__body">{emptyHint}</p>
         </div>
       </section>
@@ -36,7 +36,7 @@ export function MyAppsGrid({
     <section id="apps">
       <h2 className="portal-section-title">My apps</h2>
       <p className="-mt-2 mb-4 text-sm text-ink-muted">
-        Tap an app to open it for class.
+        Select an app to open it.
       </p>
       <ul className="portal-apps-grid">
         {sortAppsAvailableFirst(apps).map((app) => {

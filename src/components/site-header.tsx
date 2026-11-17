@@ -31,9 +31,8 @@ const navLink =
   "px-2.5 py-2 text-[0.9375rem] font-medium text-forest-950 no-underline hover:text-forest-700";
 
 /**
- * Clever 1:1 header — Guide wordmark + forest CTAs.
- * Logged-out: For schools · Log In menu (Student / Admin / Official).
- * Student login page itself uses a corner Admin control instead.
+ * Site header — Guide wordmark and primary navigation.
+ * Logged out: "For schools" link and the "Log in" role menu.
  */
 export function SiteHeader() {
   const [me, setMe] = useState<Me | null>(null);

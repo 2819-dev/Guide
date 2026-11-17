@@ -1,0 +1,141 @@
+/* polish-public: professional polish pass styles. Loaded after globals.css. */
+
+/* ---------- Homepage ---------- */
+
+/* Shaped-frame accents sit slightly outside their frame; never let them
+   cause horizontal scroll on narrow screens. */
+.gh-feature,
+.gh-steps {
+  overflow-x: clip;
+}
+
+.gh-hero .display-hero {
+  max-width: 14ch;
+  text-wrap: balance;
+}
+
+.gh-section-head .display-section,
+.gh-feature__copy .display-feature,
+.cta-band__title,
+.schools-hero-band .display-feature {
+  text-wrap: balance;
+}
+
+.gh-section-lede,
+.hero-lede,
+.clever-feature__body {
+  text-wrap: pretty;
+}
+
+.gh-audience:focus-visible,
+.hero-link-card:focus-visible,
+.btn-hero-bar:focus-visible {
+  outline: 3px solid var(--forest-500);
+  outline-offset: 3px;
+}
+
+@media (max-width: 639px) {
+  .gh-steps,
+  .gh-audiences {
+    padding: 4rem 0;
+  }
+
+  .gh-feature {
+    padding: 3.5rem 0;
+  }
+
+  .gh-steps__list {
+    margin-top: 2.25rem;
+  }
+
+  .gh-step,
+  .gh-audience {
+    padding: 1.4rem;
+  }
+
+  .cta-band__inner {
+    padding-block: 4rem;
+  }
+
+  .gh-cta__buttons {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .gh-cta__buttons > a {
+    width: 100%;
+  }
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer-follow {
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+@media (max-width: 639px) {
+  .site-footer-upper {
+    padding-top: 3.5rem;
+    padding-bottom: 3rem;
+  }
+
+  .site-footer-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 1.5rem;
+  }
+}
+
+/* ---------- Public pages: forms and secondary links ---------- */
+
+.portal-panel select.field {
+  cursor: pointer;
+}
+
+/* ---------- Legal pages ---------- */
+
+.legal-page__switch {
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+}
+
+.legal-prose h2:first-child {
+  margin-top: 2rem;
+}
+
+@media (max-width: 639px) {
+  .legal-page__inner {
+    padding-top: 2.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .legal-page__intro {
+    font-size: 1.025rem;
+  }
+}
+
+/* ---------- Dark mode ---------- */
+
+@media (prefers-color-scheme: dark) {
+  .schools-hero-band {
+    background:
+      radial-gradient(ellipse 65% 50% at 15% 0%, rgba(61, 84, 72, 0.35), transparent 55%),
+      var(--paper);
+  }
+
+  .portal-page {
+    background:
+      radial-gradient(ellipse 70% 40% at 80% 0%, rgba(61, 84, 72, 0.22), transparent 55%),
+      var(--sky-soft);
+  }
+
+  .hero-secondary-links a {
+    color: var(--forest-400);
+  }
+
+  .form-error {
+    border-color: rgba(248, 113, 113, 0.4);
+    background: rgba(127, 29, 29, 0.25);
+    color: #fecaca;
+  }
+}

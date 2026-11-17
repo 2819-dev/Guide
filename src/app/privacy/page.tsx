@@ -22,19 +22,19 @@ export default function PrivacyPage() {
         </p>
       }
     >
-      <h2>The short version</h2>
+      <h2>Summary</h2>
       <ul>
-        <li>We don’t sell personal information. Ever.</li>
-        <li>We don’t show ads, and we don’t use student data to target or build ad profiles.</li>
-        <li>We don’t use third-party analytics or tracking cookies.</li>
+        <li>We do not sell personal information.</li>
+        <li>We do not show ads, and we do not use student data to target ads or build advertising profiles.</li>
+        <li>We do not use third-party analytics or tracking cookies.</li>
         <li>Schools control their students’ information and can ask us to delete it at any time.</li>
       </ul>
 
       <h2>Who this policy covers</h2>
       <p>
         This policy covers guidelearning.org and the Guide portals for
-        students, teachers, school administrators, developer partners, and
-        Guide Official staff. Apps that run on their own sites (for example,
+        students, teachers, school administrators, developers, and Guide
+        Officials. Apps that run on their own sites (for example,
         Arcade Education) have their own privacy policies.
       </p>
 
@@ -62,10 +62,10 @@ export default function PrivacyPage() {
         Messages between students and teachers, suggestions, and support
         requests you send us.
       </p>
-      <h3>School and partner applications</h3>
+      <h3>School and developer applications</h3>
       <p>
-        When an administrator applies for a school, or a developer applies to
-        partner with Guide, we collect the contact details and answers in that
+        When a school administrator applies for a school, or a developer
+        applies to publish an app on Guide, we collect the contact details and answers in that
         application. Meeting requests include the contact details you enter.
       </p>
       <h3>Technical information</h3>
@@ -140,7 +140,8 @@ export default function PrivacyPage() {
 
       <h2>Your choices</h2>
       <p>
-        You can see your account information from Account in your portal.
+        You can view your account information on the Account page in your
+        portal.
         Students and parents can also ask their school. To get a copy
         of your information, correct it, or delete it, email{" "}
         <a href="mailto:hello@guidelearning.org">hello@guidelearning.org</a>.
@@ -151,7 +152,7 @@ export default function PrivacyPage() {
       <p>
         All traffic to Guide is encrypted (HTTPS). Passwords are never stored
         in plain text. Access to student information is limited to the people
-        who need it, and Guide Official staff review every school and partner
+        who need it, and Guide Officials review every school and developer
         before they get access. No system is perfectly secure; if a breach ever
         affects your information, we will notify the affected schools and users
         as the law requires.

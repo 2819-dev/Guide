@@ -4,7 +4,7 @@ import { LegalPage } from "@/components/legal-page";
 export const metadata: Metadata = {
   title: "Accessibility",
   description:
-    "Guide's commitment to accessibility for students, teachers, and families.",
+    "Guide's commitment to accessibility for students, teachers, and schools.",
 };
 
 export default function AccessibilityPage() {
@@ -54,31 +54,31 @@ export default function AccessibilityPage() {
       </ul>
 
       <h2>Known limitations</h2>
-      <p>We’re open about where Guide still falls short:</p>
+      <p>These are the areas where Guide does not yet fully meet our goal:</p>
       <ul>
         <li>
-          Guide hasn’t had an independent accessibility audit yet. We plan to
-          get one.
+          Guide has not yet had an independent accessibility audit. We plan to
+          complete one.
         </li>
         <li>
-          Signed-in portals and live Blitz games haven’t been fully tested
+          Signed-in portals and live Blitz games have not been fully tested
           with every screen reader. Fast-moving live games can be harder to
           follow with assistive technology.
         </li>
         <li>
-          Apps made by partners and hosted on their own sites, such as Arcade
-          Education, are responsible for their own accessibility.
+          Apps made by other developers and hosted on their own sites, such as
+          Arcade Education, are responsible for their own accessibility.
         </li>
       </ul>
 
-      <h2>Tell us about a barrier</h2>
+      <h2>Report a barrier</h2>
       <p>
-        If something in Guide is hard or impossible for you to use, please tell
-        us. Email{" "}
+        If something in Guide is difficult or impossible for you to use,
+        please let us know. Email{" "}
         <a href="mailto:hello@guidelearning.org">hello@guidelearning.org</a>{" "}
         with the page you were on, what you were trying to do, and the device
-        or assistive technology you use. We read every message, and we’ll help
-        you get what you need another way while we fix it.
+        or assistive technology you use. We read every message, and we will
+        help you get what you need another way while we fix it.
       </p>
       <p>
         Schools can also contact us to request information about Guide’s

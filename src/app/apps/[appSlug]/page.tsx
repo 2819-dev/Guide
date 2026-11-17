@@ -36,28 +36,24 @@ export default async function AppHomePage({ params }: Props) {
 
   if (!isAppAvailable(app)) {
     return (
-      <div>
-        <section className="hero-band">
-          <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
-            <p className="text-sm font-semibold text-forest-700">
-              {APP_UNAVAILABLE_LABEL}
+      <div className="portal-page">
+        <div className="content-band portal-page__inner">
+          <header className="portal-hero">
+            <p className="portal-eyebrow">{APP_UNAVAILABLE_LABEL}</p>
+            <h1 className="display-feature mt-1">{app.name}</h1>
+            <p className="mt-1.5 text-base font-medium text-forest-800">
+              {app.tagline}
             </p>
-            <h1 className="display mt-2 text-3xl text-forest-950 sm:text-4xl">
-              {app.name}
-            </h1>
-            <p className="mt-3 max-w-2xl text-base text-ink-muted">
+            <p className="mt-3 max-w-2xl text-[0.95rem] leading-relaxed text-ink-muted">
               {APP_UNAVAILABLE_DETAIL}
             </p>
             <p className="mt-6">
-              <Link
-                href="/apps"
-                className="font-semibold text-forest-800 no-underline hover:underline"
-              >
-                ← Back to app library
+              <Link href="/apps" className="btn-secondary">
+                Back to the app library
               </Link>
             </p>
-          </div>
-        </section>
+          </header>
+        </div>
       </div>
     );
   }

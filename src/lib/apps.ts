@@ -45,7 +45,7 @@ export type GuideApp = {
 export const APP_UNAVAILABLE_LABEL = "Coming soon";
 
 export const APP_UNAVAILABLE_DETAIL =
-  "Coming soon to Guide. You’ll be able to add it to a class when it’s ready.";
+  "Teachers will be able to add this app to a class when it launches.";
 
 /** Catalog with available apps first, "Coming soon" apps last. */
 export function sortAppsAvailableFirst<T extends GuideApp>(apps: T[]): T[] {

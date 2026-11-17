@@ -44,12 +44,11 @@ export function SchoolApplicationForm({
         <p className="portal-eyebrow">School application</p>
         <h2 className="display-feature mt-1">Application received</h2>
         <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-ink-muted">
-          Thanks — your school request is under review. You can use a limited
-          School Administrator Portal while you wait. After approval, invite
-          teachers and manage classes.
+          {alreadyAppliedMessage ??
+            "Thank you. Your application is under review. While you wait, you can use a limited version of the school administrator portal. After approval, you can invite teachers and manage classes."}
         </p>
         <a href="/education/panel" className="btn-primary mt-5 inline-flex">
-          School Administrator Portal
+          Open school administrator portal
         </a>
       </div>
     );
@@ -86,11 +85,15 @@ export function SchoolApplicationForm({
         error?: string;
         redirectTo?: string;
       };
-      if (!res.ok) throw new Error(data.error ?? "Could not submit");
+      if (!res.ok) throw new Error(data.error ?? "We couldn’t submit your application. Please try again.");
       router.push(data.redirectTo ?? "/education/panel");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not submit");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "We couldn’t submit your application. Please try again.",
+      );
       setBusy(false);
     }
   }
@@ -101,8 +104,8 @@ export function SchoolApplicationForm({
         <p className="portal-eyebrow">School application</p>
         <h2 className="display-feature mt-1">Apply for your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Tell us about your school or district. After approval, invite
-          teachers, create classes, and add apps.
+          Tell us about your school or district. After approval, you can
+          invite teachers, create classes, and add apps.
         </p>
       </div>
 
@@ -185,7 +188,7 @@ export function SchoolApplicationForm({
             onChange={(e) => setContactRole(e.target.value)}
             className="field mt-1.5"
           >
-            <option value="">Select…</option>
+            <option value="">Select a role</option>
             {ROLE_OPTIONS.map((role) => (
               <option key={role} value={role}>
                 {role}
@@ -194,14 +197,14 @@ export function SchoolApplicationForm({
           </select>
         </label>
         <label className="block text-sm font-semibold text-forest-900">
-          Students (estimate)
+          Number of students
           <select
             required
             value={studentCountEstimate}
             onChange={(e) => setStudentCountEstimate(e.target.value)}
             className="field mt-1.5"
           >
-            <option value="">Select…</option>
+            <option value="">Select a range</option>
             <option value="1-25">1–25</option>
             <option value="26-75">26–75</option>
             <option value="76-200">76–200</option>
@@ -219,12 +222,15 @@ export function SchoolApplicationForm({
           value={intendedUse}
           onChange={(e) => setIntendedUse(e.target.value)}
           className="field mt-1.5"
-          placeholder="Keep students engaged in class, add learning apps, manage homework…"
+          placeholder="For example: which grades, classes, or apps you plan to start with"
         />
       </label>
 
       {error && (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p
+          role="alert"
+          className="form-error rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+        >
           {error}
         </p>
       )}
@@ -236,7 +242,7 @@ export function SchoolApplicationForm({
             : "Creating your account…"
           : hasAccount
             ? "Submit application"
-            : "Create account & apply"}
+            : "Create account and apply"}
       </button>
     </form>
   );

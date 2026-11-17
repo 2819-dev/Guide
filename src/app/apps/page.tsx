@@ -12,7 +12,7 @@ export const runtime = "edge";
 export const metadata = {
   title: "App library · Guide",
   description:
-    "Learning apps teachers add to a class — students open them from My apps.",
+    "Browse the learning apps on Guide. Teachers add apps to a class, and students open them from My apps.",
 };
 
 export default function AppsLibraryPage() {
@@ -20,10 +20,11 @@ export default function AppsLibraryPage() {
     <div className="portal-page">
       <div className="content-band portal-page__inner">
         <header className="portal-hero">
-          <p className="portal-eyebrow">For schools</p>
+          <p className="portal-eyebrow">Apps on Guide</p>
           <h1 className="display-feature mt-1">App library</h1>
           <p className="mt-1.5 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-            Teachers add an app to a class. Students open it from My apps.
+            Learning apps available on Guide. Teachers add apps to a class,
+            and students open them from My apps with their Guide login.
           </p>
         </header>
 
@@ -51,7 +52,7 @@ export default function AppsLibraryPage() {
                 </p>
                 {available ? (
                   <p className="mt-5 text-sm font-semibold text-forest-800">
-                    Open {app.name} →
+                    Open {app.name} <span aria-hidden>→</span>
                   </p>
                 ) : null}
               </>
@@ -73,16 +74,16 @@ export default function AppsLibraryPage() {
           })}
         </ul>
         <p className="mt-8 text-sm text-ink-muted">
-          Teachers: add apps from your{" "}
+          Teachers can add apps from the{" "}
           <Link href="/teacher" className="font-semibold text-forest-800">
             teacher portal
           </Link>
-          . Partners:{" "}
+          . Developers can{" "}
           <Link
             href="/developers/apply"
             className="font-semibold text-forest-800"
           >
-            apply as a developer
+            apply to publish an app
           </Link>
           .
         </p>

@@ -20,14 +20,19 @@ export function MeetingRequestForm() {
         <div className="portal-empty !border-0 !bg-transparent !p-0 !shadow-none">
           <p className="portal-empty__title">Request received</p>
           <p className="portal-empty__body">
-            The Guide team will review your request and follow up by email.
-            Meanwhile, try the interactive demo or apply for your school.
+            Thank you. The Guide team will follow up by email to schedule a
+            time. In the meantime, you can explore the demo or apply for your
+            school.
           </p>
         </div>
-        <p className="mt-5 flex flex-wrap gap-3 text-sm font-semibold text-forest-800">
-          <Link href="/schools/demo">View demo →</Link>
-          <Link href="/education#apply">Apply for your school →</Link>
-        </p>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Link href="/schools/demo" className="btn-secondary">
+            See a demo
+          </Link>
+          <Link href="/education#apply" className="btn-primary">
+            Apply for your school
+          </Link>
+        </div>
       </div>
     );
   }
@@ -50,10 +55,18 @@ export function MeetingRequestForm() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not submit");
+      if (!res.ok) {
+        throw new Error(
+          data.error ?? "We couldn’t send your request. Please try again.",
+        );
+      }
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not submit");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "We couldn’t send your request. Please try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -65,8 +78,8 @@ export function MeetingRequestForm() {
         <p className="portal-eyebrow">Meeting request</p>
         <h2 className="display-feature mt-1">Tell us about your school</h2>
         <p className="mt-2 max-w-xl text-[0.95rem] leading-relaxed text-ink-muted">
-          Tell us a little about your school. We’ll follow up to schedule a
-          walkthrough.
+          Share a few details and the Guide team will follow up by email to
+          schedule a walkthrough.
         </p>
       </div>
 
@@ -109,19 +122,19 @@ export function MeetingRequestForm() {
             value={contactRole}
             onChange={(e) => setContactRole(e.target.value)}
             className="field mt-1.5"
-            placeholder="e.g. Principal, Tech director"
+            placeholder="e.g. Principal, technology director"
           />
         </label>
       </div>
 
       <label className="block text-sm font-semibold text-forest-900">
         Preferred times{" "}
-        <span className="font-medium text-ink-muted">(optional)</span>
+        <span className="font-normal text-ink-muted">(optional)</span>
         <input
           value={preferredTime}
           onChange={(e) => setPreferredTime(e.target.value)}
           className="field mt-1.5"
-          placeholder="e.g. Weekday mornings ET"
+          placeholder="e.g. Weekday mornings, Eastern Time"
         />
       </label>
 
@@ -137,13 +150,16 @@ export function MeetingRequestForm() {
       </label>
 
       {error ? (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p
+          role="alert"
+          className="form-error rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+        >
           {error}
         </p>
       ) : null}
 
       <button type="submit" disabled={busy} className="btn-primary">
-        {busy ? "Sending…" : "Submit meeting request"}
+        {busy ? "Sending…" : "Request a meeting"}
       </button>
     </form>
   );

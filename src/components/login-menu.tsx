@@ -9,7 +9,7 @@ type Props = {
   className?: string;
 };
 
-/** Clever-like header Log In control — opens a simple role menu. */
+/** Header "Log in" control — opens a role menu. */
 export function LoginMenu({ variant = "primary", className = "" }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -69,7 +69,7 @@ export function LoginMenu({ variant = "primary", className = "" }: Props) {
             />
           </svg>
         ) : null}
-        Log In
+        Log in
         <svg
           width="12"
           height="12"

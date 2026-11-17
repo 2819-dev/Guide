@@ -1,10 +1,7 @@
 import Link from "next/link";
 import { GuideWordmark } from "@/components/guide-logo";
 
-/**
- * Footer — contact strip, four link columns, legal bar.
- * Guide school language only (no Clever trademarks).
- */
+/** Footer — contact line, four link columns, legal bar. */
 export function SiteFooter() {
   return (
     <footer className="border-t border-line bg-paper">
@@ -12,12 +9,12 @@ export function SiteFooter() {
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <GuideWordmark href="/" size="md" />
           <p className="text-sm text-ink-muted">
-            Engaged students. Well-managed classrooms.
+            One login for every app your school uses.
           </p>
         </div>
 
         <p className="site-footer-follow">
-          Contact ·{" "}
+          Contact us at{" "}
           <a href="mailto:hello@guidelearning.org">hello@guidelearning.org</a>
         </p>
 
@@ -42,8 +39,8 @@ export function SiteFooter() {
           <FooterCol
             head="Developers"
             links={[
-              { href: "/developers/apply", label: "Partner with Guide" },
-              { href: "/auth/sign-in?as=developer", label: "Partner log in" },
+              { href: "/developers/apply", label: "Apply as a developer" },
+              { href: "/auth/sign-in?as=developer", label: "Developer log in" },
             ]}
           />
           <FooterCol
@@ -51,7 +48,7 @@ export function SiteFooter() {
             links={[
               { href: "/#what", label: "What is Guide?" },
               { href: "mailto:hello@guidelearning.org", label: "Contact us" },
-              { href: "/auth/sign-in?as=official", label: "Guide Official" },
+              { href: "/auth/sign-in?as=official", label: "Guide Official log in" },
             ]}
           />
         </div>
@@ -59,10 +56,10 @@ export function SiteFooter() {
 
       <div className="site-footer-legal">
         <div className="content-band site-footer-legal__inner">
-          <p>Copyright © 2026 Guide</p>
+          <p>© 2026 Guide</p>
           <p className="flex flex-wrap gap-x-4 gap-y-1">
-            <Link href="/terms">Terms</Link>
-            <Link href="/privacy">Privacy</Link>
+            <Link href="/terms">Terms of Service</Link>
+            <Link href="/privacy">Privacy Policy</Link>
             <Link href="/accessibility">Accessibility</Link>
           </p>
         </div>

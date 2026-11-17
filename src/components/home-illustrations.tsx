@@ -256,10 +256,10 @@ export function StudentTabletArt() {
   );
 }
 
-/** Live quiz answer tiles with excited kids. */
+/** Live quiz answer tiles with students raising their hands. */
 export function QuizClassArt() {
   return (
-    <Svg w={500} h={500} label="Illustration of excited students raising their hands in front of colorful quiz answers">
+    <Svg w={500} h={500} label="Illustration of students raising their hands during a live classroom quiz">
       <rect width={500} height={500} fill="#eef2fb" />
       <g>
         <rect x={50} y={50} width={190} height={92} rx={18} fill="#2459c4" />

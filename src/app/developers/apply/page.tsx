@@ -6,12 +6,12 @@ export const runtime = "edge";
 export const metadata = {
   title: "For developers · Guide",
   description:
-    "Build apps schools can add to class. Partners apply; Guide reviews each listing.",
+    "Publish your learning app on Guide. Teachers add approved apps to their classes, and students open them with one login.",
 };
 
 /**
- * Public apply form — no server session/DB on first paint.
- * Avoids 500 when Neon Auth/DB env is missing; logged-in redirect lives on /developer.
+ * Public apply form — no server session or database read on first paint.
+ * The logged-in redirect lives on /developer.
  */
 export default function DeveloperApplyPage() {
   return (
@@ -21,26 +21,23 @@ export default function DeveloperApplyPage() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow">For developers</p>
             <h1 className="display-feature mx-auto mt-3 max-w-[18ch] lg:max-w-[12em]">
-              Build apps schools can add to class
+              Bring your app to classrooms on Guide
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">
-              Partner with Guide to reach classrooms. After approval, teachers
-              add your app to class and students open it from My apps.
+              Apply to publish your learning app on Guide. After approval,
+              teachers can add it to their classes and students open it with
+              their Guide login.
             </p>
             <div className="mt-8 flex flex-col items-center gap-2">
               <a href="#apply" className="btn-primary">
                 Apply as a developer
               </a>
               <p className="hero-secondary-links !mt-2">
-                <Link href="/auth/sign-in?as=developer">Partner log in</Link>
+                <Link href="/auth/sign-in?as=developer">Developer log in</Link>
                 <span aria-hidden className="hero-secondary-links__dot">
                   ·
                 </span>
-                <Link href="/auth/sign-up?as=developer">Create account</Link>
-                <span aria-hidden className="hero-secondary-links__dot">
-                  ·
-                </span>
-                <Link href="/schools/demo">Demo</Link>
+                <Link href="/auth/sign-up?as=developer">Sign up</Link>
               </p>
             </div>
           </div>
@@ -50,24 +47,24 @@ export default function DeveloperApplyPage() {
       <section className="content-band py-10 sm:py-14">
         <div className="schools-feature-grid">
           <article className="schools-feature">
-            <h2 className="schools-feature__title">Verified partners only</h2>
+            <h2 className="schools-feature__title">A reviewed library</h2>
             <p className="schools-feature__body">
-              Every partner is reviewed before listing. Schools trust a
-              library that stays carefully curated.
+              The Guide team reviews every developer and app before it is
+              listed, so schools can add apps with confidence.
             </p>
           </article>
           <article className="schools-feature">
-            <h2 className="schools-feature__title">Sit in My apps</h2>
+            <h2 className="schools-feature__title">One login for students</h2>
             <p className="schools-feature__body">
-              Teachers add your app to a class. Students open it from the same
-              calm place they use for everything else.
+              Teachers add your app to a class. Students open it from My apps,
+              alongside the other apps their school uses.
             </p>
           </article>
           <article className="schools-feature">
-            <h2 className="schools-feature__title">Manage after approval</h2>
+            <h2 className="schools-feature__title">Your developer portal</h2>
             <p className="schools-feature__body">
-              After approval, manage listing details and documentation from
-              your partner portal.
+              After approval, manage your listing details and documentation
+              from the developer portal.
             </p>
           </article>
         </div>
@@ -81,17 +78,16 @@ export default function DeveloperApplyPage() {
               Apply
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Share your organization, website, and app. Guide reviews each
-              partner.
+              Tell us about your organization, website, and app.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
             <p className="text-xs font-semibold text-forest-600">02</p>
             <h2 className="mt-2 text-lg font-semibold text-forest-950">
-              Get approved
+              Guide reviews your application
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              When approved, partner log in opens your developer portal.
+              After approval, log in to open your developer portal.
             </p>
           </li>
           <li className="p-6">
@@ -100,8 +96,8 @@ export default function DeveloperApplyPage() {
               Reach classrooms
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Teachers add your app to class. Students stay engaged from My
-              apps.
+              Teachers add your app to their classes, and students open it from
+              My apps.
             </p>
           </li>
         </ol>
@@ -115,16 +111,16 @@ export default function DeveloperApplyPage() {
             href="/auth/sign-in?as=developer"
             className="font-semibold text-forest-800"
           >
-            Partner log in
+            Log in
           </Link>
-          {" · "}
-          Prefer an account first?{" "}
+          . Prefer to create an account first?{" "}
           <Link
             href="/auth/sign-up?as=developer"
             className="font-semibold text-forest-800"
           >
-            Create account
+            Sign up
           </Link>
+          .
         </p>
       </div>
     </div>

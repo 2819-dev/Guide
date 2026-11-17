@@ -5,7 +5,6 @@ import {
   getApplicantEducationStatus,
   hasEducationAccess,
 } from "@/lib/education-access";
-import { educatorPortalLabel } from "@/lib/educator-portal-label";
 import { ensureProfile } from "@/lib/profile";
 
 export const runtime = "edge";
@@ -13,7 +12,7 @@ export const runtime = "edge";
 export const metadata = {
   title: "For schools · Guide",
   description:
-    "Keep students engaged and classrooms well managed. School administrators apply; teachers log in with a school invite.",
+    "One login for every app your school uses. School administrators apply for their school; teachers join by invitation.",
 };
 
 /** School/district apply + status. Teachers = login / invite only. */
@@ -29,9 +28,6 @@ export default async function EducationLandingPage() {
   const isPending = appStatus.status === "pending";
   const isRejected = appStatus.status === "rejected";
   const isApproved = appStatus.status === "approved";
-  const portalLabel = educatorPortalLabel({
-    kind: "kind" in appStatus ? appStatus.kind : "school",
-  });
 
   // Signed-in applicants with a pending/approved application go straight to portal.
   if (session && (isPending || isApproved || canOpenPanel)) {
@@ -45,18 +41,19 @@ export default async function EducationLandingPage() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="eyebrow">For schools</p>
             <h1 className="display-feature mx-auto mt-3 max-w-[18ch] lg:max-w-[14em]">
-              Keep students engaged and classrooms well managed
+              One platform for your classes, rosters, and learning apps
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">
-              Classes, students, and learning apps in one calm place.
-              Administrators apply here; teachers join with a school invite.
+              Guide gives your school a single sign-in for its learning apps.
+              School administrators apply here, and teachers join by
+              invitation.
             </p>
             <div className="mt-8 flex flex-col items-center gap-2">
               <a href="#apply" className="btn-primary">
-                {isRejected ? "Update & re-apply" : "Apply for your school"}
+                {isRejected ? "Update and reapply" : "Apply for your school"}
               </a>
               <p className="hero-secondary-links !mt-2">
-                <Link href="/schools/demo">Try the demo</Link>
+                <Link href="/schools/demo">See a demo</Link>
                 <span aria-hidden className="hero-secondary-links__dot">
                   ·
                 </span>
@@ -76,22 +73,22 @@ export default async function EducationLandingPage() {
           <article className="schools-feature">
             <h2 className="schools-feature__title">Classroom management</h2>
             <p className="schools-feature__body">
-              Create classes, add each student with a username and password,
-              and reset passwords when someone forgets.
+              Create classes, give each student a username and password, and
+              reset passwords when needed.
             </p>
           </article>
           <article className="schools-feature">
-            <h2 className="schools-feature__title">Apps students open</h2>
+            <h2 className="schools-feature__title">Learning apps in every class</h2>
             <p className="schools-feature__body">
-              Teachers add apps like Blitz to a class. Students find them
-              under My apps — no extra passwords.
+              Teachers add apps, such as Blitz, to a class. Students open them
+              from My apps without another password.
             </p>
           </article>
           <article className="schools-feature">
             <h2 className="schools-feature__title">Invite teachers by email</h2>
             <p className="schools-feature__body">
-              Enter work emails from your portal. Guide sends each teacher a
-              clear setup link so they can join your school.
+              Enter work email addresses in your portal. Guide sends each
+              teacher a link to set up their account.
             </p>
           </article>
         </div>
@@ -105,8 +102,8 @@ export default async function EducationLandingPage() {
               Apply for your school
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              It takes about five minutes and creates your administrator
-              account. Guide Official reviews it and emails you.
+              The application takes about five minutes and creates your
+              administrator account. The Guide team reviews it and emails you.
             </p>
           </li>
           <li className="border-b border-line p-6 lg:border-b-0 lg:border-r">
@@ -115,8 +112,8 @@ export default async function EducationLandingPage() {
               Invite your teachers
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Once approved, add teacher emails in your portal. Each teacher
-              gets a setup link.
+              After approval, add teacher email addresses in your portal. Each
+              teacher receives a setup link.
             </p>
           </li>
           <li className="p-6">
@@ -125,7 +122,7 @@ export default async function EducationLandingPage() {
               Add classes and students
             </h2>
             <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-              Teachers create classes, add students, and pick apps. Students
+              Teachers create classes, add students, and choose apps. Students
               log in with their school, username, and password.
             </p>
           </li>
@@ -140,12 +137,12 @@ export default async function EducationLandingPage() {
               {appStatus.schoolName
                 ? `${appStatus.schoolName} was not approved.`
                 : "Your previous application was not approved."}{" "}
-              Update the details and re-apply below. Full tools open after
-              acceptance.
+              Update the details and reapply below. All tools become available
+              after approval.
             </p>
             <div className="portal-empty__action">
               <Link href="/education/panel" className="btn-primary">
-                {portalLabel}
+                Open your portal
               </Link>
             </div>
           </div>
@@ -164,7 +161,7 @@ export default async function EducationLandingPage() {
             >
               Log in
             </Link>{" "}
-            before applying so approval opens your portal automatically.
+            before you apply so your portal opens automatically after approval.
           </p>
         )}
       </section>

@@ -4,6 +4,8 @@ import { SiteChrome } from "@/components/site-chrome";
 import { FIRST_APP_NAME } from "@/lib/apps";
 import { isAmudSite } from "@/lib/site";
 import "./globals.css";
+import "../styles/polish-public.css";
+import "../styles/polish-portal.css";
 
 export const runtime = 'edge';
 

@@ -37,9 +37,10 @@ function RolePicker({
 }) {
   return (
     <div className="demo-role-picker" role="group" aria-label="Try a school role">
-      <p className="demo-role-picker__label">Choose a role to explore</p>
+      <p className="demo-role-picker__label">Choose a role</p>
       <p className="-mt-2 mb-4 text-sm leading-relaxed text-ink-muted">
-        Choose a role to explore Riverside Academy, a sample school on Guide.
+        Explore Riverside Academy, a sample school on Guide, as a teacher,
+        student, or school administrator.
       </p>
       <div className="demo-role-picker__grid">
         {DEMO_ROLES.map((role) => (
@@ -195,7 +196,7 @@ function StudentPortal({
     <DemoEmbedShell
       role="student"
       title={`Hi, ${session.displayName.student}`}
-      subtitle={`${session.schoolName} · Open apps your teachers added for class.`}
+      subtitle={`${session.schoolName} · Apps your teachers added for class`}
       accountName={session.displayName.student}
       onSwitchRole={onSwitchRole}
       chips={[
@@ -231,9 +232,9 @@ function StudentPortal({
           <h2 className="portal-section-title">My apps</h2>
           {apps.length === 0 ? (
             <div className="portal-empty">
-              <p className="portal-empty__title">Ready when your class is</p>
+              <p className="portal-empty__title">No apps yet</p>
               <p className="portal-empty__body">
-                When a teacher adds an app, it appears here for class.
+                Apps appear here when a teacher adds them to your class.
               </p>
             </div>
           ) : (
@@ -257,8 +258,8 @@ function StudentPortal({
             </ul>
           )}
           <p className="mt-4 text-sm text-ink-muted">
-            In your school account, apps open from My apps. Here they stay in
-            the preview.
+            In a school account, apps open directly from My apps. In this demo,
+            they stay on this page.
           </p>
         </section>
       ) : (
@@ -268,7 +269,7 @@ function StudentPortal({
             <div className="portal-tool-tile">
               <p className="text-base font-semibold text-forest-950">Messages</p>
               <p className="mt-1 text-sm leading-snug text-ink-muted">
-                Write to teachers of classes you joined.
+                Message the teachers of your classes.
               </p>
               <ul className="mt-3 space-y-2">
                 {session.messages.map((m) => (
@@ -290,10 +291,10 @@ function StudentPortal({
                 Suggestions
               </p>
               <p className="mt-1 text-sm leading-snug text-ink-muted">
-                Ideas and study prompts from Guide.
+                Study prompts and ideas from Guide.
               </p>
               <p className="mt-3 text-sm font-semibold text-forest-800">
-                2 new prompts ready
+                2 new prompts
               </p>
             </div>
           </div>
@@ -334,7 +335,7 @@ function TeacherPortal({
         classrooms: [room, ...session.classrooms],
       });
       setClassName("");
-      setNotice(`Created “${name}”. Next, add your students — each gets a username and password.`);
+      setNotice(`Created “${name}.” Next, add your students. Each student receives a username and password.`);
       setTab("classes");
     });
   }
@@ -363,7 +364,7 @@ function TeacherPortal({
           .find((c) => c.id === classroomId)
           ?.installedAppSlugs.includes(appSlug)
           ? "App removed from class."
-          : "App added — students will see it under My apps.",
+          : "App added. Students will see it under My apps.",
       );
     });
   }
@@ -372,7 +373,7 @@ function TeacherPortal({
     <DemoEmbedShell
       role="teacher"
       title={`Hi, ${session.displayName.teacher}`}
-      subtitle="Classes, apps, and messages — what students open next."
+      subtitle="Manage your classes, apps, and messages."
       accountName={session.displayName.teacher}
       onSwitchRole={onSwitchRole}
       chips={[
@@ -407,7 +408,7 @@ function TeacherPortal({
           <div>
             <h2 className="portal-section-title">Classes</h2>
             <p className="-mt-2 text-sm text-ink-muted">
-              Create a class, add your students, then pick apps.
+              Create a class, add your students, then choose apps.
             </p>
           </div>
           <div className="portal-panel space-y-3">
@@ -440,7 +441,7 @@ function TeacherPortal({
                     Invite · {room.inviteCode}
                     {room.installedAppSlugs.length
                       ? ` · ${room.installedAppSlugs.length} app${room.installedAppSlugs.length === 1 ? "" : "s"}`
-                      : " · pending apps"}
+                      : " · No apps yet"}
                   </p>
                 </div>
                 <span className="text-xs font-semibold text-forest-700">
@@ -457,16 +458,15 @@ function TeacherPortal({
           <div>
             <h2 className="portal-section-title">Apps</h2>
             <p className="-mt-2 text-sm text-ink-muted">
-              Add apps from the Guide library to a class. Students see them under
-              My apps.
+              Add apps from the Guide library to a class. Students see them
+              under My apps.
             </p>
           </div>
           {session.classrooms.length === 0 ? (
             <div className="portal-empty">
               <p className="portal-empty__title">Start with a class</p>
               <p className="portal-empty__body">
-                Create a class, then add apps so students see them under My
-                apps.
+                Create a class first, then add apps for your students.
               </p>
             </div>
           ) : (
@@ -517,7 +517,7 @@ function TeacherPortal({
         <section className="space-y-4">
           <h2 className="portal-section-title">Messages</h2>
           <p className="-mt-2 text-sm text-ink-muted">
-            Reach students in your classes. This demo shows a sample inbox.
+            Message students in your classes. This demo shows a sample inbox.
           </p>
           <div className="portal-panel space-y-3">
             {session.messages.map((m) => (
@@ -526,7 +526,7 @@ function TeacherPortal({
                 className="rounded-[8px] border border-line bg-sky-soft px-3 py-2 text-sm"
               >
                 <p className="font-semibold text-forest-950">
-                  Thread · {m.from}
+                  {m.from}
                 </p>
                 <p className="mt-0.5 text-ink-muted">{m.preview}</p>
               </div>
@@ -536,7 +536,7 @@ function TeacherPortal({
               className="btn-secondary"
               onClick={() =>
                 setNotice(
-                  "In your school account you message students in your classes. This preview stays on this page.",
+                  "In a school account, you can message students in your classes. Messages are not sent from this demo.",
                 )
               }
             >
@@ -591,7 +591,7 @@ function AdminPortal({
     });
     setEmailText("");
     setNotice(
-      `Added ${emails.length} teacher invite${emails.length === 1 ? "" : "s"} to this preview. Emails are not sent from the demo.`,
+      `Added ${emails.length} teacher invitation${emails.length === 1 ? "" : "s"}. Emails are not sent from this demo.`,
     );
     setTab("teachers");
   }
@@ -600,7 +600,7 @@ function AdminPortal({
     <DemoEmbedShell
       role="admin"
       title={`Hi, ${session.displayName.admin}`}
-      subtitle="Invite teachers and keep the school portal ready for classes."
+      subtitle="Invite teachers and oversee classes across your school."
       accountName={session.displayName.admin}
       onSwitchRole={onSwitchRole}
       chips={[
@@ -640,10 +640,10 @@ function AdminPortal({
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-[10px] border border-line bg-sky-soft p-4">
-              <p className="text-sm font-semibold text-forest-950">Engagement</p>
+              <p className="text-sm font-semibold text-forest-950">Learning apps</p>
               <p className="mt-1 text-sm leading-snug text-ink-muted">
-                Students open learning apps from My apps. Teachers add apps per
-                class so the portal feels inviting and used.
+                Teachers add apps to each class. Students open them from My
+                apps.
               </p>
             </div>
             <div className="rounded-[10px] border border-line bg-sky-soft p-4">
@@ -651,8 +651,8 @@ function AdminPortal({
                 Classroom management
               </p>
               <p className="mt-1 text-sm leading-snug text-ink-muted">
-                Classes, students, and teacher invites stay in one
-                professional school portal.
+                Classes, students, and teacher invitations are managed in one
+                school portal.
               </p>
             </div>
           </div>
@@ -661,7 +661,7 @@ function AdminPortal({
             className="btn-primary"
             onClick={() => setTab("teachers")}
           >
-            Invite teachers →
+            Invite teachers
           </button>
         </section>
       ) : null}
@@ -671,8 +671,8 @@ function AdminPortal({
           <div>
             <h2 className="portal-section-title">Invite teachers</h2>
             <p className="-mt-2 text-sm text-ink-muted">
-              Enter work emails (one per line). Each teacher gets a setup link
-              for their Teacher Portal.
+              Enter work email addresses, one per line. Each teacher receives a
+              link to set up their account.
             </p>
           </div>
           <div className="portal-panel space-y-3">
@@ -716,7 +716,7 @@ function AdminPortal({
         <section className="space-y-4">
           <h2 className="portal-section-title">Classes across the school</h2>
           <p className="-mt-2 text-sm text-ink-muted">
-            High-level view — teachers own day-to-day class setup.
+            A school-wide view. Teachers manage day-to-day class setup.
           </p>
           <div className="rounded-[10px] border border-line">
             {session.classrooms.map((room) => (
@@ -725,7 +725,9 @@ function AdminPortal({
                   <p className="font-semibold text-forest-950">{room.name}</p>
                   <p className="text-xs text-ink-muted">
                     Code {room.inviteCode} ·{" "}
-                    {room.installedAppSlugs.length || "no"} apps
+                    {room.installedAppSlugs.length === 0
+                      ? "No apps"
+                      : `${room.installedAppSlugs.length} app${room.installedAppSlugs.length === 1 ? "" : "s"}`}
                   </p>
                 </div>
                 <span className="text-xs font-semibold text-forest-700">
@@ -740,7 +742,7 @@ function AdminPortal({
   );
 }
 
-/** Interactive school demo — sandboxed role walkthrough (no Neon writes). */
+/** Interactive school demo — sandboxed role walkthrough (no database writes). */
 export function SchoolDemo() {
   const [role, setRole] = useState<DemoRole | null>(null);
   const [session, setSession] = useState<DemoSession>(() => createDemoSession());
@@ -759,33 +761,39 @@ export function SchoolDemo() {
   function resetSession() {
     setSession(createDemoSession());
     setRole(null);
-    setToast("Back to roles — pick one to continue.");
+    setToast("The demo has been reset. Choose a role to continue.");
   }
 
   return (
     <div className="demo-desktop-stage content-band portal-page__inner">
       <header className="mb-8 max-w-3xl lg:mb-10">
-        <p className="eyebrow">For schools · Demo</p>
+        <p className="eyebrow">School demo</p>
         <h1 className="display-feature mt-2 lg:mt-3">
-          Try Guide as your school
+          See Guide from every role
         </h1>
         <p className="mt-3 text-[1.02rem] leading-relaxed text-ink-muted lg:mt-4 lg:text-lg lg:max-w-2xl">
-          Explore Guide as a teacher, student, or school administrator. This is
-          a sample school preview — your real school account opens after you
-          apply. When you are ready, book a meeting or apply for your school.
+          Explore Guide as a teacher, student, or school administrator in a
+          sample school. Nothing you do here is saved. When you are ready,
+          book a meeting or apply for your school.
         </p>
-        <p className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold text-forest-800">
-          <Link href="/schools/meeting">Book a meeting →</Link>
-          <Link href="/education#apply">Apply for your school →</Link>
-          <Link href="/auth/sign-in?as=educator">Teacher log in →</Link>
+        <p className="hero-secondary-links mt-4">
+          <Link href="/schools/meeting">Book a meeting</Link>
+          <span aria-hidden className="hero-secondary-links__dot">
+            ·
+          </span>
+          <Link href="/education#apply">Apply for your school</Link>
+          <span aria-hidden className="hero-secondary-links__dot">
+            ·
+          </span>
+          <Link href="/auth/sign-in?as=educator">Teacher log in</Link>
         </p>
       </header>
 
       {role !== null ? (
         <div className="demo-sandbox-banner" role="status">
           <p className="demo-sandbox-banner__text">
-            <strong>Sample school preview.</strong> Viewing the{" "}
-            {demoRoleLabel(role)} portal at {session.schoolName}.
+            <strong>Demo:</strong> {demoRoleLabel(role)} ·{" "}
+            {session.schoolName}. Changes are not saved.
           </p>
           <button
             type="button"
@@ -816,7 +824,7 @@ export function SchoolDemo() {
           onSwitchRole={resetRole}
           onOpenApp={(name) =>
             setToast(
-              `${name} opens from My apps in your school account. This preview stays on this page.`,
+              `In a school account, ${name} opens from My apps. In this demo, it stays on this page.`,
             )
           }
         />

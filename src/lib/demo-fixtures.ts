@@ -54,22 +54,22 @@ export const DEMO_ROLES: {
 }[] = [
   {
     id: "teacher",
-    tryAs: "Try as Teacher",
+    tryAs: "Try as a teacher",
     portalLabel: "Teacher portal",
     blurb: "Create classes, add learning apps, and follow student progress.",
     hint: "Create a class · add an app · open messages",
   },
   {
     id: "student",
-    tryAs: "Try as Student",
+    tryAs: "Try as a student",
     portalLabel: "Student portal",
     blurb: "Open My apps — the learning tools your teacher added for class.",
     hint: "Open an app · check messages",
   },
   {
     id: "admin",
-    tryAs: "Try as School administrator",
-    portalLabel: "School administrator",
+    tryAs: "Try as a school administrator",
+    portalLabel: "School administrator portal",
     blurb: "Invite teachers by email and keep the school organized.",
     hint: "Invite a teacher · review classes",
   },

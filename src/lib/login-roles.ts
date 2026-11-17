@@ -91,7 +91,7 @@ export function loginAsCopy(as: LoginAs): {
     case "official":
       return {
         title: "Guide Official",
-        subtitle: "Sign in with your Guide Official account.",
+        subtitle: "Log in with your Guide Official account.",
         joinHref: null,
         joinLabel: null,
       };
@@ -105,9 +105,9 @@ export function loginAsCopy(as: LoginAs): {
     case "learner":
     default:
       return {
-        title: "Amud log in",
+        title: "Log in to Amud",
         subtitle:
-          "Save Test Yourself scores and notes. No school login required — Amud is for everyone.",
+          "Save Test Yourself scores and notes. No school account is required; Amud is open to everyone.",
         joinHref: "/auth/sign-up?as=learner",
         joinLabel: "Create an Amud account",
       };
@@ -123,9 +123,9 @@ export function signupAsCopy(as: LoginAs): {
   switch (as) {
     case "student":
       return {
-        title: "Join as a Student",
+        title: "Student accounts",
         subtitle:
-          "Choose your school and create an account. Then join class from Account.",
+          "Your teacher or school administrator creates your account.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -133,22 +133,22 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "School administrator",
         subtitle:
-          "Teachers are invited by their school — use Log in instead. Administrators can apply for Guide.",
+          "Teachers are invited by their school and can log in from the Log in menu. School administrators can apply to bring their school to Guide.",
         roleValue: "customer",
         showRoleChooser: false,
       };
     case "official":
       return {
         title: "Guide Official",
-        subtitle: "Sign in with your Guide Official account.",
+        subtitle: "Log in with your Guide Official account.",
         roleValue: "moderator",
         showRoleChooser: false,
       };
     case "developer":
       return {
-        title: "Developer partner",
+        title: "Developer",
         subtitle:
-          "Create an account after you apply and Guide Official verifies you.",
+          "Create an account to apply. The Guide team reviews every developer before apps go live.",
         roleValue: "customer",
         showRoleChooser: false,
       };
@@ -157,7 +157,7 @@ export function signupAsCopy(as: LoginAs): {
       return {
         title: "Create an Amud account",
         subtitle:
-          "Keep Test Yourself scores and notes after you learn. No school login required — Amud is for everyone.",
+          "Keep your Test Yourself scores and notes. No school account is required; Amud is open to everyone.",
         roleValue: "customer",
         showRoleChooser: false,
       };

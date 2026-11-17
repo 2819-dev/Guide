@@ -47,7 +47,7 @@ const FEATURES: Feature[] = [
   {
     eyebrow: "For teachers",
     title: "Run every class from one place",
-    body: "Create classes, add the apps your students need, and see who is active today. Invite co-teachers by email — no IT ticket required.",
+    body: "Create classes, add your students, and choose the apps each class uses. Students see the apps you add as soon as they log in.",
     link: { href: "/education", label: "See how schools use Guide" },
     art: TeacherClassArt,
     shape: "leaf",
@@ -55,8 +55,8 @@ const FEATURES: Feature[] = [
   },
   {
     eyebrow: "For students",
-    title: "One login. Everything for class.",
-    body: "Students find their school, log in once, and land on a calm portal with their apps and messages from teachers. It works on a Chromebook, a tablet, or a phone.",
+    title: "One login for everything in class",
+    body: "Students find their school, log in once, and see the apps their teachers have added, along with messages from their teachers. Guide works on Chromebooks, tablets, and phones.",
     link: { href: "/auth/sign-in?as=student", label: "Log in as a student" },
     art: StudentTabletArt,
     shape: "arch",
@@ -64,17 +64,17 @@ const FEATURES: Feature[] = [
   },
   {
     eyebrow: "Learning apps",
-    title: "Apps that keep attention",
-    body: "Host a live Blitz in seconds, and add more learning apps as your school grows. Every app opens from the student's portal — no extra passwords.",
+    title: "A growing library of learning apps",
+    body: "Teachers add apps to a class, and students open them from their portal without another password. Blitz, for live classroom quizzes, is available now, with more apps on the way.",
     link: { href: "/apps", label: "Browse the app library" },
     art: QuizClassArt,
     shape: "blob",
     accent: "forest",
   },
   {
-    eyebrow: "For administrators",
-    title: "Set up your school in days, not months",
-    body: "Apply once. Guide Official reviews every school before it goes live, then you invite your teachers and they add their classes.",
+    eyebrow: "For school administrators",
+    title: "Bring your whole school onto Guide",
+    body: "Apply once. The Guide team reviews every school before it goes live. After approval, you invite your teachers and they set up their classes.",
     link: { href: "/schools/meeting", label: "Book a meeting" },
     art: AdminSchoolArt,
     shape: "petal",
@@ -86,48 +86,48 @@ const STEPS = [
   {
     n: "1",
     t: "Your school applies",
-    d: "An administrator tells us about the school. It takes about five minutes.",
+    d: "A school administrator submits a short application. It takes about five minutes.",
   },
   {
     n: "2",
-    t: "Guide Official approves",
-    d: "We review every school so students only ever meet trusted people and apps.",
+    t: "Guide reviews the application",
+    d: "The Guide team reviews each application and confirms the school before it goes live.",
   },
   {
     n: "3",
     t: "Teachers and students join",
-    d: "Teachers accept their email invite. Students find their school and log in.",
+    d: "Teachers accept their email invitation. Students find their school and log in.",
   },
 ];
 
 const AUDIENCES = [
   {
     t: "Students",
-    d: "Log in to your school's portal.",
+    d: "Log in to your school’s portal.",
     href: "/auth/sign-in?as=student",
     cta: "Student log in",
   },
   {
     t: "Teachers",
-    d: "Use the invite from your school.",
+    d: "Log in to manage your classes.",
     href: "/auth/sign-in?as=educator",
     cta: "Teacher log in",
   },
   {
-    t: "Administrators",
+    t: "School administrators",
     d: "Bring Guide to your school.",
     href: "/education",
     cta: "Apply for your school",
   },
   {
     t: "Developers",
-    d: "Put your app in front of classrooms.",
+    d: "Publish your app to schools on Guide.",
     href: "/developers/apply",
-    cta: "Partner with Guide",
+    cta: "Apply as a developer",
   },
 ];
 
-/** Guide marketing home — Clever-style structure, Guide's forest brand. */
+/** Guide marketing home. */
 function GuideHomePage() {
   return (
     <div className="guide-home">
@@ -135,11 +135,13 @@ function GuideHomePage() {
         <div className="content-band gh-hero__grid">
           <div className="gh-hero__copy">
             <h1 className="display-hero">
-              Keep every student <span className="sun-underline">engaged</span>
+              One <span className="sun-underline">login</span> for every app
+              your school uses
             </h1>
             <p className="hero-lede">
-              Guide gives teachers one place to run their classes and gives
-              students one login for every learning app their school uses.
+              Students sign in once and open the apps their classes use.
+              Teachers and school administrators manage classes and rosters in
+              one place.
             </p>
             <div className="gh-hero__ctas">
               <Link href="/auth/sign-in?as=student" className="btn-hero-bar">
@@ -177,8 +179,9 @@ function GuideHomePage() {
           <div className="gh-section-head">
             <h2 className="display-section">What is Guide?</h2>
             <p className="gh-section-lede">
-              A school platform for classroom management and learning apps.
-              Every school is reviewed before it goes live.
+              Guide is a school platform that brings classes, rosters, and
+              learning apps together behind a single sign-in. Every school is
+              reviewed before it goes live.
             </p>
           </div>
           <ol className="gh-steps__list">
@@ -212,7 +215,7 @@ function GuideHomePage() {
               <p className="clever-feature__body">{f.body}</p>
               <Link href={f.link.href} className="clever-feature__link">
                 {f.link.label}
-                <span aria-hidden>→</span>
+                <ArrowIcon size={14} />
               </Link>
             </div>
           </div>
@@ -221,7 +224,7 @@ function GuideHomePage() {
 
       <section className="gh-audiences">
         <div className="content-band">
-          <h2 className="display-feature text-center">Find your way in</h2>
+          <h2 className="display-feature text-center">Choose how you use Guide</h2>
           <ul className="gh-audiences__grid">
             {AUDIENCES.map((a) => (
               <li key={a.t}>
@@ -245,7 +248,7 @@ function GuideHomePage() {
               Bring Guide to your school
             </h2>
             <p className="gh-cta__lede">
-              Apply in about five minutes, or talk with us first.
+              Apply in about five minutes, or talk with our team first.
             </p>
           </div>
           <div className="gh-cta__buttons">

@@ -6,7 +6,7 @@ export const runtime = "edge";
 export const metadata = {
   title: "Book a meeting · Guide",
   description:
-    "Request a walkthrough with the Guide team — engaged students and well-managed classrooms.",
+    "Request a walkthrough of Guide with the Guide team.",
 };
 
 export default function BookMeetingPage() {
@@ -20,12 +20,11 @@ export default function BookMeetingPage() {
               Book a meeting
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-[1.65] text-ink-muted lg:text-lg">
-              Walk through classes, teacher invites, and My apps with the Guide
-              team — so your school can keep students engaged and classrooms
-              well managed.
+              Meet with the Guide team for a walkthrough of classes, teacher
+              invitations, and the apps students open from My apps.
             </p>
             <p className="hero-secondary-links mt-6 justify-center">
-              <Link href="/schools/demo">Demo</Link>
+              <Link href="/schools/demo">See a demo</Link>
               <span aria-hidden className="hero-secondary-links__dot">
                 ·
               </span>
