@@ -86,4 +86,4 @@ export function planForPriceId(
 }
 
 export const BILLING_NOT_CONFIGURED_MESSAGE =
-  "Payments aren’t set up yet. You can still redeem a code, or check back soon.";
+  "Payments coming soon. You can still redeem a code from Guide.";

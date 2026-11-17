@@ -252,9 +252,9 @@ export function UpgradeView(props: UpgradeViewProps) {
 
       {!props.checkoutReady ? (
         <div role="note" className="rounded-2xl border border-[#ffc93c]/60 bg-[#ffc93c]/10 px-4 py-3">
-          <p className="m-0 font-bold text-[#ffe9ad]">Payments aren’t set up yet</p>
+          <p className="m-0 font-bold text-[#ffe9ad]">Payments coming soon</p>
           <p className="m-0 mt-0.5 text-sm text-[#fff1c9]">
-            Paid plans will open here soon. Have a code from Guide? Redeem it below.
+            You’ll be able to buy Plus and Ultra here soon. Have a code from Guide? Redeem it below.
           </p>
         </div>
       ) : null}
@@ -335,7 +335,7 @@ export function UpgradeView(props: UpgradeViewProps) {
             } else if (!canBuy) {
               action = (
                 <span className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-dashed border-white/25 text-sm font-bold text-indigo-100">
-                  Not available yet
+                  Coming soon
                 </span>
               );
             } else {

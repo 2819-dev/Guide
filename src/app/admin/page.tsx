@@ -73,7 +73,7 @@ async function BlitzOfficialCard() {
           Grant a plan
         </Link>
         <span className="text-sm text-ink-muted">
-          {payments ? "Stripe payments are on." : "Stripe payments aren’t set up yet. Codes and grants still work."}
+          {payments ? "Stripe payments are on." : "Payments coming soon (Stripe not connected yet). Codes and grants still work."}
         </span>
       </div>
     </div>

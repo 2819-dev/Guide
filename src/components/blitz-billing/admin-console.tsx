@@ -582,7 +582,7 @@ export function AdminConsole(props: AdminConsoleProps) {
     <div className="flex flex-col gap-5">
       {!props.stripe.checkout ? (
         <p role="note" className="m-0 rounded-xl border border-[#ffc93c]/60 bg-[#ffc93c]/10 px-4 py-3 text-sm text-[#ffe9ad]">
-          <strong className="text-[#ffc93c]">Payments aren’t set up yet.</strong>{" "}
+          <strong className="text-[#ffc93c]">Payments coming soon.</strong>{" "}
           {props.stripe.configured
             ? "The Stripe key is set, but no STRIPE_PRICE_* ids are. Teachers can’t check out until they are."
             : "Free-upgrade codes and granted plans work now. Add the Stripe keys to turn on checkout and discount codes."}

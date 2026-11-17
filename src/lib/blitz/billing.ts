@@ -99,7 +99,7 @@ export async function createCheckoutSession(opts: {
       ok: false,
       status: 503,
       code: "billing_not_configured",
-      error: "Payments aren’t set up yet.",
+      error: "Payments coming soon.",
     };
   }
 
@@ -144,7 +144,7 @@ export async function createPortalSession(
 ): Promise<{ ok: true; url: string } | { ok: false; status: number; error: string; code?: string }> {
   const stripe = getStripe();
   if (!stripe) {
-    return { ok: false, status: 503, code: "billing_not_configured", error: "Payments aren’t set up yet." };
+    return { ok: false, status: 503, code: "billing_not_configured", error: "Payments coming soon." };
   }
   const customer = await getStripeCustomerId(profileId);
   if (!customer) {
