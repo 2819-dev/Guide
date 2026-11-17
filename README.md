@@ -48,7 +48,7 @@ Deploys run from GitHub Actions (`.github/workflows/deploy-pages.yml`) with
 
 One-time setup: add the repository secret `CLOUDFLARE_API_TOKEN`
 (Account · Cloudflare Pages · Edit). Runtime secrets (`DATABASE_URL`, Neon Auth,
-`RESEND_API_KEY`) live in the Pages project settings, not in GitHub.
+`RESEND_API_KEY`, `ANTHROPIC_API_KEY` for the Guide Assistant live chat) live in the Pages project settings, not in GitHub.
 
 ## Checks
 

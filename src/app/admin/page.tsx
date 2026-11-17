@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
+import { AdminLiveChatPanel } from "@/components/admin-live-chat-panel";
 import { AdminDevelopersPanel } from "@/components/admin-developers-panel";
 import { AdminMeetingsPanel } from "@/components/admin-meetings-panel";
 import { AdminRoleBadgesPanel } from "@/components/admin-role-badges-panel";
@@ -101,6 +102,7 @@ export default async function AdminPage() {
       subtitle="Approve schools and partners, follow up on meetings, and manage Roles and Suggestions."
       chips={[
         { href: "#schools", label: "Schools", active: true },
+        { href: "#live-chat", label: "Live chat" },
         { href: "#meetings", label: "Meetings" },
         { href: "#developers", label: "Developers" },
         { href: "#roles", label: "Roles" },
@@ -116,6 +118,14 @@ export default async function AdminPage() {
         lede="Approve a school so its administrator can create classes, add students, and invite teachers. They get an email either way."
       >
         <AdminSchoolsPanel />
+      </OfficialSection>
+
+      <OfficialSection
+        id="live-chat"
+        title="Live chat"
+        lede="Guide Assistant (AI) answers the chat bubble on every Guide page and hands off to you when someone needs a person. Reply to take over."
+      >
+        <AdminLiveChatPanel />
       </OfficialSection>
 
       <OfficialSection

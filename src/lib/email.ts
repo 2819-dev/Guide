@@ -192,3 +192,24 @@ function escapeHtml(s: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
+
+/** Tell Guide Officials a live chat is waiting for a person. */
+export async function sendChatHandoffEmail(opts: {
+  to: string[];
+  visitor: string;
+  reason: string;
+  preview: string;
+}): Promise<SendEmailResult> {
+  const panel = `${guidePublicUrl()}/admin#live-chat`;
+  return sendEmail({
+    to: opts.to,
+    subject: `Live chat: ${opts.visitor} is waiting for the Guide team`,
+    html: shell(`
+      <p style="margin:0 0 14px"><strong>${escapeHtml(opts.visitor)}</strong> asked for a person in Guide live chat.</p>
+      <p style="margin:0 0 14px">${escapeHtml(opts.reason)}</p>
+      <p style="margin:0 0 18px;color:${EMAIL_MUTED};font-size:14px">Last message: “${escapeHtml(opts.preview)}”</p>
+      <p style="margin:0"><a href="${panel}" style="display:inline-block;background:${EMAIL_PRIMARY};color:#fff;text-decoration:none;padding:12px 22px;font-family:system-ui,sans-serif;font-weight:600;border-radius:8px">Open live chat</a></p>
+    `),
+    text: `${opts.visitor} is waiting in Guide live chat. ${opts.reason} Open: ${panel}`,
+  });
+}

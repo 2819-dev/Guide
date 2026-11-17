@@ -5,6 +5,7 @@ import { AmudFooter } from "@/components/amud-footer";
 import { AmudHeader } from "@/components/amud-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { SupportChatWidget } from "@/components/support-chat-widget";
 import { isAmudPublicPath, isAmudSite } from "@/lib/site";
 
 /** Portal routes own Clever top-bar chrome — skip marketing header/footer. */
@@ -48,7 +49,12 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   }
 
   if (bare) {
-    return <main className="flex-1">{children}</main>;
+    return (
+      <>
+        <main className="flex-1">{children}</main>
+        <SupportChatWidget />
+      </>
+    );
   }
 
   return (
@@ -56,6 +62,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       <SiteHeader />
       <main className="flex-1">{children}</main>
       <SiteFooter />
+      <SupportChatWidget />
     </>
   );
 }
