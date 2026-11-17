@@ -101,6 +101,11 @@ function SignInForm() {
             ) : null
           }
         >
+          {params.get("reset") === "1" ? (
+            <p className="mb-4 rounded-[10px] border border-forest-200 bg-forest-100 px-3 py-2 text-sm text-forest-900">
+              Password updated. Log in with your new password.
+            </p>
+          ) : null}
           <form action={formAction} className="space-y-4">
             <input type="hidden" name="as" value={as} />
             <label className="block text-sm font-semibold text-forest-900">
@@ -142,6 +147,16 @@ function SignInForm() {
             >
               {pending ? "Signing in…" : "Log in"}
             </button>
+            {!isLearner ? (
+              <p className="text-center text-sm">
+                <Link
+                  href={`/auth/forgot-password?as=${as}`}
+                  className="font-semibold text-forest-800 hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </p>
+            ) : null}
           </form>
           {isEducator ? (
             <p className="mt-4 text-center text-sm text-ink-muted">
