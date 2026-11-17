@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminDeleteButton } from "@/components/admin-delete-button";
 import { useEffect, useState } from "react";
 
 type Meeting = {
@@ -149,6 +150,11 @@ export function AdminMeetingsPanel() {
             >
               Email
             </a>
+            <AdminDeleteButton
+              url={`/api/meetings?id=${r.id}`}
+              what={`the meeting request from ${r.organization}`}
+              onDeleted={() => void load()}
+            />
           </div>
         </article>
       ))}

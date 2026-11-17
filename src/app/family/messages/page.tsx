@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
-export default function FamilyMessagesRemoved() {
-  redirect("/student/messages");
+/** Family portal was removed; old links go to the homepage. */
+export default function FamilyRemovedPage() {
+  redirect("/");
 }

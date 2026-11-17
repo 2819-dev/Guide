@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminDeleteButton } from "@/components/admin-delete-button";
 import { useEffect, useState } from "react";
 
 type Ticket = {
@@ -113,6 +114,11 @@ export function AdminSupportPanel() {
                   </select>
                 </div>
                 <p className="text-sm leading-relaxed text-ink-muted">{t.body}</p>
+                <AdminDeleteButton
+                  url={`/api/admin/support?id=${t.id}`}
+                  what={`help request ${t.ticketNumber}`}
+                  onDeleted={() => void load()}
+                />
               </li>
             ))}
           </ul>

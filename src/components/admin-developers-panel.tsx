@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminDeleteButton } from "@/components/admin-delete-button";
 import { useEffect, useState } from "react";
 
 type Application = {
@@ -137,6 +138,11 @@ export function AdminDevelopersPanel() {
               </button>
             </div>
           ) : null}
+          <AdminDeleteButton
+            url={`/api/developers/applications?id=${a.id}`}
+            what="this developer application"
+            onDeleted={() => void load()}
+          />
         </article>
       ))}
     </div>

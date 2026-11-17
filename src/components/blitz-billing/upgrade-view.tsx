@@ -274,6 +274,7 @@ export function UpgradeView(props: UpgradeViewProps) {
               Pick what fits your class
             </h2>
           </div>
+          {props.checkoutReady ? (
           <div role="radiogroup" aria-label="Billing period" className="inline-flex rounded-full border border-white/15 bg-white/[0.06] p-1">
             {(["month", "year"] as const).map((iv) => (
               <button
@@ -293,6 +294,7 @@ export function UpgradeView(props: UpgradeViewProps) {
               </button>
             ))}
           </div>
+          ) : null}
         </div>
 
         <ul className="m-0 grid list-none gap-4 p-0 md:grid-cols-3">
@@ -374,15 +376,22 @@ export function UpgradeView(props: UpgradeViewProps) {
                   </div>
                   <p className="m-0 mt-1 text-sm text-indigo-100">{display.tagline}</p>
                 </div>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-4xl font-black tracking-tight text-white">
-                    {paid ? fmtUsd(price) : "$0"}
-                  </span>
-                  <span className="text-sm font-semibold text-indigo-200">
-                    {paid ? (interval === "month" ? "/ month" : "/ year") : "forever"}
-                  </span>
-                </div>
-                {paid && interval === "year" ? (
+                {/* Prices stay hidden until payments are connected (placeholders). */}
+                {paid && !props.checkoutReady ? (
+                  <p className="m-0 text-2xl font-black tracking-tight text-white">
+                    Pricing soon
+                  </p>
+                ) : (
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-4xl font-black tracking-tight text-white">
+                      {paid ? fmtUsd(price) : "$0"}
+                    </span>
+                    <span className="text-sm font-semibold text-indigo-200">
+                      {paid ? (interval === "month" ? "/ month" : "/ year") : "forever"}
+                    </span>
+                  </div>
+                )}
+                {paid && props.checkoutReady && interval === "year" ? (
                   <p className="-mt-3 m-0 text-xs font-semibold text-[#d8f99a]">
                     ≈ {fmtUsd(Math.round((display.yearlyUsd / 12) * 100) / 100)} / month
                   </p>
@@ -405,9 +414,11 @@ export function UpgradeView(props: UpgradeViewProps) {
             );
           })}
         </ul>
-        <p className="m-0 text-xs text-indigo-200">
-          Prices in USD. Subscriptions renew automatically; cancel anytime and keep your plan until the end of the period. Discount codes go in at checkout.
-        </p>
+        {props.checkoutReady ? (
+          <p className="m-0 text-xs text-indigo-200">
+            Prices in USD. Subscriptions renew automatically; cancel anytime and keep your plan until the end of the period. Discount codes go in at checkout.
+          </p>
+        ) : null}
       </section>
 
       {/* Redeem */}

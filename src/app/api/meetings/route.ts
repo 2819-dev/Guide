@@ -101,3 +101,18 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Could not update" }, { status: 500 });
   }
 }
+
+/** Official-only: permanently remove a test/spam entry. */
+export async function DELETE(request: Request) {
+  const authz = await requireProfile(["admin", "moderator"]);
+  if (!authz) {
+    return NextResponse.json({ error: "Access required" }, { status: 403 });
+  }
+  const id = new URL(request.url).searchParams.get("id") ?? "";
+  if (!/^[0-9a-f-]{36}$/i.test(id)) {
+    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  }
+  const db = getDb();
+  await db.delete(meetingRequests).where(eq(meetingRequests.id, id));
+  return NextResponse.json({ ok: true });
+}

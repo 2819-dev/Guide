@@ -487,3 +487,29 @@ function friendlyFieldError(error: z.ZodError): string {
   }
   return `Please check “${label}”.`;
 }
+
+/** Official-only: permanently remove a test/spam entry. */
+export async function DELETE(request: Request) {
+  const authz = await requireProfile(["admin", "moderator"]);
+  if (!authz) {
+    return NextResponse.json({ error: "Access required" }, { status: 403 });
+  }
+  const id = new URL(request.url).searchParams.get("id") ?? "";
+  if (!/^[0-9a-f-]{36}$/i.test(id)) {
+    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  }
+  const db = getDb();
+  const [row] = await db
+    .select({ status: schoolApplications.status })
+    .from(schoolApplications)
+    .where(eq(schoolApplications.id, id))
+    .limit(1);
+  if (row?.status === "approved") {
+    return NextResponse.json(
+      { error: "Approved schools can’t be deleted here (they may have classes and students)." },
+      { status: 400 },
+    );
+  }
+  await db.delete(schoolApplications).where(eq(schoolApplications.id, id));
+  return NextResponse.json({ ok: true });
+}

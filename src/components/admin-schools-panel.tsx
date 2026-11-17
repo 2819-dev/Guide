@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminDeleteButton } from "@/components/admin-delete-button";
 import { useEffect, useState } from "react";
 
 type Application = {
@@ -143,6 +144,11 @@ export function AdminSchoolsPanel() {
                       >
                         Reject
                       </button>
+                      <AdminDeleteButton
+                        url={`/api/education/applications?id=${a.id}`}
+                        what={`the application for “${applicationTitle(a)}”`}
+                        onDeleted={() => void load()}
+                      />
                     </div>
                   </div>
                   <p className="text-sm text-ink">{a.intendedUse}</p>
@@ -169,9 +175,18 @@ export function AdminSchoolsPanel() {
                         {a.kind === "teacher" ? "Teacher" : "School"}
                       </p>
                     </div>
-                    <p className="mt-1 text-sm text-ink-muted">
-                      {a.contactName} · {a.contactEmail}
-                    </p>
+                    <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-sm text-ink-muted">
+                        {a.contactName} · {a.contactEmail}
+                      </p>
+                      {a.status !== "approved" ? (
+                        <AdminDeleteButton
+                          url={`/api/education/applications?id=${a.id}`}
+                          what={`the application for “${applicationTitle(a)}”`}
+                          onDeleted={() => void load()}
+                        />
+                      ) : null}
+                    </div>
                   </li>
                 ))}
               </ul>
