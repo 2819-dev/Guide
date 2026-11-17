@@ -172,8 +172,8 @@ export function AdminLiveChatPanel() {
     <div className="space-y-4">
       {!aiConfigured ? (
         <p className="rounded-[10px] border border-amber-300 bg-amber-50 px-3.5 py-3 text-sm leading-snug text-amber-900">
-          Guide Assistant is not connected. Add the <code>ANTHROPIC_API_KEY</code> secret in Cloudflare
-          Pages to turn it on. Until then, every chat goes directly to the Guide team.
+          Guide Assistant is not connected to Cloudflare Workers AI on this deployment, so every chat
+          goes directly to the Guide team.
         </p>
       ) : null}
       {error ? (
