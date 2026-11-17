@@ -348,7 +348,7 @@ export function SupportChatWidget() {
             ) : null}
             {showEmailAsk ? (
               <form className="gchat-email" onSubmit={saveEmail}>
-                <label htmlFor="gchat-email">Email address (optional). We'll follow up by email if you've left the chat.</label>
+                <label htmlFor="gchat-email">Email address (optional). We&apos;ll follow up by email if you&apos;ve left the chat.</label>
                 <div className="gchat-email__row">
                   <input
                     id="gchat-email"

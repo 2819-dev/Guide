@@ -55,7 +55,7 @@ export const metadata: Metadata = amud
         template: `%s · ${FIRST_APP_NAME}`,
       },
       description:
-        "Amud — Mishnayos and Gemara. Open a daf, Test Yourself, and keep your notes. For everyone.",
+        "Amud: read Mishnayos and Gemara, test yourself, and keep your notes.",
     }
   : {
       title: {
@@ -63,7 +63,7 @@ export const metadata: Metadata = amud
         template: "%s · Guide",
       },
       description:
-        "Guide — keep students engaged and classrooms well managed. Learning apps and class tools for schools.",
+        "Guide gives schools one login for every learning app, with classes and rosters managed in one place.",
     };
 
 export default function RootLayout({

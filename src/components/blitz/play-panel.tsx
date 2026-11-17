@@ -28,10 +28,10 @@ import {
 type Props = { gameId: string; playerId: string };
 
 const LINES = {
-  correct: ["Nailed it!", "Zap!", "On fire!", "Brilliant!", "Yes!!"],
-  wrong: ["Not quite", "So close", "Shake it off", "Next one’s yours"],
-  late: ["Too slow!", "Time’s up!"],
-  neutral: ["Got it!", "Noted!", "Thanks!"],
+  correct: ["Correct!", "Nice work!", "Well done!", "Great answer!", "Excellent!"],
+  wrong: ["Not quite", "Almost", "Keep going", "Next one’s yours"],
+  late: ["Time’s up", "Out of time"],
+  neutral: ["Answer received", "Thanks for answering", "Response saved"],
 };
 
 function pick(list: string[], n: number) {
@@ -75,10 +75,10 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
         body: JSON.stringify({ kind: "answer", payload }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not submit");
+      if (!res.ok) throw new Error(data.error ?? "Could not submit your answer. Try again.");
       if (data.game) setGame(data.game);
     } catch (e) {
-      setSubmitError(e instanceof Error ? e.message : "Submit failed");
+      setSubmitError(e instanceof Error ? e.message : "Could not submit your answer. Try again.");
     } finally {
       setBusy(false);
     }
@@ -89,10 +89,10 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
       <BlitzStage>
         <div className="bz-center">
           <BlitzBolt size={64} className="bz-spinner-bolt" />
-          <p className="bz-muted">{error ?? "Joining…"}</p>
+          <p className="bz-muted">{error ?? "Joining the game…"}</p>
           {error ? (
             <Link href="/apps/blitz/join" className="bz-btn bz-btn--primary no-underline">
-              Back to join
+              Enter a different PIN
             </Link>
           ) : null}
         </div>
@@ -107,7 +107,7 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
       <BlitzStage theme={theme}>
         <div className="bz-phone">
           <div className="bz-center">
-            <h1 className="bz-h1">You’re out of this one</h1>
+            <h1 className="bz-h1">You’ve been removed</h1>
             <p className="bz-muted">The host removed you from the game.</p>
             <Link href="/apps/blitz/join" className="bz-btn bz-btn--primary no-underline">
               Join another game
@@ -179,7 +179,7 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
             ) : null}
             <p className="bz-faint">
               {game.players.filter((p) => !p.kicked).length} players · {game.questions.length} questions ·{" "}
-              {gameMode(game.settings) === "accuracy" ? "Accuracy mode" : gameMode(game.settings) === "team" ? "Team battle" : "Classic"}
+              {gameMode(game.settings) === "accuracy" ? "Accuracy mode" : gameMode(game.settings) === "team" ? "Team battle" : "Classic mode"}
             </p>
           </div>
         ) : null}
@@ -198,10 +198,10 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
           myAnswer ? (
             <div className="bz-center">
               <BlitzBolt size={96} className="bz-spinner-bolt" />
-              <h1 className="bz-h1">Locked in!</h1>
+              <h1 className="bz-h1">Answer submitted</h1>
               <p className="bz-feedback-sub">
-                {myAnswer.responseMs < question.timeLimitSec * 300 ? "Lightning fingers. " : ""}
-                Eyes on the big screen…
+                {myAnswer.responseMs < question.timeLimitSec * 300 ? "Fast answer. " : ""}
+                Watch the main screen for results.
               </p>
             </div>
           ) : (
@@ -209,12 +209,12 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
               <TimerBar startedAtMs={game.questionStartedAtMs} limitSec={question.timeLimitSec} skewMs={skewMs} />
               <div className="flex items-center justify-between gap-2">
                 <span className="bz-kicker">
-                  {game.questionIndex + 1}/{game.questions.length} · {BLITZ_TYPE_LABEL[question.type]}
+                  Question {game.questionIndex + 1} of {game.questions.length} · {BLITZ_TYPE_LABEL[question.type]}
                 </span>
                 {question.points === 2000 ? <span className="bz-chip bz-chip--sun">Double points</span> : null}
               </div>
               <div className="bz-prompt-card bz-prompt-card--sm">{question.prompt}</div>
-              {submitError ? <p className="bz-alert">{submitError}</p> : null}
+              {submitError ? <p className="bz-alert" role="alert">{submitError}</p> : null}
               <PlayerAnswerInput key={question.id} question={question} busy={busy} onSubmit={(p) => void submit(p)} />
             </>
           )
@@ -223,8 +223,8 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
         {game.phase === "lock" ? (
           <div className="bz-center">
             <BlitzBolt size={80} className="bz-spinner-bolt" />
-            <h1 className="bz-h1">Pencils down</h1>
-            <p className="bz-feedback-sub">Results coming up…</p>
+            <h1 className="bz-h1">Time’s up</h1>
+            <p className="bz-feedback-sub">Results are on the way.</p>
           </div>
         ) : null}
 
@@ -234,17 +234,17 @@ export function BlitzPlayPanel({ gameId, playerId }: Props) {
 
         {game.phase === "leaderboard" ? (
           <div className="bz-center">
-            <p className="bz-kicker">You’re in</p>
+            <p className="bz-kicker">Your rank</p>
             <p className="bz-feedback-title" style={{ color: "var(--bz-accent)" }}>
               {ordinal(myRank)}
             </p>
             <p className="bz-feedback-sub">
               {ahead && me ? (
                 <>
-                  {(ahead.score - me.score).toLocaleString()} pts behind <strong>{playerLabel(ahead, game.settings.allowNicknames)}</strong>
+                  {(ahead.score - me.score).toLocaleString()} points behind <strong>{playerLabel(ahead, game.settings.allowNicknames)}</strong>
                 </>
               ) : (
-                "Top of the board. Hold on to it!"
+                "You’re in first place. Keep it up!"
               )}
             </p>
             {team ? <TeamLine game={game} teamId={team.id} /> : null}
@@ -307,7 +307,7 @@ function RevealCard({
           {ordinal(myRank)} place
           {aheadName ? (
             <span style={{ display: "block", fontSize: "0.85rem", fontWeight: 700, opacity: 0.8 }}>
-              {aheadGap.toLocaleString()} behind {aheadName}
+              {aheadGap.toLocaleString()} points behind {aheadName}
             </span>
           ) : null}
         </p>
@@ -353,7 +353,7 @@ function TeamLine({ game, teamId }: { game: LiveGameState; teamId: string }) {
   if (!t) return null;
   return (
     <span className="bz-chip" style={{ background: t.color, color: "var(--bz-ink)", borderColor: "var(--bz-ink)", fontSize: "0.95rem" }}>
-      {t.name} is {ordinal(i + 1)} · {t.average.toLocaleString()} avg
+      {t.name} is {ordinal(i + 1)} · {t.average.toLocaleString()} average
     </span>
   );
 }
@@ -391,7 +391,7 @@ function FinalCard({ game, playerId, myRank }: { game: LiveGameState; playerId: 
           "--rot": "-4deg",
         } as CSSProperties}
       >
-        {ordinal(myRank || 0)}
+        {myRank > 0 ? ordinal(myRank) : "—"}
       </div>
       <p className="bz-feedback-sub">
         <strong style={{ fontSize: "1.5rem" }}>{(me?.score ?? 0).toLocaleString()}</strong> points
@@ -407,7 +407,7 @@ function FinalCard({ game, playerId, myRank }: { game: LiveGameState; playerId: 
         </span>
       ) : null}
       <Link href="/apps/blitz/join" className="bz-btn bz-btn--primary bz-btn--lg no-underline">
-        Play another
+        Join another game
       </Link>
     </div>
   );

@@ -20,20 +20,20 @@ export async function resetPasswordAction(
   const confirm = String(formData.get("confirmPassword") ?? "");
 
   if (!token) {
-    return { error: "This reset link is missing its code. Request a new link." };
+    return { error: "This reset link is incomplete. Request a new link." };
   }
   if (newPassword.length < 8) {
-    return { error: "Use at least 8 characters." };
+    return { error: "Your new password needs at least 8 characters." };
   }
   if (newPassword !== confirm) {
-    return { error: "The two passwords don’t match." };
+    return { error: "The passwords don’t match. Enter them again." };
   }
 
   const { error } = await auth.resetPassword({ newPassword, token });
   if (error) {
     return /token|expired|invalid/i.test(error.message ?? "")
       ? { error: "This reset link has expired or was already used. Request a new one." }
-      : { error: error.message || "Couldn’t reset the password. Request a new link." };
+      : { error: "We couldn’t reset your password. Request a new link and try again." };
   }
 
   let destination = `/auth/sign-in?as=${encodeURIComponent(as)}&reset=1`;

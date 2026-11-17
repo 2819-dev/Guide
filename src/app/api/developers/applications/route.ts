@@ -12,12 +12,28 @@ import {
 export const runtime = "edge";
 
 const submitSchema = z.object({
-  contactName: z.string().trim().min(2).max(120),
-  contactEmail: z.string().trim().email().max(254),
-  organization: z.string().trim().min(2).max(200),
-  websiteUrl: z.string().trim().url().max(500),
-  appName: z.string().trim().min(2).max(160),
-  appAbout: z.string().trim().min(20).max(4000),
+  contactName: z.string().trim().min(2, "Enter your full name.").max(120),
+  contactEmail: z
+    .string()
+    .trim()
+    .email("Enter a valid email address.")
+    .max(254),
+  organization: z
+    .string()
+    .trim()
+    .min(2, "Enter your organization’s name.")
+    .max(200),
+  websiteUrl: z
+    .string()
+    .trim()
+    .url("Enter a full website address, starting with https://.")
+    .max(500),
+  appName: z.string().trim().min(2, "Enter your app’s name.").max(160),
+  appAbout: z
+    .string()
+    .trim()
+    .min(20, "Describe your app in at least 20 characters.")
+    .max(4000, "Keep the description under 4,000 characters."),
 });
 
 const reviewSchema = z.object({
@@ -39,7 +55,7 @@ function slugify(name: string): string {
 export async function GET() {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
 
   const db = getDb();
@@ -71,7 +87,8 @@ export async function POST(request: Request) {
       if (existing) {
         return NextResponse.json(
           {
-            error: "You already have a pending developer application.",
+            error:
+              "You already have a developer application under review. We’ll email you when a decision is made.",
             application: { id: existing.id, status: existing.status },
           },
           { status: 409 },
@@ -99,18 +116,18 @@ export async function POST(request: Request) {
   } catch (e) {
     if (e instanceof z.ZodError) {
       return NextResponse.json(
-        { error: e.issues[0]?.message ?? "Invalid request" },
+        { error: e.issues[0]?.message ?? "That request wasn’t valid. Refresh the page and try again." },
         { status: 400 },
       );
     }
-    return NextResponse.json({ error: "Could not submit" }, { status: 500 });
+    return NextResponse.json({ error: "Your application wasn’t submitted. Try again in a moment." }, { status: 500 });
   }
 }
 
 export async function PATCH(request: Request) {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
 
   try {
@@ -129,7 +146,7 @@ export async function PATCH(request: Request) {
       .returning();
 
     if (!updated) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({ error: "That item couldn’t be found. Refresh the page and try again." }, { status: 404 });
     }
 
     if (body.status === "approved" && updated.applicantProfileId) {
@@ -177,11 +194,11 @@ export async function PATCH(request: Request) {
   } catch (e) {
     if (e instanceof z.ZodError) {
       return NextResponse.json(
-        { error: e.issues[0]?.message ?? "Invalid request" },
+        { error: e.issues[0]?.message ?? "That request wasn’t valid. Refresh the page and try again." },
         { status: 400 },
       );
     }
-    return NextResponse.json({ error: "Could not update" }, { status: 500 });
+    return NextResponse.json({ error: "The decision wasn’t saved. Try again." }, { status: 500 });
   }
 }
 
@@ -189,11 +206,11 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   const id = new URL(request.url).searchParams.get("id") ?? "";
   if (!/^[0-9a-f-]{36}$/i.test(id)) {
-    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+    return NextResponse.json({ error: "That item couldn’t be found. Refresh the page and try again." }, { status: 400 });
   }
   const db = getDb();
   await db.delete(developerApplications).where(eq(developerApplications.id, id));

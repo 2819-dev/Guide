@@ -5,6 +5,8 @@ import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
+export const metadata = { title: "Edit quiz · Blitz" };
+
 type Props = { params: Promise<{ quizId: string }> };
 
 export default async function BlitzEditPage({ params }: Props) {

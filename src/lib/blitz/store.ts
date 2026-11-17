@@ -160,7 +160,7 @@ export async function updateQuiz(opts: {
 }): Promise<BlitzDocument> {
   const existing = await getQuiz(opts.quizId);
   if (!existing || existing.ownerProfileId !== opts.ownerProfileId) {
-    throw new Error("Quiz not found");
+    throw new Error("Quiz not found.");
   }
   const entitlement = await getEntitlement(opts.ownerProfileId);
   const questions = opts.questions ?? existing.questions;
@@ -207,7 +207,7 @@ export async function setQuizPublic(opts: {
 }): Promise<BlitzDocument> {
   const existing = await getQuiz(opts.quizId);
   if (!existing || existing.ownerProfileId !== opts.ownerProfileId) {
-    throw new Error("Quiz not found");
+    throw new Error("Quiz not found.");
   }
   if (opts.isPublic && existing.questions.length === 0) {
     throw new Error("Add at least one question before publishing to Discover.");
@@ -308,7 +308,7 @@ export async function copyDiscoverQuiz(opts: {
   ownerProfileId: string;
 }): Promise<BlitzDocument> {
   const source = await getDiscoverQuiz(opts.sourceQuizId);
-  if (!source) throw new Error("Discover quiz not found");
+  if (!source) throw new Error("This quiz is no longer on Discover.");
 
   const copy = await createQuiz({
     ownerProfileId: opts.ownerProfileId,
@@ -345,7 +345,7 @@ export async function deleteQuiz(
 ): Promise<void> {
   const existing = await getQuiz(quizId);
   if (!existing || existing.ownerProfileId !== ownerProfileId) {
-    throw new Error("Quiz not found");
+    throw new Error("Quiz not found.");
   }
   const db = getDb();
   await db.delete(testquizQuizzes).where(eq(testquizQuizzes.id, quizId));
@@ -396,7 +396,7 @@ async function mutateGame<T>(
 ): Promise<{ state: LiveGameState; result: T | null }> {
   for (let attempt = 0; attempt < 8; attempt++) {
     const state = (await getGame(gameId)) as StoredState | null;
-    if (!state) throw new Error("Game not found");
+    if (!state) throw new Error("Game not found.");
     const result = await fn(state);
     if (result === false) return { state, result: null };
     try {
@@ -407,7 +407,7 @@ async function mutateGame<T>(
       await new Promise((r) => setTimeout(r, 15 + Math.random() * 40 * (attempt + 1)));
     }
   }
-  throw new Error("The game is busy — try again.");
+  throw new Error("The game is busy. Try again.");
 }
 
 export async function getGame(gameId: string): Promise<LiveGameState | null> {
@@ -471,7 +471,7 @@ export type HostGameOptions = {
 export async function hostGame(opts: HostGameOptions): Promise<LiveGameState> {
   const quiz = await getQuiz(opts.quizId);
   if (!quiz || quiz.ownerProfileId !== opts.hostProfileId) {
-    throw new Error("Quiz not found");
+    throw new Error("Quiz not found.");
   }
   const issue = playabilityIssue(quiz.questions);
   if (issue) throw new Error(issue);
@@ -479,11 +479,11 @@ export async function hostGame(opts: HostGameOptions): Promise<LiveGameState> {
   const entitlement = await getEntitlement(opts.hostProfileId);
   const mode = opts.settings?.mode ?? "classic";
   if (!modeAllowed(entitlement.plan, mode)) {
-    throw new Error("Team battle needs Blitz Plus or Ultra.");
+    throw new Error("Team battle is included with Plus and Ultra.");
   }
   const theme = opts.settings?.theme ?? "night";
   if (!isThemeId(theme) || !themeAllowed(entitlement.plan, theme)) {
-    throw new Error("That theme needs Blitz Plus or Ultra.");
+    throw new Error("That theme is included with Plus and Ultra.");
   }
   const consumed = await consumeLiveGame(opts.hostProfileId);
   if ("error" in consumed) throw new Error(consumed.error);
@@ -636,7 +636,7 @@ export async function joinGame(opts: {
   const found = await getGameByPin(opts.pin);
   if (!found) throw new Error("No game found for that PIN.");
   if (found.hostProfileId === opts.profileId) {
-    throw new Error("Hosts cannot join as players.");
+    throw new Error("Hosts can’t join their own game as players.");
   }
   const entitlement = await getEntitlement(found.hostProfileId);
   const nickname = opts.nickname?.trim().slice(0, 24) || null;
@@ -652,10 +652,10 @@ export async function joinGame(opts: {
       if (state.settings.allowAvatars && opts.avatarId) existing.avatarId = avatarId;
       return true;
     }
-    if (state.phase !== "lobby") throw new Error("This game already started.");
+    if (state.phase !== "lobby") throw new Error("This game has already started.");
     const active = state.players.filter((p) => !p.kicked);
     if (active.length >= entitlement.plan.maxPlayersPerGame) {
-      throw new Error("This game is full for the host’s plan.");
+      throw new Error("This game is full.");
     }
     const team =
       gameMode(state.settings) === "team" && state.teams?.length
@@ -685,9 +685,9 @@ export async function updateHostSettings(
 ): Promise<LiveGameState> {
   const entitlement = await getEntitlement(hostProfileId);
   const { state } = await mutateGame(gameId, (state) => {
-    if (state.hostProfileId !== hostProfileId) throw new Error("Game not found");
+    if (state.hostProfileId !== hostProfileId) throw new Error("Game not found.");
     if (state.phase !== "lobby") {
-      throw new Error("Settings can only change in the lobby.");
+      throw new Error("Settings can only be changed in the lobby.");
     }
     if (patch.allowNicknames !== undefined) {
       state.settings.allowNicknames = patch.allowNicknames;
@@ -700,14 +700,14 @@ export async function updateHostSettings(
     }
     if (patch.theme !== undefined) {
       if (!isThemeId(patch.theme) || !themeAllowed(entitlement.plan, patch.theme)) {
-        throw new Error("That theme needs Blitz Plus or Ultra.");
+        throw new Error("That theme is included with Plus and Ultra.");
       }
       state.settings.theme = patch.theme;
     }
     let redeal = false;
     if (patch.mode !== undefined && patch.mode !== gameMode(state.settings)) {
       if (!modeAllowed(entitlement.plan, patch.mode)) {
-        throw new Error("Team battle needs Blitz Plus or Ultra.");
+        throw new Error("Team battle is included with Plus and Ultra.");
       }
       state.settings.mode = patch.mode;
       redeal = true;
@@ -749,9 +749,9 @@ function goNextQuestion(state: LiveGameState) {
 }
 
 function startGame(state: LiveGameState) {
-  if (state.phase !== "lobby") throw new Error("Already started");
+  if (state.phase !== "lobby") throw new Error("This game has already started.");
   if (state.players.filter((p) => !p.kicked).length === 0) {
-    throw new Error("Wait for at least one player.");
+    throw new Error("Wait for at least one player to join.");
   }
   if (gameMode(state.settings) === "team") {
     // Rebalance (kicks may have unbalanced the lobby).
@@ -771,7 +771,7 @@ export async function hostAction(
     action.type === "mute_music" ? await getEntitlement(hostProfileId) : null;
 
   const { state } = await mutateGame(gameId, (state) => {
-    if (state.hostProfileId !== hostProfileId) throw new Error("Game not found");
+    if (state.hostProfileId !== hostProfileId) throw new Error("Game not found.");
     const q = state.questions[state.questionIndex];
     switch (action.type) {
       case "start":
@@ -806,13 +806,13 @@ export async function hostAction(
       }
       case "lock":
         if (state.phase !== "question" && state.phase !== "countdown") {
-          throw new Error("Nothing to lock");
+          throw new Error("There’s no question to close right now.");
         }
         setPhase(state, "lock");
         break;
       case "reveal":
         if (!["lock", "question", "countdown"].includes(state.phase)) {
-          throw new Error("Reveal not available");
+          throw new Error("Results aren’t available yet.");
         }
         setPhase(state, "reveal");
         break;
@@ -855,7 +855,7 @@ export async function hostAction(
         break;
       }
       default:
-        throw new Error("Unknown action");
+        throw new Error("That action isn’t available right now.");
     }
     return true;
   });
@@ -916,17 +916,17 @@ export async function submitAnswer(opts: {
 }> {
   await tickGame(opts.gameId);
   const { state, result } = await mutateGame(opts.gameId, (state) => {
-    if (state.phase !== "question") throw new Error("Answers are locked.");
+    if (state.phase !== "question") throw new Error("Time’s up. Answers are closed.");
     const player = state.players.find((p) => p.id === opts.playerId && !p.kicked);
-    if (!player) throw new Error("Player not in this game");
+    if (!player) throw new Error("You’re not in this game.");
     const question = state.questions[state.questionIndex];
-    if (!question) throw new Error("No active question");
+    if (!question) throw new Error("There’s no active question right now.");
     if (
       state.answers.some(
         (a) => a.playerId === opts.playerId && a.questionId === question.id,
       )
     ) {
-      throw new Error("Already answered");
+      throw new Error("You’ve already answered this question.");
     }
     const now = Date.now();
     const responseMs = Math.max(0, now - (state.questionStartedAtMs ?? now));
@@ -954,7 +954,7 @@ export async function submitAnswer(opts: {
     else if (correct === false) player.streak = 0;
     return { correct, pointsAwarded: points, streak: player.streak ?? 0, streakBonus };
   });
-  if (!result) throw new Error("Could not save answer");
+  if (!result) throw new Error("Could not save your answer. Try again.");
   return { ...result, state };
 }
 

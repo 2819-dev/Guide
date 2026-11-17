@@ -3,7 +3,7 @@ import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
-export const metadata = { title: "Teacher portal · Guide" };
+export const metadata = { title: "Teacher portal" };
 
 /** Clever-style teacher / school-admin portal alias → Education panel. */
 export default async function TeacherPortalPage() {

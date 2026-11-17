@@ -317,7 +317,7 @@ export async function consumeLiveGame(
     snap.liveGamesUsedThisMonth >= snap.plan.liveGamesPerMonth
   ) {
     return {
-      error: `Your ${snap.plan.label} plan has no live games left this month.`,
+      error: `You’ve used all of this month’s live games on the ${snap.plan.label} plan. See plans to host more.`,
     };
   }
   const db = getDb();

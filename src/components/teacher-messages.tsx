@@ -47,7 +47,7 @@ export function TeacherMessages() {
     setActiveId(id);
     const res = await fetch(`/api/messages?threadId=${encodeURIComponent(id)}`);
     if (!res.ok) {
-      setError("Could not open conversation");
+      setError("This conversation couldn’t be opened. Try again.");
       return;
     }
     const data = await res.json();
@@ -71,12 +71,14 @@ export function TeacherMessages() {
         body: JSON.stringify({ threadId: activeId, body: draft.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Send failed");
+      if (!res.ok) throw new Error(data.error ?? "Your reply wasn’t sent. Try again.");
       setDraft("");
       await openThread(activeId);
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Send failed");
+      setError(
+        e instanceof Error ? e.message : "Your reply wasn’t sent. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -86,20 +88,20 @@ export function TeacherMessages() {
     <section id="messages" className="space-y-4">
       <div>
         <h2 className="portal-section-title">Messages</h2>
-        <p className="-mt-2 text-sm text-ink-muted">
-          Stay close to students in your classes — reply when they write in.
+        <p className="portal-section-lede">
+          Read and reply to messages from students in your classes.
         </p>
       </div>
       {error ? (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p className="form-alert form-alert--error" role="alert">
           {error}
         </p>
       ) : null}
       {threads.length === 0 ? (
         <div className="portal-empty">
-          <p className="portal-empty__title">Inbox is quiet</p>
+          <p className="portal-empty__title">No messages yet</p>
           <p className="portal-empty__body">
-            When students in your classes write to you, conversations appear
+            When students in your classes message you, conversations appear
             here.
           </p>
         </div>
@@ -121,10 +123,10 @@ export function TeacherMessages() {
           }
         >
           {!activeId ? (
-            <div className="portal-empty !border-0 !bg-transparent">
+            <div className="portal-empty !border-0 !bg-transparent !shadow-none">
               <p className="portal-empty__title">Select a conversation</p>
               <p className="portal-empty__body">
-                Choose a student thread to read and reply.
+                Choose a conversation to read and reply.
               </p>
             </div>
           ) : (
@@ -151,7 +153,7 @@ export function TeacherMessages() {
                   onChange={(e) => setDraft(e.target.value)}
                   rows={3}
                   className="field"
-                  placeholder="Reply…"
+                  placeholder="Write a reply"
                 />
                 <button
                   type="button"

@@ -12,7 +12,10 @@ import { randomBytes } from "@/lib/edge-crypto";
 export const runtime = "edge";
 
 const postSchema = z.object({
-  emails: z.array(z.string().trim().email().max(254)).min(1).max(40),
+  emails: z
+    .array(z.string().trim().email("Check the email addresses and try again.").max(254))
+    .min(1, "Enter at least one email address.")
+    .max(40, "You can invite up to 40 teachers at a time."),
   schoolName: z.string().trim().min(2).max(200).optional(),
 });
 
@@ -32,12 +35,12 @@ function parseEmailList(raw: unknown): string[] {
 export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   const allowed = await hasEducationAccess(authz.profile);
   if (!allowed) {
     return NextResponse.json(
-      { error: "Available after your school is approved." },
+      { error: "This is available after your school is approved." },
       { status: 403 },
     );
   }
@@ -59,12 +62,12 @@ export async function GET() {
 export async function POST(request: Request) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   const allowed = await hasEducationAccess(authz.profile);
   if (!allowed) {
     return NextResponse.json(
-      { error: "Available after your school is approved." },
+      { error: "This is available after your school is approved." },
       { status: 403 },
     );
   }
@@ -140,15 +143,15 @@ export async function POST(request: Request) {
       emailConfigured: resendConfigured(),
       message: resendConfigured()
         ? "Invites sent."
-        : "Teachers added. Use “Copy setup link” next to each one and send it to them.",
+        : "Teachers added. Use Copy setup link next to each teacher and send them the link.",
     });
   } catch (e) {
     if (e instanceof z.ZodError) {
       return NextResponse.json(
-        { error: e.issues[0]?.message ?? "Invalid emails" },
+        { error: e.issues[0]?.message ?? "Check the email addresses and try again." },
         { status: 400 },
       );
     }
-    return NextResponse.json({ error: "Could not invite" }, { status: 500 });
+    return NextResponse.json({ error: "Invites weren’t sent. Try again." }, { status: 500 });
   }
 }

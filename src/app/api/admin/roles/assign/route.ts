@@ -17,7 +17,7 @@ const schema = z.object({
 export async function POST(request: Request) {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
 
   try {
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       .where(eq(roleBadges.id, body.roleBadgeId))
       .limit(1);
     if (!role) {
-      return NextResponse.json({ error: "Role not found" }, { status: 404 });
+      return NextResponse.json({ error: "That role couldn’t be found. Refresh the page and try again." }, { status: 404 });
     }
 
     const [person] = await db
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       .where(eq(profiles.id, body.profileId))
       .limit(1);
     if (!person) {
-      return NextResponse.json({ error: "Person not found" }, { status: 404 });
+      return NextResponse.json({ error: "That person couldn’t be found. Refresh the page and try again." }, { status: 404 });
     }
 
     if (body.assign) {
@@ -75,8 +75,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error(error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
-    return NextResponse.json({ error: "Could not update assignment" }, { status: 500 });
+    return NextResponse.json({ error: "The role wasn’t updated. Try again." }, { status: 500 });
   }
 }

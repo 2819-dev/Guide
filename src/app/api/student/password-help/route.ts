@@ -18,7 +18,7 @@ const body = z.object({
 export async function POST(request: Request) {
   const parsed = body.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
-    return NextResponse.json({ error: "Enter your username." }, { status: 400 });
+    return NextResponse.json({ error: "Enter your username, then try again." }, { status: 400 });
   }
   try {
     const result = await requestPasswordHelp(parsed.data.schoolId, parsed.data.username);

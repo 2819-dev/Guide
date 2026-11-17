@@ -45,7 +45,7 @@ export function StudentMessages() {
   async function loadList() {
     const res = await fetch("/api/messages");
     if (!res.ok) {
-      setError("Could not load messages");
+      setError("Messages couldn’t be loaded. Refresh the page to try again.");
       return;
     }
     const data = await res.json();
@@ -62,7 +62,7 @@ export function StudentMessages() {
     setActiveId(id);
     const res = await fetch(`/api/messages?threadId=${encodeURIComponent(id)}`);
     if (!res.ok) {
-      setError("Could not open conversation");
+      setError("This conversation couldn’t be opened. Try again.");
       return;
     }
     const data = await res.json();
@@ -86,12 +86,14 @@ export function StudentMessages() {
         body: JSON.stringify({ threadId: activeId, body: draft.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Send failed");
+      if (!res.ok) throw new Error(data.error ?? "Your message wasn’t sent. Try again.");
       setDraft("");
       await openThread(activeId);
       await loadList();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Send failed");
+      setError(
+        e instanceof Error ? e.message : "Your message wasn’t sent. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -112,14 +114,16 @@ export function StudentMessages() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Send failed");
+      if (!res.ok) throw new Error(data.error ?? "Your message wasn’t sent. Try again.");
       setDraft("");
       setSubject("");
       setComposing(false);
       await loadList();
       if (data.threadId) await openThread(data.threadId);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Send failed");
+      setError(
+        e instanceof Error ? e.message : "Your message wasn’t sent. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -146,7 +150,7 @@ export function StudentMessages() {
             <div className="portal-empty !py-6">
               <p className="portal-empty__title">No conversations yet</p>
               <p className="portal-empty__body">
-                Tap New message to write to one of your teachers.
+                Select New message to write to one of your teachers.
               </p>
             </div>
           ) : (
@@ -167,7 +171,7 @@ export function StudentMessages() {
       }
     >
       {error ? (
-        <p className="mb-3 rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p className="form-alert form-alert--error mb-3" role="alert">
           {error}
         </p>
       ) : null}
@@ -175,8 +179,7 @@ export function StudentMessages() {
       {composing ? (
         <div className="space-y-4">
           <header>
-            <p className="portal-eyebrow">Compose</p>
-            <h2 className="mt-1 text-xl font-semibold tracking-tight text-forest-950">
+            <h2 className="text-xl font-semibold tracking-tight text-forest-950">
               New message
             </h2>
           </header>
@@ -184,8 +187,7 @@ export function StudentMessages() {
             <div className="portal-empty">
               <p className="portal-empty__title">Join a class first</p>
               <p className="portal-empty__body">
-                Once your teacher adds you to a class, you can write to them
-                here.
+                After you join a class, you can message its teacher here.
               </p>
             </div>
           ) : (
@@ -211,7 +213,7 @@ export function StudentMessages() {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   className="field mt-1.5"
-                  placeholder="What’s this about?"
+                  placeholder="Add a subject"
                 />
               </label>
               <label className="block text-sm font-semibold text-forest-900">
@@ -221,7 +223,7 @@ export function StudentMessages() {
                   onChange={(e) => setDraft(e.target.value)}
                   rows={5}
                   className="field mt-1.5"
-                  placeholder="Write to your teacher…"
+                  placeholder="Write your message"
                 />
               </label>
               <button
@@ -259,7 +261,7 @@ export function StudentMessages() {
               onChange={(e) => setDraft(e.target.value)}
               rows={3}
               className="field"
-              placeholder="Reply…"
+              placeholder="Write a reply"
             />
             <button
               type="button"
@@ -275,7 +277,8 @@ export function StudentMessages() {
         <div className="portal-empty !border-0 !bg-transparent !shadow-none">
           <p className="portal-empty__title">Select a conversation</p>
           <p className="portal-empty__body">
-            Or start a new message to a teacher of a class you joined.
+            Choose a conversation, or start a new message to one of your
+            teachers.
           </p>
         </div>
       )}

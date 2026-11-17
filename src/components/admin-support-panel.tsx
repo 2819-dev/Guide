@@ -15,6 +15,21 @@ type Ticket = {
   updatedAt: string;
 };
 
+const STATUS_OPTIONS = [
+  { value: "open", label: "Open" },
+  { value: "in_progress", label: "In progress" },
+  { value: "resolved", label: "Resolved" },
+  { value: "closed", label: "Closed" },
+];
+
+const CATEGORY_LABELS: Record<string, string> = {
+  account: "Account and log in",
+  education: "Classes and school",
+  study: "Apps and learning",
+  billing: "Billing",
+  other: "Something else",
+};
+
 export function AdminSupportPanel() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [note, setNote] = useState<string | null>(null);
@@ -23,7 +38,7 @@ export function AdminSupportPanel() {
   async function load() {
     const res = await fetch("/api/admin/support");
     if (!res.ok) {
-      setError("Could not load Get help queue");
+      setError("Help requests couldn’t be loaded. Refresh the page to try again.");
       return;
     }
     const data = await res.json();
@@ -41,7 +56,12 @@ export function AdminSupportPanel() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ticketId, status }),
     });
-    if (res.ok) await load();
+    if (res.ok) {
+      setError(null);
+      await load();
+    } else {
+      setError("The status wasn’t updated. Try again.");
+    }
   }
 
   const openCount = tickets.filter(
@@ -50,12 +70,12 @@ export function AdminSupportPanel() {
 
   return (
     <div className="space-y-4">
-      <p className="rounded-[10px] border border-line bg-sky-soft px-3.5 py-3 text-sm leading-snug text-forest-900">
+      <p className="form-alert">
         {note ??
-          "Get help shows operational ticket data only. Personal information is never shown here."}
+          "Help requests show the request details only. Personal information is not shown here."}
       </p>
       {error ? (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p className="form-alert form-alert--error" role="alert">
           {error}
         </p>
       ) : null}
@@ -64,7 +84,7 @@ export function AdminSupportPanel() {
         <div className="portal-empty">
           <p className="portal-empty__title">No help requests yet</p>
           <p className="portal-empty__body">
-            Help requests from school users appear here for follow-up.
+            Requests sent from Get help appear here for follow-up.
           </p>
         </div>
       ) : (
@@ -89,31 +109,34 @@ export function AdminSupportPanel() {
             {tickets.map((t) => (
               <li key={t.id} className="portal-panel space-y-3">
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
+                  <div className="min-w-0">
                     <p className="font-mono text-sm font-semibold text-forest-700">
                       {t.ticketNumber}
                     </p>
                     <h3 className="mt-1 text-lg font-semibold tracking-tight text-forest-950">
                       {t.subject}
                     </h3>
-                    <p className="mt-1 text-xs text-ink-muted">
-                      {t.category} · reporter {t.reporterCode} ·{" "}
-                      {new Date(t.createdAt).toLocaleString()}
+                    <p className="official-row-meta mt-1">
+                      {CATEGORY_LABELS[t.category] ?? "Other"} · From{" "}
+                      {t.reporterCode} · {new Date(t.createdAt).toLocaleString()}
                     </p>
                   </div>
                   <select
                     value={t.status}
                     onChange={(e) => void setStatus(t.id, e.target.value)}
-                    className="field !w-auto !min-h-12"
+                    className="field !w-auto !min-h-10 !py-2 text-sm"
                     aria-label={`Status for ${t.ticketNumber}`}
                   >
-                    <option value="open">open</option>
-                    <option value="in_progress">in_progress</option>
-                    <option value="resolved">resolved</option>
-                    <option value="closed">closed</option>
+                    {STATUS_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
-                <p className="text-sm leading-relaxed text-ink-muted">{t.body}</p>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
+                  {t.body}
+                </p>
                 <AdminDeleteButton
                   url={`/api/admin/support?id=${t.id}`}
                   what={`help request ${t.ticketNumber}`}

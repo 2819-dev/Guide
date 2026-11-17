@@ -93,7 +93,7 @@ export function SiteHeader() {
                     href={messagesHrefFor(portalId)}
                     className={`hidden sm:inline ${navLink}`}
                   >
-                    Messaging
+                    Messages
                   </Link>
                   <Link
                     href={suggestionsHrefFor(portalId)}

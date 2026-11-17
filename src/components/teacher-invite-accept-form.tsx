@@ -23,12 +23,12 @@ export function TeacherInviteAcceptForm({ token, email, schoolName }: Props) {
           <p className="portal-eyebrow">Welcome to Guide</p>
           <h2 className="display-feature mt-1">Account ready</h2>
           <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-muted">
-            Your account for <strong>{schoolName}</strong> is ready. Sign in to
-            create classes, add apps, and keep students engaged.
+            Your teacher account for <strong>{schoolName}</strong> is ready.
+            Log in to create classes, add students, and add apps.
           </p>
         </div>
-        <Link href="/auth/sign-in?as=educator" className="btn-primary inline-flex">
-          Teacher log in
+        <Link href="/auth/sign-in?as=educator" className="btn-primary w-full">
+          Log in
         </Link>
       </div>
     );
@@ -45,10 +45,18 @@ export function TeacherInviteAcceptForm({ token, email, schoolName }: Props) {
         body: JSON.stringify({ token, name, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not set up account");
+      if (!res.ok) {
+        throw new Error(
+          data.error ?? "Your account wasn’t created. Try again in a moment.",
+        );
+      }
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not set up account");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Your account wasn’t created. Try again in a moment.",
+      );
     } finally {
       setBusy(false);
     }
@@ -60,19 +68,20 @@ export function TeacherInviteAcceptForm({ token, email, schoolName }: Props) {
         <p className="portal-eyebrow">Teacher invite</p>
         <h1 className="display-feature mt-1">Set up your Guide account</h1>
         <p className="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">
-          Dear Teacher, <strong>{schoolName}</strong> invited you to Guide.
-          Create your password below, then open your Teacher Portal to manage
-          classes and apps.
+          <strong>{schoolName}</strong> invited you to join Guide as a teacher.
+          Enter your name and choose a password. You’ll log in with this email
+          from now on.
         </p>
       </div>
 
-      <p className="auth-soft-note">
-        After setup, sign in with this same email to open your Teacher Portal.
-      </p>
-
       <label className="block text-sm font-semibold text-forest-900">
         Work email
-        <input value={email} readOnly className="field mt-1.5 bg-sky-soft" />
+        <input
+          value={email}
+          readOnly
+          aria-readonly
+          className="field mt-1.5 !bg-sky-soft text-ink-muted"
+        />
       </label>
 
       <label className="block text-sm font-semibold text-forest-900">
@@ -102,22 +111,22 @@ export function TeacherInviteAcceptForm({ token, email, schoolName }: Props) {
       </label>
 
       {error ? (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p className="form-alert form-alert--error" role="alert">
           {error}
         </p>
       ) : null}
 
       <button type="submit" disabled={busy} className="btn-primary w-full">
-        {busy ? "Creating…" : "Create teacher account"}
+        {busy ? "Creating account…" : "Create teacher account"}
       </button>
 
       <p className="text-center text-sm text-ink-muted">
-        Already set up?{" "}
+        Already set up your account?{" "}
         <Link
           href="/auth/sign-in?as=educator"
-          className="font-semibold text-forest-800"
+          className="font-semibold text-forest-800 hover:underline"
         >
-          Teacher log in
+          Log in
         </Link>
       </p>
     </form>

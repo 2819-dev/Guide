@@ -20,7 +20,7 @@ export const runtime = 'edge';
 export async function GET() {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
 
   const db = getDb();
@@ -76,7 +76,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
 
   try {
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
     const color = normalizeHexColor(colorRaw);
     if (!color) {
       return NextResponse.json(
-        { error: "Use a hex color like #3a7d58." },
+        { error: "Enter a color as a hex code, like #3a7d58." },
         { status: 400 },
       );
     }
@@ -161,6 +161,6 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not create role" }, { status: 500 });
+    return NextResponse.json({ error: "The role wasn’t created. Try again." }, { status: 500 });
   }
 }

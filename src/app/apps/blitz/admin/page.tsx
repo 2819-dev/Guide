@@ -19,7 +19,7 @@ import { requireProfile } from "@/lib/profile";
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Blitz admin" };
+export const metadata = { title: "Admin · Blitz" };
 
 const TABS = ["promo", "plans", "subscribers", "usage"] as const;
 

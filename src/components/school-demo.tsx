@@ -216,7 +216,7 @@ function StudentPortal({
       utilities={[
         {
           id: "messaging",
-          label: "Messaging",
+          label: "Messages",
           active: tab === "tools",
           onClick: () => setTab("tools"),
         },

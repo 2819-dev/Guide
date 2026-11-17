@@ -12,7 +12,7 @@ export const runtime = "edge";
 export async function GET(request: Request) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz || !(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
 
   const entitlement = await getEntitlement(authz.profile.id);
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   if (gameId) {
     const game = await getGame(gameId);
     if (!game || game.hostProfileId !== authz.profile.id) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({ error: "Game not found." }, { status: 404 });
     }
 
     const players = game.players

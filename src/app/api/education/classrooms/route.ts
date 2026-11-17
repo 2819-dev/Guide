@@ -20,11 +20,11 @@ export const runtime = 'edge';
 export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Teacher access required" }, { status: 403 });
+    return NextResponse.json({ error: "Log in with your teacher account to continue." }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
     return NextResponse.json(
-      { error: "School approval required" },
+      { error: "This is available after your school is approved." },
       { status: 403 },
     );
   }
@@ -134,11 +134,11 @@ export async function GET() {
 export async function POST(request: Request) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Teacher access required" }, { status: 403 });
+    return NextResponse.json({ error: "Log in with your teacher account to continue." }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
     return NextResponse.json(
-      { error: "School approval required" },
+      { error: "This is available after your school is approved." },
       { status: 403 },
     );
   }
@@ -159,7 +159,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ classroom: room }, { status: 201 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not create class" }, { status: 400 });
+    return NextResponse.json({ error: "The class wasn’t created. Try again." }, { status: 400 });
   }
 }
 
@@ -167,7 +167,7 @@ export async function PUT(request: Request) {
   /** Student joins a class with invite code */
   const authz = await requireProfile(["customer", "rebbe"]);
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Log in to continue." }, { status: 401 });
   }
   try {
     const body = z
@@ -180,7 +180,7 @@ export async function PUT(request: Request) {
       .where(eq(classrooms.inviteCode, body.inviteCode.trim().toUpperCase()))
       .limit(1);
     if (!room) {
-      return NextResponse.json({ error: "Invite code not found" }, { status: 404 });
+      return NextResponse.json({ error: "No class matches that code. Check it with your teacher and try again." }, { status: 404 });
     }
     const existing = await db
       .select()
@@ -201,6 +201,6 @@ export async function PUT(request: Request) {
     return NextResponse.json({ classroom: { id: room.id, name: room.name } });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not join class" }, { status: 400 });
+    return NextResponse.json({ error: "We couldn’t add you to that class. Try again." }, { status: 400 });
   }
 }

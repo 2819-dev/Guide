@@ -131,11 +131,11 @@ export async function createChallenge(opts: {
   await ensureChallengeSchema();
   const entitlement = await getEntitlement(opts.ownerProfileId);
   if (!challengesAllowed(entitlement.plan)) {
-    throw new Error("Self-paced challenges need Blitz Plus or Ultra.");
+    throw new Error("Self-paced challenges are included with Plus and Ultra.");
   }
   const quiz = await getQuiz(opts.quizId);
   if (!quiz || quiz.ownerProfileId !== opts.ownerProfileId) {
-    throw new Error("Quiz not found");
+    throw new Error("Quiz not found.");
   }
   const issue = playabilityIssue(quiz.questions);
   if (issue) throw new Error(issue);
@@ -150,9 +150,9 @@ export async function createChallenge(opts: {
       ),
     )
     .limit(1);
-  if (!cls) throw new Error("Class not found");
+  if (!cls) throw new Error("Class not found.");
   if (opts.dueAt && opts.dueAt.getTime() < Date.now()) {
-    throw new Error("Pick a deadline in the future.");
+    throw new Error("Choose a due date in the future.");
   }
   const [row] = await db
     .insert(blitzChallenges)
@@ -343,7 +343,7 @@ export async function setChallengeClosed(
       ),
     )
     .returning({ id: blitzChallenges.id });
-  if (!rows.length) throw new Error("Challenge not found");
+  if (!rows.length) throw new Error("Challenge not found.");
 }
 
 export async function deleteChallenge(id: string, ownerProfileId: string) {
@@ -494,7 +494,7 @@ export async function beginChallengeQuestion(
   profile: { id: string; displayName: string },
 ): Promise<StudentChallengeView> {
   const row = await loadForStudent(id, profile.id);
-  if (!row) throw new Error("Challenge not found");
+  if (!row) throw new Error("Challenge not found.");
   const db = getDb();
   let attempt = row.attempt;
   if (!attempt) {
@@ -524,7 +524,7 @@ export async function beginChallengeQuestion(
           .limit(1)
       )[0] ??
       null;
-    if (!attempt) throw new Error("Could not start");
+    if (!attempt) throw new Error("Could not start the challenge. Try again.");
   }
   if (attempt.finishedAt) return studentView(row.c, row.className, attempt);
   const st = attemptStateOf(attempt.state);
@@ -558,8 +558,8 @@ export async function answerChallengeQuestion(
   const questions = questionsOf(row.c.questions);
   const st = attemptStateOf(attempt.state);
   const q = questions[st.index];
-  if (!q || q.id !== questionId) throw new Error("That question already moved on.");
-  if (st.questionStartedAtMs == null) throw new Error("Question not started.");
+  if (!q || q.id !== questionId) throw new Error("That question has already closed.");
+  if (st.questionStartedAtMs == null) throw new Error("This question hasn’t started yet.");
 
   const responseMs = Math.max(0, Date.now() - st.questionStartedAtMs);
   const timedOut = responseMs > q.timeLimitSec * 1000 + 1500;
@@ -604,7 +604,7 @@ export async function answerChallengeQuestion(
       ),
     )
     .returning();
-  if (!saved) throw new Error("Already answered.");
+  if (!saved) throw new Error("You’ve already answered this question.");
 
   return {
     result: { ...ans, streak: st.streak },

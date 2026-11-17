@@ -14,6 +14,37 @@ import { loginAsCopy, parseLoginAs } from "@/lib/login-roles";
 import { publicAmudHomePath } from "@/lib/site";
 import { signInWithEmail } from "./actions";
 
+/** Heading copy per sign-in audience. */
+const SIGN_IN_HEADINGS: Record<
+  "educator" | "official" | "developer" | "learner",
+  { eyebrow: string | null; title: string; subtitle: string }
+> = {
+  educator: {
+    eyebrow: "Teachers and school administrators",
+    title: "Log in to Guide",
+    subtitle: "Use the email and password for your school’s Guide account.",
+  },
+  official: {
+    eyebrow: "Guide Official",
+    title: "Log in to Guide",
+    subtitle: "Use your Guide Official account.",
+  },
+  developer: {
+    eyebrow: "Developer",
+    title: "Log in to Guide",
+    subtitle:
+      "Use the account you applied with. Your developer portal opens once a Guide Official approves your application.",
+  },
+  learner: {
+    eyebrow: null,
+    title: `Log in to ${FIRST_APP_NAME}`,
+    subtitle:
+      "Save your Test Yourself scores and notes. A school account is not required.",
+  },
+};
+
+const linkClass = "font-semibold text-forest-800 hover:underline";
+
 function SignInForm() {
   const params = useSearchParams();
   const as = parseLoginAs(params.get("as"));
@@ -27,10 +58,11 @@ function SignInForm() {
   const isEducator = as === "educator";
   const isOfficial = as === "official";
   const isLearner = as === "learner";
+  const heading = SIGN_IN_HEADINGS[as];
 
   return (
     <div className="auth-shell flex min-h-screen flex-col">
-      <div className="flex items-center justify-between px-6 py-5 sm:px-8">
+      <div className="flex items-center justify-between gap-4 px-4 py-5 sm:px-8">
         {isLearner ? (
           <AppWordmark
             name={FIRST_APP_NAME}
@@ -40,61 +72,42 @@ function SignInForm() {
         ) : (
           <GuideWordmark href="/" size="lg" />
         )}
-        {isEducator ? (
-          <Link
-            href="/schools/demo"
-            className="text-sm font-semibold text-forest-800 no-underline hover:underline"
-          >
-            View demo
-          </Link>
-        ) : null}
         {isLearner ? (
           <Link
             href={publicAmudHomePath()}
             className="text-sm font-semibold text-forest-800 no-underline hover:underline"
           >
-            ← {FIRST_APP_NAME}
+            Back to {FIRST_APP_NAME}
           </Link>
         ) : null}
       </div>
-      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8 lg:max-w-xl">
+      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-4 pb-16 sm:px-8">
         <AuthCard
-          eyebrow={isEducator ? null : isLearner || isOfficial ? null : "Log in"}
-          title={copy.title}
-          subtitle={copy.subtitle}
+          eyebrow={heading.eyebrow}
+          title={heading.title}
+          subtitle={heading.subtitle}
           footer={
             copy.joinHref && copy.joinLabel ? (
               <>
-                {isEducator ? (
-                  <>
-                    School or district administrator?{" "}
-                    <Link
-                      href={copy.joinHref}
-                      className="font-semibold text-forest-800"
-                    >
-                      {copy.joinLabel}
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    New here?{" "}
-                    <Link
-                      href={copy.joinHref}
-                      className="font-semibold text-forest-800"
-                    >
-                      {copy.joinLabel}
-                    </Link>
-                  </>
-                )}
+                {isEducator
+                  ? "New to Guide? School administrators can "
+                  : as === "developer"
+                    ? "Not a Guide developer yet? "
+                    : "New here? "}
+                <Link href={copy.joinHref} className={linkClass}>
+                  {isEducator
+                    ? "apply for their school"
+                    : as === "developer"
+                      ? "Apply as a developer"
+                      : "Create an account"}
+                </Link>
+                {isEducator ? "." : null}
               </>
             ) : isOfficial ? (
               <>
-                Students use{" "}
-                <Link
-                  href="/auth/sign-in?as=student"
-                  className="font-semibold text-forest-800"
-                >
-                  student log in
+                Students log in from the{" "}
+                <Link href="/auth/sign-in?as=student" className={linkClass}>
+                  student page
                 </Link>
                 .
               </>
@@ -102,8 +115,8 @@ function SignInForm() {
           }
         >
           {params.get("reset") === "1" ? (
-            <p className="mb-4 rounded-[10px] border border-forest-200 bg-forest-100 px-3 py-2 text-sm text-forest-900">
-              Password updated. Log in with your new password.
+            <p className="form-alert form-alert--success mb-5" role="status">
+              Your password was updated. Log in with your new password.
             </p>
           ) : null}
           <form action={formAction} className="space-y-4">
@@ -120,8 +133,8 @@ function SignInForm() {
                   isEducator
                     ? "you@school.org"
                     : isOfficial
-                      ? "official@guidelearning.org"
-                      : undefined
+                      ? "name@guidelearning.org"
+                      : "you@example.com"
                 }
               />
             </label>
@@ -136,7 +149,7 @@ function SignInForm() {
               />
             </label>
             {state?.error && (
-              <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+              <p className="form-alert form-alert--error" role="alert">
                 {state.error}
               </p>
             )}
@@ -145,13 +158,13 @@ function SignInForm() {
               disabled={pending}
               className="btn-primary w-full"
             >
-              {pending ? "Signing in…" : "Log in"}
+              {pending ? "Logging in…" : "Log in"}
             </button>
             {!isLearner ? (
               <p className="text-center text-sm">
                 <Link
                   href={`/auth/forgot-password?as=${as}`}
-                  className="font-semibold text-forest-800 hover:underline"
+                  className={linkClass}
                 >
                   Forgot password?
                 </Link>
@@ -159,13 +172,15 @@ function SignInForm() {
             ) : null}
           </form>
           {isEducator ? (
-            <p className="mt-4 text-center text-sm text-ink-muted">
-              <Link href="/schools/meeting" className="font-semibold text-forest-800">
-                Book a meeting
+            <p className="mt-5 border-t border-line pt-4 text-center text-sm text-ink-muted">
+              <Link href="/schools/demo" className={linkClass}>
+                View demo
               </Link>
-              {" · "}
-              <Link href="/account" className="font-semibold text-forest-800">
-                Get help
+              <span aria-hidden className="mx-2">
+                ·
+              </span>
+              <Link href="/schools/meeting" className={linkClass}>
+                Book a meeting
               </Link>
             </p>
           ) : null}

@@ -19,11 +19,11 @@ type Ctx = { params: Promise<{ id: string }> };
 export async function GET(_req: Request, ctx: Ctx) {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in to continue." }, { status: 401 });
   }
   const { id } = await ctx.params;
   if (!z.string().uuid().safeParse(id).success) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Challenge not found." }, { status: 404 });
   }
   try {
     const report = await getChallengeReport(id, authz.profile.id);
@@ -38,7 +38,7 @@ export async function GET(_req: Request, ctx: Ctx) {
     return NextResponse.json({ role: "student", view });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not load challenge" }, { status: 500 });
+    return NextResponse.json({ error: "Could not load this challenge. Try again." }, { status: 500 });
   }
 }
 
@@ -46,7 +46,7 @@ export async function GET(_req: Request, ctx: Ctx) {
 export async function POST(request: Request, ctx: Ctx) {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in to continue." }, { status: 401 });
   }
   const { id } = await ctx.params;
   try {
@@ -85,9 +85,9 @@ export async function POST(request: Request, ctx: Ctx) {
   } catch (error) {
     console.error(error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
-    const message = error instanceof Error ? error.message : "Action failed";
+    const message = error instanceof Error ? error.message : "Something went wrong. Try again.";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }
@@ -96,7 +96,7 @@ export async function POST(request: Request, ctx: Ctx) {
 export async function PATCH(request: Request, ctx: Ctx) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz || !(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const { id } = await ctx.params;
   try {
@@ -105,7 +105,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error(error);
-    const message = error instanceof Error ? error.message : "Could not update";
+    const message = error instanceof Error ? error.message : "Could not save your changes.";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }
@@ -113,7 +113,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
 export async function DELETE(_req: Request, ctx: Ctx) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz || !(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const { id } = await ctx.params;
   await deleteChallenge(id, authz.profile.id);

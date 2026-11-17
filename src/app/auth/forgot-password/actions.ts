@@ -25,7 +25,7 @@ export async function requestPasswordResetAction(
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const as = parseLoginAs(String(formData.get("as") ?? "educator"));
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { sent: false, error: "Enter the email you use for Guide." };
+    return { sent: false, error: "Enter a valid email address." };
   }
   // Student logins are private usernames; their teachers reset them.
   if (isStudentSyntheticEmail(email)) return { sent: true };

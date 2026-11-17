@@ -4,6 +4,8 @@ import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
+export const metadata = { title: "Play · Blitz" };
+
 type Props = { params: Promise<{ gameId: string }> };
 
 export default async function BlitzPlayPage({ params }: Props) {

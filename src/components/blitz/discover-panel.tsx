@@ -35,7 +35,7 @@ export function BlitzDiscoverPanel() {
     const res = await fetch(`/api/blitz/discover?${params}`);
     const data = await res.json();
     if (!res.ok) {
-      setError(data.error ?? "Could not load Discover");
+      setError(data.error ?? "Could not load Discover. Refresh to try again.");
       setQuizzes([]);
       return;
     }
@@ -46,16 +46,25 @@ export function BlitzDiscoverPanel() {
     void load();
   }, [load]);
 
+  useEffect(() => {
+    if (!preview) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setPreview(null);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [preview]);
+
   async function openPreview(id: string) {
     setBusy(true);
     setError(null);
     try {
       const res = await fetch(`/api/blitz/discover/${id}`);
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Not found");
+      if (!res.ok) throw new Error(data.error ?? "This quiz is no longer available.");
       setPreview(data.quiz);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Preview failed");
+      setError(e instanceof Error ? e.message : "Could not open the preview.");
     } finally {
       setBusy(false);
     }
@@ -67,10 +76,10 @@ export function BlitzDiscoverPanel() {
     try {
       const res = await fetch(`/api/blitz/discover/${id}`, { method: "POST" });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not copy");
+      if (!res.ok) throw new Error(data.error ?? "Could not copy the quiz.");
       router.push(`/apps/blitz/edit/${data.quiz.id}`);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not copy");
+      setError(e instanceof Error ? e.message : "Could not copy the quiz.");
       setBusy(false);
     }
   }
@@ -79,15 +88,15 @@ export function BlitzDiscoverPanel() {
     <div className="bz-page">
       <p className="bz-kicker">Discover</p>
       <h1 className="bz-h1 mt-2">
-        Steal{" "}
+        Quizzes shared by{" "}
         <span className="bz-mark">
-          good ideas
+          other teachers
           <Squiggle color="var(--bz-cyan)" />
         </span>
         .
       </h1>
       <p className="bz-muted mt-4" style={{ maxWidth: 560, fontSize: "1.05rem" }}>
-        Blitzes other teachers shared. Preview one, copy it into your library, make it yours.
+        Preview a quiz, copy it to your library, and edit it for your class.
       </p>
 
       <form
@@ -97,7 +106,7 @@ export function BlitzDiscoverPanel() {
           setQuery(q);
         }}
       >
-        <input className="bz-input" style={{ maxWidth: 380 }} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search photosynthesis, fractions, the 1920s…" aria-label="Search Discover" />
+        <input className="bz-input" style={{ flex: "1 1 220px", maxWidth: 380 }} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by topic, such as fractions or photosynthesis" aria-label="Search Discover" />
         <button type="submit" className="bz-btn bz-btn--primary">
           Search
         </button>
@@ -113,7 +122,7 @@ export function BlitzDiscoverPanel() {
 
       <div className="bz-filters mt-4" role="group" aria-label="Categories">
         <button type="button" className="bz-filter" aria-pressed={category === ""} onClick={() => setCategory("")}>
-          Everything
+          All
         </button>
         {BLITZ_DISCOVER_CATEGORIES.map((c) => (
           <button key={c.id} type="button" className="bz-filter" aria-pressed={category === c.id} onClick={() => setCategory(c.id)}>
@@ -122,18 +131,22 @@ export function BlitzDiscoverPanel() {
         ))}
       </div>
 
-      {error ? <p className="bz-alert mt-4">{error}</p> : null}
+      {error ? <p className="bz-alert mt-4" role="alert">{error}</p> : null}
 
       <div className="mt-6">
         {quizzes === null ? (
-          <p className="bz-muted">Loading…</p>
+          <p className="bz-muted" role="status">Loading quizzes…</p>
         ) : quizzes.length === 0 ? (
           <div className="bz-empty">
             <TileSymbol index={2} size={48} className="text-[var(--bz-cyan)]" />
             <p className="bz-h3" style={{ color: "var(--bz-text)" }}>
-              Nothing here yet
+              {query.trim() || category ? "No quizzes match your search" : "No shared quizzes yet"}
             </p>
-            <p>Be the first: open a quiz in the editor → Settings → Publish to Discover.</p>
+            <p>
+              {query.trim() || category
+                ? "Try a different search or category."
+                : "To share one of yours, open it in the editor, go to Settings, and turn on Publish to Discover."}
+            </p>
           </div>
         ) : (
           <div className="bz-quiz-grid">
@@ -151,11 +164,11 @@ export function BlitzDiscoverPanel() {
                     <span className="bz-cover-sym">
                       <TileSymbol index={ci + 2} size={40} />
                     </span>
-                    <span className="bz-cover-count">{item.questionCount} Qs</span>
+                    <span className="bz-cover-count">{item.questionCount} {item.questionCount === 1 ? "question" : "questions"}</span>
                   </div>
                   <div className="bz-quiz-body">
                     <h3 className="bz-quiz-title">{item.title}</h3>
-                    <p className="bz-faint">by {item.ownerDisplayName} · copied {item.copyCount}×</p>
+                    <p className="bz-faint">By {item.ownerDisplayName} · Copied {item.copyCount} {item.copyCount === 1 ? "time" : "times"}</p>
                     <div className="bz-quiz-meta">
                       <span className="bz-chip">{categoryLabel(item.category)}</span>
                       {item.types.slice(0, 2).map((t) => (
@@ -166,7 +179,7 @@ export function BlitzDiscoverPanel() {
                     </div>
                     <div className="bz-quiz-actions">
                       <button type="button" className="bz-btn bz-btn--sm" disabled={busy} onClick={() => void openPreview(item.id)}>
-                        Peek inside
+                        Preview
                       </button>
                       <button type="button" className="bz-btn bz-btn--primary bz-btn--sm" disabled={busy} onClick={() => void copyQuiz(item.id)}>
                         Copy to library
@@ -182,13 +195,13 @@ export function BlitzDiscoverPanel() {
 
       {preview ? (
         <div className="bz-backdrop" onClick={() => setPreview(null)}>
-          <div className="bz-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+          <div className="bz-modal" role="dialog" aria-modal="true" aria-labelledby="bz-preview-title" onClick={(e) => e.stopPropagation()}>
             <div className="bz-modal-head">
               <div className="min-w-0">
                 <p className="bz-kicker">
-                  {categoryLabel(preview.category)} · by {preview.ownerDisplayName}
+                  {categoryLabel(preview.category)} · By {preview.ownerDisplayName}
                 </p>
-                <h2 className="bz-h2 mt-1">{preview.title}</h2>
+                <h2 id="bz-preview-title" className="bz-h2 mt-1" style={{ overflowWrap: "anywhere" }}>{preview.title}</h2>
                 {preview.description ? <p className="bz-muted mt-2">{preview.description}</p> : null}
               </div>
               <button type="button" className="bz-iconbtn" aria-label="Close" onClick={() => setPreview(null)}>
@@ -203,7 +216,7 @@ export function BlitzDiscoverPanel() {
                     <span className="bz-faint">
                       {BLITZ_TYPE_LABEL[qu.type]} · {qu.timeLimitSec}s
                     </span>
-                    <strong style={{ display: "block", lineHeight: 1.25 }}>{qu.prompt || "Untitled"}</strong>
+                    <strong style={{ display: "block", lineHeight: 1.25 }}>{qu.prompt || "Untitled question"}</strong>
                   </span>
                 </li>
               ))}

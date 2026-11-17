@@ -1,5 +1,5 @@
 /**
- * Blitz plan caps — Kahoot-like, slightly looser.
+ * Blitz plan caps.
  * Tune numbers here only; entitlements read from this config.
  */
 
@@ -14,9 +14,9 @@ export type BlitzPlan = {
   maxPlayersPerGame: number;
   /** Max questions per quiz. */
   maxQuestionsPerQuiz: number;
-  /** Placeholder lobby/play music. */
+  /** Lobby and gameplay music. */
   music: boolean;
-  /** CSV/JSON report export. */
+  /** CSV report export. */
   reportsExport: boolean;
   /** Show Free-plan watermark on host projector. */
   watermark: boolean;
@@ -24,7 +24,7 @@ export type BlitzPlan = {
   advancedReports: boolean;
   /**
    * Question types allowed when creating/editing.
-   * "all" = every Kahoot live type; otherwise an allow-list.
+   * "all" = every Blitz question type; "core" = quiz + true/false.
    */
   questionTypes: "all" | "core";
 };
@@ -33,8 +33,8 @@ export const BLITZ_PLANS: Record<BlitzPlanId, BlitzPlan> = {
   free: {
     id: "free",
     label: "Free",
-    liveGamesPerMonth: 12, // Kahoot free is tighter; we loosen slightly
-    maxPlayersPerGame: 40, // Kahoot free ~10–20 historically; looser
+    liveGamesPerMonth: 12,
+    maxPlayersPerGame: 40,
     maxQuestionsPerQuiz: 40,
     music: false,
     reportsExport: false,
@@ -111,16 +111,16 @@ export const BLITZ_PLAN_DISPLAY: Record<
     tagline: "Everything you need to try Blitz with a class.",
     monthlyUsd: 0,
     yearlyUsd: 0,
-    highlights: ["Quiz and true/false questions", "Live results on the projector"],
+    highlights: ["Quiz and True/False questions", "Live results on the main screen"],
   },
   plus: {
     tagline: "For teachers who run Blitz every week.",
     monthlyUsd: 7.99,
     yearlyUsd: 69,
     highlights: [
-      "Every question type",
-      "Lobby music",
-      "Advanced reports + CSV export",
+      "All question types",
+      "Game music",
+      "Advanced reports and CSV export",
       "No watermark",
     ],
   },

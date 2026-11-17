@@ -44,7 +44,7 @@ export function EducationPanel({
   async function load() {
     const res = await fetch("/api/education/classrooms");
     if (!res.ok) {
-      setError("Could not load classes");
+      setError("Classes couldn’t be loaded. Refresh the page to try again.");
       return;
     }
     const data = await res.json();
@@ -65,12 +65,16 @@ export function EducationPanel({
         body: JSON.stringify({ name }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed");
+      if (!res.ok) {
+        throw new Error(data.error ?? "The class wasn’t created. Try again.");
+      }
       setName("");
       await load();
       setClassesVersion((v) => v + 1);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed");
+      setError(
+        e instanceof Error ? e.message : "The class wasn’t created. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -89,43 +93,51 @@ export function EducationPanel({
       <section id="classes" className="space-y-4">
         <div>
           <h2 className="portal-section-title">Classes</h2>
-          <p className="-mt-2 text-sm text-ink-muted">
+          <p className="portal-section-lede">
             Create a class, then add each student with a username and password.
           </p>
         </div>
-        <div className="portal-panel space-y-3">
-          <label className="block text-sm font-semibold text-forest-900">
+        <form
+          className="portal-panel space-y-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!busy && name.trim().length >= 2) void createClass();
+          }}
+        >
+          <label
+            htmlFor="new-class-name"
+            className="block text-sm font-semibold text-forest-900"
+          >
             Class name
-            <div className="mt-1.5 flex flex-wrap gap-3">
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Period 3 Algebra · Grade 9"
-                className="field min-w-[14rem] flex-1"
-              />
-              <button
-                type="button"
-                disabled={busy || name.trim().length < 2}
-                onClick={() => void createClass()}
-                className="btn-primary"
-              >
-                {busy ? "Creating…" : "Create class"}
-              </button>
-            </div>
           </label>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <input
+              id="new-class-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Period 3 Algebra · Grade 9"
+              className="field min-w-0 flex-1"
+            />
+            <button
+              type="submit"
+              disabled={busy || name.trim().length < 2}
+              className="btn-primary sm:shrink-0"
+            >
+              {busy ? "Creating…" : "Create class"}
+            </button>
+          </div>
           {error && (
-            <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+            <p className="form-alert form-alert--error" role="alert">
               {error}
             </p>
           )}
-        </div>
+        </form>
 
         {classrooms.length === 0 ? (
           <div className="portal-empty">
-            <p className="portal-empty__title">Create your first class</p>
+            <p className="portal-empty__title">No classes yet</p>
             <p className="portal-empty__body">
-              Name it above — for example “Grade 5 · Room 12”. Then add your
-              students to it.
+              Name your first class above, then add your students to it.
             </p>
           </div>
         ) : (
@@ -136,37 +148,37 @@ export function EducationPanel({
                   {room.name}
                 </h3>
                 <p className="mt-1 text-sm text-ink-muted">
-                  Class code:{" "}
-                  <span className="font-mono font-semibold text-forest-800">
-                    {room.inviteCode}
-                  </span>{" "}
-                  — students with an account can also join this class from
-                  their portal.
+                  Class code{" "}
+                  <span className="portal-code">{room.inviteCode}</span>
+                  <span className="mt-0.5 block">
+                    Students who already have an account can join with this
+                    code.
+                  </span>
                 </p>
               </div>
 
               {room.students.length === 0 ? (
                 <p className="text-sm text-ink-muted">
-                  No students yet. Add each student below — you’ll get a
-                  username and password to give them.
+                  No students yet. Add each student below, then share their
+                  username and password with them.
                 </p>
               ) : (
                 <div>
-                  <table className="w-full border-collapse text-left text-sm">
+                  <table className="portal-table">
                     <thead>
-                      <tr className="border-b border-line text-forest-700">
-                        <th className="py-2 pr-3 font-semibold">Student</th>
-                        <th className="hidden py-2 pr-3 font-semibold sm:table-cell">Username</th>
-                        <th className="hidden py-2 pr-3 font-semibold sm:table-cell">Quizzes</th>
-                        <th className="py-2 font-semibold">
+                      <tr>
+                        <th>Student</th>
+                        <th className="hidden sm:table-cell">Username</th>
+                        <th className="hidden sm:table-cell">Quizzes</th>
+                        <th>
                           <span className="sr-only">Password</span>
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {room.students.map((s) => (
-                        <tr key={s.id} className="border-b border-line/70 align-top">
-                          <td className="py-3 pr-3 font-medium text-forest-950">
+                        <tr key={s.id}>
+                          <td className="font-medium">
                             {s.displayName}
                             {s.username ? (
                               <span className="block font-mono text-xs font-normal text-ink-muted sm:hidden">
@@ -174,11 +186,11 @@ export function EducationPanel({
                               </span>
                             ) : null}
                           </td>
-                          <td className="hidden py-3 pr-3 font-mono sm:table-cell">
+                          <td className="hidden font-mono sm:table-cell">
                             {s.username ?? <span className="text-ink-muted">—</span>}
                           </td>
-                          <td className="hidden py-3 pr-3 sm:table-cell">{s.quizAttempts}</td>
-                          <td className="py-3 text-right">
+                          <td className="hidden sm:table-cell">{s.quizAttempts}</td>
+                          <td className="text-right">
                             {s.username ? (
                               <ResetPasswordButton
                                 studentId={s.id}
@@ -231,9 +243,9 @@ function GettingStarted({
   const steps = [
     { done: hasClass, label: "Create your first class", href: "#classes" },
     { done: hasStudents, label: "Add students to it", href: "#classes" },
-    { done: false, label: "Add an app like Blitz", href: "#apps" },
+    { done: false, label: "Add apps to your classes", href: "#apps" },
     ...(canInviteTeachers
-      ? [{ done: false, label: "Invite your teachers (optional)", href: "#teachers" }]
+      ? [{ done: false, label: "Invite teachers (optional)", href: "#teachers" }]
       : []),
   ];
   return (
@@ -241,21 +253,32 @@ function GettingStarted({
       <h2 id="get-started-title" className="text-lg font-semibold text-forest-950">
         Get started
       </h2>
-      <ol className="mt-3 space-y-2">
+      <ol className="portal-steps">
         {steps.map((step, i) => (
-          <li key={step.label} className="flex items-center gap-3">
-            <span
-              className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-sm font-bold ${
-                step.done
-                  ? "bg-forest-700 text-white"
-                  : "border-2 border-forest-300 text-forest-800"
-              }`}
-              aria-hidden
-            >
-              {step.done ? "✓" : i + 1}
+          <li
+            key={step.label}
+            className={`portal-steps__item${step.done ? " portal-steps__item--done" : ""}`}
+          >
+            <span className="portal-steps__mark" aria-hidden>
+              {step.done ? (
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M3.5 8.5 6.5 11.5 12.5 4.5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                i + 1
+              )}
             </span>
             {step.done ? (
-              <span className="text-ink-muted line-through">{step.label}</span>
+              <span className="portal-steps__label">
+                {step.label}
+                <span className="sr-only"> (done)</span>
+              </span>
             ) : (
               <a href={step.href} className="font-semibold text-forest-800 hover:underline">
                 {step.label}

@@ -9,7 +9,7 @@ export const runtime = "edge";
 export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz || !(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const classes = await listTeacherClasses(authz.profile.id);
   return NextResponse.json({ classes });

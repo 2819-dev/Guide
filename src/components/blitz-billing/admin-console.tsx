@@ -36,9 +36,9 @@ const labelCls = "flex flex-col gap-1.5 text-sm font-semibold text-indigo-100";
 const primaryBtn =
   "inline-flex min-h-11 items-center justify-center rounded-xl bg-[#b6f03a] px-5 text-sm font-extrabold text-[#15123b] transition hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-50";
 const ghostBtn =
-  "inline-flex min-h-10 items-center justify-center rounded-lg border border-white/25 px-3 text-sm font-bold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22d3ee] disabled:opacity-50";
+  "inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-white/25 px-3 text-sm font-bold text-white transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#22d3ee] disabled:opacity-50";
 const dangerBtn =
-  "inline-flex min-h-10 items-center justify-center rounded-lg border border-[#ff5a5f]/70 px-3 text-sm font-bold text-[#ffb3b5] transition hover:bg-[#ff5a5f]/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5a5f] disabled:opacity-50";
+  "inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-[#ff5a5f]/70 px-3 text-sm font-bold text-[#ffb3b5] transition hover:bg-[#ff5a5f]/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5a5f] disabled:opacity-50";
 
 function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
@@ -153,7 +153,7 @@ function PromoTab({ codes, stripe }: { codes: PromoCodeRow[]; stripe: AdminConso
     setBusy(c.id);
     const { ok, data } = await send("/api/blitz/admin/promo", "PATCH", { id: c.id, active: !c.active });
     setBusy(null);
-    setMsg(ok ? { ok: true, text: `${c.code} ${c.active ? "deactivated" : "reactivated"}.` } : { ok: false, text: String(data.error ?? "Couldn’t update.") });
+    setMsg(ok ? { ok: true, text: `${c.code} ${c.active ? "deactivated" : "reactivated"}.` } : { ok: false, text: String(data.error ?? "Couldn’t update the code.") });
     if (ok) router.refresh();
   }
 
@@ -166,8 +166,8 @@ function PromoTab({ codes, stripe }: { codes: PromoCodeRow[]; stripe: AdminConso
         <form onSubmit={create} className="mt-4 flex flex-col gap-4">
           <div role="radiogroup" aria-label="Code type" className="grid gap-2 sm:grid-cols-2">
             {([
-              ["upgrade", "Free upgrade", "Grants Plus or Ultra for a set number of days. Teachers redeem on the Blitz plans page."],
-              ["discount", "Checkout discount", "A % off Stripe coupon. Teachers type it on the Stripe payment page."],
+              ["upgrade", "Free upgrade", "Gives Plus or Ultra for a set number of days. Teachers redeem it on the Blitz plans page."],
+              ["discount", "Checkout discount", "A percentage discount on a paid plan. Teachers enter it at checkout."],
             ] as const).map(([k, title, desc]) => (
               <button
                 key={k}
@@ -185,7 +185,7 @@ function PromoTab({ codes, stripe }: { codes: PromoCodeRow[]; stripe: AdminConso
 
           {discountBlocked ? (
             <p className="m-0 rounded-xl border border-[#ffc93c]/60 bg-[#ffc93c]/10 px-3 py-2 text-sm text-[#ffe9ad]">
-              Payments aren’t set up yet, so Stripe discount codes can’t be created. Add <code className="font-mono">STRIPE_SECRET_KEY</code> first, or make a free-upgrade code.
+              Payments aren’t connected yet, so checkout discount codes can’t be created. Create a free upgrade code instead.
             </p>
           ) : null}
 
@@ -194,7 +194,7 @@ function PromoTab({ codes, stripe }: { codes: PromoCodeRow[]; stripe: AdminConso
               Code
               <div className="flex gap-2">
                 <input
-                  className={`${inputCls} font-mono uppercase tracking-wider placeholder:font-sans placeholder:normal-case placeholder:tracking-normal`}
+                  className={`${inputCls} min-w-0 font-mono uppercase tracking-wider placeholder:font-sans placeholder:normal-case placeholder:tracking-normal`}
                   value={code}
                   onChange={(e) => setCode(e.target.value.toUpperCase().replace(/\s+/g, ""))}
                   placeholder="Leave blank to generate"
@@ -254,7 +254,7 @@ function PromoTab({ codes, stripe }: { codes: PromoCodeRow[]; stripe: AdminConso
             </label>
             <label className={`${labelCls} sm:col-span-2 lg:col-span-1`}>
               <span>Note <span className="font-normal text-indigo-300">(only Officials see this)</span></span>
-              <input className={inputCls} value={note} maxLength={300} onChange={(e) => setNote(e.target.value)} placeholder="e.g. Spring conference" />
+              <input className={inputCls} value={note} maxLength={300} onChange={(e) => setNote(e.target.value)} placeholder="For example, Spring conference" />
             </label>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -304,7 +304,7 @@ function PromoTab({ codes, stripe }: { codes: PromoCodeRow[]; stripe: AdminConso
                           aria-expanded={open === c.id}
                           onClick={() => setOpen(open === c.id ? null : c.id)}
                         >
-                          {open === c.id ? "Hide" : "Who used it"}
+                          {open === c.id ? "Hide redemptions" : "Show redemptions"}
                         </button>
                       ) : null}
                       <button type="button" className={c.active ? dangerBtn : ghostBtn} disabled={busy !== null} onClick={() => toggle(c)}>
@@ -383,7 +383,7 @@ function PlansTab({ grants }: { grants: GrantRow[] }) {
       setExpires("");
       router.refresh();
     } else {
-      setMsg({ ok: false, text: String(data.error ?? "Couldn’t save.") });
+      setMsg({ ok: false, text: String(data.error ?? "Couldn’t save the plan.") });
     }
   }
 
@@ -391,7 +391,7 @@ function PlansTab({ grants }: { grants: GrantRow[] }) {
     setBusy(g.id);
     const { ok, data } = await send("/api/blitz/admin/grants", "DELETE", { grantId: g.id });
     setBusy(null);
-    setMsg(ok ? { ok: true, text: `Revoked ${planLabel(g.planId)} for ${g.teacherName}.` } : { ok: false, text: String(data.error ?? "Couldn’t revoke.") });
+    setMsg(ok ? { ok: true, text: `Revoked ${planLabel(g.planId)} for ${g.teacherName}.` } : { ok: false, text: String(data.error ?? "Couldn’t revoke the plan.") });
     if (ok) router.refresh();
   }
 
@@ -400,7 +400,7 @@ function PlansTab({ grants }: { grants: GrantRow[] }) {
       <Card>
         <h2 className="m-0 text-lg font-black text-white">Give a teacher a plan</h2>
         <p className="m-0 mt-1 text-sm text-indigo-200">
-          Replaces any earlier plan you granted them. Doesn’t touch Stripe subscriptions or codes they redeemed. Pick “Free” to remove your grant.
+          Replaces any plan you granted them earlier. Paid subscriptions and redeemed codes are not affected. Choose “Free” to remove your grant.
         </p>
         <form onSubmit={grant} className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <label className={`${labelCls} sm:col-span-2 lg:col-span-1`}>
@@ -421,7 +421,7 @@ function PlansTab({ grants }: { grants: GrantRow[] }) {
           </label>
           <label className={labelCls}>
             <span>Note <span className="font-normal text-indigo-300">(optional)</span></span>
-            <input className={inputCls} value={note} maxLength={300} onChange={(e) => setNote(e.target.value)} placeholder="e.g. Pilot school" />
+            <input className={inputCls} value={note} maxLength={300} onChange={(e) => setNote(e.target.value)} placeholder="For example, Pilot school" />
           </label>
           <div className="flex flex-wrap items-center gap-3 sm:col-span-2 lg:col-span-4">
             <button type="submit" className={primaryBtn} disabled={busy !== null}>
@@ -472,6 +472,29 @@ function statusTone(s: string): "good" | "warn" | "bad" | "muted" {
   return "muted";
 }
 
+function statusLabel(s: string): string {
+  switch (s) {
+    case "active":
+      return "Active";
+    case "trialing":
+      return "Trial";
+    case "past_due":
+      return "Past due";
+    case "incomplete":
+      return "Incomplete";
+    case "incomplete_expired":
+      return "Expired";
+    case "canceled":
+      return "Canceled";
+    case "unpaid":
+      return "Unpaid";
+    case "paused":
+      return "Paused";
+    default:
+      return s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, " ");
+  }
+}
+
 function SubscribersTab({ subscribers, stripe }: { subscribers: SubscriberRow[]; stripe: AdminConsoleProps["stripe"] }) {
   if (subscribers.length === 0) {
     return (
@@ -479,8 +502,8 @@ function SubscribersTab({ subscribers, stripe }: { subscribers: SubscriberRow[];
         <p className="m-0 font-bold text-white">No subscribers yet</p>
         <p className="m-0 mt-1 text-sm text-indigo-200">
           {stripe.checkout
-            ? "Teachers who subscribe through Stripe Checkout show up here."
-            : "Payments aren’t set up yet. Once the Stripe keys and prices are added, subscribers show up here."}
+            ? "Teachers who subscribe to a paid plan will appear here."
+            : "Payments aren’t connected yet. Subscribers will appear here once checkout is available."}
         </p>
       </Card>
     );
@@ -496,14 +519,14 @@ function SubscribersTab({ subscribers, stripe }: { subscribers: SubscriberRow[];
           <div className="flex flex-wrap items-center gap-2">
             <PlanBadge planId={s.planId} label={planLabel(s.planId)} />
             <StatusChip tone="muted">{s.interval === "year" ? "Yearly" : s.interval === "month" ? "Monthly" : "—"}</StatusChip>
-            <StatusChip tone={statusTone(s.status)}>{s.status.replace(/_/g, " ")}</StatusChip>
+            <StatusChip tone={statusTone(s.status)}>{statusLabel(s.status)}</StatusChip>
           </div>
           <p className="m-0 text-sm text-indigo-100">
             {s.cancelAtPeriodEnd ? "Ends" : s.status === "canceled" ? "Ended" : "Renews"} {fmtDate(s.currentPeriodEnd)}
           </p>
-          <div className="flex gap-2">
-            <a className={ghostBtn} href={s.stripeUrl} target="_blank" rel="noreferrer">Stripe</a>
-            <a className={ghostBtn} href={s.customerUrl} target="_blank" rel="noreferrer">Customer</a>
+          <div className="flex flex-wrap gap-2">
+            <a className={ghostBtn} href={s.stripeUrl} target="_blank" rel="noreferrer">View subscription</a>
+            <a className={ghostBtn} href={s.customerUrl} target="_blank" rel="noreferrer">View customer</a>
           </div>
         </li>
       ))}
@@ -560,7 +583,7 @@ function UsageTab({ overview }: { overview: BlitzOverview }) {
         <Stat label="Public on Discover" value={overview.publicQuizzes} />
         <Stat label="Paying subscriptions" value={overview.payingSubscriptions} accent="#b6f03a" />
         <Stat label="Past due" value={overview.pastDue} accent={overview.pastDue ? "#ff8a8d" : undefined} />
-        <Stat label="Active grants + codes" value={overview.activeGrants} />
+        <Stat label="Active grants and codes" value={overview.activeGrants} />
         <Stat label="Code redemptions this month" value={overview.redemptionsThisMonth} accent="#ffc93c" />
       </div>
     </div>
@@ -584,12 +607,12 @@ export function AdminConsole(props: AdminConsoleProps) {
         <p role="note" className="m-0 rounded-xl border border-[#ffc93c]/60 bg-[#ffc93c]/10 px-4 py-3 text-sm text-[#ffe9ad]">
           <strong className="text-[#ffc93c]">Payments coming soon.</strong>{" "}
           {props.stripe.configured
-            ? "The Stripe key is set, but no STRIPE_PRICE_* ids are. Teachers can’t check out until they are."
-            : "Free-upgrade codes and granted plans work now. Add the Stripe keys to turn on checkout and discount codes."}
+            ? "The payment account is connected, but plan prices aren’t set up yet. Teachers can’t check out until they are."
+            : "Free upgrade codes and granted plans work now. Checkout and discount codes will be available once payments are connected."}
         </p>
       ) : props.stripe.testMode ? (
         <p role="note" className="m-0 rounded-xl border border-[#22d3ee]/50 bg-[#22d3ee]/10 px-4 py-2 text-sm text-[#c9f5fc]">
-          Stripe is in <strong>test mode</strong>. No real charges.
+          Payments are in <strong>test mode</strong>. No real charges are made.
         </p>
       ) : null}
 

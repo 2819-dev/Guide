@@ -16,7 +16,7 @@ async function requireTeacher() {
 export async function GET() {
   const authz = await requireTeacher();
   if (!authz) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const quizzes = await listQuizzesForOwner(authz.profile.id);
   return NextResponse.json({ quizzes });
@@ -25,7 +25,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const authz = await requireTeacher();
   if (!authz) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   try {
     const body = z
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     console.error(error);
     const message = error instanceof Error ? error.message : "Could not create quiz";
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
     return NextResponse.json({ error: message }, { status: 400 });
   }

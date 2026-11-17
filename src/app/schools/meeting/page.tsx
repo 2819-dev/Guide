@@ -4,7 +4,7 @@ import { MeetingRequestForm } from "@/components/meeting-request-form";
 export const runtime = "edge";
 
 export const metadata = {
-  title: "Book a meeting · Guide",
+  title: "Book a meeting",
   description:
     "Request a walkthrough of Guide with the Guide team.",
 };

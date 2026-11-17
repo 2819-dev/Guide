@@ -23,7 +23,7 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
   async function load() {
     const res = await fetch("/api/education/apps");
     if (!res.ok) {
-      setError("Could not load apps");
+      setError("Apps couldn’t be loaded. Refresh the page to try again.");
       return;
     }
     const data = await res.json();
@@ -47,10 +47,14 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
         body: JSON.stringify({ classroomId, appSlug, install }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed");
+      if (!res.ok) {
+        throw new Error(data.error ?? "Your change wasn’t saved. Try again.");
+      }
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed");
+      setError(
+        e instanceof Error ? e.message : "Your change wasn’t saved. Try again.",
+      );
     } finally {
       setBusy(null);
     }
@@ -60,18 +64,17 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
     <section id="apps" className="space-y-4">
       <div>
         <h2 className="portal-section-title">Apps</h2>
-        <p className="-mt-2 text-sm text-ink-muted">
-          Add apps from the Guide library to a class. Students see them under
-          My apps on their portal.
+        <p className="portal-section-lede">
+          Add apps from the Guide library to your classes. Students open them
+          from My apps.
         </p>
       </div>
 
       {classrooms.length === 0 ? (
         <div className="portal-empty">
-          <p className="portal-empty__title">Start with a class</p>
+          <p className="portal-empty__title">No classes yet</p>
           <p className="portal-empty__body">
-            Create a class, then add apps here so students open them from My
-            apps.
+            Create a class first. Then you can add apps to it here.
           </p>
         </div>
       ) : (
@@ -86,18 +89,18 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
               className={`portal-panel space-y-4${isAppAvailable(app) ? "" : " portal-tile--soon"}`}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex items-start gap-3">
+                <div className="flex min-w-0 items-start gap-3">
                   <span
                     className="portal-app-tile__mark !h-12 !w-12 !text-lg"
                     aria-hidden
                   >
                     {app.name.slice(0, 1)}
                   </span>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-lg font-semibold text-forest-950">
                       {app.name}
                     </p>
-                    <p className="mt-0.5 text-sm text-forest-700">
+                    <p className="mt-0.5 text-sm text-ink-muted">
                       {app.tagline}
                     </p>
                   </div>
@@ -105,7 +108,7 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
                 {isAppAvailable(app) ? (
                   <a
                     href={appOpenHref(app) ?? "#"}
-                    className="btn-secondary !py-2 text-sm"
+                    className="btn-secondary !min-h-10 !px-4 !py-2 !text-sm"
                     {...(app.launchUrl
                       ? { rel: "noopener noreferrer" }
                       : {})}
@@ -113,9 +116,7 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
                     Open app
                   </a>
                 ) : (
-                  <span className="rounded-[10px] border border-line bg-forest-100 px-3 py-2 text-sm font-semibold text-forest-800">
-                    {APP_UNAVAILABLE_LABEL}
-                  </span>
+                  <span className="portal-pill">{APP_UNAVAILABLE_LABEL}</span>
                 )}
               </div>
               {!isAppAvailable(app) ? (
@@ -131,7 +132,7 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
                       key={room.id}
                       className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
                     >
-                      <span className="font-medium text-forest-950">
+                      <span className="min-w-0 font-medium text-forest-950">
                         {room.name}
                       </span>
                       <button
@@ -140,13 +141,13 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
                         onClick={() =>
                           void toggle(room.id, app.slug, !installed)
                         }
-                        className={installed ? "btn-secondary !py-2 text-sm" : "btn-primary !py-2 text-sm"}
+                        className={`${installed ? "btn-secondary" : "btn-primary"} !min-h-10 !px-4 !py-2 !text-sm`}
                       >
                         {busy === key
                           ? "Saving…"
                           : installed
                             ? "Remove from class"
-                            : `Add ${app.name}`}
+                            : "Add to class"}
                       </button>
                     </li>
                   );
@@ -158,7 +159,11 @@ export function TeacherAppsPanel({ refreshKey = 0 }: { refreshKey?: number }) {
         </div>
       )}
 
-      {error && <p className="text-sm text-red-700">{error}</p>}
+      {error && (
+        <p className="form-alert form-alert--error" role="alert">
+          {error}
+        </p>
+      )}
     </section>
   );
 }

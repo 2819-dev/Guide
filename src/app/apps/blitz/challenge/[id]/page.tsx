@@ -4,7 +4,7 @@ import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
-export const metadata = { title: "Blitz challenge" };
+export const metadata = { title: "Challenge · Blitz" };
 
 type Props = { params: Promise<{ id: string }> };
 

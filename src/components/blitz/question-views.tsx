@@ -217,7 +217,7 @@ function ChoicePicker({
   const multi = !!question.multiSelect;
   return (
     <div className="bz-pick">
-      {multi ? <p className="bz-pick-hint">Pick all that apply, then lock in</p> : null}
+      {multi ? <p className="bz-pick-hint">Select all that apply, then submit</p> : null}
       <div className={`bz-board bz-board--phone bz-board--${choices.length <= 2 ? "two" : "grid"} ${choices.length > 4 ? "bz-board--many" : ""}`}>
         {choices.map((c, i) => (
           <AnswerTile
@@ -247,7 +247,7 @@ function ChoicePicker({
           disabled={busy || picked.length === 0}
           onClick={() => onSubmit({ choiceIds: picked })}
         >
-          Lock in {picked.length ? `(${picked.length})` : ""}
+          Submit {picked.length ? `(${picked.length})` : ""}
         </button>
       ) : null}
     </div>
@@ -282,7 +282,7 @@ function TextAnswer({
           autoFocus
           autoComplete="off"
           onChange={(e) => setText(e.target.value)}
-          placeholder={question.type === "word_cloud" ? "One word or two…" : "Type your answer"}
+          placeholder={question.type === "word_cloud" ? "One or two words" : "Type your answer"}
           aria-label="Your answer"
         />
       ) : (
@@ -292,7 +292,7 @@ function TextAnswer({
           maxLength={limit}
           autoFocus
           onChange={(e) => setText(e.target.value)}
-          placeholder={question.type === "brainstorm" ? "Throw an idea in…" : "Write your thoughts…"}
+          placeholder={question.type === "brainstorm" ? "Type your idea" : "Type your response"}
           aria-label="Your answer"
         />
       )}
@@ -301,7 +301,7 @@ function TextAnswer({
           {text.length}/{limit}
         </span>
         <button type="submit" className="bz-btn bz-btn--primary bz-btn--lg" disabled={busy || !text.trim()}>
-          Send it
+          Submit
         </button>
       </div>
     </form>
@@ -348,7 +348,7 @@ function SliderAnswer({
         disabled={busy}
         onClick={() => onSubmit({ number: n })}
       >
-        Lock in {n}
+        Submit {n}
       </button>
     </div>
   );
@@ -426,7 +426,7 @@ function PuzzleAnswer({
 
   return (
     <div className="bz-puzzle">
-      <p className="bz-pick-hint">Tap two blocks to swap them, or use the arrows</p>
+      <p className="bz-pick-hint">Tap two items to swap them, or use the arrows</p>
       <ol className="bz-puzzle-list">
         {order.map((id, pos) => (
           <li key={id} className={`bz-puzzle-item bz-tile--${label[id]!.i % 6} ${held === id ? "is-held" : ""}`}>
@@ -451,7 +451,7 @@ function PuzzleAnswer({
         disabled={busy}
         onClick={() => onSubmit({ order })}
       >
-        Lock in order
+        Submit order
       </button>
     </div>
   );
@@ -482,11 +482,11 @@ function PinAnswer({
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={question.mediaUrl} alt="Tap to drop your pin" />
+          <img src={question.mediaUrl} alt="Tap the image to place your pin" />
           {pin ? <PinMark x={pin.x} y={pin.y} /> : null}
         </button>
       ) : (
-        <p className="bz-note">No image on this question — your pin lands in the middle.</p>
+        <p className="bz-note">This question has no image. Your pin will be placed in the center.</p>
       )}
       <button
         type="button"
@@ -494,7 +494,7 @@ function PinAnswer({
         disabled={busy || (!!question.mediaUrl && !pin)}
         onClick={() => onSubmit({ pinX: pin?.x ?? 0.5, pinY: pin?.y ?? 0.5 })}
       >
-        {pin || !question.mediaUrl ? "Drop pin here" : "Tap the picture first"}
+        {pin || !question.mediaUrl ? "Submit pin" : "Tap the image to place your pin"}
       </button>
     </div>
   );
@@ -543,7 +543,7 @@ export function HostResults({
     if (t === "open_ended" || t === "brainstorm") {
       return (
         <div className="bz-notes">
-          {list.length === 0 ? <WaitingBlurb text="Ideas will pin up here as they land…" /> : null}
+          {list.length === 0 ? <WaitingBlurb text="Ideas will appear here as players submit them." /> : null}
           {list.slice(0, 24).map((w, i) => (
             <div key={w.text + i} className={`bz-note-card bz-tile--${i % 6}`} style={{ "--r": `${((i * 37) % 7) - 3}deg`, animationDelay: `${i * 50}ms` } as CSSProperties}>
               {w.text}
@@ -560,7 +560,7 @@ export function HostResults({
             Accepted: <strong>{(question.acceptedAnswers ?? []).filter(Boolean).join(" · ")}</strong>
           </p>
         ) : null}
-        {list.length === 0 ? <WaitingBlurb text={t === "type_answer" ? "Answers stay hidden until the reveal" : "Words will float in here…"} /> : null}
+        {list.length === 0 ? <WaitingBlurb text={t === "type_answer" ? "Answers stay hidden until results are shown." : "Words will appear here as players submit them."} /> : null}
         {(t !== "type_answer" || reveal) &&
           list.slice(0, 40).map((w, i) => (
             <span
@@ -603,7 +603,7 @@ export function HostResults({
           <span>{min}</span>
           <span>{max}</span>
         </div>
-        {answers.length === 0 ? <WaitingBlurb text="Guesses drop onto the line here" /> : null}
+        {answers.length === 0 ? <WaitingBlurb text="Guesses will appear on the number line." /> : null}
       </div>
     );
   }
@@ -642,7 +642,7 @@ export function HostResults({
             Average <strong>{avg.toFixed(1)}</strong>
             {nps != null ? (
               <>
-                {" "}· NPS <strong>{nps}</strong>
+                {" "}· Net Promoter Score <strong>{nps}</strong>
               </>
             ) : null}
           </p>
@@ -703,7 +703,7 @@ export function HostResults({
             ) : null}
           </div>
         ) : (
-          <WaitingBlurb text="Add an image to this question to see pins on a map." />
+          <WaitingBlurb text="Add an image to this question to show pins." />
         )}
       </div>
     );

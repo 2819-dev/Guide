@@ -93,10 +93,10 @@ export function GameSetupDialog({
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not open the lobby");
+      if (!res.ok) throw new Error(data.error ?? "Could not open the lobby. Try again.");
       router.push(`/apps/blitz/host/${data.game.id}`);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not open the lobby");
+      setError(e instanceof Error ? e.message : "Could not open the lobby. Try again.");
       setBusy(false);
     }
   }
@@ -117,10 +117,10 @@ export function GameSetupDialog({
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not assign");
+      if (!res.ok) throw new Error(data.error ?? "Could not assign the challenge. Try again.");
       setAssigned({ id: data.challenge.id, className: data.challenge.classroomName });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not assign");
+      setError(e instanceof Error ? e.message : "Could not assign the challenge. Try again.");
     } finally {
       setBusy(false);
     }
@@ -142,7 +142,7 @@ export function GameSetupDialog({
       >
         <div className="bz-modal-head">
           <div className="min-w-0">
-            <p className="bz-kicker">{quiz.questions.length} questions</p>
+            <p className="bz-kicker">{quiz.questions.length} {quiz.questions.length === 1 ? "question" : "questions"}</p>
             <h2 id="bz-setup-title" className="bz-h2 mt-1" style={{ overflowWrap: "anywhere" }}>
               {quiz.title}
             </h2>
@@ -187,7 +187,7 @@ export function GameSetupDialog({
               })}
             </div>
             {mode === "team" ? (
-              <div className="mt-3 flex items-center gap-3">
+              <div className="mt-3 flex flex-wrap items-center gap-3">
                 <span className="bz-label" style={{ margin: 0 }}>
                   Teams
                 </span>
@@ -198,7 +198,7 @@ export function GameSetupDialog({
                     </button>
                   ))}
                 </div>
-                <span className="bz-faint">Players are auto-balanced as they join.</span>
+                <span className="bz-faint">Teams are balanced automatically as players join.</span>
               </div>
             ) : null}
           </>
@@ -242,7 +242,7 @@ export function GameSetupDialog({
               <label className="bz-switch">
                 <input type="checkbox" checked={avatars} onChange={(e) => setAvatars(e.target.checked)} />
                 <span className="bz-switch-track" aria-hidden />
-                Critter avatars
+                Avatars
               </label>
               <label className="bz-switch">
                 <input type="checkbox" checked={music && !!plan?.music} disabled={!plan?.music} onChange={(e) => setMusic(e.target.checked)} />
@@ -251,11 +251,11 @@ export function GameSetupDialog({
               </label>
             </div>
             {error ? (
-              <p className="bz-alert mt-4">
+              <p className="bz-alert mt-4" role="alert">
                 {error}
                 {/plan|Plus|Ultra/i.test(error) ? (
                   <Link href="/apps/blitz/upgrade" style={{ color: "var(--bz-sun)", marginLeft: 6, whiteSpace: "nowrap" }}>
-                    See plans →
+                    See plans
                   </Link>
                 ) : null}
               </p>
@@ -263,21 +263,21 @@ export function GameSetupDialog({
             <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
               {!premium ? (
                 <Link href="/apps/blitz/upgrade" className="bz-faint" style={{ color: "var(--bz-sun)", fontWeight: 700 }}>
-                  Unlock team battles, themes &amp; music →
+                  Get team battles, more themes, and music with Plus
                 </Link>
               ) : (
                 <span />
               )}
               <button type="button" className="bz-btn bz-btn--primary bz-btn--lg" disabled={busy} onClick={() => void startLive()}>
-                {busy ? "Opening…" : "Open the lobby"} <BlitzBolt size={22} color="var(--bz-sun)" />
+                {busy ? "Opening…" : "Open lobby"} <BlitzBolt size={22} color="var(--bz-sun)" />
               </button>
             </div>
           </>
         ) : !premium ? (
           <div className="bz-card bz-card--pad mt-5" style={{ textAlign: "center" }}>
-            <p className="bz-h3">Assign Blitz as homework</p>
+            <p className="bz-h3">Assign a quiz as homework</p>
             <p className="bz-muted mt-2">
-              Students play on their own time before a deadline, and you get a per-student report. Self-paced challenges come with Plus and Ultra.
+              Students play on their own time before a due date, and you get a report for each student. Self-paced challenges are included with Plus and Ultra.
             </p>
             <Link href="/apps/blitz/upgrade" className="bz-btn bz-btn--sun mt-4 no-underline">
               See plans
@@ -287,10 +287,10 @@ export function GameSetupDialog({
           <div className="bz-card bz-card--pad mt-5">
             <p className="bz-h3">Assigned to {assigned.className}</p>
             <p className="bz-muted mt-1">
-              Students see it on their Blitz join screen. You can also share the link:
+              Students will see it on their Blitz join screen. You can also share this link:
             </p>
             <div className="mt-3 flex gap-2">
-              <input className="bz-input" readOnly value={challengeUrl} onFocus={(e) => e.currentTarget.select()} />
+              <input className="bz-input min-w-0" aria-label="Challenge link" readOnly value={challengeUrl} onFocus={(e) => e.currentTarget.select()} />
               <button
                 type="button"
                 className="bz-btn"
@@ -301,7 +301,7 @@ export function GameSetupDialog({
                   });
                 }}
               >
-                {copied ? "Copied" : "Copy"}
+                {copied ? "Copied" : "Copy link"}
               </button>
             </div>
             <div className="mt-4 flex flex-wrap justify-end gap-2">
@@ -309,7 +309,7 @@ export function GameSetupDialog({
                 Done
               </button>
               <Link href={`/apps/blitz/reports?challenge=${assigned.id}`} className="bz-btn bz-btn--primary no-underline">
-                Watch results
+                View results
               </Link>
             </div>
           </div>
@@ -329,7 +329,7 @@ export function GameSetupDialog({
                 </select>
               </label>
               <label>
-                <span className="bz-label">Due</span>
+                <span className="bz-label">Due date</span>
                 <input type="datetime-local" className="bz-input" value={due} onChange={(e) => setDue(e.target.value)} />
               </label>
             </div>
@@ -337,15 +337,15 @@ export function GameSetupDialog({
               <label className="bz-switch">
                 <input type="checkbox" checked={speed} onChange={(e) => setSpeed(e.target.checked)} />
                 <span className="bz-switch-track" aria-hidden />
-                Speed bonus (faster answers score more)
+                Speed bonus (faster correct answers score more)
               </label>
             </div>
             {classes?.length === 0 ? (
               <p className="bz-alert bz-alert--info mt-4">
-                Create a class in your Guide teacher panel first, then assign challenges to it.
+                You don’t have any classes yet. Create a class in your Guide teacher dashboard, then assign the challenge to it.
               </p>
             ) : null}
-            {error ? <p className="bz-alert mt-4">{error}</p> : null}
+            {error ? <p className="bz-alert mt-4" role="alert">{error}</p> : null}
             <div className="mt-6 flex justify-end">
               <button type="button" className="bz-btn bz-btn--primary bz-btn--lg" disabled={busy || !classId} onClick={() => void assign()}>
                 {busy ? "Assigning…" : "Assign to class"}

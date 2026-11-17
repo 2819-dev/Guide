@@ -44,7 +44,7 @@ export function AdminRoleBadgesPanel() {
   async function load() {
     const res = await fetch("/api/admin/roles");
     if (!res.ok) {
-      setError("Could not load roles");
+      setError("Roles couldn’t be loaded. Refresh the page to try again.");
       return;
     }
     const data = await res.json();
@@ -84,12 +84,16 @@ export function AdminRoleBadgesPanel() {
         body: form,
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed");
+      if (!res.ok) {
+        throw new Error(data.error ?? "The role wasn’t created. Try again.");
+      }
       setName("");
       setIconFile(null);
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed");
+      setError(
+        e instanceof Error ? e.message : "That didn’t work. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -110,10 +114,14 @@ export function AdminRoleBadgesPanel() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed");
+      if (!res.ok) {
+        throw new Error(data.error ?? "The role wasn’t updated. Try again.");
+      }
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed");
+      setError(
+        e instanceof Error ? e.message : "That didn’t work. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -122,11 +130,14 @@ export function AdminRoleBadgesPanel() {
   return (
     <div className="space-y-4">
       <div className="portal-panel space-y-4">
-        <h3 className="text-sm font-semibold text-forest-800">Create a role</h3>
-        <p className="-mt-2 text-sm text-ink-muted">
-          Name, color, and optional icon — separate from student badge login
-          codes.
-        </p>
+        <div>
+          <h3 className="text-base font-semibold text-forest-950">
+            Create a role
+          </h3>
+          <p className="mt-1 text-sm text-ink-muted">
+            Give the role a name and color. An icon is optional.
+          </p>
+        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm font-semibold text-forest-900">
             Name
@@ -156,11 +167,11 @@ export function AdminRoleBadgesPanel() {
           </label>
         </div>
         <label className="block text-sm font-semibold text-forest-900">
-          Role icon
+          Icon (optional)
           <input
             type="file"
             accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
-            className="mt-1.5 block w-full text-sm text-ink-muted file:mr-3 file:rounded-full file:border-0 file:bg-forest-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-forest-900"
+            className="mt-1.5 block w-full text-sm text-ink-muted file:mr-3 file:rounded-[8px] file:border-0 file:bg-forest-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-forest-900"
             onChange={(e) => setIconFile(e.target.files?.[0] ?? null)}
           />
         </label>
@@ -187,15 +198,14 @@ export function AdminRoleBadgesPanel() {
       </div>
 
       <div className="portal-panel space-y-4">
-        <h3 className="text-sm font-semibold text-forest-800">
-          Assign to a person
+        <h3 className="text-base font-semibold text-forest-950">
+          Assign a role
         </h3>
         {roles.length === 0 || people.length === 0 ? (
           <div className="portal-empty !py-6">
             <p className="portal-empty__title">Nothing to assign yet</p>
             <p className="portal-empty__body">
-              Create a role and wait for people to have accounts, then assign
-              here.
+              Create a role first. You can assign it once people have accounts.
             </p>
           </div>
         ) : (
@@ -254,7 +264,7 @@ export function AdminRoleBadgesPanel() {
       </div>
 
       {error ? (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p className="form-alert form-alert--error" role="alert">
           {error}
         </p>
       ) : null}
@@ -263,12 +273,12 @@ export function AdminRoleBadgesPanel() {
         <div className="portal-empty">
           <p className="portal-empty__title">No roles yet</p>
           <p className="portal-empty__body">
-            Create a role above to start assigning badges in school communities.
+            Roles you create appear here.
           </p>
         </div>
       ) : (
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-forest-800">All roles</h3>
+          <h3 className="text-sm font-semibold text-forest-950">All roles</h3>
           <ul className="flex flex-wrap gap-2">
             {roles.map((r) => (
               <li key={r.id}>
@@ -285,7 +295,7 @@ export function AdminRoleBadgesPanel() {
 
       {assignments.length > 0 ? (
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-forest-800">
+          <h3 className="text-sm font-semibold text-forest-950">
             Recent assignments
           </h3>
           <ul className="divide-y divide-line overflow-hidden rounded-[10px] border border-line bg-surface">

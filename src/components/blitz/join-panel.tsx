@@ -76,10 +76,10 @@ export function BlitzJoinPanel({ realName, isTeacher }: Props) {
     try {
       const res = await fetch(`/api/blitz/games/peek?pin=${encodeURIComponent(value)}`);
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "No game with that PIN");
+      if (!res.ok) throw new Error(data.error ?? "No game found with that PIN.");
       setPeek(data.game);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "No game with that PIN");
+      setError(e instanceof Error ? e.message : "No game found with that PIN.");
       setPeek(null);
     } finally {
       setBusy(false);
@@ -107,10 +107,10 @@ export function BlitzJoinPanel({ realName, isTeacher }: Props) {
         body: JSON.stringify({ pin, nickname: nickname.trim() || null, avatarId }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not join");
+      if (!res.ok) throw new Error(data.error ?? "Could not join the game. Try again.");
       router.push(`/apps/blitz/play/${data.game.id}`);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not join");
+      setError(e instanceof Error ? e.message : "Could not join the game. Try again.");
       setBusy(false);
     }
   }
@@ -124,7 +124,7 @@ export function BlitzJoinPanel({ realName, isTeacher }: Props) {
         <Link href={isTeacher ? "/apps/blitz/library" : "/apps"} className="bz-btn bz-btn--quiet bz-btn--sm no-underline">
           ← {isTeacher ? "Library" : "My apps"}
         </Link>
-        <span className="bz-faint">Playing as {realName}</span>
+        <span className="bz-faint min-w-0 truncate">Playing as {realName}</span>
       </header>
       <div className="bz-join">
         <BlitzWordmark size="xl" />
@@ -162,10 +162,10 @@ export function BlitzJoinPanel({ realName, isTeacher }: Props) {
               </p>
             ) : null}
             <button type="submit" className="bz-btn bz-btn--primary bz-btn--block bz-btn--lg mt-4" disabled={busy || pin.length !== 6}>
-              {busy ? "Looking…" : "Enter"}
+              {busy ? "Checking…" : "Continue"}
             </button>
             <p className="bz-faint mt-3 text-center" style={{ color: "#5b5490" }}>
-              The PIN is on your teacher’s screen.
+              Find the 6-digit PIN on your teacher’s screen.
             </p>
           </form>
         ) : (
@@ -209,13 +209,13 @@ export function BlitzJoinPanel({ realName, isTeacher }: Props) {
               </label>
             ) : (
               <p className="mt-4 text-sm font-semibold" style={{ color: "#5b5490" }}>
-                Your teacher is using real names — you’ll show up as <strong>{realName}</strong>.
+                Your teacher is using real names. You’ll appear as <strong>{realName}</strong>.
               </p>
             )}
 
             {peek.allowAvatars ? (
               <div className="mt-4">
-                <span className="bz-label">Pick a critter</span>
+                <span className="bz-label">Choose an avatar</span>
                 <div className="bz-avatar-grid">
                   {BLITZ_AVATARS.map((a) => (
                     <button
@@ -241,10 +241,10 @@ export function BlitzJoinPanel({ realName, isTeacher }: Props) {
             ) : null}
 
             <button type="button" className="bz-btn bz-btn--primary bz-btn--block bz-btn--lg mt-5" disabled={busy} onClick={() => void join()}>
-              {busy ? "Joining…" : "Let’s go!"} <BlitzBolt size={22} color="var(--bz-sun)" />
+              {busy ? "Joining…" : "Join game"} <BlitzBolt size={22} color="var(--bz-sun)" />
             </button>
             <p className="bz-faint mt-3 text-center" style={{ color: "#5b5490" }}>
-              {peek.playerCount} already in · {peek.mode === "team" ? "Team battle" : peek.mode === "accuracy" ? "Accuracy mode" : "Classic"}
+              {peek.playerCount} {peek.playerCount === 1 ? "player" : "players"} joined · {peek.mode === "team" ? "Team battle" : peek.mode === "accuracy" ? "Accuracy mode" : "Classic mode"}
             </p>
           </div>
         )}
@@ -261,8 +261,8 @@ export function BlitzJoinPanel({ realName, isTeacher }: Props) {
                         {c.title}
                       </strong>
                       <span className="bz-faint">
-                        {c.classroomName} · {c.questionCount} Qs
-                        {c.dueAt ? ` · due ${formatDue(c.dueAt)}` : ""}
+                        {c.classroomName} · {c.questionCount} {c.questionCount === 1 ? "question" : "questions"}
+                        {c.dueAt ? ` · Due ${formatDue(c.dueAt)}` : ""}
                       </span>
                     </span>
                     <span className="bz-btn bz-btn--primary bz-btn--sm">{c.status === "in_progress" ? "Resume" : "Play"}</span>
@@ -275,7 +275,7 @@ export function BlitzJoinPanel({ realName, isTeacher }: Props) {
                     <span className="min-w-0">
                       <strong style={{ display: "block" }}>{c.title}</strong>
                       <span className="bz-faint">
-                        {c.status === "finished" ? `Done · ${c.score?.toLocaleString() ?? 0} pts` : "Closed"}
+                        {c.status === "finished" ? `Finished · ${c.score?.toLocaleString() ?? 0} points` : "Closed"}
                       </span>
                     </span>
                     <span className="bz-chip">{c.status === "finished" ? "Review" : "Closed"}</span>
@@ -287,7 +287,7 @@ export function BlitzJoinPanel({ realName, isTeacher }: Props) {
         ) : null}
 
         <p className="bz-faint flex items-center gap-1">
-          <BlitzBolt size={14} /> Guide sign-in keeps scores with your class — no guests.
+          <BlitzBolt size={14} /> You’re signed in with Guide, so your scores stay with your class.
         </p>
       </div>
     </BlitzStage>

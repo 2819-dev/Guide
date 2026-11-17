@@ -23,22 +23,22 @@ function ResetPasswordForm() {
 
   return (
     <div className="auth-shell flex min-h-screen flex-col">
-      <div className="flex items-center px-6 py-5 sm:px-8">
+      <div className="flex items-center px-4 py-5 sm:px-8">
         <GuideWordmark href="/" size="lg" />
       </div>
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8">
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 pb-16 sm:px-8">
         <AuthCard
           eyebrow={null}
-          title={broken ? "This link doesn’t work anymore" : "Choose a new password"}
+          title={broken ? "This link has expired" : "Choose a new password"}
           subtitle={
             broken
-              ? "Reset links expire after a while and work only once. Request a new one."
+              ? "Reset links expire after a short time and can be used once. Request a new link to continue."
               : email
                 ? `For ${email}. You’ll be logged in right after.`
                 : "You’ll be logged in right after."
           }
           footer={
-            <Link href={forgotHref} className="font-semibold text-forest-800">
+            <Link href={forgotHref} className="font-semibold text-forest-800 hover:underline">
               {broken ? "Send a new link" : "Need a new link?"}
             </Link>
           }
@@ -83,7 +83,7 @@ function ResetPasswordForm() {
               </label>
               <p className="text-sm text-ink-muted">At least 8 characters.</p>
               {state?.error ? (
-                <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
+                <p className="form-alert form-alert--error" role="alert">
                   {state.error}
                 </p>
               ) : null}

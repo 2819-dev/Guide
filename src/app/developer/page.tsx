@@ -10,7 +10,14 @@ import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
-export const metadata = { title: "Developer portal · Guide" };
+export const metadata = { title: "Developer portal" };
+
+function appStatusLabel(status: string): string {
+  if (status === "active") return "Live";
+  if (status === "pending") return "In review";
+  if (status === "paused" || status === "inactive") return "Paused";
+  return "Not live";
+}
 
 export default async function DeveloperPortalPage() {
   const authz = await requireProfile();
@@ -29,26 +36,26 @@ export default async function DeveloperPortalPage() {
   return (
     <PortalShell
       eyebrow="Developer"
-      title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Your verified apps appear here. Use the tabs to manage listings and docs."
+      title={`Welcome, ${authz.profile.displayName}`}
+      subtitle="See your apps on Guide and how schools add them to classes."
       chips={[
         { href: "#apps", label: "My apps", active: true },
-        { href: "#manage", label: "Manage apps" },
-        { href: "#docs", label: "Docs" },
+        { href: "#manage", label: "App details" },
+        { href: "#docs", label: "How it works" },
       ]}
       accountName={authz.profile.displayName}
     >
       <section id="apps">
         <h2 className="portal-section-title">My apps</h2>
-        <p className="-mt-2 mb-4 text-sm text-ink-muted">
-          Apps teachers can add to a class after Official approval.
+        <p className="portal-section-lede mb-4">
+          Approved apps that teachers can add to their classes.
         </p>
         {apps.length === 0 ? (
           <div className="portal-empty">
-            <p className="portal-empty__title">No apps listed yet</p>
+            <p className="portal-empty__title">No apps yet</p>
             <p className="portal-empty__body">
-              When Guide Official finishes setup, your app appears here for
-              schools to add to class.
+              Your app appears here once a Guide Official finishes setting up
+              its listing.
             </p>
           </div>
         ) : (
@@ -61,7 +68,7 @@ export default async function DeveloperPortalPage() {
                   </span>
                   <span className="portal-app-tile__name">{app.name}</span>
                   <span className="portal-app-tile__tag">
-                    {app.status === "active" ? "Active" : app.status}
+                    {appStatusLabel(app.status)}
                   </span>
                 </div>
               </li>
@@ -70,17 +77,17 @@ export default async function DeveloperPortalPage() {
         )}
       </section>
 
-      <section id="manage" className="mt-2">
-        <h2 className="portal-section-title">Manage apps</h2>
-        <p className="-mt-2 mb-4 text-sm text-ink-muted">
-          Listing details stay curated with Official after approval.
+      <section id="manage">
+        <h2 className="portal-section-title">App details</h2>
+        <p className="portal-section-lede mb-4">
+          To change a listing, email the Guide team. A Guide Official reviews
+          every update.
         </p>
         {apps.length === 0 ? (
           <div className="portal-empty">
-            <p className="portal-empty__title">Nothing to manage yet</p>
+            <p className="portal-empty__title">No app details yet</p>
             <p className="portal-empty__body">
-              After your first app is listed, update website and about copy here
-              with Guide Official.
+              Listing details for your apps will appear here.
             </p>
           </div>
         ) : (
@@ -97,25 +104,21 @@ export default async function DeveloperPortalPage() {
                       app.status === "active" ? "approved" : "pending"
                     }`}
                   >
-                    {app.status}
+                    {appStatusLabel(app.status)}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-ink-muted">
-                  Slug · {app.slug}
-                  {app.websiteUrl ? (
-                    <>
-                      {" · "}
-                      <a
-                        href={app.websiteUrl}
-                        className="font-semibold text-forest-800"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Website
-                      </a>
-                    </>
-                  ) : null}
-                </p>
+                {app.websiteUrl ? (
+                  <p className="mt-1 text-sm">
+                    <a
+                      href={app.websiteUrl}
+                      className="font-semibold text-forest-800 hover:underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Visit website
+                    </a>
+                  </p>
+                ) : null}
                 {app.about ? (
                   <p className="mt-2 text-sm leading-relaxed text-forest-950">
                     {app.about}
@@ -128,32 +131,29 @@ export default async function DeveloperPortalPage() {
       </section>
 
       <section id="docs">
-        <h2 className="portal-section-title">Docs</h2>
-        <p className="-mt-2 mb-4 text-sm text-ink-muted">
-          How partner apps reach classrooms on Guide.
+        <h2 className="portal-section-title">How it works</h2>
+        <p className="portal-section-lede mb-4">
+          How approved apps reach classrooms on Guide.
         </p>
-        <div className="portal-panel space-y-3 text-[0.95rem] leading-relaxed text-ink-muted">
+        <div className="portal-panel space-y-3 text-[0.9375rem] leading-relaxed text-ink-muted">
+          <ol className="list-decimal space-y-2 pl-5">
+            <li>A Guide Official reviews and approves your app.</li>
+            <li>Teachers add your app to the classes that need it.</li>
+            <li>Students open it from My apps in their student portal.</li>
+          </ol>
           <p>
-            Guide hosts verified partner apps for schools. Teachers add an app
-            to a class; students open it from My apps — so learning stays
-            engaging and classrooms stay organized.
-          </p>
-          <p>
-            Teachers choose which apps to add. Schools keep a curated library
-            for their classrooms.
-          </p>
-          <p>
-            Questions for Official:{" "}
+            Questions about your listing? Email{" "}
             <a
               href="mailto:hello@guidelearning.org"
-              className="font-semibold text-forest-800"
+              className="font-semibold text-forest-800 hover:underline"
             >
               hello@guidelearning.org
             </a>
+            .
           </p>
           <p className="pt-1">
-            <Link href="/" className="font-semibold text-forest-800">
-              ← Back to Guide
+            <Link href="/" className="font-semibold text-forest-800 hover:underline">
+              Back to Guide home
             </Link>
           </p>
         </div>

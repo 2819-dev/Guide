@@ -7,7 +7,7 @@ import { amudPublicUrl, guidePublicUrl } from "@/lib/site";
 export const runtime = "edge";
 
 export const metadata: Metadata = {
-  title: "Invitation to try Guide · Guide",
+  title: "Invitation to try Guide",
   description:
     "Invitation for Yeshivas Ohr Reuven to try Guide with your school.",
   robots: { index: false, follow: false },
@@ -155,7 +155,7 @@ export default function OhrReuvenInvitePage() {
                 href={DEMO_URL}
                 className="font-semibold text-[#1b4332] no-underline"
               >
-                Demo →
+                View demo →
               </a>
               {" · "}
               <a

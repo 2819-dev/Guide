@@ -49,7 +49,7 @@ async function BlitzOfficialCard() {
   const payments = checkoutConfigured();
   const stats = overview
     ? [
-        { value: overview.planCounts.plus + overview.planCounts.ultra, label: "Teachers on Plus / Ultra" },
+        { value: overview.planCounts.plus + overview.planCounts.ultra, label: "Teachers on paid plans" },
         { value: overview.liveGamesThisMonth, label: "Live games this month" },
         { value: overview.activePromoCodes, label: "Active promo codes" },
       ]
@@ -74,7 +74,9 @@ async function BlitzOfficialCard() {
           Grant a plan
         </Link>
         <span className="text-sm text-ink-muted">
-          {payments ? "Stripe payments are on." : "Payments coming soon (Stripe not connected yet). Codes and grants still work."}
+          {payments
+            ? "Online payments are on."
+            : "Online payments are not set up yet. Promo codes and plan grants still work."}
         </span>
       </div>
     </div>
@@ -98,8 +100,8 @@ export default async function AdminPage() {
   return (
     <PortalShell
       eyebrow="Guide Official"
-      title={`Hi, ${authz.profile.displayName}`}
-      subtitle="Approve schools and partners, follow up on meetings, and manage Roles and Suggestions."
+      title={`Welcome, ${authz.profile.displayName}`}
+      subtitle="Review school and developer applications, follow up on requests, and manage platform content."
       chips={[
         { href: "#schools", label: "Schools", active: true },
         { href: "#live-chat", label: "Live chat" },
@@ -108,14 +110,14 @@ export default async function AdminPage() {
         { href: "#roles", label: "Roles" },
         { href: "#suggestions", label: "Suggestions" },
         { href: "#blitz", label: "Blitz" },
-        ...(isAdmin ? [{ href: "#support", label: "Get help" }] : []),
+        ...(isAdmin ? [{ href: "#support", label: "Help" }] : []),
       ]}
       accountName={authz.profile.displayName}
     >
       <OfficialSection
         id="schools"
         title="School applications"
-        lede="Approve a school so its administrator can create classes, add students, and invite teachers. They get an email either way."
+        lede="Approving a school lets its administrator create classes, add students, and invite teachers. The applicant is emailed either way."
       >
         <AdminSchoolsPanel />
       </OfficialSection>
@@ -123,7 +125,7 @@ export default async function AdminPage() {
       <OfficialSection
         id="live-chat"
         title="Live chat"
-        lede="Guide Assistant (AI) answers the chat bubble on every Guide page and hands off to you when someone needs a person. Reply to take over."
+        lede="Guide Assistant (AI) answers the chat on Guide pages and hands the conversation to the Guide team when someone needs a person. Replying takes over the chat."
       >
         <AdminLiveChatPanel />
       </OfficialSection>
@@ -131,7 +133,7 @@ export default async function AdminPage() {
       <OfficialSection
         id="meetings"
         title="Meeting requests"
-        lede="Book a meeting from For schools lands here — mark contacted, scheduled, or closed."
+        lede="Requests from the Book a meeting form. Update each request as you follow up."
       >
         <AdminMeetingsPanel />
       </OfficialSection>
@@ -139,7 +141,7 @@ export default async function AdminPage() {
       <OfficialSection
         id="developers"
         title="Developers"
-        lede="Verified partners only — approve apps schools can add to class."
+        lede="Applications from developers who want to publish apps on Guide."
       >
         <AdminDevelopersPanel />
       </OfficialSection>
@@ -147,7 +149,7 @@ export default async function AdminPage() {
       <OfficialSection
         id="roles"
         title="Roles"
-        lede="Community role badges people can show on their profile."
+        lede="Badges that appear on a person’s profile, such as Star Student."
       >
         <AdminRoleBadgesPanel />
       </OfficialSection>
@@ -155,7 +157,7 @@ export default async function AdminPage() {
       <OfficialSection
         id="suggestions"
         title="Suggestions"
-        lede="Review student suggestions and study prompts from across Guide."
+        lede="Ideas and study prompts shown to students. Teachers can pause Suggestions for their classes."
       >
         <AdminSuggestionsPanel />
       </OfficialSection>
@@ -163,7 +165,7 @@ export default async function AdminPage() {
       <OfficialSection
         id="blitz"
         title="Blitz"
-        lede="Live classroom quizzes: promo codes, teacher plans, subscribers, and usage."
+        lede="Plans, promo codes, and usage for the Blitz app."
       >
         <BlitzOfficialCard />
       </OfficialSection>
@@ -171,8 +173,8 @@ export default async function AdminPage() {
       {isAdmin ? (
         <OfficialSection
           id="support"
-          title="Get help queue"
-          lede="Account help requests from school users."
+          title="Help requests"
+          lede="Requests sent from Get help on the account page."
         >
           <AdminSupportPanel />
         </OfficialSection>

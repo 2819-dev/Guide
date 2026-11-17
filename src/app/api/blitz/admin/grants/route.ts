@@ -11,7 +11,7 @@ import { getEntitlement, grantPlan, revokeAdminGrants } from "@/lib/blitz/entitl
 export const runtime = "edge";
 
 const forbidden = () =>
-  NextResponse.json({ error: "Guide Official access required" }, { status: 403 });
+  NextResponse.json({ error: "Only Guide Officials can do this." }, { status: 403 });
 
 export async function GET() {
   if (!(await requireBlitzOfficial())) return forbidden();
@@ -79,7 +79,7 @@ export async function DELETE(request: Request) {
     })
     .safeParse(await request.json().catch(() => null));
   if (!parsed.success || (!parsed.data.grantId && !parsed.data.email)) {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
   }
   let profileId: string | null = null;
   if (parsed.data.grantId) {

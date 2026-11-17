@@ -22,12 +22,16 @@ export function StudentSuggestionsPad() {
       try {
         const res = await fetch("/api/suggestions");
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Could not load");
+        if (!res.ok) throw new Error(data.error ?? "Suggestions couldn’t be loaded.");
         setItems(data.suggestions ?? []);
         setBlocked(Boolean(data.blocked));
         setReason(data.reason ?? null);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Could not load");
+        setError(
+          e instanceof Error
+            ? e.message
+            : "Suggestions couldn’t be loaded. Refresh the page to try again.",
+        );
       } finally {
         setLoading(false);
       }
@@ -35,11 +39,15 @@ export function StudentSuggestionsPad() {
   }, []);
 
   if (loading) {
-    return <p className="text-ink-muted">Loading Suggestions…</p>;
+    return <p className="text-sm text-ink-muted">Loading suggestions…</p>;
   }
 
   if (error) {
-    return <p className="text-sm text-red-700">{error}</p>;
+    return (
+      <p className="form-alert form-alert--error" role="alert">
+        {error}
+      </p>
+    );
   }
 
   if (blocked) {
@@ -48,7 +56,7 @@ export function StudentSuggestionsPad() {
         <p className="portal-empty__title">Suggestions paused</p>
         <p className="portal-empty__body">
           {reason ??
-            "Your teacher has paused Suggestions for now. Ask them if you need access."}
+            "Your teacher has paused Suggestions. Ask your teacher if you have questions."}
         </p>
       </div>
     );
@@ -59,8 +67,7 @@ export function StudentSuggestionsPad() {
       <div className="portal-empty">
         <p className="portal-empty__title">No suggestions yet</p>
         <p className="portal-empty__body">
-          When Guide Official posts something new, it shows up here — ideas and
-          notes that keep school feeling inviting.
+          New ideas and study prompts from the Guide team will appear here.
         </p>
       </div>
     );

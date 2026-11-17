@@ -46,7 +46,7 @@ const reviewSchema = z.object({
 export async function GET() {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
 
   const db = getDb();
@@ -98,8 +98,9 @@ async function neonAuthSignUpThenSession(opts: {
       }),
     });
   } catch (e) {
+    console.error("school apply sign-up request failed", e);
     throw new AccountError(
-      `Could not reach authentication service (${e instanceof Error ? e.message : "network"}).`,
+      "We couldn’t create your account right now. Try again in a few minutes.",
       502,
     );
   }
@@ -127,10 +128,11 @@ async function neonAuthSignUpThenSession(opts: {
         signUpData.error ||
         signInError?.message ||
         "";
-      const detail =
-        msg && msg !== "<none>"
-          ? msg
-          : `Auth signup failed (${signUpRes.status}${signUpData.code ? ` ${signUpData.code}` : ""}). If you already have Guide, log in and apply from your account.`;
+      const detail = /exist|already/i.test(msg)
+        ? "An account with this email already exists. Log in, then apply from your account."
+        : /password/i.test(msg)
+          ? "That password doesn’t match the existing account for this email. Log in, then apply from your account."
+          : "We couldn’t create your account. If you already use Guide, log in and apply from your account.";
       throw new AccountError(detail, 400);
     }
     return { authUserId, createdAccount };
@@ -275,7 +277,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             error:
-              "You already have an application under review. Open your School Administrator Portal to check status.",
+              "You already have an application under review. Open your school portal to check its status.",
             application: { id: existing.id, status: existing.status },
             redirectTo: "/education/panel",
           },
@@ -377,7 +379,7 @@ export async function POST(request: Request) {
       );
     }
     return NextResponse.json(
-      { error: "Could not submit application" },
+      { error: "Your application wasn’t submitted. Try again in a moment." },
       { status: 500 },
     );
   }
@@ -386,7 +388,7 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
 
   try {
@@ -398,7 +400,7 @@ export async function PATCH(request: Request) {
       .where(eq(schoolApplications.id, body.applicationId))
       .limit(1);
     if (!existing) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({ error: "That item couldn’t be found. Refresh the page and try again." }, { status: 404 });
     }
 
     const [updated] = await db
@@ -458,9 +460,9 @@ export async function PATCH(request: Request) {
   } catch (error) {
     console.error(error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid review" }, { status: 400 });
+      return NextResponse.json({ error: "That decision wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
-    return NextResponse.json({ error: "Could not review" }, { status: 500 });
+    return NextResponse.json({ error: "The decision wasn’t saved. Try again." }, { status: 500 });
   }
 }
 
@@ -492,11 +494,11 @@ function friendlyFieldError(error: z.ZodError): string {
 export async function DELETE(request: Request) {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   const id = new URL(request.url).searchParams.get("id") ?? "";
   if (!/^[0-9a-f-]{36}$/i.test(id)) {
-    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+    return NextResponse.json({ error: "That item couldn’t be found. Refresh the page and try again." }, { status: 400 });
   }
   const db = getDb();
   const [row] = await db
@@ -506,7 +508,7 @@ export async function DELETE(request: Request) {
     .limit(1);
   if (row?.status === "approved") {
     return NextResponse.json(
-      { error: "Approved schools can’t be deleted here (they may have classes and students)." },
+      { error: "Approved schools can’t be deleted because they may have classes and students." },
       { status: 400 },
     );
   }

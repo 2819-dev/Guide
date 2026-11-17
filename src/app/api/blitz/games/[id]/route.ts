@@ -13,12 +13,12 @@ type Ctx = { params: Promise<{ id: string }> };
 export async function GET(_req: Request, ctx: Ctx) {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in to continue." }, { status: 401 });
   }
   const { id } = await ctx.params;
   const state = await tickGame(id);
   if (!state) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Game not found." }, { status: 404 });
   }
 
   const isHost =
@@ -28,7 +28,7 @@ export async function GET(_req: Request, ctx: Ctx) {
   );
 
   if (!isHost && !isPlayer) {
-    return NextResponse.json({ error: "Not in this game" }, { status: 403 });
+    return NextResponse.json({ error: "You’re not in this game. Join with the PIN first." }, { status: 403 });
   }
 
   if (isHost) {

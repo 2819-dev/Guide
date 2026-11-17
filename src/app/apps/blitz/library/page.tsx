@@ -5,7 +5,7 @@ import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
-export const metadata = { title: "Blitz library" };
+export const metadata = { title: "Library · Blitz" };
 
 export default async function BlitzLibraryPage() {
   const authz = await requireProfile(["rebbe", "admin"]);

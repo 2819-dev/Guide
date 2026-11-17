@@ -19,16 +19,18 @@ async function post(body: unknown) {
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error ?? "Something went wrong. Try again.");
+  if (!res.ok) throw new Error(data.error ?? "That didn’t work. Try again.");
   return data;
 }
 
 /** Shows a new password once so the teacher can hand it to the student. */
 function NewPasswordNote({ name, username, password }: { name: string; username: string; password: string }) {
   return (
-    <div className="rounded-[10px] border border-forest-200 bg-forest-100 px-3 py-2.5 text-sm text-forest-950">
-      Give these to <strong>{name}</strong>: username <strong className="font-mono">{username}</strong>,
-      password <strong className="font-mono">{password}</strong>
+    <div className="form-alert form-alert--success text-left" role="status">
+      Share these with <strong>{name}</strong>. Username{" "}
+      <strong className="font-mono">{username}</strong>, password{" "}
+      <strong className="font-mono">{password}</strong>. The password is shown
+      only once.
     </div>
   );
 }
@@ -67,7 +69,9 @@ export function AddStudentForm({
       setPassword(generatePassword());
       onAdded();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Couldn’t add the student.");
+      setError(
+        err instanceof Error ? err.message : "The student wasn’t added. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -77,7 +81,11 @@ export function AddStudentForm({
     return (
       <div className="space-y-2">
         {created ? <NewPasswordNote {...created} /> : null}
-        <button type="button" onClick={start} className="btn-secondary !py-2 text-sm">
+        <button
+          type="button"
+          onClick={start}
+          className="btn-secondary !min-h-10 !px-4 !py-2 !text-sm"
+        >
           + Add a student
         </button>
       </div>
@@ -85,7 +93,10 @@ export function AddStudentForm({
   }
 
   return (
-    <form onSubmit={submit} className="space-y-3 rounded-[10px] border border-line p-4">
+    <form
+      onSubmit={submit}
+      className="space-y-3 rounded-[10px] border border-line bg-sky-soft p-4"
+    >
       {created ? <NewPasswordNote {...created} /> : null}
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="block text-sm font-semibold text-forest-900">
@@ -109,12 +120,24 @@ export function AddStudentForm({
           <input value={password} onChange={(e) => setPassword(e.target.value)} className="field mt-1.5 font-mono" required minLength={8} />
         </label>
       </div>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {error ? (
+        <p className="form-error-text" role="alert">
+          {error}
+        </p>
+      ) : null}
       <div className="flex flex-wrap gap-2">
-        <button type="submit" disabled={busy} className="btn-primary !py-2 text-sm">
+        <button
+          type="submit"
+          disabled={busy}
+          className="btn-primary !min-h-10 !px-4 !py-2 !text-sm"
+        >
           {busy ? "Adding…" : "Add student"}
         </button>
-        <button type="button" onClick={() => setOpen(false)} className="btn-secondary !py-2 text-sm">
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="btn-secondary !min-h-10 !px-4 !py-2 !text-sm"
+        >
           Done
         </button>
       </div>
@@ -149,7 +172,11 @@ export function ResetPasswordButton({
       setOpen(false);
       onDone?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Couldn’t reset the password.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "The password wasn’t reset. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -173,21 +200,29 @@ export function ResetPasswordButton({
   }
 
   return (
-    <span className="flex flex-wrap items-center gap-2">
+    <span className="flex flex-wrap items-center justify-end gap-2">
       <input
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="field !min-h-0 !w-48 !py-1.5 font-mono text-sm"
+        className="field !min-h-0 !w-40 !py-1.5 font-mono text-sm"
         aria-label={`New password for ${name}`}
         minLength={8}
       />
       <button type="button" onClick={() => void save()} disabled={busy || password.length < 8} className="btn-primary !min-h-0 !px-3 !py-1.5 text-sm">
         {busy ? "Saving…" : "Save"}
       </button>
-      <button type="button" onClick={() => setOpen(false)} className="text-sm text-ink-muted">
+      <button
+        type="button"
+        onClick={() => setOpen(false)}
+        className="text-sm font-semibold text-ink-muted hover:underline"
+      >
         Cancel
       </button>
-      {error ? <span className="w-full text-sm text-red-700">{error}</span> : null}
+      {error ? (
+        <span className="form-error-text w-full" role="alert">
+          {error}
+        </span>
+      ) : null}
     </span>
   );
 }
@@ -221,17 +256,18 @@ export function PasswordHelpPanel({ refreshKey = 0 }: { refreshKey?: number }) {
     <section id="password-help" className="space-y-3">
       <div>
         <h2 className="portal-section-title">Password help</h2>
-        <p className="-mt-2 text-sm text-ink-muted">
-          These students forgot their password. Set a new one and give it to them.
+        <p className="portal-section-lede">
+          These students asked for a new password. Set one, then share it with
+          the student.
         </p>
       </div>
       <ul className="portal-panel divide-y divide-line !p-0">
         {requests.map((r) => (
-          <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+          <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-5">
             <div>
               <p className="font-semibold text-forest-950">{r.displayName}</p>
               <p className="text-sm text-ink-muted">
-                <span className="font-mono">{r.username}</span> · asked{" "}
+                <span className="font-mono">{r.username}</span> · Requested{" "}
                 {new Date(r.createdAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
               </p>
             </div>

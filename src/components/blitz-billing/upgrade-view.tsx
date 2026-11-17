@@ -52,17 +52,17 @@ function capLine(n: number, unit: string) {
 
 function featureRows(plan: BlitzPlan): { text: string; on: boolean }[] {
   return [
-    { text: capLine(plan.liveGamesPerMonth, "live games / month"), on: true },
+    { text: capLine(plan.liveGamesPerMonth, "live games per month"), on: true },
     { text: `Up to ${plan.maxPlayersPerGame} players per game`, on: true },
     { text: `Up to ${plan.maxQuestionsPerQuiz} questions per quiz`, on: true },
     {
-      text: plan.questionTypes === "all" ? "Every question type" : "Quiz + true/false questions",
+      text: plan.questionTypes === "all" ? "All question types" : "Quiz and True/False questions",
       on: true,
     },
-    { text: "Lobby music", on: plan.music },
+    { text: "Game music", on: plan.music },
     { text: "Advanced reports", on: plan.advancedReports },
-    { text: "CSV / JSON export", on: plan.reportsExport },
-    { text: plan.watermark ? "Blitz watermark on screen" : "No watermark", on: !plan.watermark },
+    { text: "CSV report export", on: plan.reportsExport },
+    { text: "No watermark", on: !plan.watermark },
   ];
 }
 
@@ -70,21 +70,21 @@ function sourceLine(p: UpgradeViewProps): string {
   const s = p.subscription;
   if (p.source === "subscription" && s) {
     const period = s.interval === "year" ? "Billed yearly" : s.interval === "month" ? "Billed monthly" : "Subscription";
-    if (s.status === "past_due") return `${period} · Payment issue: update your card in Manage subscription`;
+    if (s.status === "past_due") return `${period} · There’s a problem with your payment. Update your card in Manage subscription.`;
     if (s.cancelAtPeriodEnd) return `${period} · Canceled, ends ${fmtDate(s.periodEnd)}`;
-    if (s.status === "trialing") return `Free trial · first charge ${fmtDate(s.periodEnd)}`;
+    if (s.status === "trialing") return `Free trial · First charge ${fmtDate(s.periodEnd)}`;
     return `${period} · Renews ${fmtDate(s.periodEnd)}`;
   }
   if (p.source === "promo" && p.grant) {
-    return `From code ${p.grant.code ?? ""}${p.grant.expiresAt ? ` · until ${fmtDate(p.grant.expiresAt)}` : ""}`;
+    return `${p.grant.code ? `From code ${p.grant.code}` : "From a promo code"}${p.grant.expiresAt ? ` · Until ${fmtDate(p.grant.expiresAt)}` : ""}`;
   }
   if (p.source === "admin" && p.grant) {
-    return `Granted by Guide${p.grant.expiresAt ? ` · until ${fmtDate(p.grant.expiresAt)}` : ""}`;
+    return `Granted by Guide${p.grant.expiresAt ? ` · Until ${fmtDate(p.grant.expiresAt)}` : ""}`;
   }
   if (s && (s.status === "canceled" || s.status === "unpaid" || s.status === "incomplete_expired")) {
-    return "Your subscription has ended. Pick a plan to come back anytime.";
+    return "Your subscription has ended. Choose a plan to resubscribe at any time.";
   }
-  return "Free forever. Upgrade when your class needs more.";
+  return "The Free plan has no time limit. Upgrade when your class needs more.";
 }
 
 export function UpgradeView(props: UpgradeViewProps) {
@@ -151,7 +151,7 @@ export function UpgradeView(props: UpgradeViewProps) {
   async function redeem(e: FormEvent) {
     e.preventDefault();
     if (!code.trim()) {
-      setCodeMsg({ ok: false, text: "Enter a code." });
+      setCodeMsg({ ok: false, text: "Enter a promo code." });
       return;
     }
     setBusy("code");
@@ -164,11 +164,11 @@ export function UpgradeView(props: UpgradeViewProps) {
       });
       const data = (await res.json().catch(() => ({}))) as { message?: string; error?: string };
       if (res.ok) {
-        setCodeMsg({ ok: true, text: data.message ?? "Code applied!" });
+        setCodeMsg({ ok: true, text: data.message ?? "Code applied." });
         setCode("");
         router.refresh();
       } else {
-        setCodeMsg({ ok: false, text: data.error ?? "That code didn’t work." });
+        setCodeMsg({ ok: false, text: data.error ?? "That code isn’t valid." });
       }
     } catch {
       setCodeMsg({ ok: false, text: "We couldn’t reach the server. Try again." });
@@ -192,7 +192,7 @@ export function UpgradeView(props: UpgradeViewProps) {
             <h1 id="current-plan" className="m-0 text-3xl font-black tracking-tight text-white sm:text-4xl">
               Blitz {current.label}
             </h1>
-            <PlanBadge planId={current.id} label={props.source === "free" ? "Current" : props.source === "subscription" ? "Subscribed" : props.source === "promo" ? "Code" : "Granted"} />
+            <PlanBadge planId={current.id} label={props.source === "free" ? "Current" : props.source === "subscription" ? "Subscribed" : props.source === "promo" ? "Promo code" : "Granted"} />
           </div>
           <p className="m-0 text-[0.95rem] text-indigo-100">{sourceLine(props)}</p>
         </div>
@@ -227,10 +227,10 @@ export function UpgradeView(props: UpgradeViewProps) {
             </div>
             <p className="m-0 mt-2 text-xs text-indigo-200">
               {cap < 0
-                ? "Unlimited on Ultra. Resets don’t matter to you."
+                ? "Ultra includes unlimited live games."
                 : props.liveGamesRemaining === 0
-                  ? "You’ve used every live game this month. Upgrade or wait for the 1st."
-                  : `${props.liveGamesRemaining} left · resets on the 1st (UTC)`}
+                  ? "You’ve used all of this month’s live games. Upgrade, or wait until they reset on the 1st."
+                  : `${props.liveGamesRemaining} left · Resets on the 1st of each month (UTC)`}
             </p>
           </div>
           <div className="flex flex-col justify-center gap-1 rounded-2xl border border-white/10 bg-white/[0.06] p-4 text-sm text-indigo-100">
@@ -271,7 +271,7 @@ export function UpgradeView(props: UpgradeViewProps) {
           <div>
             <StageEyebrow>Plans</StageEyebrow>
             <h2 id="compare" className="m-0 mt-1 text-2xl font-black tracking-tight text-white">
-              Pick what fits your class
+              Choose a plan for your class
             </h2>
           </div>
           {props.checkoutReady ? (
@@ -320,7 +320,7 @@ export function UpgradeView(props: UpgradeViewProps) {
             } else if (!paid) {
               action = (
                 <span className="inline-flex min-h-11 w-full items-center justify-center text-sm font-semibold text-indigo-200">
-                  {subscribed ? "Cancel anytime in Manage subscription" : "Always free"}
+                  {subscribed ? "Cancel at any time in Manage subscription" : "Always free"}
                 </span>
               );
             } else if (subscribed && props.hasStripeCustomer) {
@@ -365,7 +365,7 @@ export function UpgradeView(props: UpgradeViewProps) {
               >
                 {featured ? (
                   <span className="absolute -top-3 left-5 rounded-full bg-[#b6f03a] px-2.5 py-0.5 text-[0.7rem] font-extrabold uppercase tracking-wider text-[#15123b]">
-                    Most popular
+                    Recommended
                   </span>
                 ) : null}
                 <div>
@@ -376,7 +376,7 @@ export function UpgradeView(props: UpgradeViewProps) {
                   </div>
                   <p className="m-0 mt-1 text-sm text-indigo-100">{display.tagline}</p>
                 </div>
-                {/* Prices stay hidden until payments are connected (placeholders). */}
+                {/* Prices stay hidden until payments are connected. */}
                 {paid && !props.checkoutReady ? (
                   <p className="m-0 text-2xl font-black tracking-tight text-white">
                     Pricing soon
@@ -416,22 +416,22 @@ export function UpgradeView(props: UpgradeViewProps) {
         </ul>
         {props.checkoutReady ? (
           <p className="m-0 text-xs text-indigo-200">
-            Prices in USD. Subscriptions renew automatically; cancel anytime and keep your plan until the end of the period. Discount codes go in at checkout.
+            Prices in USD. Subscriptions renew automatically. Cancel at any time and keep your plan until the end of the billing period. Enter discount codes at checkout.
           </p>
         ) : null}
       </section>
 
       {/* Redeem */}
       <section aria-labelledby="redeem" className="rounded-3xl border border-[#22d3ee]/30 bg-[#22d3ee]/[0.06] p-5">
-        <h2 id="redeem" className="m-0 text-lg font-black text-white">Have a code?</h2>
-        <p className="m-0 mt-1 text-sm text-indigo-100">Free-upgrade codes from Guide apply right away.</p>
+        <h2 id="redeem" className="m-0 text-lg font-black text-white">Have a promo code?</h2>
+        <p className="m-0 mt-1 text-sm text-indigo-100">Upgrade codes from Guide apply to your account right away.</p>
         <form onSubmit={redeem} className="mt-3 flex flex-col gap-2 sm:flex-row">
           <label htmlFor="blitz-code" className="sr-only">Promo code</label>
           <input
             id="blitz-code"
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
-            placeholder="ENTER-CODE"
+            placeholder="PROMO CODE"
             autoComplete="off"
             autoCapitalize="characters"
             spellCheck={false}

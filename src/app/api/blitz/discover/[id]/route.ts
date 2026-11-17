@@ -18,12 +18,12 @@ async function requireTeacher() {
 export async function GET(_request: Request, ctx: Ctx) {
   const authz = await requireTeacher();
   if (!authz) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const { id } = await ctx.params;
   const quiz = await getDiscoverQuiz(id);
   if (!quiz) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Quiz not found." }, { status: 404 });
   }
   return NextResponse.json({ quiz });
 }
@@ -32,7 +32,7 @@ export async function GET(_request: Request, ctx: Ctx) {
 export async function POST(_request: Request, ctx: Ctx) {
   const authz = await requireTeacher();
   if (!authz) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const { id } = await ctx.params;
   try {

@@ -16,13 +16,13 @@ export async function changePasswordAction(
   const confirmPassword = String(formData.get("confirmPassword") ?? "");
 
   if (newPassword.length < 8) {
-    return { error: "Use at least 8 characters for your new password." };
+    return { error: "Your new password needs at least 8 characters." };
   }
   if (newPassword !== confirmPassword) {
-    return { error: "New password and confirmation do not match." };
+    return { error: "The new passwords don’t match. Enter them again." };
   }
   if (newPassword === currentPassword) {
-    return { error: "Choose a new password that is different from the current one." };
+    return { error: "Choose a new password that is different from your current one." };
   }
 
   const session = await ensureProfile();
@@ -38,7 +38,9 @@ export async function changePasswordAction(
 
   if (error) {
     return {
-      error: error.message || "Could not update password. Check your current password.",
+      error: /invalid|incorrect|password/i.test(error.message ?? "")
+        ? "Your current password is incorrect. Check it and try again."
+        : "We couldn’t update your password. Try again in a moment.",
     };
   }
 

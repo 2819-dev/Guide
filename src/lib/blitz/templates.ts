@@ -142,8 +142,8 @@ export const BLITZ_TEMPLATES: BlitzTemplate[] = [
   {
     id: "warm-up-tf",
     title: "Lightning warm-up",
-    description: "Five fast true-or-false calls to wake the room up.",
-    blurb: "5 true/false · 2 min",
+    description: "Five quick true-or-false questions to start class.",
+    blurb: "5 questions · About 2 min",
     category: "warm-up",
     discoverCategory: "icebreaker",
     motif: "bolt",
@@ -158,8 +158,8 @@ export const BLITZ_TEMPLATES: BlitzTemplate[] = [
   {
     id: "unit-review",
     title: "Unit review: Ancient Egypt",
-    description: "Mixed review with ordering, typing and a double-points finale.",
-    blurb: "Quiz · puzzle · type answer",
+    description: "Mixed review with ordering, typed answers, and a double-points final question.",
+    blurb: "Quiz · Puzzle · Type answer",
     category: "review",
     discoverCategory: "history",
     motif: "hex",
@@ -183,8 +183,8 @@ export const BLITZ_TEMPLATES: BlitzTemplate[] = [
   {
     id: "vocab-builder",
     title: "Vocabulary sprint",
-    description: "Definitions, synonyms and a spelling round.",
-    blurb: "Quiz · type answer · 6 Qs",
+    description: "Definitions, synonyms, and a spelling question.",
+    blurb: "Quiz · Type answer · 6 questions",
     category: "vocabulary",
     discoverCategory: "ela",
     motif: "star",
@@ -200,8 +200,8 @@ export const BLITZ_TEMPLATES: BlitzTemplate[] = [
   {
     id: "math-facts",
     title: "Times-table blitz",
-    description: "Quick-fire multiplication with a slider estimate to finish.",
-    blurb: "Speed round · slider",
+    description: "Quick multiplication questions, finishing with a slider estimate.",
+    blurb: "Quiz · Type answer · Slider",
     category: "math",
     discoverCategory: "math",
     motif: "spark",
@@ -217,8 +217,8 @@ export const BLITZ_TEMPLATES: BlitzTemplate[] = [
   {
     id: "cell-parts",
     title: "Inside the cell",
-    description: "Organelles, functions and a labelling challenge.",
-    blurb: "Quiz · type answer · puzzle",
+    description: "Organelles, their functions, and an ordering question.",
+    blurb: "Quiz · Type answer · Puzzle",
     category: "science",
     discoverCategory: "science",
     motif: "hex",
@@ -233,8 +233,8 @@ export const BLITZ_TEMPLATES: BlitzTemplate[] = [
   {
     id: "check-in-poll",
     title: "How’s everyone doing?",
-    description: "A no-wrong-answers check-in: mood, confidence and one word.",
-    blurb: "Poll · scale · word cloud",
+    description: "An unscored check-in on readiness, understanding, and how students feel.",
+    blurb: "Poll · Scale · Word cloud",
     category: "check-in",
     discoverCategory: "check-in",
     motif: "moon",
@@ -248,8 +248,8 @@ export const BLITZ_TEMPLATES: BlitzTemplate[] = [
   {
     id: "fun-friday",
     title: "Fun Friday showdown",
-    description: "Silly trivia, a map pin drop and a would-you-rather poll.",
-    blurb: "Trivia · poll · brainstorm",
+    description: "Light trivia, a slider guess, a would-you-rather poll, and a brainstorm.",
+    blurb: "Quiz · Slider · Poll · Brainstorm",
     category: "fun",
     discoverCategory: "icebreaker",
     motif: "star",
@@ -258,14 +258,14 @@ export const BLITZ_TEMPLATES: BlitzTemplate[] = [
       quiz("What color is a polar bear’s skin?", ["White", "Pink", "Black", "Grey"], 2),
       slider("How many keys are on a standard piano?", 40, 120, 88, 4),
       poll("Would you rather…", ["Fly", "Be invisible", "Talk to animals", "Time travel"]),
-      open("brainstorm", "Pitch a name for our class mascot!", 45),
+      open("brainstorm", "Suggest a name for our class mascot.", 45),
     ],
   },
   {
     id: "exit-ticket",
     title: "Exit ticket",
-    description: "Three-minute wrap-up: one check, one reflection, one rating.",
-    blurb: "Quiz · open-ended · scale",
+    description: "A three-minute wrap-up: one question, one reflection, and one rating.",
+    blurb: "Quiz · Open-ended · Scale",
     category: "exit",
     discoverCategory: "check-in",
     motif: "moon",
@@ -278,14 +278,14 @@ export const BLITZ_TEMPLATES: BlitzTemplate[] = [
   {
     id: "geo-explorer",
     title: "Map explorer",
-    description: "Continents, capitals and a pin-the-place round (add your own map image).",
-    blurb: "Quiz · pin answer · drop pin",
+    description: "Continents, capitals, and pin questions. Add your own map image.",
+    blurb: "Quiz · Pin answer · Drop pin",
     category: "review",
     discoverCategory: "general",
     motif: "wave",
     questions: () => {
       const pinQ = newBlankQuestion("pin_answer");
-      pinQ.prompt = "Tap where the equator crosses this map. (Add a world map image URL.)";
+      pinQ.prompt = "Tap where the equator crosses this map. (Add a world map image URL in the editor.)";
       pinQ.pinX = 0.5;
       pinQ.pinY = 0.52;
       pinQ.pinRadius = 0.08;

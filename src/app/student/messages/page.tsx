@@ -16,13 +16,11 @@ export default async function StudentMessagesPage() {
       studentTabs
       eyebrow="Student"
       title="Messages"
-      subtitle="Write to teachers of classes you joined — keep class work moving."
+      subtitle="Message the teachers of your classes."
       chips={[
         { href: "/student#apps", label: "My apps" },
-        { href: "/student#tools", label: "Tools" },
-      ]}
-      utilities={[
-        { href: "/student/messages", label: "Messaging", active: true },
+        { href: "/student#classes", label: "Classes" },
+        { href: "/student/messages", label: "Messages", active: true },
         { href: "/student/suggestions", label: "Suggestions" },
       ]}
       accountName={authz.profile.displayName}

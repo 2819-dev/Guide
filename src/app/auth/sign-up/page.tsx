@@ -5,7 +5,6 @@ export const runtime = "edge";
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
-import { AdminKeyIcon } from "@/components/admin-entry";
 import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
@@ -13,6 +12,8 @@ import { FIRST_APP_NAME } from "@/lib/apps";
 import { parseLoginAs, signupAsCopy } from "@/lib/login-roles";
 import { publicAmudHomePath } from "@/lib/site";
 import { signUpWithEmail } from "./actions";
+
+const linkClass = "font-semibold text-forest-800 hover:underline";
 
 function SignUpForm() {
   const params = useSearchParams();
@@ -23,13 +24,13 @@ function SignUpForm() {
   if (as === "official") {
     return (
       <AuthCard
-        eyebrow={null}
-        title="Guide Official"
-        subtitle="Please log in with your Guide Official account."
+        eyebrow="Guide Official"
+        title="Log in with your Guide Official account"
+        subtitle="Guide Official accounts are created by the Guide team."
         footer={null}
       >
-        <Link href="/auth/sign-in?as=official" className="btn-primary inline-flex">
-          Log In
+        <Link href="/auth/sign-in?as=official" className="btn-primary w-full">
+          Log in
         </Link>
       </AuthCard>
     );
@@ -39,12 +40,12 @@ function SignUpForm() {
   if (as === "student") {
     return (
       <AuthCard
-        eyebrow="Students"
+        eyebrow="Student"
         title="Your teacher sets up your account"
         subtitle="Ask your teacher for your username and password, then log in."
         footer={null}
       >
-        <Link href="/auth/sign-in?as=student" className="btn-primary inline-flex">
+        <Link href="/auth/sign-in?as=student" className="btn-primary w-full">
           Go to student log in
         </Link>
       </AuthCard>
@@ -55,52 +56,45 @@ function SignUpForm() {
   if (as === "educator") {
     return (
       <AuthCard
-        eyebrow="For schools"
-        title="Teachers log in only"
-        subtitle="Teachers receive a setup invite from their school. School and district administrators apply for Guide."
+        eyebrow="Teachers and school administrators"
+        title="Accounts come from your school"
+        subtitle="Teachers receive an invite from their school administrator. School and district administrators apply to bring Guide to their school."
         footer={
           <>
-            Already invited?{" "}
-            <Link
-              href="/auth/sign-in?as=educator"
-              className="font-semibold text-forest-800"
-            >
+            Already have an account?{" "}
+            <Link href="/auth/sign-in?as=educator" className={linkClass}>
               Log in
             </Link>
           </>
         }
       >
         <div className="flex flex-col gap-3">
-          <Link
-            href="/auth/sign-in?as=educator"
-            className="btn-primary inline-flex items-center justify-center gap-2"
-          >
-            <AdminKeyIcon />
-            Admin
-          </Link>
-          <Link
-            href="/education#apply"
-            className="btn-secondary inline-flex justify-center"
-          >
+          <Link href="/education#apply" className="btn-primary w-full">
             Apply for your school
+          </Link>
+          <Link href="/auth/sign-in?as=educator" className="btn-secondary w-full">
+            Log in
           </Link>
         </div>
       </AuthCard>
     );
   }
 
+  const isDeveloper = as === "developer";
+
   return (
     <AuthCard
-      eyebrow={as === "developer" ? "Partners" : null}
-      title={copy.title}
-      subtitle={copy.subtitle}
+      eyebrow={isDeveloper ? "Developer" : null}
+      title={isDeveloper ? "Create a developer account" : copy.title}
+      subtitle={
+        isDeveloper
+          ? "Create your account, then submit your developer application."
+          : "Save your Test Yourself scores and notes. A school account is not required."
+      }
       footer={
         <>
           Already have an account?{" "}
-          <Link
-            href={`/auth/sign-in?as=${as}`}
-            className="font-semibold text-forest-800"
-          >
+          <Link href={`/auth/sign-in?as=${as}`} className={linkClass}>
             Log in
           </Link>
         </>
@@ -126,7 +120,7 @@ function SignUpForm() {
             type="email"
             required
             className="field mt-1.5"
-            placeholder="you@school.org"
+            placeholder={isDeveloper ? "you@company.com" : "you@example.com"}
             autoComplete="email"
           />
         </label>
@@ -143,25 +137,21 @@ function SignUpForm() {
           />
         </label>
 
-        {as === "developer" ? (
+        {isDeveloper ? (
           <p className="text-[0.8125rem] leading-snug text-ink-muted">
-            Next, submit a developer application. Your partner portal opens after
-            Guide Official verifies you.
+            A Guide Official reviews every developer application. Your
+            developer portal opens once you are approved.
           </p>
         ) : null}
 
         {state?.error && (
-          <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          <p className="form-alert form-alert--error" role="alert">
             {state.error}
           </p>
         )}
 
         <button type="submit" disabled={pending} className="btn-primary w-full">
-          {pending
-            ? "Creating…"
-            : as === "developer"
-              ? "Create account"
-              : "Get started"}
+          {pending ? "Creating account…" : "Create account"}
         </button>
       </form>
     </AuthCard>
@@ -175,7 +165,7 @@ function SignUpShell() {
 
   return (
     <div className="auth-shell flex min-h-screen flex-col">
-      <div className="flex items-center justify-between px-6 py-5 sm:px-8">
+      <div className="flex items-center justify-between gap-4 px-4 py-5 sm:px-8">
         {isLearner ? (
           <AppWordmark
             name={FIRST_APP_NAME}
@@ -190,11 +180,11 @@ function SignUpShell() {
             href={publicAmudHomePath()}
             className="text-sm font-semibold text-forest-800 no-underline hover:underline"
           >
-            ← {FIRST_APP_NAME}
+            Back to {FIRST_APP_NAME}
           </Link>
         ) : null}
       </div>
-      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-5 pb-16 sm:px-8 lg:max-w-xl">
+      <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-4 pb-16 sm:px-8">
         <SignUpForm />
       </div>
     </div>

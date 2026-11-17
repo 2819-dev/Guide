@@ -16,7 +16,7 @@ type Ctx = { params: Promise<{ id: string }> };
 export async function POST(request: Request, ctx: Ctx) {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in to continue." }, { status: 401 });
   }
   const { id } = await ctx.params;
 
@@ -71,7 +71,7 @@ export async function POST(request: Request, ctx: Ctx) {
 
     if (body.kind === "host") {
       if (!body.action) {
-        return NextResponse.json({ error: "Missing action" }, { status: 400 });
+        return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
       }
       const action =
         body.action.type === "kick"
@@ -108,12 +108,12 @@ export async function POST(request: Request, ctx: Ctx) {
       });
     }
 
-    return NextResponse.json({ error: "Unknown kind" }, { status: 400 });
+    return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
   } catch (error) {
     console.error(error);
-    const message = error instanceof Error ? error.message : "Action failed";
+    const message = error instanceof Error ? error.message : "Something went wrong. Try again.";
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
     return NextResponse.json({ error: message }, { status: 400 });
   }

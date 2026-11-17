@@ -19,6 +19,16 @@ type Application = {
   reviewedAt: string | null;
 };
 
+const STATUS_LABELS: Record<string, string> = {
+  pending: "Pending",
+  approved: "Approved",
+  rejected: "Declined",
+};
+
+function statusLabel(status: string) {
+  return STATUS_LABELS[status] ?? "Reviewed";
+}
+
 function applicationTitle(a: Application) {
   if (a.kind === "teacher") {
     return a.className?.trim()
@@ -42,7 +52,14 @@ function applicationMeta(a: Application) {
       .filter(Boolean)
       .join(" · ");
   }
-  return `${a.contactName} · ${a.contactEmail} · ${a.contactRole} · ${a.studentCountEstimate} students`;
+  return [
+    a.contactName,
+    a.contactEmail,
+    a.contactRole,
+    a.studentCountEstimate ? `${a.studentCountEstimate} students` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 export function AdminSchoolsPanel() {
@@ -53,7 +70,7 @@ export function AdminSchoolsPanel() {
   async function load() {
     const res = await fetch("/api/education/applications");
     if (!res.ok) {
-      setError("Could not load applications");
+      setError("Applications couldn’t be loaded. Refresh the page to try again.");
       return;
     }
     const data = await res.json();
@@ -75,11 +92,13 @@ export function AdminSchoolsPanel() {
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error ?? "Review failed");
+        throw new Error(data.error ?? "The decision wasn’t saved. Try again.");
       }
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Review failed");
+      setError(
+        e instanceof Error ? e.message : "The decision wasn’t saved. Try again.",
+      );
     } finally {
       setBusyId(null);
     }
@@ -91,7 +110,7 @@ export function AdminSchoolsPanel() {
   return (
     <div className="space-y-6">
       {error ? (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p className="form-alert form-alert--error" role="alert">
           {error}
         </p>
       ) : null}
@@ -100,9 +119,7 @@ export function AdminSchoolsPanel() {
         <div className="portal-empty">
           <p className="portal-empty__title">No applications yet</p>
           <p className="portal-empty__body">
-            School and district applications from For schools appear here.
-            Teachers are invited by email after approval — they do not apply
-            alone.
+            School and district applications appear here for review.
           </p>
         </div>
       ) : (
@@ -113,14 +130,15 @@ export function AdminSchoolsPanel() {
                 <li key={a.id} className="portal-panel space-y-3">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <p className="status-chip status-chip--pending !normal-case">
-                        Pending ·{" "}
-                        {a.kind === "teacher" ? "Legacy class" : "School"}
+                      <p className="status-chip status-chip--pending">
+                        {a.kind === "teacher"
+                          ? "Pending · Class application"
+                          : "Pending · School"}
                       </p>
                       <h3 className="mt-2 text-xl font-semibold tracking-tight text-forest-950">
                         {applicationTitle(a)}
                       </h3>
-                      <p className="mt-1 text-sm text-ink-muted">
+                      <p className="official-row-meta mt-1">
                         {applicationMeta(a)}
                       </p>
                       <p className="mt-1 text-xs text-ink-muted">
@@ -132,7 +150,7 @@ export function AdminSchoolsPanel() {
                         type="button"
                         disabled={busyId === a.id}
                         onClick={() => void review(a.id, "approved")}
-                        className="btn-primary !py-2 text-sm"
+                        className="btn-primary !min-h-10 !px-4 !py-2 !text-sm"
                       >
                         Approve
                       </button>
@@ -140,9 +158,9 @@ export function AdminSchoolsPanel() {
                         type="button"
                         disabled={busyId === a.id}
                         onClick={() => void review(a.id, "rejected")}
-                        className="btn-secondary !py-2 text-sm"
+                        className="btn-secondary !min-h-10 !px-4 !py-2 !text-sm"
                       >
-                        Reject
+                        Decline
                       </button>
                       <AdminDeleteButton
                         url={`/api/education/applications?id=${a.id}`}
@@ -151,7 +169,9 @@ export function AdminSchoolsPanel() {
                       />
                     </div>
                   </div>
-                  <p className="text-sm text-ink">{a.intendedUse}</p>
+                  <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
+                    {a.intendedUse}
+                  </p>
                 </li>
               ))}
             </ul>
@@ -169,14 +189,16 @@ export function AdminSchoolsPanel() {
                       <p className="font-semibold text-forest-950">
                         {applicationTitle(a)}
                       </p>
-                      <p className="text-xs font-semibold uppercase text-forest-700">
-                        {a.status}
+                      <span
+                        className={`status-chip status-chip--${a.status === "approved" ? "approved" : "closed"}`}
+                      >
+                        {statusLabel(a.status)}
                         {" · "}
-                        {a.kind === "teacher" ? "Teacher" : "School"}
-                      </p>
+                        {a.kind === "teacher" ? "Class" : "School"}
+                      </span>
                     </div>
                     <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
-                      <p className="text-sm text-ink-muted">
+                      <p className="official-row-meta">
                         {a.contactName} · {a.contactEmail}
                       </p>
                       {a.status !== "approved" ? (

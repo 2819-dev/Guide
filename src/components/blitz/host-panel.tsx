@@ -81,11 +81,11 @@ export function BlitzHostPanel({ gameId }: Props) {
           ),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Action failed");
+        if (!res.ok) throw new Error(data.error ?? "Something went wrong. Try again.");
         setGame(data.game);
         void refresh();
       } catch (e) {
-        setMsg(e instanceof Error ? e.message : "Action failed");
+        setMsg(e instanceof Error ? e.message : "Something went wrong. Try again.");
       } finally {
         setBusy(false);
       }
@@ -139,7 +139,12 @@ export function BlitzHostPanel({ gameId }: Props) {
       <BlitzStage>
         <div className="bz-center">
           <BlitzBolt size={64} className="bz-spinner-bolt" />
-          <p className="bz-muted">{error ?? "Warming up the stage…"}</p>
+          <p className="bz-muted" role={error ? "alert" : "status"}>{error ?? "Loading game…"}</p>
+          {error ? (
+            <Link href="/apps/blitz/library" className="bz-btn bz-btn--primary no-underline">
+              Back to library
+            </Link>
+          ) : null}
         </div>
       </BlitzStage>
     );
@@ -172,7 +177,7 @@ export function BlitzHostPanel({ gameId }: Props) {
             aria-label={muted ? "Unmute sound" : "Mute sound"}
             title={
               !planMusic
-                ? "Sound effects only — music is a Plus feature"
+                ? "Sound effects only. Music is included with Plus."
                 : muted
                   ? "Unmute"
                   : "Mute"
@@ -190,7 +195,7 @@ export function BlitzHostPanel({ gameId }: Props) {
                 if (window.confirm("End this game for everyone?")) void act({ type: "end" });
               }}
             >
-              End
+              End game
             </button>
           ) : null}
         </div>
@@ -202,7 +207,7 @@ export function BlitzHostPanel({ gameId }: Props) {
             {msg}
             {/plan|Plus|Ultra/i.test(msg) ? (
               <Link href="/apps/blitz/upgrade" style={{ color: "var(--bz-sun)", marginLeft: 6 }}>
-                See plans →
+                See plans
               </Link>
             ) : null}
           </p>
@@ -254,7 +259,7 @@ export function BlitzHostPanel({ gameId }: Props) {
           <div className="bz-dock-group">
             {game.phase === "question" ? (
               <span className="bz-pill">
-                Space = show results
+                Press Space to show results
               </span>
             ) : null}
           </div>
@@ -294,7 +299,7 @@ export function BlitzHostPanel({ gameId }: Props) {
               disabled={busy || activePlayers.length === 0}
               onClick={() => void act({ type: "advance" })}
             >
-              {activePlayers.length === 0 ? "Waiting for players…" : "Start Blitz"}
+              {activePlayers.length === 0 ? "Waiting for players…" : "Start game"}
               {activePlayers.length > 0 ? <BlitzBolt size={30} color="var(--bz-sun)" /> : null}
             </button>
           </div>
@@ -303,7 +308,7 @@ export function BlitzHostPanel({ gameId }: Props) {
 
       {blocked ? (
         <button type="button" className="bz-btn bz-btn--paper bz-soundgate">
-          Tap anywhere to turn the sound on
+          Click anywhere to turn on sound
         </button>
       ) : null}
       {game.planWatermark ? (
@@ -326,8 +331,8 @@ function nextLabel(game: LiveGameState): string | null {
     case "lock":
       return "Show results";
     case "reveal":
-      if (last) return "Final podium";
-      return q && isScoredType(q.type) ? "Leaderboard" : "Next question";
+      if (last) return "Show podium";
+      return q && isScoredType(q.type) ? "Show leaderboard" : "Next question";
     case "leaderboard":
       return "Next question";
     case "podium":
@@ -371,10 +376,10 @@ function HostLobby({
           <div className="bz-joinbox-row">
             <div className="min-w-0">
               <p className="bz-joinurl">
-                Join at <strong>{host || "guide"}/apps/blitz/join</strong>
+                Join at <strong>{host || "guidelearning.org"}/apps/blitz/join</strong>
                 <br />
                 <span className="bz-sub">
-                  or open Blitz from My apps
+                  or open Blitz from My apps on Guide
                 </span>
               </p>
               <p className="bz-kicker" style={{ marginTop: "1.1rem" }}>
@@ -397,7 +402,7 @@ function HostLobby({
             <p className="bz-kicker">Stage theme</p>
             {!premium ? (
               <Link href="/apps/blitz/upgrade" className="bz-faint" style={{ color: "var(--bz-sun)" }}>
-                More themes with Plus →
+                More themes with Plus
               </Link>
             ) : null}
           </div>
@@ -411,7 +416,7 @@ function HostLobby({
                   className="bz-filter"
                   aria-pressed={theme === t.id}
                   disabled={busy || locked}
-                  title={locked ? "Plus theme" : t.blurb}
+                  title={locked ? "Available with Plus" : t.blurb}
                   onClick={() => onSettings({ theme: t.id as BlitzThemeId })}
                   style={{ opacity: locked ? 0.5 : 1 }}
                 >
@@ -435,7 +440,7 @@ function HostLobby({
           </div>
           <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
             <Switch label="Nicknames" checked={game.settings.allowNicknames} disabled={busy} onChange={(v) => onSettings({ allowNicknames: v })} />
-            <Switch label="Critter avatars" checked={game.settings.allowAvatars} disabled={busy} onChange={(v) => onSettings({ allowAvatars: v })} />
+            <Switch label="Avatars" checked={game.settings.allowAvatars} disabled={busy} onChange={(v) => onSettings({ allowAvatars: v })} />
             <Switch
               label={planMusic ? "Music" : "Music (Plus)"}
               checked={game.settings.musicEnabled}
@@ -473,7 +478,7 @@ function HostLobby({
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="bz-lobby-count">
             <b>{players.length}</b>
-            <span>{players.length === 1 ? "player" : "players"} in</span>
+            <span>{players.length === 1 ? "player" : "players"} joined</span>
           </div>
           <span className="bz-pill">{game.quizTitle}</span>
         </div>
@@ -499,9 +504,9 @@ function HostLobby({
           <div className="bz-crowd bz-crowd--empty">
             <div>
               <Sparkle className="mx-auto mb-2" style={{ width: 36, height: 36, color: "var(--bz-accent)" }} />
-              Players pop up here as they join.
+              Players appear here as they join.
               <br />
-              <span className="bz-faint">Start whenever you’re ready.</span>
+              <span className="bz-faint">Start the game when everyone is in.</span>
             </div>
           </div>
         ) : (
@@ -594,7 +599,7 @@ function HostQuestionView({
                 {reveal && isScoredType(question.type) && graded.length ? (
                   <>
                     <b>{Math.round((right / graded.length) * 100)}%</b>
-                    got it
+                    correct
                   </>
                 ) : (
                   <>
@@ -644,18 +649,18 @@ function typeHint(type: string): string {
     case "type_answer":
       return "Type the answer on your device";
     case "word_cloud":
-      return "Send a word — watch the cloud grow";
+      return "Submit a word on your device";
     case "brainstorm":
-      return "Throw your ideas in";
+      return "Share your ideas on your device";
     case "open_ended":
-      return "Share your thinking";
+      return "Write your response on your device";
     case "slider":
-      return "Slide to your best guess";
+      return "Use the slider on your device";
     case "scale":
     case "nps_scale":
       return "Pick a number on your device";
     case "puzzle":
-      return "Put the blocks in order";
+      return "Put the items in order on your device";
     default:
       return "Answer on your device";
   }
@@ -702,7 +707,7 @@ function HostLeaderboard({ game, players }: { game: LiveGameState; players: Play
             </div>
           ))}
           <p className="bz-faint" style={{ textAlign: "center" }}>
-            Team score = average points per player
+            Team score is the average points per player.
           </p>
         </div>
       ) : null}
@@ -724,7 +729,7 @@ function HostLeaderboard({ game, players }: { game: LiveGameState; players: Play
                 ) : null}
                 <small>
                   {team ? <span style={{ color: team.color }}>{team.name} · </span> : null}
-                  {moved > 0 ? <span className="bz-move">▲ {moved}</span> : moved < 0 ? <span className="bz-move is-down">▼ {-moved}</span> : "holding steady"}
+                  {moved > 0 ? <span className="bz-move">▲ {moved}</span> : moved < 0 ? <span className="bz-move is-down">▼ {-moved}</span> : "No change"}
                 </small>
               </span>
               <span className="bz-lb-score">
@@ -768,13 +773,13 @@ function HostPodium({ game, players }: { game: LiveGameState; players: PlayerPub
               {winner.name}
             </h2>
             <p className="bz-muted">
-              {winner.average.toLocaleString()} avg points · {winner.members} {winner.members === 1 ? "player" : "players"}
+              {winner.average.toLocaleString()} average points · {winner.members} {winner.members === 1 ? "player" : "players"}
             </p>
           </>
         ) : (
           <h2 className="bz-h1">
             {!game.questions.some((q) => isScoredType(q.type))
-              ? "That’s a wrap — thanks, everyone!"
+              ? "Thanks for playing!"
               : game.phase === "ended"
                 ? "Final results"
                 : "And the winner is…"}
@@ -796,7 +801,7 @@ function HostPodium({ game, players }: { game: LiveGameState; players: PlayerPub
       </div>
       {ranked.length > 3 ? (
         <p className="bz-faint" style={{ textAlign: "center" }}>
-          Everyone else: {ranked.slice(3, 12).map((p) => playerLabel(p, game.settings.allowNicknames)).join(" · ")}
+          Also played: {ranked.slice(3, 12).map((p) => playerLabel(p, game.settings.allowNicknames)).join(" · ")}
           {ranked.length > 12 ? " …" : ""}
         </p>
       ) : null}

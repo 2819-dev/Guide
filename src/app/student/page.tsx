@@ -56,11 +56,11 @@ export default async function StudentHubPage() {
     <PortalShell
       studentTabs
       eyebrow="Student"
-      title={`Hi, ${authz.profile.displayName}`}
+      title={`Welcome, ${authz.profile.displayName}`}
       subtitle={
         schoolName
-          ? `${schoolName} · Open apps your teachers added for class.`
-          : "Open the apps your teachers added for class."
+          ? `${schoolName} · Open the apps your teachers added to your classes.`
+          : "Open the apps your teachers added to your classes."
       }
       chips={[
         { href: "/student#apps", label: "My apps", active: true },
@@ -90,8 +90,8 @@ export default async function StudentHubPage() {
           apps={apps}
           emptyHint={
             myClasses.length === 0
-              ? "Join your class with the code from your teacher below. Your class apps will show up here."
-              : "Your teacher hasn’t added an app to your class yet. Check back soon."
+              ? "Join a class with the code from your teacher. Your class apps will appear here."
+              : "Your teachers haven’t added any apps yet. They will appear here when they do."
           }
         />
       </div>
@@ -103,12 +103,14 @@ export default async function StudentHubPage() {
             {myClasses.map((c) => (
               <li key={c.id} className="portal-panel !py-4">
                 <p className="font-semibold text-forest-950">{c.name}</p>
-                <p className="mt-0.5 text-sm text-ink-muted">{c.teacher}</p>
+                <p className="mt-0.5 text-sm text-ink-muted">
+                  Teacher: {c.teacher}
+                </p>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="-mt-2 mb-4 text-sm text-ink-muted">
+          <p className="portal-section-lede mb-4">
             You haven’t joined a class yet. Ask your teacher for the class code.
           </p>
         )}
@@ -121,15 +123,15 @@ export default async function StudentHubPage() {
           <PortalToolTile
             href="/student/messages"
             title="Messages"
-            description="Write to teachers of classes you joined."
-            cta="Open →"
+            description="Message the teachers of your classes."
+            cta="Open messages"
           />
           {suggestionsAccess.blocked ? (
             <PortalToolTile
               href="/student/suggestions"
               title="Suggestions"
               description={
-                suggestionsAccess.reason ?? "Suggestions are paused for now."
+                suggestionsAccess.reason ?? "Your teacher has paused Suggestions."
               }
               muted
             />
@@ -137,8 +139,8 @@ export default async function StudentHubPage() {
             <PortalToolTile
               href="/student/suggestions"
               title="Suggestions"
-              description="Ideas and study prompts from Guide."
-              cta="Open →"
+              description="Ideas and study prompts from the Guide team."
+              cta="Open suggestions"
             />
           )}
         </div>

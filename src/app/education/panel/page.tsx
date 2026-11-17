@@ -11,7 +11,7 @@ import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
-export const metadata = { title: "School portal · Guide" };
+export const metadata = { title: "School portal" };
 
 export default async function EducationPanelPage() {
   const authz = await requireProfile(["rebbe", "admin"]);
@@ -51,11 +51,11 @@ export default async function EducationPanelPage() {
   return (
     <PortalShell
       eyebrow={shortRole}
-      title={`Hi, ${authz.profile.displayName}`}
+      title={`Welcome, ${authz.profile.displayName}`}
       subtitle={
         isTeacher
-          ? "Create classes, add apps, and message your students."
-          : "Create classes, add apps, invite teachers, and message students."
+          ? "Manage your classes, students, and apps."
+          : "Manage classes, students, apps, and teachers for your school."
       }
       chips={[
         { href: "#classes", label: "Classes", active: true },

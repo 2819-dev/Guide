@@ -17,7 +17,7 @@ const Body = z.object({
 export async function POST(request: Request) {
   const profile = await requireBlitzTeacher();
   if (!profile) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   if (!checkoutConfigured()) {
     return NextResponse.json(

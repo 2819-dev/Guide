@@ -35,7 +35,7 @@
 
   --bz-text: #f6f3ff;
   --bz-muted: #b9b2e0;
-  --bz-faint: #8c84bf;
+  --bz-faint: #9a93cc;
   --bz-accent: var(--bz-lime);
 
   --bz-display: "Bricolage Blitz", var(--font-manrope, system-ui), system-ui, sans-serif;
@@ -611,6 +611,7 @@
   display: flex;
   align-items: center;
   gap: 0.15rem;
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -3123,6 +3124,7 @@ button.bz-tile:disabled {
 }
 
 .bz-scorechip {
+  min-width: 0;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -3886,4 +3888,33 @@ button.bz-listrow {
   .bz-confetti {
     display: none;
   }
+}
+
+/* ------------------------------------------------------------ small-screen polish */
+
+.bz-band-inner > a {
+  flex-shrink: 0;
+}
+
+.bz-scorechip > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bz-listrow > .bz-btn,
+.bz-listrow > .bz-chip {
+  flex-shrink: 0;
+}
+
+.bz-quiz-title {
+  overflow-wrap: anywhere;
+}
+
+.bz-alert a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }

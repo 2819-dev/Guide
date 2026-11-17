@@ -67,13 +67,11 @@ export default async function AccountPage() {
       studentTabs={role === "customer"}
       eyebrow={shortRole}
       title={authz.profile.displayName}
-      subtitle={[
-        "Signed in",
-        isOfficial ? null : roleLabel(role),
-        schoolName,
-      ]
-        .filter(Boolean)
-        .join(" · ")}
+      subtitle={
+        schoolName
+          ? `${schoolName} · Manage your account and get help.`
+          : "Manage your account and get help."
+      }
       chips={[
         { href: portalHref, label: portalLabel },
         { href: "/account", label: "Account", active: true },
@@ -82,7 +80,7 @@ export default async function AccountPage() {
       accountHref={null}
     >
       {roles.length > 0 ? (
-        <ul className="-mt-2 flex flex-wrap gap-2">
+        <ul className="portal-role-row">
           {roles.map((r) => (
             <li key={r.id}>
               <RoleBadgeChip

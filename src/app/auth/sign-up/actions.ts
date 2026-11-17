@@ -34,7 +34,7 @@ export async function signUpWithEmail(
   }
 
   if (!email || !password || password.length < 8) {
-    return { error: "Use a valid email and a password of at least 8 characters." };
+    return { error: "Enter a valid email and a password of at least 8 characters." };
   }
 
   if (as === "official") {
@@ -47,12 +47,12 @@ export async function signUpWithEmail(
   if (as === "educator") {
     return {
       error:
-        "Teachers log in with a school invite. School administrators apply at /education.",
+        "Teacher accounts come from a school invite. School administrators can apply for their school from the For schools page.",
     };
   }
 
   if (as === "student") {
-    return { error: "Student accounts are created by teachers. Ask your teacher for your username." };
+    return { error: "Student accounts are created by teachers. Ask your teacher for your username and password." };
   }
 
   const { data: signUpData, error } = await auth.signUp.email({
@@ -62,7 +62,11 @@ export async function signUpWithEmail(
   });
 
   if (error) {
-    return { error: error.message || "Could not create account" };
+    return {
+      error: /exist|already/i.test(error.message ?? "")
+        ? "An account with this email already exists. Log in instead."
+        : "We couldn’t create your account. Check your details and try again.",
+    };
   }
 
   // Use the user from signUp: getSession() would read this request's cookies,

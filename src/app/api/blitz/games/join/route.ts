@@ -37,9 +37,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error(error);
-    const message = error instanceof Error ? error.message : "Could not join";
+    const message = error instanceof Error ? error.message : "Could not join the game.";
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
     return NextResponse.json({ error: message }, { status: 400 });
   }

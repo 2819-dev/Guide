@@ -14,7 +14,7 @@ import { requireProfile } from "@/lib/profile";
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Blitz plans" };
+export const metadata = { title: "Plans · Blitz" };
 
 export default async function BlitzUpgradePage({
   searchParams,
@@ -33,9 +33,9 @@ export default async function BlitzUpgradePage({
       <BlitzStage>
         <div className="mx-auto flex max-w-xl flex-col gap-3 py-10">
           <StageEyebrow>Blitz plans</StageEyebrow>
-          <h1 className="m-0 text-3xl font-black text-white">Almost there</h1>
+          <h1 className="m-0 text-3xl font-black text-white">Waiting for school approval</h1>
           <p className="m-0 text-indigo-100">
-            Blitz plans open once your school is approved on Guide. We’ll email you as soon as it is.
+            Blitz plans become available once your school is approved on Guide. We’ll email you when it is.
           </p>
           <Link
             href="/teacher"
@@ -61,8 +61,8 @@ export default async function BlitzUpgradePage({
     flash = {
       tone: "good",
       text: synced
-        ? "You’re all set. Thanks for upgrading Blitz!"
-        : "Payment received. Your plan will switch on in a moment. Refresh if it hasn’t yet.",
+        ? "You’re all set. Thanks for upgrading Blitz."
+        : "Payment received. Your new plan will be active in a moment. Refresh the page if it isn’t yet.",
     };
   } else if (one("checkout") === "canceled") {
     flash = { tone: "info", text: "Checkout canceled. Nothing was charged." };

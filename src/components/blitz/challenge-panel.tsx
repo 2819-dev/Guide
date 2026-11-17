@@ -43,7 +43,7 @@ export function BlitzChallengePanel({ challengeId }: { challengeId: string }) {
       const res = await fetch(`/api/blitz/challenges/${challengeId}`, { cache: "no-store" });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Challenge not found");
+        setError(data.error ?? "We couldn’t find this challenge.");
         return;
       }
       if (data.role === "teacher") {
@@ -64,11 +64,11 @@ export function BlitzChallengePanel({ challengeId }: { challengeId: string }) {
         body: JSON.stringify({ kind: "begin" }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not start");
+      if (!res.ok) throw new Error(data.error ?? "Could not start the challenge. Try again.");
       setFeedback(null);
       accept(data.view);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not start");
+      setError(e instanceof Error ? e.message : "Could not start the challenge. Try again.");
     } finally {
       setBusy(false);
     }
@@ -88,13 +88,13 @@ export function BlitzChallengePanel({ challengeId }: { challengeId: string }) {
           body: JSON.stringify({ kind: "answer", questionId: view.question.id, payload }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Could not submit");
+        if (!res.ok) throw new Error(data.error ?? "Could not submit your answer. Try again.");
         setFeedback({ result: data.result, revealed: data.revealed });
         accept(data.view);
         if (data.result.correct === true) playBlitzSfx("correct");
         else if (data.result.correct === false) playBlitzSfx("wrong", 0.8);
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Could not submit");
+        setError(e instanceof Error ? e.message : "Could not submit your answer. Try again.");
       } finally {
         submitting.current = false;
         setBusy(false);
@@ -109,10 +109,10 @@ export function BlitzChallengePanel({ challengeId }: { challengeId: string }) {
         <div className="bz-phone">
           <div className="bz-center">
             <BlitzWordmark size="lg" />
-            <h1 className="bz-h2">This is your challenge</h1>
-            <p className="bz-muted">Share this page’s link with your class. Results land in Reports.</p>
+            <h1 className="bz-h2">You assigned this challenge</h1>
+            <p className="bz-muted">Share this page’s link with your class. Results appear in Reports as students finish.</p>
             <Link href={`/apps/blitz/reports?challenge=${challengeId}`} className="bz-btn bz-btn--primary bz-btn--lg no-underline">
-              See results
+              View results
             </Link>
           </div>
         </div>
@@ -129,7 +129,7 @@ export function BlitzChallengePanel({ challengeId }: { challengeId: string }) {
             <p className="bz-muted">{error ?? "Loading your challenge…"}</p>
             {error ? (
               <Link href="/apps/blitz/join" className="bz-btn bz-btn--primary no-underline">
-                Back
+                Back to Blitz
               </Link>
             ) : null}
           </div>
@@ -164,19 +164,19 @@ export function BlitzChallengePanel({ challengeId }: { challengeId: string }) {
               </span>
             ) : null}
             <span className="bz-pill" style={tone ? { background: "rgba(255,255,255,.45)", color: "var(--bz-ink)", borderColor: "var(--bz-ink)" } : undefined}>
-              {view.score.toLocaleString()} pts
+              {view.score.toLocaleString()} points
             </span>
           </span>
         </div>
 
-        {error ? <p className="bz-alert">{error}</p> : null}
+        {error ? <p className="bz-alert" role="alert">{error}</p> : null}
 
         {view.status === "not_started" ? (
           <div className="bz-center">
             <span className="bz-chip bz-chip--cyan">Self-paced challenge</span>
             <h1 className="bz-h1">{c.title}</h1>
             <p className="bz-feedback-sub">
-              {c.classroomName} · {view.total} questions · {c.settings.mode === "accuracy" ? "accuracy scoring" : "faster answers score more"}
+              {c.classroomName} · {view.total} questions · {c.settings.mode === "accuracy" ? "Accuracy scoring" : "Faster answers score more"}
             </p>
             {c.dueAt ? <p className="bz-faint">Due {formatDue(c.dueAt)}</p> : null}
             {c.open ? (
@@ -186,7 +186,7 @@ export function BlitzChallengePanel({ challengeId }: { challengeId: string }) {
             ) : (
               <p className="bz-alert">This challenge is closed.</p>
             )}
-            <p className="bz-faint">One try. Each question has a timer — it keeps running if you leave.</p>
+            <p className="bz-faint">You get one attempt. Each question is timed, and the timer keeps running if you leave the page.</p>
           </div>
         ) : null}
 
@@ -213,9 +213,9 @@ export function BlitzChallengePanel({ challengeId }: { challengeId: string }) {
               <p className="bz-kicker">
                 Question {view.index + 1} of {view.total}
               </p>
-              <h1 className="bz-h1">Ready?</h1>
+              <h1 className="bz-h1">Ready for the next question?</h1>
               <button type="button" className="bz-btn bz-btn--primary bz-btn--xl" disabled={busy} onClick={() => void begin()}>
-                Go!
+                Continue
               </button>
             </div>
           )
@@ -252,7 +252,7 @@ function ChallengeQuestion({
       <TimerBar startedAtMs={view.questionStartedAtMs} limitSec={q.timeLimitSec} skewMs={skew} />
       <div className="flex items-center justify-between gap-2">
         <span className="bz-kicker">
-          {view.index + 1}/{view.total} · {BLITZ_TYPE_LABEL[q.type]}
+          Question {view.index + 1} of {view.total} · {BLITZ_TYPE_LABEL[q.type]}
         </span>
         <span className="bz-pill">{left}s</span>
       </div>
@@ -280,12 +280,12 @@ function ChallengeFeedback({
   const r = feedback.result;
   const right = correctAnswerText(feedback.revealed);
   const title = r.timedOut
-    ? "Time’s up!"
+    ? "Time’s up"
     : r.correct === true
-      ? "Nailed it!"
+      ? "Correct!"
       : r.correct === false
         ? "Not quite"
-        : "Got it!";
+        : "Answer received";
   return (
     <div className={`bz-center ${r.correct === false && !r.timedOut ? "bz-shake" : ""}`}>
       <h1 className="bz-feedback-title">{title}</h1>
@@ -302,7 +302,7 @@ function ChallengeFeedback({
         </div>
       ) : null}
       <button type="button" className="bz-btn bz-btn--paper bz-btn--lg" disabled={busy} onClick={onNext}>
-        {last ? "See my results" : "Next question"} →
+        {last ? "See my results" : "Next question"}
       </button>
     </div>
   );
@@ -334,14 +334,14 @@ function ChallengeSummary({ view }: { view: StudentChallengeView }) {
               </span>
               <strong style={{ display: "block", lineHeight: 1.25 }}>{question.prompt}</strong>
               <span className="bz-faint" style={{ display: "block", marginTop: 4 }}>
-                You: {answer?.timedOut ? "ran out of time" : payloadText(question, answer?.payload)}
+                Your answer: {answer?.timedOut ? "Ran out of time" : payloadText(question, answer?.payload)}
                 {answer?.correct === false && correctAnswerText(question) ? ` · Answer: ${correctAnswerText(question)}` : ""}
               </span>
             </span>
             <span
               className={`bz-chip ${answer?.correct === true ? "bz-chip--lime" : answer?.correct === false ? "bz-chip--coral" : "bz-chip--cyan"}`}
             >
-              {answer?.correct === true ? `+${answer.points}` : answer?.correct === false ? "Missed" : "Noted"}
+              {answer?.correct === true ? `+${answer.points}` : answer?.correct === false ? "Incorrect" : "Answered"}
             </span>
           </li>
         ))}

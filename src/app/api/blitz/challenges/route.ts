@@ -21,7 +21,7 @@ async function isTeacher(profile: Profile) {
 export async function GET() {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in to continue." }, { status: 401 });
   }
   try {
     if (await isTeacher(authz.profile)) {
@@ -32,14 +32,14 @@ export async function GET() {
     return NextResponse.json({ role: "student", challenges });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not load challenges" }, { status: 500 });
+    return NextResponse.json({ error: "Could not load challenges. Try again." }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz || !(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   try {
     const body = z
@@ -63,9 +63,9 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error(error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
-    const message = error instanceof Error ? error.message : "Could not assign";
+    const message = error instanceof Error ? error.message : "Could not assign the challenge.";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

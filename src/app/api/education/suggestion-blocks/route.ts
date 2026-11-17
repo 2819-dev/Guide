@@ -45,10 +45,10 @@ async function assertOwnsClassroom(
 export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "School approval required" }, { status: 403 });
+    return NextResponse.json({ error: "This is available after your school is approved." }, { status: 403 });
   }
 
   const db = getDb();
@@ -101,10 +101,10 @@ export async function GET() {
 export async function POST(request: Request) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "School approval required" }, { status: 403 });
+    return NextResponse.json({ error: "This is available after your school is approved." }, { status: 403 });
   }
 
   try {
@@ -115,7 +115,7 @@ export async function POST(request: Request) {
       authz.profile.role,
     );
     if (!room) {
-      return NextResponse.json({ error: "Class not found" }, { status: 404 });
+      return NextResponse.json({ error: "That class couldn’t be found. Refresh the page and try again." }, { status: 404 });
     }
 
     const db = getDb();
@@ -133,7 +133,7 @@ export async function POST(request: Request) {
         .limit(1);
       if (!member) {
         return NextResponse.json(
-          { error: "Student is not in this class" },
+          { error: "That student isn’t in this class." },
           { status: 400 },
         );
       }
@@ -201,8 +201,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error(error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
-    return NextResponse.json({ error: "Could not update access" }, { status: 500 });
+    return NextResponse.json({ error: "Your change wasn’t saved. Try again." }, { status: 500 });
   }
 }

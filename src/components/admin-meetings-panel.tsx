@@ -16,6 +16,13 @@ type Meeting = {
   createdAt: string;
 };
 
+const STATUS_LABELS: Record<string, string> = {
+  pending: "New",
+  contacted: "Contacted",
+  scheduled: "Scheduled",
+  closed: "Closed",
+};
+
 export function AdminMeetingsPanel() {
   const [requests, setRequests] = useState<Meeting[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +31,9 @@ export function AdminMeetingsPanel() {
   async function load() {
     const res = await fetch("/api/meetings");
     if (!res.ok) {
-      setError("Could not load meeting requests");
+      setError(
+        "Meeting requests couldn’t be loaded. Refresh the page to try again.",
+      );
       return;
     }
     const data = await res.json();
@@ -49,11 +58,13 @@ export function AdminMeetingsPanel() {
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error ?? "Update failed");
+        throw new Error(data.error ?? "The status wasn’t updated. Try again.");
       }
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Update failed");
+      setError(
+        e instanceof Error ? e.message : "The status wasn’t updated. Try again.",
+      );
     } finally {
       setBusyId(null);
     }
@@ -62,7 +73,7 @@ export function AdminMeetingsPanel() {
   if (error && requests.length === 0) {
     return (
       <div className="portal-empty">
-        <p className="portal-empty__title">Could not load</p>
+        <p className="portal-empty__title">Meeting requests unavailable</p>
         <p className="portal-empty__body">{error}</p>
       </div>
     );
@@ -73,7 +84,7 @@ export function AdminMeetingsPanel() {
       <div className="portal-empty">
         <p className="portal-empty__title">No meeting requests yet</p>
         <p className="portal-empty__body">
-          Requests from Book a meeting appear here for follow-up.
+          Requests from the Book a meeting form appear here for follow-up.
         </p>
       </div>
     );
@@ -90,7 +101,7 @@ export function AdminMeetingsPanel() {
         </div>
         <div className="official-stat">
           <p className="official-stat__value">{pendingCount}</p>
-          <p className="official-stat__label">Pending</p>
+          <p className="official-stat__label">New</p>
         </div>
         <div className="official-stat">
           <p className="official-stat__value">
@@ -100,38 +111,40 @@ export function AdminMeetingsPanel() {
         </div>
       </div>
       {error ? (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p className="form-alert form-alert--error" role="alert">
           {error}
         </p>
       ) : null}
       {requests.map((r) => (
         <article key={r.id} className="portal-panel space-y-3">
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <div>
+            <div className="min-w-0">
               <h3 className="text-base font-semibold tracking-tight text-forest-950">
                 {r.organization}
               </h3>
-              <p className="mt-0.5 text-sm text-ink-muted">
+              <p className="official-row-meta mt-0.5">
                 {r.contactName} · {r.contactEmail} · {r.contactRole}
               </p>
             </div>
             <span className={`status-chip status-chip--${r.status}`}>
-              {r.status}
+              {STATUS_LABELS[r.status] ?? "Open"}
             </span>
           </div>
           {r.preferredTime ? (
             <p className="text-sm text-ink-muted">
-              Preferred: {r.preferredTime}
+              Preferred time: {r.preferredTime}
             </p>
           ) : null}
-          <p className="text-sm leading-relaxed text-forest-950">{r.message}</p>
-          <div className="flex flex-wrap gap-2">
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
+            {r.message}
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
             {(
               [
                 ["contacted", "Mark contacted"],
-                ["scheduled", "Scheduled"],
-                ["closed", "Close"],
-                ["pending", "Back to pending"],
+                ["scheduled", "Mark scheduled"],
+                ["closed", "Close request"],
+                ["pending", "Reopen"],
               ] as const
             ).map(([status, label]) => (
               <button
@@ -139,16 +152,16 @@ export function AdminMeetingsPanel() {
                 type="button"
                 disabled={busyId === r.id || r.status === status}
                 onClick={() => void setStatus(r.id, status)}
-                className="btn-secondary !min-h-12 !px-3.5 !text-sm"
+                className="btn-secondary !min-h-10 !px-4 !py-2 !text-sm"
               >
                 {label}
               </button>
             ))}
             <a
               href={`mailto:${r.contactEmail}?subject=${encodeURIComponent(`Guide meeting · ${r.organization}`)}`}
-              className="btn-primary !min-h-12 !px-3.5 !text-sm"
+              className="btn-primary !min-h-10 !px-4 !py-2 !text-sm"
             >
-              Email
+              Send email
             </a>
             <AdminDeleteButton
               url={`/api/meetings?id=${r.id}`}

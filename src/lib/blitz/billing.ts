@@ -133,7 +133,7 @@ export async function createCheckoutSession(opts: {
     cancel_url: `${back}?checkout=canceled`,
   });
   if (!session.url) {
-    return { ok: false, status: 502, error: "Stripe did not return a checkout link." };
+    return { ok: false, status: 502, error: "We couldn’t start checkout. Try again." };
   }
   return { ok: true, url: session.url };
 }

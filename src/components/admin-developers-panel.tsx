@@ -15,6 +15,12 @@ type Application = {
   createdAt: string;
 };
 
+const STATUS_LABELS: Record<string, string> = {
+  pending: "Pending",
+  approved: "Approved",
+  rejected: "Declined",
+};
+
 export function AdminDevelopersPanel() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +29,9 @@ export function AdminDevelopersPanel() {
   async function load() {
     const res = await fetch("/api/developers/applications");
     if (!res.ok) {
-      setError("Could not load developer applications");
+      setError(
+        "Developer applications couldn’t be loaded. Refresh the page to try again.",
+      );
       return;
     }
     const data = await res.json();
@@ -45,11 +53,13 @@ export function AdminDevelopersPanel() {
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error ?? "Review failed");
+        throw new Error(data.error ?? "The decision wasn’t saved. Try again.");
       }
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Review failed");
+      setError(
+        e instanceof Error ? e.message : "The decision wasn’t saved. Try again.",
+      );
     } finally {
       setBusyId(null);
     }
@@ -58,10 +68,9 @@ export function AdminDevelopersPanel() {
   if (applications.length === 0) {
     return (
       <div className="portal-empty">
-        <p className="portal-empty__title">No developer applications</p>
+        <p className="portal-empty__title">No developer applications yet</p>
         <p className="portal-empty__body">
-          Verified partner applications from For developers appear here for
-          Official review.
+          Applications from the For developers page appear here for review.
         </p>
       </div>
     );
@@ -88,61 +97,65 @@ export function AdminDevelopersPanel() {
         </div>
       </div>
       {error ? (
-        <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+        <p className="form-alert form-alert--error" role="alert">
           {error}
         </p>
       ) : null}
       {applications.map((a) => (
         <article key={a.id} className="portal-panel space-y-3">
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <div>
+            <div className="min-w-0">
               <h3 className="text-base font-semibold tracking-tight text-forest-950">
                 {a.appName}
               </h3>
-              <p className="mt-0.5 text-sm text-ink-muted">
+              <p className="official-row-meta mt-0.5">
                 {a.organization} · {a.contactName} · {a.contactEmail}
               </p>
-              <p className="mt-1 text-sm">
+              <p className="mt-1 text-sm [overflow-wrap:anywhere]">
                 <a
                   href={a.websiteUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-semibold text-forest-800"
+                  className="font-semibold text-forest-800 hover:underline"
                 >
                   {a.websiteUrl}
                 </a>
               </p>
             </div>
             <span className={`status-chip status-chip--${a.status}`}>
-              {a.status}
+              {STATUS_LABELS[a.status] ?? "Reviewed"}
             </span>
           </div>
-          <p className="text-sm leading-relaxed text-forest-950">{a.appAbout}</p>
-          {a.status === "pending" ? (
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                disabled={busyId === a.id}
-                onClick={() => void review(a.id, "approved")}
-                className="btn-primary !min-h-12 !px-3.5 !text-sm"
-              >
-                Approve
-              </button>
-              <button
-                type="button"
-                disabled={busyId === a.id}
-                onClick={() => void review(a.id, "rejected")}
-                className="btn-secondary !min-h-12 !px-3.5 !text-sm"
-              >
-                Decline
-              </button>
-            </div>
-          ) : null}
-          <AdminDeleteButton
-            url={`/api/developers/applications?id=${a.id}`}
-            what="this developer application"
-            onDeleted={() => void load()}
-          />
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
+            {a.appAbout}
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            {a.status === "pending" ? (
+              <>
+                <button
+                  type="button"
+                  disabled={busyId === a.id}
+                  onClick={() => void review(a.id, "approved")}
+                  className="btn-primary !min-h-10 !px-4 !py-2 !text-sm"
+                >
+                  Approve
+                </button>
+                <button
+                  type="button"
+                  disabled={busyId === a.id}
+                  onClick={() => void review(a.id, "rejected")}
+                  className="btn-secondary !min-h-10 !px-4 !py-2 !text-sm"
+                >
+                  Decline
+                </button>
+              </>
+            ) : null}
+            <AdminDeleteButton
+              url={`/api/developers/applications?id=${a.id}`}
+              what="this developer application"
+              onDeleted={() => void load()}
+            />
+          </div>
         </article>
       ))}
     </div>

@@ -8,12 +8,24 @@ import { meetingRequests } from "@/lib/schema";
 export const runtime = "edge";
 
 const submitSchema = z.object({
-  contactName: z.string().trim().min(2).max(120),
-  contactEmail: z.string().trim().email().max(254),
-  organization: z.string().trim().min(2).max(200),
-  contactRole: z.string().trim().min(2).max(120),
+  contactName: z.string().trim().min(2, "Enter your full name.").max(120),
+  contactEmail: z
+    .string()
+    .trim()
+    .email("Enter a valid email address.")
+    .max(254),
+  organization: z
+    .string()
+    .trim()
+    .min(2, "Enter your school or organization.")
+    .max(200),
+  contactRole: z.string().trim().min(2, "Enter your role.").max(120),
   preferredTime: z.string().trim().max(200).optional().default(""),
-  message: z.string().trim().min(10).max(4000),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Tell us a little more, at least 10 characters.")
+    .max(4000, "Keep your message under 4,000 characters."),
 });
 
 const reviewSchema = z.object({
@@ -25,7 +37,7 @@ const reviewSchema = z.object({
 export async function GET() {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
 
   const db = getDb();
@@ -58,18 +70,18 @@ export async function POST(request: Request) {
   } catch (e) {
     if (e instanceof z.ZodError) {
       return NextResponse.json(
-        { error: e.issues[0]?.message ?? "Invalid request" },
+        { error: e.issues[0]?.message ?? "That request wasn’t valid. Refresh the page and try again." },
         { status: 400 },
       );
     }
-    return NextResponse.json({ error: "Could not submit" }, { status: 500 });
+    return NextResponse.json({ error: "Your request wasn’t sent. Try again in a moment." }, { status: 500 });
   }
 }
 
 export async function PATCH(request: Request) {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
 
   try {
@@ -88,17 +100,17 @@ export async function PATCH(request: Request) {
       .returning();
 
     if (!updated) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({ error: "That item couldn’t be found. Refresh the page and try again." }, { status: 404 });
     }
     return NextResponse.json({ request: updated });
   } catch (e) {
     if (e instanceof z.ZodError) {
       return NextResponse.json(
-        { error: e.issues[0]?.message ?? "Invalid request" },
+        { error: e.issues[0]?.message ?? "That request wasn’t valid. Refresh the page and try again." },
         { status: 400 },
       );
     }
-    return NextResponse.json({ error: "Could not update" }, { status: 500 });
+    return NextResponse.json({ error: "The status wasn’t updated. Try again." }, { status: 500 });
   }
 }
 
@@ -106,11 +118,11 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   const authz = await requireProfile(["admin", "moderator"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   const id = new URL(request.url).searchParams.get("id") ?? "";
   if (!/^[0-9a-f-]{36}$/i.test(id)) {
-    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+    return NextResponse.json({ error: "That item couldn’t be found. Refresh the page and try again." }, { status: 400 });
   }
   const db = getDb();
   await db.delete(meetingRequests).where(eq(meetingRequests.id, id));

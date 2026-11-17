@@ -1,1 +1,336 @@
 /* polish-portal: professional polish pass styles. Loaded after globals.css. */
+
+/* ---------- Form feedback (errors, confirmations, notices) ---------- */
+.form-alert {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--clever-radius);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink);
+  background: var(--sky-soft);
+}
+
+.form-alert--error {
+  border-color: #f1c4c4;
+  background: #fdf2f2;
+  color: #8a1c1c;
+}
+
+.form-alert--success {
+  border-color: var(--forest-200);
+  background: var(--forest-100);
+  color: var(--forest-900);
+}
+
+.form-alert--warning {
+  border-color: #f0d9a8;
+  background: #fff8eb;
+  color: #6b4a10;
+}
+
+.form-error-text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #b42318;
+}
+
+/* ---------- Log out button (portal top bar + drawer) ---------- */
+.portal-signout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--clever-radius);
+  background: var(--surface);
+  color: var(--forest-800);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.portal-signout:hover {
+  background: var(--forest-100);
+  border-color: var(--forest-300);
+}
+
+.portal-signout:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.portal-drawer__signout .portal-signout {
+  width: 100%;
+  min-height: 44px;
+}
+
+/* ---------- Portal layout ---------- */
+/* Anchored sections land below the sticky top bar. */
+.portal-dash__body [id] {
+  scroll-margin-top: calc(var(--clever-header-h) + 1rem);
+}
+
+/* Compact section intro under a section title. */
+.portal-section-lede {
+  margin: -0.45rem 0 0;
+  max-width: 40rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+/* Small inline key/value line, e.g. class code. */
+.portal-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--forest-800);
+}
+
+/* Data tables inside panels. */
+.portal-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.portal-table th {
+  padding: 0 0.75rem 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.portal-table td {
+  padding: 0.75rem 0.75rem 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+  color: var(--ink);
+}
+
+.portal-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.portal-table th:last-child,
+.portal-table td:last-child {
+  padding-right: 0;
+}
+
+/* Muted "Coming soon" status pill. */
+.portal-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--sky-soft);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+/* Getting started checklist. */
+.portal-steps {
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.portal-steps__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+}
+
+.portal-steps__mark {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1.5px solid var(--forest-300);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--forest-800);
+}
+
+.portal-steps__item--done .portal-steps__mark {
+  border-color: var(--forest-700);
+  background: var(--forest-700);
+  color: #fff;
+}
+
+.portal-steps__item--done .portal-steps__label {
+  color: var(--ink-muted);
+}
+
+/* Reviewed queue rows (Guide Official). */
+.official-row-meta {
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  overflow-wrap: anywhere;
+}
+
+/* Official stats: readable labels on phones. */
+.official-stat__label {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+/* Status chips: readable sentence-case labels. */
+.status-chip {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* Limited portal illustration backdrop follows the theme. */
+.portal-limited__bg {
+  fill: var(--sky-soft);
+}
+
+/* ---------- Phones: 16px gutters, comfortable panels ---------- */
+@media (max-width: 639px) {
+  .portal-topbar {
+    height: 64px;
+  }
+
+  .portal-topbar__inner,
+  .portal-dash__inner {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .portal-dash__body [id] {
+    scroll-margin-top: calc(64px + 1rem);
+  }
+
+  .portal-panel {
+    padding: 1.1rem 1rem;
+  }
+
+  .portal-empty {
+    padding: 2rem 1.25rem;
+  }
+
+  .msg-inbox__main {
+    padding: 1.1rem 1rem 1.2rem;
+    min-height: 0;
+  }
+
+  .official-stat {
+    padding: 0.7rem 0.75rem;
+  }
+
+  .official-stat__value {
+    font-size: 1.2rem;
+  }
+
+  .official-stat__label {
+    font-size: 0.75rem;
+  }
+
+  .auth-card {
+    padding: 1.6rem 1.25rem;
+  }
+
+  .msg-conversation__compose .btn-primary {
+    width: 100%;
+  }
+}
+
+/* ---------- Dark mode ---------- */
+@media (prefers-color-scheme: dark) {
+  .portal-shell {
+    background:
+      radial-gradient(ellipse 70% 40% at 100% 0%, rgba(54, 117, 83, 0.16), transparent 55%),
+      var(--sky-soft);
+  }
+
+  .portal-tool-tile--muted {
+    background: var(--sky-soft);
+  }
+
+  .portal-topbar__tab,
+  .portal-topbar__menu-btn,
+  .portal-topbar__link,
+  .portal-drawer__close,
+  .portal-drawer__link,
+  .portal-drawer__account,
+  .portal-chip,
+  .msg-thread__title,
+  .msg-bubble__name,
+  .official-stat__value,
+  .auth-soft-note {
+    color: var(--ink);
+  }
+
+  .portal-topbar__role,
+  .portal-drawer__role,
+  .portal-dash__eyebrow,
+  .official-stat__label,
+  .portal-topbar__link:hover,
+  .portal-topbar__link--active,
+  .portal-topbar__badge,
+  .portal-code,
+  .status-chip,
+  .portal-signout,
+  .portal-steps__mark {
+    color: var(--forest-400);
+  }
+
+  .portal-topbar__tab--active,
+  .portal-topbar__tab--active:hover,
+  .portal-drawer__link--active,
+  .portal-drawer__link--active:hover,
+  .portal-steps__item--done .portal-steps__mark {
+    color: #fff;
+  }
+
+  .status-chip--closed,
+  .status-chip--rejected {
+    color: var(--ink-muted);
+  }
+
+  .status-chip--pending,
+  .form-alert--warning {
+    border-color: #5a4520;
+    background: #2a2112;
+    color: #f2d08a;
+  }
+
+  .form-alert--error {
+    border-color: #7a2a2a;
+    background: #2a1414;
+    color: #ffc9c9;
+  }
+
+  .form-alert--success {
+    border-color: var(--forest-300);
+    color: var(--ink);
+  }
+
+  .form-error-text {
+    color: #ff9b9b;
+  }
+}

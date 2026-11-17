@@ -25,19 +25,19 @@ import { randomUUID } from "@/lib/edge-crypto";
 type Props = { quizId: string };
 
 const TYPE_ICON: Record<BlitzQuestionType, { glyph: string; color: string; hint: string }> = {
-  quiz: { glyph: "◆", color: "var(--bz-lime)", hint: "Pick the right answer" },
-  true_false: { glyph: "✓✗", color: "var(--bz-coral)", hint: "Two-way call" },
-  type_answer: { glyph: "Aa", color: "var(--bz-cyan)", hint: "Type it exactly" },
-  puzzle: { glyph: "1-2-3", color: "var(--bz-sun)", hint: "Put in order" },
-  slider: { glyph: "⟷", color: "var(--bz-violet)", hint: "Guess a number" },
-  pin_answer: { glyph: "⌖", color: "var(--bz-mint)", hint: "Tap the spot" },
-  poll: { glyph: "▥", color: "var(--bz-lime)", hint: "Opinion, no score" },
-  word_cloud: { glyph: "☁", color: "var(--bz-cyan)", hint: "Words float up" },
+  quiz: { glyph: "◆", color: "var(--bz-lime)", hint: "Choose the correct answer" },
+  true_false: { glyph: "✓✗", color: "var(--bz-coral)", hint: "Decide if a statement is true" },
+  type_answer: { glyph: "Aa", color: "var(--bz-cyan)", hint: "Type the answer" },
+  puzzle: { glyph: "1-2-3", color: "var(--bz-sun)", hint: "Put items in order" },
+  slider: { glyph: "⟷", color: "var(--bz-violet)", hint: "Choose a number on a slider" },
+  pin_answer: { glyph: "⌖", color: "var(--bz-mint)", hint: "Tap the correct spot on an image" },
+  poll: { glyph: "▥", color: "var(--bz-lime)", hint: "Collect opinions, no score" },
+  word_cloud: { glyph: "☁", color: "var(--bz-cyan)", hint: "Collect short answers as a word cloud" },
   brainstorm: { glyph: "✦", color: "var(--bz-sun)", hint: "Collect ideas" },
-  drop_pin: { glyph: "◎", color: "var(--bz-mint)", hint: "Pins, no score" },
-  open_ended: { glyph: "¶", color: "var(--bz-violet)", hint: "Free response" },
-  scale: { glyph: "1–5", color: "var(--bz-coral)", hint: "Rate it" },
-  nps_scale: { glyph: "0–10", color: "var(--bz-coral)", hint: "Would you recommend" },
+  drop_pin: { glyph: "◎", color: "var(--bz-mint)", hint: "Drop pins on an image, no score" },
+  open_ended: { glyph: "¶", color: "var(--bz-violet)", hint: "Collect written responses" },
+  scale: { glyph: "1–5", color: "var(--bz-coral)", hint: "Rate on a scale" },
+  nps_scale: { glyph: "0–10", color: "var(--bz-coral)", hint: "Rate from 0 to 10" },
 };
 
 const TIME_PRESETS = [5, 10, 15, 20, 30, 60, 90];
@@ -62,7 +62,7 @@ export function BlitzEditorPanel({ quizId }: Props) {
       const qData = await qRes.json();
       const eData = await eRes.json().catch(() => null);
       if (!qRes.ok) {
-        setError(qData.error ?? "Not found");
+        setError(qData.error ?? "We couldn’t find this quiz.");
         return;
       }
       setQuiz(qData.quiz);
@@ -81,7 +81,7 @@ export function BlitzEditorPanel({ quizId }: Props) {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            title: next.title.trim() || "Untitled Blitz",
+            title: next.title.trim() || "Untitled quiz",
             description: next.description,
             questions: next.questions,
             category: next.category,
@@ -90,7 +90,7 @@ export function BlitzEditorPanel({ quizId }: Props) {
           }),
         });
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? "Save failed");
+        if (!res.ok) throw new Error(data.error ?? "Could not save your changes.");
         if (extra?.isPublic !== undefined) {
           setQuiz(data.quiz);
           latest.current = data.quiz;
@@ -100,7 +100,7 @@ export function BlitzEditorPanel({ quizId }: Props) {
         return true;
       } catch (e) {
         setSaveState("error");
-        setError(e instanceof Error ? e.message : "Save failed");
+        setError(e instanceof Error ? e.message : "Could not save your changes.");
         return false;
       }
     },
@@ -131,7 +131,7 @@ export function BlitzEditorPanel({ quizId }: Props) {
   function addQuestion(type: BlitzQuestionType) {
     if (!quiz) return;
     if (!allowAll && !BLITZ_CORE_TYPES.includes(type)) {
-      setError(`“${BLITZ_TYPE_LABEL[type]}” comes with Blitz Plus.`);
+      setError(`${BLITZ_TYPE_LABEL[type]} questions are included with Plus.`);
       return;
     }
     const questions = [...quiz.questions, newBlankQuestion(type)];
@@ -182,7 +182,14 @@ export function BlitzEditorPanel({ quizId }: Props) {
   if (!quiz) {
     return (
       <div className="bz-page">
-        <p className={error ? "bz-alert" : "bz-muted"}>{error ?? "Loading editor…"}</p>
+        <p className={error ? "bz-alert" : "bz-muted"} role={error ? "alert" : "status"}>
+          {error ?? "Loading quiz…"}
+        </p>
+        {error ? (
+          <Link href="/apps/blitz/library" className="bz-btn bz-btn--sm mt-4 no-underline">
+            Back to library
+          </Link>
+        ) : null}
       </div>
     );
   }
@@ -198,7 +205,7 @@ export function BlitzEditorPanel({ quizId }: Props) {
         </Link>
         <div className="flex flex-wrap items-center gap-2">
           <span className="bz-faint" aria-live="polite" style={{ minWidth: 80, textAlign: "right" }}>
-            {saveState === "saving" ? "Saving…" : saveState === "dirty" ? "Unsaved" : saveState === "error" ? "Not saved" : "All saved ✓"}
+            {saveState === "saving" ? "Saving…" : saveState === "dirty" ? "Unsaved changes" : saveState === "error" ? "Not saved" : "All changes saved"}
           </span>
           <button type="button" className="bz-btn bz-btn--sm" onClick={() => setShowSettings((v) => !v)} aria-expanded={showSettings}>
             Settings
@@ -226,10 +233,10 @@ export function BlitzEditorPanel({ quizId }: Props) {
         value={quiz.title}
         onChange={(e) => change({ ...quiz, title: e.target.value })}
         aria-label="Quiz title"
-        placeholder="Name your Blitz"
+        placeholder="Quiz title"
       />
       <p className="bz-faint mt-2">
-        {quiz.questions.length} questions · about {estMin} min · {quiz.isPublic ? "on Discover" : "private"}
+        {quiz.questions.length} {quiz.questions.length === 1 ? "question" : "questions"} · About {estMin} min · {quiz.isPublic ? "Shared on Discover" : "Private"}
       </p>
 
       {showSettings ? (
@@ -241,7 +248,7 @@ export function BlitzEditorPanel({ quizId }: Props) {
                 className="bz-textarea"
                 value={quiz.description}
                 onChange={(e) => change({ ...quiz, description: e.target.value })}
-                placeholder="What’s this Blitz about? (shows in your library and on Discover)"
+                placeholder="A short summary. Shown in your library and on Discover."
               />
             </label>
             <label>
@@ -330,7 +337,7 @@ export function BlitzEditorPanel({ quizId }: Props) {
                   type="button"
                   className="bz-typebtn"
                   disabled={locked}
-                  title={locked ? "Comes with Blitz Plus" : TYPE_ICON[t].hint}
+                  title={locked ? "Included with Plus" : TYPE_ICON[t].hint}
                   style={{ "--tc": TYPE_ICON[t].color } as CSSProperties}
                   onClick={() => addQuestion(t)}
                 >
@@ -343,7 +350,10 @@ export function BlitzEditorPanel({ quizId }: Props) {
           </div>
           {!allowAll ? (
             <p className="bz-faint mt-2">
-              Free: Quiz + True/False. <Link href="/apps/blitz/upgrade" style={{ color: "var(--bz-sun)" }}>Plus unlocks all 13 types.</Link>
+              Free includes Quiz and True/False.{" "}
+              <Link href="/apps/blitz/upgrade" style={{ color: "var(--bz-sun)" }}>
+                Plus includes all {BLITZ_QUESTION_TYPES.length} question types.
+              </Link>
             </p>
           ) : null}
         </aside>
@@ -358,10 +368,10 @@ export function BlitzEditorPanel({ quizId }: Props) {
                 </p>
                 <div className="flex flex-wrap justify-center gap-2">
                   <button type="button" className="bz-btn bz-btn--primary" onClick={() => addQuestion("quiz")}>
-                    + Quiz
+                    Add quiz question
                   </button>
                   <button type="button" className="bz-btn" onClick={() => addQuestion("true_false")}>
-                    + True / false
+                    Add true/false question
                   </button>
                 </div>
               </div>
@@ -386,7 +396,7 @@ export function BlitzEditorPanel({ quizId }: Props) {
               </p>
               <div className="bz-preview-phone">
                 <div className="bz-prompt-card bz-prompt-card--sm" style={{ fontSize: "1rem", marginBottom: 12 }}>
-                  {q.prompt || "Your question…"}
+                  {q.prompt || "Your question appears here"}
                 </div>
                 <PlayerAnswerInput key={JSON.stringify(q)} question={q} busy={false} onSubmit={() => undefined} />
               </div>
@@ -423,7 +433,7 @@ function QuestionFields({
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="bz-chip" style={{ background: TYPE_ICON[t].color, color: "var(--bz-ink)", borderColor: "var(--bz-ink)" }}>
-          Q{index + 1} · {BLITZ_TYPE_LABEL[t]}
+          Question {index + 1} · {BLITZ_TYPE_LABEL[t]}
         </span>
         <div className="flex gap-2">
           <button type="button" className="bz-btn bz-btn--sm" onClick={onDuplicate}>
@@ -440,7 +450,7 @@ function QuestionFields({
         value={question.prompt}
         rows={2}
         onChange={(e) => onChange({ prompt: e.target.value })}
-        placeholder={t === "poll" ? "Ask the room something…" : "Type your question"}
+        placeholder={t === "poll" ? "Type your poll question" : "Type your question"}
         aria-label="Question prompt"
       />
 
@@ -467,29 +477,29 @@ function QuestionFields({
             </div>
           </div>
         ) : (
-          <span className="bz-chip">No points — opinion question</span>
+          <span className="bz-chip">Not scored</span>
         )}
         {t === "quiz" ? (
           <label className="bz-switch">
             <input type="checkbox" checked={!!question.multiSelect} onChange={(e) => onChange({ multiSelect: e.target.checked })} />
             <span className="bz-switch-track" aria-hidden />
-            Multiple right answers
+            Allow multiple correct answers
           </label>
         ) : null}
       </div>
 
       <label>
         <span className="bz-label">
-          {t === "pin_answer" || t === "drop_pin" ? "Image to pin on (URL — required)" : "Image (optional URL)"}
+          {t === "pin_answer" || t === "drop_pin" ? "Image URL (required)" : "Image URL (optional)"}
         </span>
-        <input className="bz-input" value={question.mediaUrl ?? ""} onChange={(e) => onChange({ mediaUrl: e.target.value })} placeholder="https://…" />
+        <input className="bz-input" value={question.mediaUrl ?? ""} onChange={(e) => onChange({ mediaUrl: e.target.value })} placeholder="https://" />
       </label>
 
       {choiceLike ? <ChoiceEditor question={question} onChange={onChange} /> : null}
 
       {t === "type_answer" ? (
         <div className="flex flex-col gap-2">
-          <span className="bz-label">Accepted answers (case and punctuation don’t matter)</span>
+          <span className="bz-label">Accepted answers (not case- or punctuation-sensitive)</span>
           {(question.acceptedAnswers ?? [""]).map((a, i) => (
             <div key={i} className="bz-choice-edit bz-tile--2" style={{ "--tile": "var(--bz-cyan)" } as CSSProperties}>
               <span className="bz-tile-badge" style={{ width: "2.4rem", height: "2.4rem" }}>
@@ -503,13 +513,13 @@ function QuestionFields({
                   acceptedAnswers[i] = e.target.value;
                   onChange({ acceptedAnswers });
                 }}
-                placeholder={i === 0 ? "Main answer" : "Also accept…"}
+                placeholder={i === 0 ? "Main answer" : "Alternative answer"}
               />
               {(question.acceptedAnswers ?? []).length > 1 ? (
                 <button
                   type="button"
                   className="bz-mini-x"
-                  aria-label="Remove"
+                  aria-label="Remove answer"
                   onClick={() => onChange({ acceptedAnswers: (question.acceptedAnswers ?? []).filter((_, j) => j !== i) })}
                 >
                   ✕
@@ -523,7 +533,7 @@ function QuestionFields({
             disabled={(question.acceptedAnswers ?? []).length >= 8}
             onClick={() => onChange({ acceptedAnswers: [...(question.acceptedAnswers ?? []), ""] })}
           >
-            + Another spelling
+            Add alternative answer
           </button>
         </div>
       ) : null}
@@ -535,7 +545,7 @@ function QuestionFields({
           {t === "slider" ? (
             <>
               <NumField label="Correct value" value={question.sliderCorrect ?? 50} onChange={(v) => onChange({ sliderCorrect: v })} />
-              <NumField label="Counts if within ±" value={question.sliderTolerance ?? 5} onChange={(v) => onChange({ sliderTolerance: v })} />
+              <NumField label="Accept within ±" value={question.sliderTolerance ?? 5} onChange={(v) => onChange({ sliderTolerance: v })} />
               <NumField label="Step" value={question.sliderStep ?? 1} onChange={(v) => onChange({ sliderStep: Math.max(0.01, v) })} />
             </>
           ) : (
@@ -558,19 +568,21 @@ function QuestionFields({
       {t === "word_cloud" || t === "brainstorm" || t === "open_ended" ? (
         <p className="bz-alert bz-alert--info">
           {t === "word_cloud"
-            ? "Short answers grow into a word cloud on the big screen — repeated words get bigger."
+            ? "Short answers form a word cloud on the main screen. Repeated words appear larger."
             : t === "brainstorm"
-              ? "Ideas pin up as colorful sticky notes on the projector."
-              : "Longer responses appear as a wall of notes. Great for exit tickets."}{" "}
-          No points, no wrong answers.
+              ? "Ideas appear as sticky notes on the main screen."
+              : "Longer responses appear as a wall of notes on the main screen. Useful for exit tickets."}{" "}
+          This question is not scored.
         </p>
       ) : null}
 
       {choiceLike && (question.choices ?? []).length > 0 && t !== "puzzle" ? (
         <div>
-          <p className="bz-kicker mb-2">On the projector</p>
+          <p className="bz-kicker mb-2">Main screen preview</p>
+          <div style={{ overflow: "hidden" }}>
           <div style={{ transform: "scale(.9)", transformOrigin: "top left", width: "111%" }}>
             <ChoiceBoard question={question} reveal size="md" />
+          </div>
           </div>
         </div>
       ) : null}
@@ -629,10 +641,10 @@ function ChoiceEditor({
     <div className="flex flex-col gap-3">
       <span className="bz-label">
         {t === "puzzle"
-          ? "Blocks (set the right order below)"
+          ? "Items (set the correct order below)"
           : t === "poll"
             ? "Options"
-            : "Answers — tap the circle to mark the right one"}
+            : "Answers (select the check mark next to each correct answer)"}
       </span>
       <div className="grid gap-3 sm:grid-cols-2">
         {choices.map((c, i) => (
@@ -645,7 +657,7 @@ function ChoiceEditor({
               value={c.text}
               readOnly={t === "true_false"}
               onChange={(e) => setChoice(c.id, { text: e.target.value })}
-              placeholder={`Answer ${i + 1}${i >= 2 && t !== "puzzle" ? " (optional)" : ""}`}
+              placeholder={`${t === "puzzle" ? "Item" : t === "poll" ? "Option" : "Answer"} ${i + 1}${i >= 2 && t !== "puzzle" ? " (optional)" : ""}`}
               maxLength={120}
             />
             {graded ? (
@@ -693,7 +705,7 @@ function PuzzleOrderEditor({
     ...(question.correctOrder ?? []).filter((id) => known.has(id)),
     ...choices.map((c) => c.id).filter((id) => !(question.correctOrder ?? []).includes(id)),
   ];
-  const byId = Object.fromEntries(choices.map((c, i) => [c.id, { text: c.text || `Block ${i + 1}`, i }]));
+  const byId = Object.fromEntries(choices.map((c, i) => [c.id, { text: c.text || `Item ${i + 1}`, i }]));
 
   function move(id: string, dir: -1 | 1) {
     const i = order.indexOf(id);
@@ -706,7 +718,7 @@ function PuzzleOrderEditor({
 
   return (
     <div className="bz-card bz-card--pad">
-      <p className="bz-kicker mb-2">Correct order (players see them shuffled)</p>
+      <p className="bz-kicker mb-2">Correct order (players see the items shuffled)</p>
       <ol className="bz-puzzle-list">
         {order.map((id, pos) => (
           <li key={id} className={`bz-puzzle-item bz-tile--${byId[id]!.i % 6}`}>
@@ -741,11 +753,11 @@ function PinEditor({
   const y = question.pinY ?? 0.5;
   const r = question.pinRadius ?? 0.08;
   if (!question.mediaUrl) {
-    return <p className="bz-alert bz-alert--info">Add an image URL above, then {graded ? "tap the image to set the right spot" : "students drop pins anywhere on it"}.</p>;
+    return <p className="bz-alert bz-alert--info">Add an image URL above. {graded ? "Then click the image to set the correct spot." : "Students can drop pins anywhere on it."}</p>;
   }
   return (
     <div className="flex flex-col gap-3">
-      {graded ? <span className="bz-label">Tap the image to set the right spot</span> : null}
+      {graded ? <span className="bz-label">Click the image to set the correct spot</span> : null}
       <button
         type="button"
         className="bz-pin-canvas"
@@ -760,12 +772,12 @@ function PinEditor({
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={question.mediaUrl} alt="Pin target" />
+        <img src={question.mediaUrl} alt="Image for this question" />
         {graded ? <span className="bz-pin-target" style={{ left: `${x * 100}%`, top: `${y * 100}%`, width: `${r * 200}%` }} /> : null}
       </button>
       {graded ? (
         <label>
-          <span className="bz-label">Target size: {Math.round(r * 100)}% of the picture</span>
+          <span className="bz-label">Target size: {Math.round(r * 100)}% of the image</span>
           <input
             type="range"
             className="bz-range"

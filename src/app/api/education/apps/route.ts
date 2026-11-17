@@ -18,10 +18,10 @@ export const runtime = 'edge';
 export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "School access required" }, { status: 403 });
+    return NextResponse.json({ error: "This is available after your school is approved." }, { status: 403 });
   }
 
   const db = getDb();
@@ -55,10 +55,10 @@ export async function GET() {
 export async function POST(request: Request) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   if (!(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "School access required" }, { status: 403 });
+    return NextResponse.json({ error: "This is available after your school is approved." }, { status: 403 });
   }
 
   try {
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
       .parse(await request.json());
 
     if (!isKnownAppSlug(body.appSlug)) {
-      return NextResponse.json({ error: "Unknown app" }, { status: 400 });
+      return NextResponse.json({ error: "That app isn’t available. Refresh the page and try again." }, { status: 400 });
     }
 
     const result = await setClassroomAppInstall({
@@ -89,8 +89,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error(error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
-    return NextResponse.json({ error: "Could not update apps" }, { status: 500 });
+    return NextResponse.json({ error: "Your change wasn’t saved. Try again." }, { status: 500 });
   }
 }

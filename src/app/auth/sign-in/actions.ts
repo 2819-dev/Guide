@@ -99,11 +99,13 @@ export async function signInWithEmail(
 
 
 function friendlyAuthError(message?: string): string {
-  if (!message) return "Could not log in. Please try again.";
-  if (/invalid (email|password)|credentials/i.test(message)) {
+  if (message && /too many|rate/i.test(message)) {
+    return "Too many attempts. Wait a minute, then try again.";
+  }
+  if (!message || /invalid|credentials|not found|password/i.test(message)) {
     return "That email and password don’t match. Check them and try again.";
   }
-  return message;
+  return "We couldn’t log you in. Check your email and password, then try again.";
 }
 
 /**

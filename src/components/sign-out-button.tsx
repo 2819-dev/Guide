@@ -9,7 +9,7 @@ export function SignOutButton() {
     <button
       type="button"
       disabled={busy}
-      className="rounded-[10px] border border-line bg-white px-3 py-2 text-sm font-semibold text-forest-800 transition hover:bg-forest-100 disabled:opacity-60"
+      className="portal-signout"
       onClick={async () => {
         setBusy(true);
         try {

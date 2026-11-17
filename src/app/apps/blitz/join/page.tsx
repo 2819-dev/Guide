@@ -6,7 +6,7 @@ import { requireProfile } from "@/lib/profile";
 
 export const runtime = "edge";
 
-export const metadata = { title: "Join Blitz" };
+export const metadata = { title: "Join a game · Blitz" };
 
 export default async function BlitzJoinPage() {
   const authz = await requireProfile();
@@ -18,7 +18,7 @@ export default async function BlitzJoinPage() {
     (await hasEducationAccess(authz.profile));
 
   return (
-    <Suspense fallback={<p className="bz-page bz-muted">Loading…</p>}>
+    <Suspense fallback={<p className="bz-page bz-muted" role="status">Loading…</p>}>
       <BlitzJoinPanel realName={authz.profile.displayName} isTeacher={isTeacher} />
     </Suspense>
   );

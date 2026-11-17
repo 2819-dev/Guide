@@ -20,7 +20,7 @@ export function useGamePoll(gameId: string | null, intervalMs = 1200) {
       const res = await fetch(`/api/blitz/games/${gameId}`, { cache: "no-store" });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Could not load game");
+        setError(data.error ?? "Could not load this game.");
         return;
       }
       if (typeof data.serverNowMs === "number") {
@@ -33,7 +33,7 @@ export function useGamePoll(gameId: string | null, intervalMs = 1200) {
       setPlayerId(data.playerId ?? null);
       setError(null);
     } catch {
-      setError("Connection hiccup — retrying…");
+      setError("Connection lost. Reconnecting…");
     } finally {
       inFlight.current = false;
     }

@@ -28,7 +28,7 @@ export const BLITZ_CORE_TYPES: BlitzQuestionType[] = [
 
 export const BLITZ_TYPE_LABEL: Record<BlitzQuestionType, string> = {
   quiz: "Quiz",
-  true_false: "True or false",
+  true_false: "True/False",
   type_answer: "Type answer",
   puzzle: "Puzzle",
   slider: "Slider",
@@ -39,7 +39,7 @@ export const BLITZ_TYPE_LABEL: Record<BlitzQuestionType, string> = {
   drop_pin: "Drop pin",
   open_ended: "Open-ended",
   scale: "Scale",
-  nps_scale: "NPS scale",
+  nps_scale: "0–10 rating",
 };
 
 /** Types that award points / show competitive leaderboard after. */

@@ -16,7 +16,7 @@ async function requireTeacher() {
 export async function GET(request: Request) {
   const authz = await requireTeacher();
   if (!authz) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const url = new URL(request.url);
   const q = url.searchParams.get("q") ?? undefined;

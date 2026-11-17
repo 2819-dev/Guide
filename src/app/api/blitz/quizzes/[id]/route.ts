@@ -23,15 +23,15 @@ async function requireTeacher() {
 export async function GET(_req: Request, ctx: Ctx) {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Sign in to continue." }, { status: 401 });
   }
   const { id } = await ctx.params;
   const quiz = await getQuiz(id);
   if (!quiz) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Quiz not found." }, { status: 404 });
   }
   if (quiz.ownerProfileId !== authz.profile.id && authz.profile.role !== "admin") {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Quiz not found." }, { status: 404 });
   }
   return NextResponse.json({ quiz });
 }
@@ -39,7 +39,7 @@ export async function GET(_req: Request, ctx: Ctx) {
 export async function PATCH(request: Request, ctx: Ctx) {
   const authz = await requireTeacher();
   if (!authz) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const { id } = await ctx.params;
   try {
@@ -75,7 +75,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
         : await getQuiz(id);
 
     if (!quiz || quiz.ownerProfileId !== authz.profile.id) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({ error: "Quiz not found." }, { status: 404 });
     }
 
     if (body.isPublic !== undefined) {
@@ -90,9 +90,9 @@ export async function PATCH(request: Request, ctx: Ctx) {
     return NextResponse.json({ quiz });
   } catch (error) {
     console.error(error);
-    const message = error instanceof Error ? error.message : "Could not update";
+    const message = error instanceof Error ? error.message : "Could not save your changes.";
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
     return NextResponse.json({ error: message }, { status: 400 });
   }
@@ -101,7 +101,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
 export async function DELETE(_req: Request, ctx: Ctx) {
   const authz = await requireTeacher();
   if (!authz) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const { id } = await ctx.params;
   try {
@@ -109,7 +109,7 @@ export async function DELETE(_req: Request, ctx: Ctx) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error(error);
-    const message = error instanceof Error ? error.message : "Could not delete";
+    const message = error instanceof Error ? error.message : "Could not delete the quiz.";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }

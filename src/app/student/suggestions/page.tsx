@@ -16,13 +16,11 @@ export default async function StudentSuggestionsPage() {
       studentTabs
       eyebrow="Student"
       title="Suggestions"
-      subtitle="Ideas and study prompts from Guide."
+      subtitle="Ideas and study prompts from the Guide team."
       chips={[
         { href: "/student#apps", label: "My apps" },
-        { href: "/student#tools", label: "Tools" },
-      ]}
-      utilities={[
-        { href: "/student/messages", label: "Messaging" },
+        { href: "/student#classes", label: "Classes" },
+        { href: "/student/messages", label: "Messages" },
         { href: "/student/suggestions", label: "Suggestions", active: true },
       ]}
       accountName={authz.profile.displayName}

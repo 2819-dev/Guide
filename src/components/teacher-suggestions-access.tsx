@@ -25,7 +25,7 @@ export function TeacherSuggestionsAccess({ refreshKey = 0 }: { refreshKey?: numb
   async function load() {
     const res = await fetch("/api/education/suggestion-blocks");
     if (!res.ok) {
-      setError("Could not load Suggestions access");
+      setError("Suggestions settings couldn’t be loaded. Refresh the page to try again.");
       return;
     }
     const data = await res.json();
@@ -51,10 +51,14 @@ export function TeacherSuggestionsAccess({ refreshKey = 0 }: { refreshKey?: numb
         body: JSON.stringify(opts),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Update failed");
+      if (!res.ok) {
+        throw new Error(data.error ?? "Your change wasn’t saved. Try again.");
+      }
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Update failed");
+      setError(
+        e instanceof Error ? e.message : "Your change wasn’t saved. Try again.",
+      );
     } finally {
       setBusyKey(null);
     }
@@ -65,10 +69,10 @@ export function TeacherSuggestionsAccess({ refreshKey = 0 }: { refreshKey?: numb
       <section>
         <h2 className="portal-section-title">Suggestions</h2>
         <div className="portal-empty">
-          <p className="portal-empty__title">Create a class first</p>
+          <p className="portal-empty__title">No classes yet</p>
           <p className="portal-empty__body">
-            Then you can pause Suggestions for a class or for individual
-            students.
+            After you create a class, you can pause Suggestions for the class
+            or for individual students.
           </p>
         </div>
       </section>
@@ -79,11 +83,16 @@ export function TeacherSuggestionsAccess({ refreshKey = 0 }: { refreshKey?: numb
     <div className="space-y-4">
       <div>
         <h2 className="portal-section-title">Suggestions</h2>
-        <p className="-mt-2 text-sm text-ink-muted">
-          Pause Suggestions for a whole class or for individual students.
+        <p className="portal-section-lede">
+          Suggestions shows students ideas and study prompts from the Guide
+          team. Pause it for a whole class or for individual students.
         </p>
       </div>
-      {error && <p className="text-sm text-red-700">{error}</p>}
+      {error && (
+        <p className="form-alert form-alert--error" role="alert">
+          {error}
+        </p>
+      )}
 
       {classrooms.map((room) => (
         <section key={room.classroomId} className="portal-panel space-y-4">
@@ -91,9 +100,10 @@ export function TeacherSuggestionsAccess({ refreshKey = 0 }: { refreshKey?: numb
             <h3 className="text-lg font-semibold text-forest-950">
               {room.classroomName}
             </h3>
-            <label className="inline-flex items-center gap-2 text-sm font-semibold text-forest-900">
+            <label className="inline-flex min-h-10 cursor-pointer items-center gap-2 text-sm font-semibold text-forest-900">
               <input
                 type="checkbox"
+                className="h-4 w-4 accent-[var(--forest-700)]"
                 checked={room.classBlocked}
                 disabled={busyKey === `${room.classroomId}:class`}
                 onChange={(e) =>
@@ -104,14 +114,14 @@ export function TeacherSuggestionsAccess({ refreshKey = 0 }: { refreshKey?: numb
                   })
                 }
               />
-              Pause for whole class
+              Pause for the whole class
             </label>
           </div>
 
           {room.students.length === 0 ? (
-            <p className="text-sm text-ink-muted">No students in this class.</p>
+            <p className="text-sm text-ink-muted">No students in this class yet.</p>
           ) : (
-            <ul className="divide-y divide-line rounded-xl border border-line">
+            <ul className="divide-y divide-line rounded-[10px] border border-line">
               {room.students.map((s) => (
                 <li
                   key={s.id}
@@ -123,13 +133,14 @@ export function TeacherSuggestionsAccess({ refreshKey = 0 }: { refreshKey?: numb
                     </p>
                     {room.classBlocked && (
                       <p className="text-xs text-ink-muted">
-                        Covered by class pause
+                        Paused for the whole class
                       </p>
                     )}
                   </div>
-                  <label className="inline-flex items-center gap-2 text-sm text-forest-900">
+                  <label className="inline-flex min-h-10 cursor-pointer items-center gap-2 text-sm text-forest-900">
                     <input
                       type="checkbox"
+                      className="h-4 w-4 accent-[var(--forest-700)]"
                       checked={s.individuallyBlocked || room.classBlocked}
                       disabled={
                         room.classBlocked ||

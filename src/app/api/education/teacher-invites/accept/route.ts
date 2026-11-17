@@ -9,9 +9,12 @@ import { profiles, schoolApplications, teacherInvites } from "@/lib/schema";
 export const runtime = "edge";
 
 const schema = z.object({
-  token: z.string().trim().min(16).max(128),
-  name: z.string().trim().min(2).max(120),
-  password: z.string().min(8).max(200),
+  token: z.string().trim().min(16, "This invite link is incomplete.").max(128),
+  name: z.string().trim().min(2, "Enter your full name.").max(120),
+  password: z
+    .string()
+    .min(8, "Your password needs at least 8 characters.")
+    .max(200, "Use a shorter password."),
 });
 
 export async function POST(request: Request) {
@@ -25,17 +28,17 @@ export async function POST(request: Request) {
       .limit(1);
 
     if (!invite) {
-      return NextResponse.json({ error: "Invite not found" }, { status: 404 });
+      return NextResponse.json({ error: "This invite couldn’t be found. Ask your school administrator for a new one." }, { status: 404 });
     }
     if (invite.status === "accepted") {
       return NextResponse.json(
-        { error: "This invite was already used. Please log in." },
+        { error: "This invite was already used. Log in with your email and password." },
         { status: 409 },
       );
     }
     if (invite.expiresAt.getTime() < Date.now()) {
       return NextResponse.json(
-        { error: "This invite has expired. Ask your school for a new one." },
+        { error: "This invite has expired. Ask your school administrator for a new one." },
         { status: 410 },
       );
     }
@@ -58,8 +61,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             error:
-              error.message ||
-              "Could not create account. If you already have Guide, log in instead.",
+              "An account with this email already exists. Log in instead.",
           },
           { status: 400 },
         );
@@ -71,7 +73,7 @@ export async function POST(request: Request) {
     authUserId ??= signUpData?.user?.id;
     if (!authUserId) {
       return NextResponse.json(
-        { error: "Account created but session missing — please log in." },
+        { error: "Your account was created. Log in to continue." },
         { status: 500 },
       );
     }
@@ -156,11 +158,11 @@ export async function POST(request: Request) {
   } catch (e) {
     if (e instanceof z.ZodError) {
       return NextResponse.json(
-        { error: e.issues[0]?.message ?? "Invalid request" },
+        { error: e.issues[0]?.message ?? "That request wasn’t valid. Refresh the page and try again." },
         { status: 400 },
       );
     }
     console.error(e);
-    return NextResponse.json({ error: "Could not accept invite" }, { status: 500 });
+    return NextResponse.json({ error: "Your account wasn’t created. Try again in a moment." }, { status: 500 });
   }
 }

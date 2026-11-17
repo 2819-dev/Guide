@@ -49,7 +49,7 @@ export async function GET() {
 export async function PATCH(request: Request) {
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Log in to continue." }, { status: 401 });
   }
 
   try {
@@ -80,7 +80,7 @@ export async function PATCH(request: Request) {
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not update profile" }, { status: 400 });
+    return NextResponse.json({ error: "Your profile wasn’t updated. Try again." }, { status: 400 });
   }
 }
 
@@ -88,7 +88,7 @@ export async function PATCH(request: Request) {
 export async function PUT(request: Request) {
   const authz = await requireProfile(["admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Admin only" }, { status: 403 });
+    return NextResponse.json({ error: "Only Guide Officials can do this." }, { status: 403 });
   }
   try {
     const body = z
@@ -98,7 +98,7 @@ export async function PUT(request: Request) {
       })
       .parse(await request.json());
     if (!isRole(body.role)) {
-      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+      return NextResponse.json({ error: "That role isn’t valid." }, { status: 400 });
     }
     const db = getDb();
     const [updated] = await db
@@ -113,6 +113,6 @@ export async function PUT(request: Request) {
     return NextResponse.json({ profile: updated });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not set role" }, { status: 400 });
+    return NextResponse.json({ error: "The role wasn’t updated. Try again." }, { status: 400 });
   }
 }

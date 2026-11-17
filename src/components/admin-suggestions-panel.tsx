@@ -20,7 +20,7 @@ export function AdminSuggestionsPanel() {
   async function load() {
     const res = await fetch("/api/suggestions");
     if (!res.ok) {
-      setError("Could not load suggestions");
+      setError("Suggestions couldn’t be loaded. Refresh the page to try again.");
       return;
     }
     const data = await res.json();
@@ -41,12 +41,18 @@ export function AdminSuggestionsPanel() {
         body: JSON.stringify({ title, body, published: true }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed");
+      if (!res.ok) {
+        throw new Error(data.error ?? "The suggestion wasn’t published. Try again.");
+      }
       setTitle("");
       setBody("");
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed");
+      setError(
+        e instanceof Error
+          ? e.message
+          : "The suggestion wasn’t published. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -55,7 +61,7 @@ export function AdminSuggestionsPanel() {
   return (
     <div className="space-y-4">
       <div className="portal-panel space-y-3">
-        <h3 className="text-sm font-semibold text-forest-800">
+        <h3 className="text-base font-semibold text-forest-950">
           Publish a suggestion
         </h3>
         <label className="block text-sm font-semibold text-forest-900">
@@ -64,7 +70,7 @@ export function AdminSuggestionsPanel() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="field mt-1.5"
-            placeholder="Short title"
+            placeholder="A short, clear title"
           />
         </label>
         <label className="block text-sm font-semibold text-forest-900">
@@ -74,7 +80,7 @@ export function AdminSuggestionsPanel() {
             onChange={(e) => setBody(e.target.value)}
             rows={4}
             className="field mt-1.5"
-            placeholder="What should students see?"
+            placeholder="What students will read"
           />
         </label>
         <button
@@ -86,7 +92,7 @@ export function AdminSuggestionsPanel() {
           {busy ? "Publishing…" : "Publish suggestion"}
         </button>
         {error ? (
-          <p className="rounded-[10px] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          <p className="form-alert form-alert--error" role="alert">
             {error}
           </p>
         ) : null}
@@ -96,8 +102,8 @@ export function AdminSuggestionsPanel() {
         <div className="portal-empty">
           <p className="portal-empty__title">No suggestions yet</p>
           <p className="portal-empty__body">
-            Published posts appear in the student Suggestions pad (unless a
-            teacher has paused access).
+            Published suggestions appear on the Suggestions page for students
+            whose teachers have not paused it.
           </p>
         </div>
       ) : (

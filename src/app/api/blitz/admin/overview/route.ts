@@ -8,7 +8,7 @@ export const runtime = "edge";
 /** Usage overview + subscribers for the Blitz admin console. */
 export async function GET() {
   if (!(await requireBlitzOfficial())) {
-    return NextResponse.json({ error: "Guide Official access required" }, { status: 403 });
+    return NextResponse.json({ error: "Only Guide Officials can do this." }, { status: 403 });
   }
   const [overview, subscribers] = await Promise.all([getBlitzOverview(), listSubscribers()]);
   return NextResponse.json({

@@ -110,7 +110,7 @@ export function StudentSignIn() {
     username: "Enter your username",
     password: "Enter your password",
     forgot: "Forgot your password?",
-    "forgot-sent": "Your teachers have been told",
+    "forgot-sent": "Request sent",
   }[step];
 
   return (
@@ -158,9 +158,9 @@ export function StudentSignIn() {
             />
             <div aria-live="polite" className="slogin__stack">
               {loading ? null : loadError ? (
-                <p className="slogin__note">Couldn’t load schools. Refresh to try again.</p>
+                <p className="slogin__note">Schools couldn’t be loaded. Refresh the page to try again.</p>
               ) : q && matches.length === 0 ? (
-                <p className="slogin__note">No school found. Check the spelling.</p>
+                <p className="slogin__note">No schools match. Check the spelling and try again.</p>
               ) : (
                 matches.slice(0, 6).map((s) => (
                   <button key={s.id} type="button" className="slogin__option" onClick={() => chooseSchool(s)}>
@@ -241,7 +241,7 @@ export function StudentSignIn() {
         {step === "forgot" && (
           <div className="slogin__stack">
             <p className="slogin__text">
-              We’ll ask your teachers to give you a new password.
+              We’ll ask your teachers to set a new password for you.
             </p>
             <button
               type="button"
@@ -257,7 +257,7 @@ export function StudentSignIn() {
         {step === "forgot-sent" && (
           <div className="slogin__stack">
             <p className="slogin__text">
-              They’ll give you a new password. Then come back and log in.
+              Your teachers will give you a new password. Then come back and log in.
             </p>
             <button
               type="button"

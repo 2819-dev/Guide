@@ -9,7 +9,7 @@ import { teacherInvites } from "@/lib/schema";
 export const runtime = "edge";
 
 export const metadata = {
-  title: "Teacher invite · Guide",
+  title: "Teacher invite",
   description: "Set up your Guide teacher account from a school invite.",
   robots: { index: false, follow: false },
 };
@@ -40,10 +40,10 @@ export default async function TeacherInvitePage({ params }: Props) {
         <div className="content-band portal-page__inner max-w-lg">
           <div className="portal-panel">
             <p className="portal-eyebrow">Teacher invite</p>
-            <h1 className="display-feature mt-1">Temporarily unavailable</h1>
+            <h1 className="display-feature mt-1">We couldn’t open this invite</h1>
             <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-muted">
-              We could not look up this invite right now. Try again shortly, or
-              log in if you already set up your account.
+              Something went wrong on our end. Refresh the page in a few
+              minutes, or log in if you already set up your account.
             </p>
             <p className="mt-5">
               <Link
@@ -72,12 +72,12 @@ export default async function TeacherInvitePage({ params }: Props) {
           <div className="portal-panel">
             <p className="portal-eyebrow">Teacher invite</p>
             <h1 className="display-feature mt-1">
-              {used ? "Invite already used" : "Invite expired"}
+              {used ? "This invite was already used" : "This invite has expired"}
             </h1>
             <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-muted">
               {used
-                ? "This setup link was already used. Log in with the account you created."
-                : "Ask your school administrator to send a new invite from the school portal."}
+                ? "Log in with the email and password you created."
+                : "Invites expire after 14 days. Ask your school administrator to send a new one."}
             </p>
             <p className="mt-5 flex flex-wrap gap-3">
               <Link
@@ -85,9 +85,6 @@ export default async function TeacherInvitePage({ params }: Props) {
                 className="btn-primary inline-flex"
               >
                 Teacher log in
-              </Link>
-              <Link href="/schools/meeting" className="btn-secondary inline-flex">
-                Book a meeting
               </Link>
             </p>
           </div>

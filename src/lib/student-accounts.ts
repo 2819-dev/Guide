@@ -104,15 +104,17 @@ async function createAuthIdentity(opts: {
     },
     body: JSON.stringify({ email: opts.email, password: opts.password, name: opts.name }),
   }).catch(() => null);
-  if (!res) return { error: "Couldn’t reach the sign-in service. Try again." };
+  if (!res) return { error: "The sign-in service could not be reached. Please try again." };
   const data = (await res.json().catch(() => ({}))) as {
     user?: { id?: string };
     message?: string;
   };
   if (!res.ok || !data.user?.id) {
     const msg = data.message || "";
-    if (/password/i.test(msg)) return { error: msg };
-    return { error: msg || "Couldn’t create the login. Try again." };
+    if (/password/i.test(msg) && /short|long|length|weak/i.test(msg)) {
+      return { error: "That password doesn’t meet the requirements. Use at least 8 characters." };
+    }
+    return { error: "The student’s login could not be created. Please try again." };
   }
   return { id: data.user.id };
 }

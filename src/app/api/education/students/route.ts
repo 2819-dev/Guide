@@ -30,7 +30,7 @@ function originOf(request: Request) {
 /** Pending password-help requests for this teacher's students. */
 export async function GET() {
   const me = await teacher();
-  if (!me) return NextResponse.json({ error: "Access required" }, { status: 403 });
+  if (!me) return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   const requests = await pendingRequestsForTeacher(me.id);
   return NextResponse.json({ requests });
 }
@@ -39,7 +39,11 @@ const createBody = z.object({
   action: z.literal("create"),
   classroomId: z.string().uuid(),
   displayName: z.string().trim().min(1, "Enter the student’s name.").max(120),
-  username: z.string().trim().min(1).max(40),
+  username: z
+    .string()
+    .trim()
+    .min(1, "Enter a username.")
+    .max(40, "Usernames can be up to 40 characters."),
   password: z.string().min(8, "Passwords need at least 8 characters.").max(128),
 });
 
@@ -52,7 +56,7 @@ const resetBody = z.object({
 /** Create a student account in a class, or set a student's new password. */
 export async function POST(request: Request) {
   const me = await teacher();
-  if (!me) return NextResponse.json({ error: "Access required" }, { status: 403 });
+  if (!me) return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
 
   const raw = await request.json().catch(() => null);
   const parsed = z.discriminatedUnion("action", [createBody, resetBody]).safeParse(raw);
@@ -66,12 +70,12 @@ export async function POST(request: Request) {
 
   if (body.action === "create") {
     if (!(await teacherOwnsClassroom(me.id, body.classroomId))) {
-      return NextResponse.json({ error: "Class not found." }, { status: 404 });
+      return NextResponse.json({ error: "That class couldn’t be found. Refresh the page and try again." }, { status: 404 });
     }
     const schoolId = await schoolIdForEducator(me);
     if (!schoolId) {
       return NextResponse.json(
-        { error: "Your account isn’t linked to a school yet. Contact Guide Official." },
+        { error: "Your account isn’t linked to a school yet. Use Get help on your account page to contact the Guide team." },
         { status: 400 },
       );
     }
@@ -88,7 +92,7 @@ export async function POST(request: Request) {
   }
 
   if (!(await teacherTeachesStudent(me.id, body.studentId))) {
-    return NextResponse.json({ error: "Student not found in your classes." }, { status: 404 });
+    return NextResponse.json({ error: "That student isn’t in any of your classes." }, { status: 404 });
   }
   const result = await resetStudentPassword({
     studentId: body.studentId,

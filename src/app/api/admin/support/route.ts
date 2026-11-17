@@ -16,7 +16,7 @@ function ticketNumber() {
 export async function GET() {
   const authz = await requireProfile(["admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+    return NextResponse.json({ error: "Only Guide Officials can do this." }, { status: 403 });
   }
 
   const db = getDb();
@@ -41,7 +41,7 @@ export async function GET() {
       ...t,
       // Never expose email/name; reporterCode is already opaque
     })),
-    note: "Support view shows operational data only. Personal information is not available to Admin.",
+    note: "Help requests show the request details only. Personal information is not shown here.",
   });
 }
 
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   /** Anyone signed in can file a ticket; reporter identity stored as opaque code only */
   const authz = await requireProfile();
   if (!authz) {
-    return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    return NextResponse.json({ error: "Log in to continue." }, { status: 401 });
   }
 
   try {
@@ -86,14 +86,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ ticket }, { status: 201 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not create ticket" }, { status: 400 });
+    return NextResponse.json({ error: "Your request wasn’t sent. Check the subject and details, then try again." }, { status: 400 });
   }
 }
 
 export async function PATCH(request: Request) {
   const authz = await requireProfile(["admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+    return NextResponse.json({ error: "Only Guide Officials can do this." }, { status: 403 });
   }
   try {
     const body = z
@@ -115,7 +115,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ ticket: updated });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not update ticket" }, { status: 400 });
+    return NextResponse.json({ error: "The status wasn’t updated. Try again." }, { status: 400 });
   }
 }
 
@@ -123,11 +123,11 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   const authz = await requireProfile(["admin"]);
   if (!authz) {
-    return NextResponse.json({ error: "Access required" }, { status: 403 });
+    return NextResponse.json({ error: "You don’t have access to this. Log in with the correct account." }, { status: 403 });
   }
   const id = new URL(request.url).searchParams.get("id") ?? "";
   if (!/^[0-9a-f-]{36}$/i.test(id)) {
-    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+    return NextResponse.json({ error: "That item couldn’t be found. Refresh the page and try again." }, { status: 400 });
   }
   const db = getDb();
   await db.delete(supportTickets).where(eq(supportTickets.id, id));

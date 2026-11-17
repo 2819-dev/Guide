@@ -104,7 +104,7 @@ export async function createPromoCode(
       return {
         ok: false,
         error:
-          "Discount codes live in Stripe, and payments aren’t set up yet. Add the Stripe keys first, or make a free-upgrade code instead.",
+          "Payments aren’t connected yet, so checkout discount codes can’t be created. Create a free upgrade code instead.",
       };
     }
     if (input.discountDuration === "repeating" && !input.discountMonths) {
@@ -242,7 +242,7 @@ export async function setPromoActive(
         console.error("[blitz promo] stripe toggle failed", e);
         return {
           ok: false,
-          error: "Saved in Guide, but Stripe didn’t update. Check the code in the Stripe dashboard.",
+          error: "Saved in Guide, but the payment provider didn’t update. Check the code in the Stripe dashboard.",
         };
       }
     }
@@ -290,7 +290,7 @@ export async function redeemPromoCode(
     return {
       ok: false,
       status: 400,
-      error: "That’s a checkout discount. Pick a plan below and enter the code on the Stripe payment page.",
+      error: "That’s a checkout discount. Choose a plan below and enter the code at checkout.",
     };
   }
   if (!promo.active) return { ok: false, status: 410, error: "That code is no longer active." };
@@ -299,7 +299,7 @@ export async function redeemPromoCode(
   }
   if (promo.already) return { ok: false, status: 409, error: "You’ve already used this code." };
   if (promo.max_redemptions != null && promo.redemption_count >= promo.max_redemptions) {
-    return { ok: false, status: 410, error: "That code has been fully used up." };
+    return { ok: false, status: 410, error: "That code has reached its redemption limit." };
   }
 
   // One atomic statement: redemption (unique per teacher) → grant → counter.
@@ -337,7 +337,7 @@ export async function redeemPromoCode(
   );
 
   if (!granted) {
-    return { ok: false, status: 409, error: "That code can’t be used right now. It may have just run out." };
+    return { ok: false, status: 409, error: "That code can’t be used right now. It may have just reached its limit." };
   }
 
   const ent = await getEntitlement(profileId);
@@ -358,6 +358,6 @@ export async function redeemPromoCode(
     expiresAt: granted.expires_at ? new Date(granted.expires_at).toISOString() : null,
     message: outranked
       ? `Code applied: ${plan.label}${until ? ` until ${until}` : ""}. You’re already on ${ent.plan.label}, which includes it.`
-      : `You’re on Blitz ${plan.label}${until ? ` until ${until}` : ""}. Enjoy!`,
+      : `Code applied. You’re now on Blitz ${plan.label}${until ? ` until ${until}` : ""}.`,
   };
 }

@@ -7,7 +7,7 @@ export const runtime = "edge";
 
 async function open(request: Request) {
   const profile = await requireBlitzTeacher();
-  if (!profile) return { status: 403, error: "Teachers only" } as const;
+  if (!profile) return { status: 403, error: "This is only available to teachers." } as const;
   try {
     const result = await createPortalSession(profile.id, requestOrigin(request));
     if (!result.ok) {

@@ -51,7 +51,7 @@ export function AdminEntryButton({
       className={`${buttonClass} ${className}`.trim()}
     >
       <AdminKeyIcon />
-      Admin
+      Teacher log in
     </Link>
   );
 }

@@ -22,10 +22,14 @@ export function AdminDeleteButton({
     try {
       const res = await fetch(url, { method: "DELETE" });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error ?? "Couldn’t delete.");
+      if (!res.ok) {
+        throw new Error(data.error ?? "This item wasn’t deleted. Try again.");
+      }
       onDeleted();
     } catch (e) {
-      window.alert(e instanceof Error ? e.message : "Couldn’t delete.");
+      window.alert(
+        e instanceof Error ? e.message : "This item wasn’t deleted. Try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -36,7 +40,7 @@ export function AdminDeleteButton({
       type="button"
       onClick={() => void remove()}
       disabled={busy}
-      className="text-sm font-semibold text-red-700 hover:underline disabled:opacity-50"
+      className="inline-flex min-h-10 items-center px-1 text-sm font-semibold text-red-700 hover:underline disabled:opacity-50 dark:text-red-300"
     >
       {busy ? "Deleting…" : "Delete"}
     </button>

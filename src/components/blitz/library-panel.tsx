@@ -58,7 +58,7 @@ export function BlitzLibraryPanel() {
     const qData = await qRes.json();
     const eData = await eRes.json().catch(() => null);
     if (!qRes.ok) {
-      setError(qData.error ?? "Could not load quizzes");
+      setError(qData.error ?? "Could not load your quizzes. Refresh to try again.");
       setQuizzes([]);
       return;
     }
@@ -92,13 +92,13 @@ export function BlitzLibraryPanel() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: opts?.title ?? "Untitled Blitz",
+          title: opts?.title ?? "Untitled quiz",
           description: opts?.description,
           questions: opts?.questions ?? [],
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Create failed");
+      if (!res.ok) throw new Error(data.error ?? "Could not create the quiz.");
       if (opts?.category) {
         await fetch(`/api/blitz/quizzes/${data.quiz.id}`, {
           method: "PATCH",
@@ -108,14 +108,14 @@ export function BlitzLibraryPanel() {
       }
       router.push(`/apps/blitz/edit/${data.quiz.id}`);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Create failed");
+      setError(e instanceof Error ? e.message : "Could not create the quiz.");
       setBusy(false);
     }
   }
 
   function startFromTemplate(t: BlitzTemplate) {
     if (!allTypes && templateNeedsPlus(t)) {
-      setError(`“${t.title}” uses question types from Blitz Plus. Upgrade to use it, or start from a Quiz / True-false template.`);
+      setError(`“${t.title}” uses question types included with Plus. Upgrade to use it, or choose a template with Quiz or True/False questions.`);
       return;
     }
     void createQuiz({
@@ -136,26 +136,26 @@ export function BlitzLibraryPanel() {
         body: JSON.stringify({ title: `${quiz.title} (copy)`, description: quiz.description, questions: quiz.questions }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not duplicate");
+      if (!res.ok) throw new Error(data.error ?? "Could not duplicate the quiz.");
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not duplicate");
+      setError(e instanceof Error ? e.message : "Could not duplicate the quiz.");
     } finally {
       setBusy(false);
     }
   }
 
   async function deleteQuiz(quizId: string) {
-    if (!window.confirm("Delete this quiz from your library?")) return;
+    if (!window.confirm("Delete this quiz? This can’t be undone.")) return;
     setBusy(true);
     setError(null);
     try {
       const res = await fetch(`/api/blitz/quizzes/${quizId}`, { method: "DELETE" });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Could not delete");
+      if (!res.ok) throw new Error(data.error ?? "Could not delete the quiz.");
       await load();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not delete");
+      setError(e instanceof Error ? e.message : "Could not delete the quiz.");
     } finally {
       setBusy(false);
     }
@@ -169,19 +169,19 @@ export function BlitzLibraryPanel() {
         <div>
           <p className="bz-kicker">Live classroom quizzes</p>
           <h1 className="bz-h1 mt-2">
-            Make the room go{" "}
+            Quizzes the whole class plays{" "}
             <span className="bz-mark">
-              loud
+              together
               <Squiggle />
             </span>
             .
           </h1>
           <p className="bz-muted mt-4" style={{ maxWidth: 520, fontSize: "1.05rem" }}>
-            Build a Blitz, put the PIN on the projector, and watch answers fly in. Host it live, run it in teams, or assign it as a self-paced challenge.
+            Build a quiz, show the PIN on screen, and see answers come in live. Host it for the class, play in teams, or assign it as a self-paced challenge.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             <button type="button" className="bz-btn bz-btn--primary bz-btn--lg" disabled={busy} onClick={() => void createQuiz()}>
-              + New Blitz
+              New quiz
             </button>
             <Link href="/apps/blitz/discover" className="bz-btn bz-btn--lg no-underline">
               Browse Discover
@@ -192,21 +192,21 @@ export function BlitzLibraryPanel() {
           <div className="bz-hero-stats">
             <div className="bz-stat">
               <b style={{ color: "var(--bz-lime)" }}>{plan?.label ?? "—"}</b>
-              <span>your plan</span>
+              <span>Your plan</span>
             </div>
             <div className="bz-stat">
               <b>{entitlement ? (entitlement.liveGamesRemaining == null ? "∞" : entitlement.liveGamesRemaining) : "—"}</b>
-              <span>live games left this month</span>
+              <span>Live games left this month</span>
             </div>
             <div className="bz-stat">
               <b>{plan?.maxPlayersPerGame ?? "—"}</b>
-              <span>players per game</span>
+              <span>Players per game</span>
             </div>
           </div>
           {plan && plan.id === "free" ? (
             <p className="bz-plan-strip">
-              Free covers Quiz + True/False and the Night &amp; Arcade stages.
-              <Link href="/apps/blitz/upgrade">Get Plus →</Link>
+              Free includes Quiz and True/False questions and the Night and Arcade themes.
+              <Link href="/apps/blitz/upgrade">Compare plans</Link>
             </p>
           ) : null}
         </div>
@@ -227,7 +227,7 @@ export function BlitzLibraryPanel() {
         <div className="bz-section-head">
           <div>
             <p className="bz-kicker">Start from a template</p>
-            <h2 className="bz-h2 mt-1">Ready-to-play starters</h2>
+            <h2 className="bz-h2 mt-1">Ready-made quizzes</h2>
           </div>
         </div>
         <div className="bz-filters mb-3" role="group" aria-label="Template categories">
@@ -261,7 +261,7 @@ export function BlitzLibraryPanel() {
                 <span className="bz-tpl-desc">{t.description}</span>
                 <span className="bz-tpl-foot">
                   <span>{t.blurb}</span>
-                  {locked ? <span className="bz-lock">Plus</span> : <span className="bz-tpl-go">Use →</span>}
+                  {locked ? <span className="bz-lock">Plus</span> : <span className="bz-tpl-go">Use template</span>}
                 </span>
               </button>
             );
@@ -274,7 +274,7 @@ export function BlitzLibraryPanel() {
           <div>
             <p className="bz-kicker">Your library</p>
             <h2 className="bz-h2 mt-1">
-              My Blitzes {quizzes ? <span className="bz-muted">({quizzes.length})</span> : null}
+              My quizzes {quizzes ? <span className="bz-muted">({quizzes.length})</span> : null}
             </h2>
           </div>
           <input
@@ -288,15 +288,15 @@ export function BlitzLibraryPanel() {
         </div>
 
         {quizzes === null ? (
-          <p className="bz-muted">Loading…</p>
+          <p className="bz-muted" role="status">Loading your quizzes…</p>
         ) : filtered.length === 0 ? (
           <div className="bz-empty">
             <TileSymbol index={0} size={48} className="text-[var(--bz-lime)]" />
             <p className="bz-h3" style={{ color: "var(--bz-text)" }}>
-              {quizzes.length === 0 ? "Your library is empty — for now." : "Nothing matches that search."}
+              {quizzes.length === 0 ? "No quizzes yet" : "No quizzes match your search"}
             </p>
             {quizzes.length === 0 ? (
-              <p>Pick a template above or start a fresh Blitz.</p>
+              <p>Start from a template above, or create a new quiz.</p>
             ) : null}
           </div>
         ) : (
@@ -318,7 +318,7 @@ export function BlitzLibraryPanel() {
                       <TileSymbol index={ci + 2} size={40} />
                     </span>
                     <span className="bz-cover-count">
-                      {q.questions.length} Q{q.questions.length === 1 ? "" : "s"}
+                      {q.questions.length} {q.questions.length === 1 ? "question" : "questions"}
                     </span>
                   </div>
                   <div className="bz-quiz-body">
@@ -360,7 +360,7 @@ export function BlitzLibraryPanel() {
                         Edit
                       </Link>
                       <button type="button" className="bz-btn bz-btn--quiet bz-btn--sm" disabled={busy} onClick={() => void duplicateQuiz(q)}>
-                        Copy
+                        Duplicate
                       </button>
                       <button type="button" className="bz-btn bz-btn--quiet bz-btn--sm" disabled={busy} onClick={() => void deleteQuiz(q.id)} aria-label={`Delete ${q.title}`}>
                         Delete

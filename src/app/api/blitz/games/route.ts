@@ -9,7 +9,7 @@ export const runtime = "edge";
 export async function GET() {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz || !(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   const games = await listGamesForHost(authz.profile.id);
   return NextResponse.json({ games });
@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const authz = await requireProfile(["rebbe", "admin"]);
   if (!authz || !(await hasEducationAccess(authz.profile))) {
-    return NextResponse.json({ error: "Teachers only" }, { status: 403 });
+    return NextResponse.json({ error: "This is only available to teachers." }, { status: 403 });
   }
   try {
     const body = z
@@ -49,9 +49,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ game: viewForHost(state) });
   } catch (error) {
     console.error(error);
-    const message = error instanceof Error ? error.message : "Could not host";
+    const message = error instanceof Error ? error.message : "Could not open the lobby.";
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+      return NextResponse.json({ error: "That request wasn’t valid. Refresh the page and try again." }, { status: 400 });
     }
     return NextResponse.json({ error: message }, { status: 400 });
   }
