@@ -5,6 +5,7 @@
 
 export const OFFICIAL_ADMIN_EMAILS = [
   "hf@guidelearning.org",
+  "hfrankel@guidelearning.org",
   "admin@bighappysmiley.com", // legacy seed Official
 ] as const;
 
@@ -20,5 +21,6 @@ export function isOfficialAdminEmail(
 export function officialRequiresInitialPasswordChange(
   email: string | null | undefined,
 ): boolean {
-  return email?.trim().toLowerCase() === "hf@guidelearning.org";
+  const e = email?.trim().toLowerCase();
+  return e === "hf@guidelearning.org" || e === "hfrankel@guidelearning.org";
 }

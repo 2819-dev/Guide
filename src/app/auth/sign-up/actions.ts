@@ -1,5 +1,9 @@
 "use server";
 
+import {
+  isOfficialAdminEmail,
+  officialRequiresInitialPasswordChange,
+} from "@/lib/official-emails";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth/server";
@@ -69,13 +73,12 @@ export async function signUpWithEmail(
     const db = getDb();
     let finalRole: Role = role;
     const emailLower = email.toLowerCase();
-    const isOfficial =
-      emailLower === "admin@bighappysmiley.com" ||
-      emailLower === "hf@guidelearning.org";
+    const isOfficial = isOfficialAdminEmail(emailLower);
     if (isOfficial) {
       finalRole = "admin";
     }
-    const forcePasswordChange = emailLower === "hf@guidelearning.org";
+    const forcePasswordChange =
+      officialRequiresInitialPasswordChange(emailLower);
     const existing = await db
       .select()
       .from(profiles)
