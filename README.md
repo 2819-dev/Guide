@@ -14,7 +14,7 @@ student's portal. Live at **https://guidelearning.org**.
 | Developer partner | `/developer` | Apply at `/developers/apply` |
 | Guide Official | `/admin` | Staff accounts only |
 
-Apps live in `src/lib/apps.ts` (TestQuiz, Amud, Arcade Education). Teachers add an
+Apps live in `src/lib/apps.ts` (Blitz, Arcade Education). Teachers add an
 app to a class; students in that class see it under **My apps**.
 
 ## Stack

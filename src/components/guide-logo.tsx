@@ -15,7 +15,6 @@ const sizeMap = {
 
 /**
  * Guide wordmark — licensed Gulfs Display (wordmark only).
- * Amud keeps AppWordmark.
  */
 export function GuideWordmark({
   href = "/",

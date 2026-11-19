@@ -2,12 +2,10 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { AppWordmark } from "@/components/app-wordmark";
 import {
-  FIRST_APP_SLUG,
   getApp,
   isAppAvailable,
   isExternalLaunchApp,
 } from "@/lib/apps";
-import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 
 export const runtime = "edge";
 
@@ -27,17 +25,12 @@ export default async function AppShellLayout({ children, params }: Props) {
     redirect(`/api/apps/launch?slug=${encodeURIComponent(app.slug)}`);
   }
 
-  // On the dedicated Amud deploy, learning lives at /learn — not under /apps.
-  if (isAmudSite() && appSlug === FIRST_APP_SLUG) {
-    redirect(publicAmudLearnBase());
-  }
-
   return (
     <div>
       <div className="border-b border-line bg-sky-soft/60">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-3 sm:px-8">
           <div className="flex items-center gap-3">
-            <AppWordmark name={app.name} size="md" />
+            <AppWordmark name={app.name} href={null} size="md" />
             <span className="hidden text-sm text-ink-muted sm:inline">
               {app.tagline}
             </span>

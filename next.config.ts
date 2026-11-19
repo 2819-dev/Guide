@@ -1,10 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /**
-   * Legacy /study and old Chazarah slug → Amud.
-   * FIRST_APP_SLUG is `amud` — update destinations if renamed.
-   */
   async redirects() {
     return [
       // TestQuiz was renamed Blitz.
@@ -14,36 +10,24 @@ const nextConfig: NextConfig = {
         destination: "/apps/blitz/:path*",
         permanent: true,
       },
-      {
-        source: "/study",
-        destination: "/apps/amud",
-        permanent: false,
-      },
-      {
-        source: "/study/:daf(\\d{1,3}[abAB])",
-        destination: "/apps/amud/bava-metzia/:daf",
-        permanent: false,
-      },
-      {
-        source: "/study/:tractate",
-        destination: "/apps/amud/:tractate",
-        permanent: false,
-      },
-      {
-        source: "/study/:tractate/:daf",
-        destination: "/apps/amud/:tractate/:daf",
-        permanent: false,
-      },
-      {
-        source: "/apps/chazarah",
-        destination: "/apps/amud",
-        permanent: false,
-      },
-      {
-        source: "/apps/chazarah/:path*",
-        destination: "/apps/amud/:path*",
-        permanent: false,
-      },
+      { source: "/developers", destination: "/developers/apply", permanent: true },
+      // The family portal was removed.
+      { source: "/family", destination: "/", permanent: true },
+      { source: "/family/:path*", destination: "/", permanent: true },
+      // Amud was removed from Guide; its old links go to the app library.
+      ...[
+        "/study",
+        "/study/:path*",
+        "/apps/chazarah",
+        "/apps/chazarah/:path*",
+        "/apps/amud",
+        "/apps/amud/:path*",
+        "/amudsite",
+        "/amudsite/:path*",
+        "/learn",
+        "/learn/:path*",
+        "/invite/ohr-reuven",
+      ].map((source) => ({ source, destination: "/apps", permanent: true })),
     ];
   },
 };

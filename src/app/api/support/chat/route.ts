@@ -7,12 +7,15 @@ import { ensureProfile } from "@/lib/profile";
 import { isRole, roleLabel } from "@/lib/roles";
 import {
   addMessage,
+  aiDailyCapReached,
+  chatLimitError,
   createChat,
   getChatForVisitor,
   getChatSettings,
   listMessages,
   newVisitorToken,
   updateChat,
+  visitorKeyFor,
   type ChatRecord,
   type ChatSettings,
 } from "@/lib/support-chat";
@@ -153,6 +156,11 @@ export async function POST(request: Request) {
     if (input.chatId && input.token) {
       chat = await getChatForVisitor(input.chatId, input.token);
     }
+    const visitorKey = await visitorKeyFor(request);
+    const limited = await chatLimitError({ visitorKey, chatId: chat?.id ?? null });
+    if (limited) {
+      return NextResponse.json({ error: limited }, { status: 429 });
+    }
     if (!chat) {
       const who = await visitorInfo();
       const token = newVisitorToken();
@@ -162,6 +170,7 @@ export async function POST(request: Request) {
         visitorName: who.name,
         visitorRole: who.role,
         page: input.page ?? null,
+        visitorKey,
       });
       chat = (await getChatForVisitor(id, token))!;
     }
@@ -185,6 +194,8 @@ export async function POST(request: Request) {
         await handOff(chat, settings, "Guide Assistant is off; needs a person.", input.body);
       } else if (chat.aiReplies >= MAX_AI_REPLIES) {
         await handOff(chat, settings, "Long chat; Guide Assistant handed off.", input.body);
+      } else if (await aiDailyCapReached()) {
+        await handOff(chat, settings, "Guide Assistant reached today's reply limit.", input.body);
       } else {
         const reply = await askGuideAssistant({
           history: await listMessages(chat.id),

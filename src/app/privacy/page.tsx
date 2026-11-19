@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LegalPage } from "@/components/legal-page";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacy" },
   title: "Privacy Policy",
   description:
     "How Guide collects, uses, and protects information about students, teachers, and schools.",
@@ -54,8 +55,7 @@ export default function PrivacyPage() {
       <h3>Learning activity</h3>
       <p>
         Activity inside Guide’s own apps that teachers use to follow
-        progress. For example: Blitz games, answers, and scores; Amud pages
-        opened, quiz results, and notes a student saves.
+        progress. For example: Blitz games, answers, and scores.
       </p>
       <h3>Messages and requests</h3>
       <p>

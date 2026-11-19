@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { AdminLiveChatPanel } from "@/components/admin-live-chat-panel";
 import { AdminDevelopersPanel } from "@/components/admin-developers-panel";
 import { AdminMeetingsPanel } from "@/components/admin-meetings-panel";
-import { AdminRoleBadgesPanel } from "@/components/admin-role-badges-panel";
 import { AdminSchoolsPanel } from "@/components/admin-schools-panel";
 import { AdminSuggestionsPanel } from "@/components/admin-suggestions-panel";
 import { AdminSupportPanel } from "@/components/admin-support-panel";
@@ -107,7 +106,6 @@ export default async function AdminPage() {
         { href: "#live-chat", label: "Live chat" },
         { href: "#meetings", label: "Meetings" },
         { href: "#developers", label: "Developers" },
-        { href: "#roles", label: "Roles" },
         { href: "#suggestions", label: "Suggestions" },
         { href: "#blitz", label: "Blitz" },
         ...(isAdmin ? [{ href: "#support", label: "Help" }] : []),
@@ -147,14 +145,6 @@ export default async function AdminPage() {
       </OfficialSection>
 
       <OfficialSection
-        id="roles"
-        title="Roles"
-        lede="Badges that appear on a person’s profile, such as Star Student."
-      >
-        <AdminRoleBadgesPanel />
-      </OfficialSection>
-
-      <OfficialSection
         id="suggestions"
         title="Suggestions"
         lede="Ideas and study prompts shown to students. Teachers can pause Suggestions for their classes."
@@ -174,7 +164,7 @@ export default async function AdminPage() {
         <OfficialSection
           id="support"
           title="Help requests"
-          lede="Requests sent from Get help on the account page."
+          lede="Requests sent from the old Get help form. New questions come through Live chat."
         >
           <AdminSupportPanel />
         </OfficialSection>

@@ -3,11 +3,9 @@ import { eq } from "drizzle-orm";
 import { JoinClass } from "@/components/join-class";
 import { MyAppsGrid } from "@/components/my-apps-grid";
 import { PortalShell, PortalToolTile } from "@/components/portal-shell";
-import { RoleBadgeChip } from "@/components/role-badge-chip";
 import { listAppsForStudent } from "@/lib/app-installs";
 import { getDb } from "@/lib/db";
 import { requireProfile } from "@/lib/profile";
-import { listRolesForProfile } from "@/lib/role-badges";
 import {
   classroomMembers,
   classrooms,
@@ -46,7 +44,6 @@ export default async function StudentHubPage() {
     .innerJoin(profiles, eq(classrooms.rebbeId, profiles.id))
     .where(eq(classroomMembers.studentId, authz.profile.id));
 
-  const roles = await listRolesForProfile(authz.profile.id);
   const apps = await listAppsForStudent(authz.profile.id);
   const suggestionsAccess = await isStudentSuggestionsBlocked(
     authz.profile.id,
@@ -70,21 +67,6 @@ export default async function StudentHubPage() {
       ]}
       accountName={authz.profile.displayName}
     >
-      {roles.length > 0 ? (
-        <ul className="portal-role-row">
-          {roles.map((r) => (
-            <li key={r.id}>
-              <RoleBadgeChip
-                name={r.name}
-                color={r.color}
-                iconUrl={r.iconUrl}
-                size="sm"
-              />
-            </li>
-          ))}
-        </ul>
-      ) : null}
-
       <div className="portal-primary">
         <MyAppsGrid
           apps={apps}

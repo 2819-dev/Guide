@@ -11,7 +11,6 @@ import { getDb } from "@/lib/db";
 import { parseLoginAs } from "@/lib/login-roles";
 import { isRole, type Role } from "@/lib/roles";
 import { profiles } from "@/lib/schema";
-import { publicAmudLearnBase } from "@/lib/site";
 
 export async function signUpWithEmail(
   _prev: { error: string } | null,
@@ -117,6 +116,5 @@ export async function signUpWithEmail(
   }
 
   if (as === "developer") redirect("/developers/apply");
-  if (as === "learner") redirect(publicAmudLearnBase());
   redirect("/apps");
 }

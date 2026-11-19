@@ -10,6 +10,7 @@ import { ensureProfile } from "@/lib/profile";
 export const runtime = "edge";
 
 export const metadata = {
+  alternates: { canonical: "/education" },
   title: "For schools",
   description:
     "One login for every app your school uses. School administrators apply for their school; teachers join by invitation.",

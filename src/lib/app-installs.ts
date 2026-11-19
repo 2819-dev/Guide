@@ -10,11 +10,18 @@ import {
 let legacySlugsMigrated: Promise<void> | null = null;
 
 /** One-time per isolate: installs saved as "testquiz" become "blitz". */
+/** TestQuiz became Blitz; Amud (and its old Chazarah slug) was removed from Guide. */
 function migrateLegacySlugs(): Promise<void> {
-  legacySlugsMigrated ??= getDb()
+  const db = getDb();
+  legacySlugsMigrated ??= db
     .update(classroomAppInstalls)
     .set({ appSlug: "blitz" })
     .where(eq(classroomAppInstalls.appSlug, "testquiz"))
+    .then(() =>
+      db
+        .delete(classroomAppInstalls)
+        .where(inArray(classroomAppInstalls.appSlug, ["amud", "chazarah"])),
+    )
     .then(() => undefined)
     .catch((e) => {
       legacySlugsMigrated = null;
@@ -53,10 +60,9 @@ export async function listInstallsForTeacher(
     )
     .where(eq(classrooms.rebbeId, teacherProfileId));
 
-  return rows.map((r) => ({
-    ...r,
-    app: getApp(r.appSlug) ?? null,
-  }));
+  return rows
+    .map((r) => ({ ...r, app: getApp(r.appSlug) ?? null }))
+    .filter((r) => r.app !== null);
 }
 
 /** Apps installed on classes a student joined (Clever-style My apps). */

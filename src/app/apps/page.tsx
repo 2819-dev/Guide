@@ -10,6 +10,7 @@ import {
 export const runtime = "edge";
 
 export const metadata = {
+  alternates: { canonical: "/apps" },
   title: "App library",
   description:
     "Browse the learning apps on Guide. Teachers add apps to a class, and students open them from My apps.",

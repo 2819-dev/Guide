@@ -25,9 +25,7 @@ jobs:
       deployments: write
     env:
       NEXT_TELEMETRY_DISABLED: "1"
-      NEXT_PUBLIC_SITE: guide
       NEXT_PUBLIC_GUIDE_URL: https://guidelearning.org
-      NEXT_PUBLIC_AMUD_URL: https://guidelearning.org/amudsite
       NEXT_PUBLIC_ARCADE_URL: https://arcade-edu.guidelearning.org
     steps:
       - uses: actions/checkout@v4

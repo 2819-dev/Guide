@@ -10,7 +10,6 @@ import { parseLoginAs, type LoginAs } from "@/lib/login-roles";
 import { portalFor } from "@/lib/portals";
 import { ensureProfile } from "@/lib/profile";
 import type { Role } from "@/lib/roles";
-import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 import { profiles } from "@/lib/schema";
 import { loginEmailForStudent } from "@/lib/student-accounts";
 
@@ -22,9 +21,6 @@ function destinationFor(
   badgeCode: string | null,
   developerOk: boolean,
 ): string {
-  if (as === "learner" || isAmudSite()) {
-    return publicAmudLearnBase();
-  }
   if (as === "educator") {
     if (role === "admin") return "/official";
     // Approved = full tools; pending/declined = limited portal (same route).
@@ -68,7 +64,7 @@ export async function signInWithEmail(
     user: data?.user ?? null,
     schoolId,
   });
-  if (!session) redirect(isAmudSite() ? publicAmudLearnBase() : "/apps");
+  if (!session) redirect("/apps");
 
   if (schoolId && session.profile.schoolId !== schoolId) {
     const db = getDb();

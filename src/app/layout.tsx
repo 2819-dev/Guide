@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { SiteChrome } from "@/components/site-chrome";
-import { FIRST_APP_NAME } from "@/lib/apps";
-import { isAmudSite } from "@/lib/site";
+import { guidePublicUrl } from "@/lib/site";
 import "./globals.css";
 import "../styles/polish-public.css";
 import "../styles/polish-portal.css";
@@ -20,24 +19,7 @@ const manrope = localFont({
   display: "swap",
 });
 
-const frankRuhlLatin = localFont({
-  src: "../fonts/FrankRuhlLibre-latin-var.woff2",
-  variable: "--font-frank-ruhl-latin",
-  weight: "300 900",
-  display: "swap",
-  // No metric fallback here, so Hebrew characters fall through to the
-  // Hebrew file below instead of a system serif.
-  adjustFontFallback: false,
-});
-
-const frankRuhlHebrew = localFont({
-  src: "../fonts/FrankRuhlLibre-hebrew-var.woff2",
-  variable: "--font-frank-ruhl-hebrew",
-  weight: "300 900",
-  display: "swap",
-});
-
-/** Licensed Gulfs Display — Guide wordmark only (not Amud). */
+/** Licensed Gulfs Display, used for the Guide wordmark only. */
 const gulfsDisplay = localFont({
   src: "../fonts/GulfsDisplay-Normal.ttf",
   variable: "--font-gulfs-display",
@@ -46,25 +28,43 @@ const gulfsDisplay = localFont({
   style: "normal",
 });
 
-const amud = isAmudSite();
+const SITE_DESCRIPTION =
+  "Guide gives schools one login for every learning app, with classes and rosters managed in one place.";
 
-export const metadata: Metadata = amud
-  ? {
-      title: {
-        default: FIRST_APP_NAME,
-        template: `%s · ${FIRST_APP_NAME}`,
+export const metadata: Metadata = {
+  metadataBase: new URL(guidePublicUrl()),
+  title: {
+    default: "Guide · One login for every app your school uses",
+    template: "%s · Guide",
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: "Guide",
+  openGraph: {
+    type: "website",
+    siteName: "Guide",
+    title: "Guide · One login for every app your school uses",
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Guide: one login for every app your school uses",
       },
-      description:
-        "Amud: read Mishnayos and Gemara, test yourself, and keep your notes.",
-    }
-  : {
-      title: {
-        default: "Guide",
-        template: "%s · Guide",
-      },
-      description:
-        "Guide gives schools one login for every learning app, with classes and rosters managed in one place.",
-    };
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Guide · One login for every app your school uses",
+    description: SITE_DESCRIPTION,
+    images: ["/og-image.png"],
+  },
+  // Set GOOGLE_SITE_VERIFICATION in Cloudflare Pages to verify with Google
+  // Search Console by HTML tag (not needed when verifying through DNS).
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
+};
 
 export default function RootLayout({
   children,
@@ -74,7 +74,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${frankRuhlLatin.variable} ${frankRuhlHebrew.variable} ${gulfsDisplay.variable} h-full`}
+      className={`${manrope.variable} ${gulfsDisplay.variable} h-full`}
     >
       <body className="site-shell flex min-h-full flex-col antialiased">
         <SiteChrome>{children}</SiteChrome>

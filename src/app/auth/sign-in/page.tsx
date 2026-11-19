@@ -5,18 +5,15 @@ export const runtime = "edge";
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
-import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
 import { StudentSignIn } from "@/components/student-sign-in";
-import { FIRST_APP_NAME } from "@/lib/apps";
 import { loginAsCopy, parseLoginAs } from "@/lib/login-roles";
-import { publicAmudHomePath } from "@/lib/site";
 import { signInWithEmail } from "./actions";
 
 /** Heading copy per sign-in audience. */
 const SIGN_IN_HEADINGS: Record<
-  "educator" | "official" | "developer" | "learner",
+  "educator" | "official" | "developer",
   { eyebrow: string | null; title: string; subtitle: string }
 > = {
   educator: {
@@ -35,12 +32,6 @@ const SIGN_IN_HEADINGS: Record<
     subtitle:
       "Use the account you applied with. Your developer portal opens once a Guide Official approves your application.",
   },
-  learner: {
-    eyebrow: null,
-    title: `Log in to ${FIRST_APP_NAME}`,
-    subtitle:
-      "Save your Test Yourself scores and notes. A school account is not required.",
-  },
 };
 
 const linkClass = "font-semibold text-forest-800 hover:underline";
@@ -57,29 +48,12 @@ function SignInForm() {
 
   const isEducator = as === "educator";
   const isOfficial = as === "official";
-  const isLearner = as === "learner";
   const heading = SIGN_IN_HEADINGS[as];
 
   return (
     <div className="auth-shell flex min-h-screen flex-col">
       <div className="flex items-center justify-between gap-4 px-4 py-5 sm:px-8">
-        {isLearner ? (
-          <AppWordmark
-            name={FIRST_APP_NAME}
-            href={publicAmudHomePath()}
-            size="lg"
-          />
-        ) : (
-          <GuideWordmark href="/" size="lg" />
-        )}
-        {isLearner ? (
-          <Link
-            href={publicAmudHomePath()}
-            className="text-sm font-semibold text-forest-800 no-underline hover:underline"
-          >
-            Back to {FIRST_APP_NAME}
-          </Link>
-        ) : null}
+        <GuideWordmark href="/" size="lg" />
       </div>
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-4 pb-16 sm:px-8">
         <AuthCard
@@ -160,16 +134,14 @@ function SignInForm() {
             >
               {pending ? "Logging in…" : "Log in"}
             </button>
-            {!isLearner ? (
-              <p className="text-center text-sm">
-                <Link
-                  href={`/auth/forgot-password?as=${as}`}
-                  className={linkClass}
-                >
-                  Forgot password?
-                </Link>
-              </p>
-            ) : null}
+            <p className="text-center text-sm">
+              <Link
+                href={`/auth/forgot-password?as=${as}`}
+                className={linkClass}
+              >
+                Forgot password?
+              </Link>
+            </p>
           </form>
           {isEducator ? (
             <p className="mt-5 border-t border-line pt-4 text-center text-sm text-ink-muted">

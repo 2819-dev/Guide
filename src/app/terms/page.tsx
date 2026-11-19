@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LegalPage } from "@/components/legal-page";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/terms" },
   title: "Terms of Service",
   description: "The terms for using Guide, the school platform at guidelearning.org.",
 };

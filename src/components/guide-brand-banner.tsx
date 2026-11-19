@@ -3,15 +3,13 @@ import {
   GUIDE_BANNER_HEIGHT,
   GUIDE_BANNER_SRC,
   GUIDE_BANNER_WIDTH,
-  INVITE_BANNER_SRC,
 } from "@/lib/brand";
 
 type Variant = "strip" | "panel" | "full" | "login";
 
 type Props = {
   variant?: Variant;
-  /** Use invite-local path (same bytes) when the surface is the Ohr Reuven letter. */
-  src?: typeof GUIDE_BANNER_SRC | typeof INVITE_BANNER_SRC;
+  src?: typeof GUIDE_BANNER_SRC;
   priority?: boolean;
   className?: string;
   alt?: string;

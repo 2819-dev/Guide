@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AmudHomePage } from "@/components/amud-home";
 import {
   AdminSchoolArt,
   HeroStudentArt,
@@ -8,15 +7,48 @@ import {
   TeacherClassArt,
 } from "@/components/home-illustrations";
 import { PhotoFrame, type FrameAccent, type FrameShape } from "@/components/photo-frame";
-import { isAmudSite } from "@/lib/site";
 
 export const runtime = "edge";
 
+export const metadata = {
+  alternates: { canonical: "/" },
+};
+
+/** Organization and website details for Google (structured data). */
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://guidelearning.org/#organization",
+      name: "Guide",
+      url: "https://guidelearning.org",
+      logo: "https://guidelearning.org/icon.svg",
+      email: "hello@guidelearning.org",
+      description:
+        "Guide gives schools one login for every learning app, with classes and rosters managed in one place.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://guidelearning.org/#website",
+      name: "Guide",
+      url: "https://guidelearning.org",
+      publisher: { "@id": "https://guidelearning.org/#organization" },
+    },
+  ],
+};
+
 export default function HomePage() {
-  if (isAmudSite()) {
-    return <AmudHomePage />;
-  }
-  return <GuideHomePage />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        // Static, trusted JSON (no user input).
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
+      />
+      <GuideHomePage />
+    </>
+  );
 }
 
 function ArrowIcon({ size = 16 }: { size?: number }) {

@@ -30,8 +30,6 @@
   --foreground: var(--ink);
   --font-display: var(--font-manrope);
   --font-body: var(--font-manrope);
-  --font-frank-ruhl: var(--font-frank-ruhl-latin), var(--font-frank-ruhl-hebrew);
-  --font-hebrew: var(--font-frank-ruhl);
   /* Wordmark: licensed Gulfs Display (next/font/local) */
   --font-wordmark: var(--font-gulfs-display), "Gulfs Display", Georgia, serif;
 
@@ -128,7 +126,6 @@
   --color-surface: var(--surface);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
-  --font-hebrew: var(--font-hebrew);
 }
 
 * {
@@ -158,14 +155,6 @@ body {
 .site-shell {
   position: relative;
   z-index: 1;
-}
-
-.hebrew {
-  font-family: var(--font-hebrew), "Frank Ruhl Libre", serif;
-  direction: rtl;
-  unicode-bidi: plaintext;
-  line-height: 1.8;
-  letter-spacing: 0;
 }
 
 /* Clever H1 scale (~65px) */

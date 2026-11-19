@@ -15,12 +15,6 @@ type Student = {
   id: string;
   displayName: string;
   username: string | null;
-  dapimStudied: number;
-  quizAttempts: number;
-  bestScore: number | null;
-  averageQuizScore: number | null;
-  notesSubmitted: number;
-  recentDafim: string[];
 };
 
 type Classroom = {
@@ -169,7 +163,6 @@ export function EducationPanel({
                       <tr>
                         <th>Student</th>
                         <th className="hidden sm:table-cell">Username</th>
-                        <th className="hidden sm:table-cell">Quizzes</th>
                         <th>
                           <span className="sr-only">Password</span>
                         </th>
@@ -189,7 +182,6 @@ export function EducationPanel({
                           <td className="hidden font-mono sm:table-cell">
                             {s.username ?? <span className="text-ink-muted">—</span>}
                           </td>
-                          <td className="hidden sm:table-cell">{s.quizAttempts}</td>
                           <td className="text-right">
                             {s.username ? (
                               <ResetPasswordButton

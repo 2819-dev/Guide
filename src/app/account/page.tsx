@@ -1,17 +1,14 @@
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { PortalShell } from "@/components/portal-shell";
-import { RoleBadgeChip } from "@/components/role-badge-chip";
-import { SupportForm } from "@/components/support-form";
+import { OpenChatButton } from "@/components/open-chat-button";
 import { getDb } from "@/lib/db";
 import { hasEducationAccess } from "@/lib/education-access";
 import { portalFor } from "@/lib/portals";
 import { requireProfile } from "@/lib/profile";
-import { listRolesForProfile } from "@/lib/role-badges";
 import type { Role } from "@/lib/roles";
 import { roleLabel } from "@/lib/roles";
 import { schools } from "@/lib/schema";
-import { isAmudSite, publicAmudLearnBase } from "@/lib/site";
 
 export const runtime = "edge";
 
@@ -20,11 +17,7 @@ export const metadata = { title: "Account" };
 export default async function AccountPage() {
   const authz = await requireProfile();
   if (!authz) {
-    redirect(
-      isAmudSite()
-        ? "/auth/sign-in?as=learner"
-        : "/auth/sign-in?as=student",
-    );
+    redirect("/auth/sign-in?as=student");
   }
 
   const role = authz.profile.role as Role;
@@ -36,10 +29,9 @@ export default async function AccountPage() {
     badgeCode: authz.profile.badgeCode,
     educationOk,
   });
-  const portalHref = isAmudSite()
-    ? publicAmudLearnBase()
-    : (portal?.href ?? (role === "rebbe" ? "/education/panel" : "/apps"));
-  const portalLabel = isAmudSite() ? "Amud" : (portal?.label ?? "Guide");
+  const portalHref =
+    portal?.href ?? (role === "rebbe" ? "/education/panel" : "/apps");
+  const portalLabel = portal?.label ?? "Guide";
 
   let schoolName: string | null = null;
   if (authz.profile.schoolId) {
@@ -51,8 +43,6 @@ export default async function AccountPage() {
       .limit(1);
     schoolName = school?.name ?? null;
   }
-
-  const roles = await listRolesForProfile(authz.profile.id);
 
   const shortRole = isOfficial
     ? "Guide Official"
@@ -79,22 +69,32 @@ export default async function AccountPage() {
       accountName={authz.profile.displayName}
       accountHref={null}
     >
-      {roles.length > 0 ? (
-        <ul className="portal-role-row">
-          {roles.map((r) => (
-            <li key={r.id}>
-              <RoleBadgeChip
-                name={r.name}
-                color={r.color}
-                iconUrl={r.iconUrl}
-              />
-            </li>
-          ))}
-        </ul>
-      ) : null}
+      <section className="portal-panel">
+        <h2 className="portal-section-title">Account details</h2>
+        <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-[10rem_1fr]">
+          <dt className="font-semibold text-forest-950">Name</dt>
+          <dd className="text-ink-muted">{authz.profile.displayName}</dd>
+          <dt className="font-semibold text-forest-950">Role</dt>
+          <dd className="text-ink-muted">{shortRole}</dd>
+          {schoolName ? (
+            <>
+              <dt className="font-semibold text-forest-950">School</dt>
+              <dd className="text-ink-muted">{schoolName}</dd>
+            </>
+          ) : null}
+        </dl>
+      </section>
 
-
-      <SupportForm />
+      <section className="portal-panel mt-6">
+        <h2 className="portal-section-title">Need help?</h2>
+        <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+          Chat with Guide Assistant for quick answers, or ask to talk with a
+          member of the Guide team.
+        </p>
+        <div className="mt-4">
+          <OpenChatButton />
+        </div>
+      </section>
     </PortalShell>
   );
 }

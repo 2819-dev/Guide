@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { FIRST_APP_NAME, appHomePath } from "@/lib/apps";
 
 type Props = {
-  name?: string;
+  name: string;
   href?: string | null;
   className?: string;
   size?: "sm" | "md" | "lg";
@@ -16,8 +15,8 @@ const sizeMap = {
 
 /** Wordmark for a Guide app (not the Guide platform mark). */
 export function AppWordmark({
-  name = FIRST_APP_NAME,
-  href = appHomePath(),
+  name,
+  href = null,
   className = "",
   size = "md",
 }: Props) {

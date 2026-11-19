@@ -4,6 +4,7 @@ import Link from "next/link";
 export const runtime = "edge";
 
 export const metadata = {
+  alternates: { canonical: "/developers/apply" },
   title: "For developers",
   description:
     "Publish your learning app on Guide. Teachers add approved apps to their classes, and students open them with one login.",

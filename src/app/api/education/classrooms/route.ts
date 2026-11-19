@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { hasEducationAccess } from "@/lib/education-access";
@@ -9,9 +9,6 @@ import { usernamesForStudents } from "@/lib/student-accounts";
 import {
   classroomMembers,
   classrooms,
-  progress,
-  quizSessions,
-  studyNotes,
   profiles,
 } from "@/lib/schema";
 
@@ -51,80 +48,14 @@ export async function GET() {
 
     const studentIds = members.map((m) => m.studentId);
     const usernames = await usernamesForStudents(studentIds);
-    let progressRows: (typeof progress.$inferSelect)[] = [];
-    let quizRows: { profileId: string; score: number | null; dafId: string; completedAt: Date | null }[] = [];
-    let noteCounts: { profileId: string; count: number }[] = [];
-
-    if (studentIds.length) {
-      progressRows = await db
-        .select()
-        .from(progress)
-        .where(inArray(progress.profileId, studentIds));
-      quizRows = await db
-        .select({
-          profileId: quizSessions.profileId,
-          score: quizSessions.score,
-          dafId: quizSessions.dafId,
-          completedAt: quizSessions.completedAt,
-        })
-        .from(quizSessions)
-        .where(inArray(quizSessions.profileId, studentIds));
-      const notes = await db
-        .select({ profileId: studyNotes.profileId })
-        .from(studyNotes)
-        .where(inArray(studyNotes.profileId, studentIds));
-      const map = new Map<string, number>();
-      for (const n of notes) {
-        map.set(n.profileId, (map.get(n.profileId) ?? 0) + 1);
-      }
-      noteCounts = [...map.entries()].map(([profileId, count]) => ({
-        profileId,
-        count,
-      }));
-    }
-
     result.push({
       ...room,
-      students: members.map((m) => {
-        const pRows = progressRows.filter((p) => p.profileId === m.studentId);
-        const qRows = quizRows.filter((q) => q.profileId === m.studentId && q.score != null);
-        const notesSubmitted = noteCounts.find((n) => n.profileId === m.studentId)?.count ?? 0;
-        const avgScore = qRows.length
-          ? Math.round(
-              qRows.reduce((s, q) => s + (q.score ?? 0), 0) / qRows.length,
-            )
-          : null;
-        return {
-          id: m.studentId,
-          displayName: m.displayName,
-          username: usernames.get(m.studentId) ?? null,
-          joinedAt: m.joinedAt,
-          dapimStudied: pRows.filter((p) => p.visited).length,
-          quizAttempts: pRows.reduce((s, p) => s + p.quizAttempts, 0),
-          bestScore: pRows.reduce<number | null>(
-            (best, p) =>
-              p.bestScore == null
-                ? best
-                : best == null
-                  ? p.bestScore
-                  : Math.max(best, p.bestScore),
-            null,
-          ),
-          averageQuizScore: avgScore,
-          notesSubmitted,
-          recentDafim: pRows
-            .sort(
-              (a, b) =>
-                b.lastVisitedAt.getTime() - a.lastVisitedAt.getTime(),
-            )
-            .slice(0, 5)
-            .map((p) =>
-              p.tractateSlug === "bava-metzia"
-                ? p.dafId
-                : `${p.tractateSlug} ${p.dafId}`,
-            ),
-        };
-      }),
+      students: members.map((m) => ({
+        id: m.studentId,
+        displayName: m.displayName,
+        username: usernames.get(m.studentId) ?? null,
+        joinedAt: m.joinedAt,
+      })),
     });
   }
 

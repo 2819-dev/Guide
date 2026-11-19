@@ -91,7 +91,7 @@ export function createDemoSession(): DemoSession {
         name: "Period 3 · Grade 9",
         inviteCode: "8F2K",
         studentCount: 12,
-        installedAppSlugs: ["blitz", "amud"],
+        installedAppSlugs: ["blitz"],
       },
       {
         id: "c2",
@@ -130,7 +130,7 @@ export function createDemoSession(): DemoSession {
     ],
     invites: [],
     catalog: APP_CATALOG.map((a) => ({ ...a })),
-    studentAppSlugs: ["blitz", "amud"],
+    studentAppSlugs: ["blitz"],
     messages: [
       {
         id: "m1",

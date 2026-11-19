@@ -4,7 +4,6 @@ export type LoginAs =
   | "student"
   | "educator"
   | "official"
-  | "learner"
   | "developer";
 
 export type LoginRoleOption = {
@@ -45,15 +44,6 @@ export const LOGIN_AS_OPTIONS: LoginRoleOption[] = [
 export function parseLoginAs(value: string | null | undefined): LoginAs {
   if (value === "teacher" || value === "school") return "educator";
   if (value === "partner" || value === "developer") return "developer";
-  // Legacy family/home → Amud learner (not a Guide school role)
-  if (
-    value === "family" ||
-    value === "learner" ||
-    value === "home" ||
-    value === "customer"
-  ) {
-    return "learner";
-  }
   if (
     value === "student" ||
     value === "educator" ||
@@ -73,6 +63,7 @@ export function loginAsCopy(as: LoginAs): {
 } {
   switch (as) {
     case "student":
+    default:
       return {
         title: "Student",
         subtitle: "Find your school, then log in with your password.",
@@ -102,15 +93,6 @@ export function loginAsCopy(as: LoginAs): {
         joinHref: "/developers/apply",
         joinLabel: "Apply as a developer",
       };
-    case "learner":
-    default:
-      return {
-        title: "Log in to Amud",
-        subtitle:
-          "Save Test Yourself scores and notes. No school account is required; Amud is open to everyone.",
-        joinHref: "/auth/sign-up?as=learner",
-        joinLabel: "Create an Amud account",
-      };
   }
 }
 
@@ -122,6 +104,7 @@ export function signupAsCopy(as: LoginAs): {
 } {
   switch (as) {
     case "student":
+    default:
       return {
         title: "Student accounts",
         subtitle:
@@ -149,15 +132,6 @@ export function signupAsCopy(as: LoginAs): {
         title: "Developer",
         subtitle:
           "Create an account to apply. The Guide team reviews every developer before apps go live.",
-        roleValue: "customer",
-        showRoleChooser: false,
-      };
-    case "learner":
-    default:
-      return {
-        title: "Create an Amud account",
-        subtitle:
-          "Keep your Test Yourself scores and notes. No school account is required; Amud is open to everyone.",
         roleValue: "customer",
         showRoleChooser: false,
       };

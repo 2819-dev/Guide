@@ -128,6 +128,13 @@ export function SupportChatWidget() {
     [merge],
   );
 
+  // Other parts of Guide (e.g. Account) can open the chat window.
+  useEffect(() => {
+    const openChat = () => setOpen(true);
+    window.addEventListener("guide:open-chat", openChat);
+    return () => window.removeEventListener("guide:open-chat", openChat);
+  }, []);
+
   // Restore an open chat from this device.
   useEffect(() => {
     const s = readStored();

@@ -1,12 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { AmudFooter } from "@/components/amud-footer";
-import { AmudHeader } from "@/components/amud-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { SupportChatWidget } from "@/components/support-chat-widget";
-import { isAmudPublicPath, isAmudSite } from "@/lib/site";
 
 /** Portal routes own Clever top-bar chrome — skip marketing header/footer. */
 function isSchoolPortalPath(pathname: string): boolean {
@@ -25,28 +22,13 @@ function isSchoolPortalPath(pathname: string): boolean {
   );
 }
 
-/** Picks Guide school chrome vs public Amud chrome. Auth / portals are full-bleed. */
+/** Guide header and footer; auth and portal pages are full-bleed. */
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "";
   const authBare =
     pathname.startsWith("/auth/") || pathname.startsWith("/invite/");
   const portalBare = isSchoolPortalPath(pathname);
   const bare = authBare || portalBare;
-
-  const amudChrome = isAmudSite() || isAmudPublicPath(pathname);
-
-  if (amudChrome) {
-    if (authBare) {
-      return <main className="flex-1">{children}</main>;
-    }
-    return (
-      <>
-        <AmudHeader />
-        <main className="flex-1">{children}</main>
-        <AmudFooter />
-      </>
-    );
-  }
 
   if (bare) {
     return (

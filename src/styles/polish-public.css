@@ -139,3 +139,55 @@
     color: #fecaca;
   }
 }
+
+/* ---------- 404 and error pages ---------- */
+.status-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: clamp(4rem, 12vh, 8rem) 16px;
+  text-align: center;
+}
+.status-page__code {
+  margin: 0 0 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--forest-100);
+  color: var(--forest-800);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.status-page__title {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.75rem, 4vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.status-page__body {
+  margin: 0.9rem 0 0;
+  color: var(--ink-muted);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.status-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+.status-page__ref {
+  margin: 1.5rem 0 0;
+  color: var(--ink-muted);
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+}
+@media (max-width: 480px) {
+  .status-page__actions { flex-direction: column; width: 100%; }
+  .status-page__actions > * { width: 100%; justify-content: center; }
+}

@@ -5,12 +5,9 @@ export const runtime = "edge";
 import Link from "next/link";
 import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
-import { AppWordmark } from "@/components/app-wordmark";
 import { AuthCard } from "@/components/auth-card";
 import { GuideWordmark } from "@/components/guide-logo";
-import { FIRST_APP_NAME } from "@/lib/apps";
 import { parseLoginAs, signupAsCopy } from "@/lib/login-roles";
-import { publicAmudHomePath } from "@/lib/site";
 import { signUpWithEmail } from "./actions";
 
 const linkClass = "font-semibold text-forest-800 hover:underline";
@@ -159,30 +156,10 @@ function SignUpForm() {
 }
 
 function SignUpShell() {
-  const params = useSearchParams();
-  const as = parseLoginAs(params.get("as") ?? params.get("role"));
-  const isLearner = as === "learner";
-
   return (
     <div className="auth-shell flex min-h-screen flex-col">
       <div className="flex items-center justify-between gap-4 px-4 py-5 sm:px-8">
-        {isLearner ? (
-          <AppWordmark
-            name={FIRST_APP_NAME}
-            href={publicAmudHomePath()}
-            size="lg"
-          />
-        ) : (
-          <GuideWordmark href="/" size="lg" />
-        )}
-        {isLearner ? (
-          <Link
-            href={publicAmudHomePath()}
-            className="text-sm font-semibold text-forest-800 no-underline hover:underline"
-          >
-            Back to {FIRST_APP_NAME}
-          </Link>
-        ) : null}
+        <GuideWordmark href="/" size="lg" />
       </div>
       <div className="mx-auto flex w-full max-w-lg flex-1 flex-col items-center justify-center px-4 pb-16 sm:px-8">
         <SignUpForm />

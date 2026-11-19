@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LegalPage } from "@/components/legal-page";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/accessibility" },
   title: "Accessibility",
   description:
     "Guide's commitment to accessibility for students, teachers, and schools.",

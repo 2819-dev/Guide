@@ -4,6 +4,7 @@ import { SchoolDemo } from "@/components/school-demo";
 export const runtime = "edge";
 
 export const metadata = {
+  alternates: { canonical: "/schools/demo" },
   title: "School demo",
   description:
     "An interactive demo of Guide for teachers, students, and school administrators. Best viewed on a computer or tablet.",

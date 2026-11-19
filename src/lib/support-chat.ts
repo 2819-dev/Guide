@@ -74,6 +74,13 @@ export function ensureSupportChatSchema(): Promise<void> {
     await db.execute(
       sql`CREATE INDEX IF NOT EXISTS support_chats_status_idx ON support_chats (status, last_message_at DESC)`,
     );
+    // One-way hash of the visitor's IP, used only for rate limits.
+    await db.execute(
+      sql`ALTER TABLE support_chats ADD COLUMN IF NOT EXISTS visitor_key varchar(64)`,
+    );
+    await db.execute(
+      sql`CREATE INDEX IF NOT EXISTS support_chats_visitor_key_idx ON support_chats (visitor_key, created_at DESC)`,
+    );
     await db.execute(sql`CREATE TABLE IF NOT EXISTS support_chat_messages (
       id bigserial PRIMARY KEY,
       chat_id uuid NOT NULL REFERENCES support_chats(id) ON DELETE CASCADE,
@@ -148,12 +155,13 @@ export async function createChat(opts: {
   visitorName: string | null;
   visitorRole: string | null;
   page: string | null;
+  visitorKey: string | null;
 }): Promise<string> {
   await ensureSupportChatSchema();
   const [row] = rows(
     await getDb().execute(sql`
-      INSERT INTO support_chats (visitor_token, profile_id, visitor_name, visitor_role, page)
-      VALUES (${opts.token}, ${opts.profileId}, ${opts.visitorName}, ${opts.visitorRole}, ${opts.page})
+      INSERT INTO support_chats (visitor_token, profile_id, visitor_name, visitor_role, page, visitor_key)
+      VALUES (${opts.token}, ${opts.profileId}, ${opts.visitorName}, ${opts.visitorRole}, ${opts.page}, ${opts.visitorKey})
       RETURNING id`),
   );
   return String(row.id);
@@ -310,4 +318,89 @@ export function newVisitorToken(): string {
   const bytes = new Uint8Array(24);
   crypto.getRandomValues(bytes);
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/* ---------- abuse protection ---------- */
+
+/** Limits for the public chat. Generous for real people, tight for scripts. */
+export const CHAT_LIMITS = {
+  newChatsPerVisitorPerHour: 5,
+  messagesPerVisitorPer10Min: 30,
+  messagesPerChatPerMinute: 8,
+  aiRepliesPerDay: 1500,
+};
+
+/**
+ * One-way hash of the visitor's IP (Cloudflare sets cf-connecting-ip), so
+ * rate limits work without storing anyone's address.
+ */
+export async function visitorKeyFor(request: Request): Promise<string | null> {
+  const ip =
+    request.headers.get("cf-connecting-ip") ??
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    null;
+  if (!ip) return null;
+  const salt = process.env.CHAT_RATE_SALT ?? "guide-live-chat";
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(`${salt}:${ip}`),
+  );
+  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 64);
+}
+
+/** Returns a message to show the visitor when they are over a limit, else null. */
+export async function chatLimitError(opts: {
+  visitorKey: string | null;
+  chatId: string | null;
+}): Promise<string | null> {
+  await ensureSupportChatSchema();
+  const db = getDb();
+  if (opts.chatId) {
+    const [r] = rows(
+      await db.execute(sql`
+        SELECT count(*)::int AS n FROM support_chat_messages
+        WHERE chat_id = ${opts.chatId} AND sender = 'user'
+          AND created_at > now() - interval '1 minute'`),
+    );
+    if (Number(r?.n ?? 0) >= CHAT_LIMITS.messagesPerChatPerMinute) {
+      return "You're sending messages quickly. Please wait a moment and try again.";
+    }
+  }
+  if (opts.visitorKey) {
+    if (!opts.chatId) {
+      const [c] = rows(
+        await db.execute(sql`
+          SELECT count(*)::int AS n FROM support_chats
+          WHERE visitor_key = ${opts.visitorKey}
+            AND created_at > now() - interval '1 hour'`),
+      );
+      if (Number(c?.n ?? 0) >= CHAT_LIMITS.newChatsPerVisitorPerHour) {
+        return "You've started several chats recently. Please continue in your current chat or try again later.";
+      }
+    }
+    const [m] = rows(
+      await db.execute(sql`
+        SELECT count(*)::int AS n FROM support_chat_messages m
+        JOIN support_chats c ON c.id = m.chat_id
+        WHERE c.visitor_key = ${opts.visitorKey} AND m.sender = 'user'
+          AND m.created_at > now() - interval '10 minutes'`),
+    );
+    if (Number(m?.n ?? 0) >= CHAT_LIMITS.messagesPerVisitorPer10Min) {
+      return "You've reached the message limit for now. Please try again in a few minutes.";
+    }
+  }
+  return null;
+}
+
+/** True once Guide Assistant has hit today's site-wide reply cap (UTC day). */
+export async function aiDailyCapReached(): Promise<boolean> {
+  await ensureSupportChatSchema();
+  const [r] = rows(
+    await getDb().execute(sql`
+      SELECT count(*)::int AS n FROM support_chat_messages
+      WHERE sender = 'assistant' AND created_at >= date_trunc('day', now())`),
+  );
+  return Number(r?.n ?? 0) >= CHAT_LIMITS.aiRepliesPerDay;
 }
