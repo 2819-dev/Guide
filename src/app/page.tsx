@@ -23,7 +23,7 @@ const STRUCTURED_DATA = {
       "@id": "https://guidelearning.org/#organization",
       name: "Guide",
       url: "https://guidelearning.org",
-      logo: "https://guidelearning.org/icon.svg",
+      logo: "https://guidelearning.org/logo-512.png",
       email: "hello@guidelearning.org",
       description:
         "Guide gives schools one login for every learning app, with classes and rosters managed in one place.",

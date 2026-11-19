@@ -1,14 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <!-- Minimal letter favicon derived from the Guide wordmark -->
-  <rect width="32" height="32" rx="7" fill="#1C3D2E"/>
-  <text
-    x="16"
-    y="22.5"
-    text-anchor="middle"
-    fill="#FFFFFF"
-    font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
-    font-size="18"
-    font-weight="600"
-    letter-spacing="-0.5"
-  >G</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Guide icon: the "G" from Gulfs Display, as a path (no font needed). -->
+  <rect width="512" height="512" rx="112" fill="#1E3F30"/>
+  <path fill="#FFFFFF" transform="translate(89.75 402.38) scale(0.41823 -0.41823)" d="M313 -15Q183 -15 100.5 79.5Q18 174 18 348Q18 529 125.5 622.0Q233 715 413 715Q542 715 662 691L637 413Q532 437 424 437Q341 437 292.5 414.5Q244 392 244 351Q244 308 281.5 286.5Q319 265 387 265Q432 265 459.5 276.5Q487 288 488 307L326 308V403H777V299H726L736 0H516L564 267H548Q524 108 468.5 46.5Q413 -15 313 -15Z"/>
 </svg>
